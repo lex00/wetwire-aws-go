@@ -9,6 +9,8 @@ github.com/lex00/cfn-lint-go v0.7.2 h1:G7Ikkm0xupmc9omRN6lW3uvEvcgt+14d9m2RBUk+Y
 github.com/lex00/cfn-lint-go v0.7.2/go.mod h1:DSYsVhCrt5M8vSUAUdydkF4I0UJ4FMTq1btw9pUE46E=
 github.com/lex00/cloudformation-schema-go v0.7.0 h1:Y/OLP6qI3aOe9MDGzUhlpt96Hyedou1I2VC+BD8rHmI=
 github.com/lex00/cloudformation-schema-go v0.7.0/go.mod h1:y9p4ivYrQHUhB2bitHjhT1LthxJiAwSRAfipmr2wXMQ=
+github.com/lex00/wetwire-core-go v0.1.0 h1:VxCcIL4AD23heLGOw5I3RGui49/ZOt9m0Lk4xjKp/PM=
+github.com/lex00/wetwire-core-go v0.1.0/go.mod h1:B2pM9e6/zN4hBxG+e3u/w8uNMAycVtENoaKEJLbKTGQ=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
