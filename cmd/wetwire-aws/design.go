@@ -92,7 +92,8 @@ func runDesign(prompt, outputDir string, maxLintCycles int, stream bool) error {
 
 	fmt.Println("Starting AI-assisted design session...")
 	fmt.Println("The AI will ask questions and generate infrastructure code.")
-	fmt.Println("Press Ctrl+C to stop.\n")
+	fmt.Println("Press Ctrl+C to stop.")
+	fmt.Println()
 
 	// Run the agent
 	if err := runner.Run(ctx, prompt); err != nil {
