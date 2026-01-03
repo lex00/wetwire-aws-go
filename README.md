@@ -145,6 +145,7 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 
 - [Quick Start](docs/QUICK_START.md)
 - [CLI Reference](docs/CLI.md)
+- [Import Workflow](docs/IMPORT_WORKFLOW.md)
 - [Implementation Checklist](../../docs/research/ImplementationChecklist.md)
 - [Go Design Decisions](../../docs/research/Go.md)
 
