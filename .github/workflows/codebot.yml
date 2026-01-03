@@ -1,0 +1,112 @@
+name: CodeBot Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'CodeBot run ID'
+        required: true
+        type: string
+      callback_url:
+        description: 'Callback URL for status updates'
+        required: true
+        type: string
+      callback_token:
+        description: 'JWT token for callback authentication'
+        required: true
+        type: string
+      payload:
+        description: 'JSON payload with workflow details'
+        required: true
+        type: string
+      anthropic_api_key:
+        description: 'Anthropic API key (required if not using OAuth token)'
+        required: false
+        type: string
+      claude_oauth_token:
+        description: 'Claude Code OAuth token (alternative to API key, from `claude setup-token`)'
+        required: false
+        type: string
+      prompt:
+        description: 'Prompt for Claude Code'
+        required: true
+        type: string
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.KJPR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.KJPR_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Parse Payload
+        id: parse
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+        run: |
+          echo "$PAYLOAD" > payload.json
+          echo "workflow_name=$(jq -r '.workflow.name' payload.json)" >> $GITHUB_OUTPUT
+          echo "event_type=$(jq -r '.event.type' payload.json)" >> $GITHUB_OUTPUT
+
+      - name: Report Started
+        run: |
+          curl -s -X POST "${{ inputs.callback_url }}" \
+            -H "Authorization: Bearer ${{ inputs.callback_token }}" \
+            -H "Content-Type: application/json" \
+            -d '{"type": "run_started", "runId": "${{ inputs.run_id }}"}'
+
+      # ========================================
+      # ADD YOUR IMPLEMENTATION HERE
+      # ========================================
+      # This is where you implement your workflow logic.
+      # The payload contains:
+      # - workflow: { id, name }
+      # - event: { type, source, payload }
+      # - steps: [{ id, stepId, name, action, botId, config }]
+
+      - name: Run Claude Code
+        env:
+          ANTHROPIC_API_KEY: ${{ inputs.anthropic_api_key }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.claude_oauth_token }}
+          PROMPT: ${{ inputs.prompt }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          npx --yes @anthropic-ai/claude-code --dangerously-skip-permissions -p --verbose --output-format stream-json "$PROMPT"
+
+      - name: Execute Workflow
+        run: |
+          echo "Executing workflow: ${{ steps.parse.outputs.workflow_name }}"
+          echo "Event type: ${{ steps.parse.outputs.event_type }}"
+          echo "Run ID: ${{ inputs.run_id }}"
+          echo ""
+          echo "Payload:"
+          cat payload.json | jq .
+          echo ""
+          echo "TODO: Add your implementation here"
+
+      - name: Report Completed
+        if: success()
+        run: |
+          curl -s -X POST "${{ inputs.callback_url }}" \
+            -H "Authorization: Bearer ${{ inputs.callback_token }}" \
+            -H "Content-Type: application/json" \
+            -d '{"type": "run_completed", "runId": "${{ inputs.run_id }}"}'
+
+      - name: Report Failed
+        if: failure()
+        run: |
+          curl -s -X POST "${{ inputs.callback_url }}" \
+            -H "Authorization: Bearer ${{ inputs.callback_token }}" \
+            -H "Content-Type: application/json" \
+            -d '{"type": "run_failed", "runId": "${{ inputs.run_id }}", "error": "Workflow execution failed"}'
