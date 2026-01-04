@@ -153,3 +153,7 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 
 - [wetwire-agent](../wetwire-agent/) - AI agent for infrastructure design
 - [wetwire-aws (Python)](../../python/packages/wetwire-aws/) - Python implementation
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.

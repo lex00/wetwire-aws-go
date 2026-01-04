@@ -1,0 +1,25 @@
+wetwire-aws-go
+Copyright 2026 Albert Artigues
+
+This product includes software developed at Amazon Web Services, Inc.
+(https://aws.amazon.com/).
+
+---
+
+cloudformation-schema-go
+https://github.com/lex00/cloudformation-schema-go
+
+This product uses cloudformation-schema-go which extracts enum values from
+botocore service model definitions. See that project's NOTICE file for
+additional attributions.
+
+---
+
+AWS CloudFormation Resource Specification
+
+This product uses the AWS CloudFormation Resource Specification to generate
+typed Go resource structures.
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html
+
+The CloudFormation Resource Specification is provided by Amazon Web Services
+and is subject to the AWS Service Terms.
