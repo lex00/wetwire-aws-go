@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated cloudformation-schema-go from v0.7.0 to v1.0.0
+- Updated cfn-lint-go from v0.7.2 to v1.0.0
+- Updated wetwire-core-go from v0.1.0 to v1.0.0
+- Updated spf13/cobra from v1.8.1 to v1.10.2
+
+### Fixed
+
+- Fixed unchecked error return values in internal/runner/runner.go (lint)
+
 ## [0.4.1] - 2026-01-02
 
 ### Fixed

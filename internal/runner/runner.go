@@ -114,7 +114,7 @@ func ExtractValues(pkgPath string, resources map[string]wetwire.DiscoveredResour
 	if err != nil {
 		return nil, fmt.Errorf("creating temp dir: %w", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Generate runner main.go
 	runnerPath := filepath.Join(tmpDir, "main.go")
@@ -134,10 +134,10 @@ func ExtractValues(pkgPath string, resources map[string]wetwire.DiscoveredResour
 	}
 
 	if err := runnerTemplate.Execute(f, data); err != nil {
-		f.Close()
+		_ = f.Close()
 		return nil, fmt.Errorf("executing template: %w", err)
 	}
-	f.Close()
+	_ = f.Close()
 
 	// Create go.mod for the runner
 	goModPath := filepath.Join(tmpDir, "go.mod")
