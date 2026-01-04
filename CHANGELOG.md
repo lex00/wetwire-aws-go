@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-01-03
+
 ### Changed
 
 - Updated cloudformation-schema-go from v0.7.0 to v1.0.0
@@ -85,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Block-style code generation with typed property types
 - 254/254 AWS sample templates import successfully (100% success rate)
 
-[unreleased]: https://github.com/lex00/wetwire/compare/wetwire-aws-v0.4.1...HEAD
+[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/lex00/wetwire-aws-go/releases/tag/v1.0.0
 [0.4.1]: https://github.com/lex00/wetwire/compare/wetwire-aws-v0.4.0...wetwire-aws-v0.4.1
 [0.4.0]: https://github.com/lex00/wetwire/releases/tag/wetwire-aws-v0.4.0
 [0.1.0]: https://github.com/lex00/wetwire/go/wetwire-aws/releases/tag/v0.1.0
