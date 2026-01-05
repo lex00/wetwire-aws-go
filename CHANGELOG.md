@@ -7,10 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-05
+
 ### Added
 
-- Version info now embedded via `runtime/debug.ReadBuildInfo()` for `go install @version`
-- Version can also be set via ldflags: `-ldflags "-X main.version=v1.0.0"`
+- **Flattened complex property types**: Origins, Rules, and other nested arrays now generate typed block variables instead of inline `Json{}` maps
+- `Json{}` type alias for cleaner inline map syntax (replaces `map[string]any{}`)
+- WAW017 linter rule: detects pointer assignments (`&Type{}`) - prefer value types
+- WAW018 linter rule: detects `map[string]any{}` usage - prefer `Json{}`
+- Version info embedded via `runtime/debug.ReadBuildInfo()` for `go install @version`
+
+### Changed
+
+- Array syntax standardized to `[]any{}` everywhere (removed `List()` and `Any()` helpers)
+- Type lookup now uses flat CloudFormation pattern (`Distribution_Origin` not `Distribution_DistributionConfig_Origin`)
+- PropertyTypeMap generation fixed for array element types
+
+### Fixed
+
+- Importer: complex nested types like CloudFront Origins now flatten to typed structs with IDE autocomplete support
+- Importer: S3 ReplicationConfiguration.Rules correctly maps to `Bucket_ReplicationRule`
+- Importer: removed pointer assignments from generated code (value types only)
+- Documentation: updated QUICK_START examples to use `[]any{}` syntax
 
 ## [1.1.0] - 2026-01-05
 
