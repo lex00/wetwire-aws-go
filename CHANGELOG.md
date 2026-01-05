@@ -14,8 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - WAW014 linter rule: detects unused intrinsics imports
 - WAW015 linter rule: detects explicit Ref{} (prefer direct variable refs or Param())
 - WAW016 linter rule: detects explicit GetAtt{} (prefer Resource.Attr field access)
+- CLI documentation for design, test, validate, list commands
 
 ### Fixed
+
+- Importer: never generates Ref{} or GetAtt{} patterns (always uses direct refs and field access)
 
 - Importer: variable names with hyphens now sanitized (e.g., `Port-1ICMP` → `PortNeg1ICMP`)
 - Importer: unknown resource types skipped with comment instead of broken imports

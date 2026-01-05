@@ -12,7 +12,8 @@ The `wetwire-aws import` command generates Go code with several categories of er
 - [x] **Excessive intrinsics imports** - Import only added when intrinsic types are actually used
 - [x] **List() helper import** - Added intrinsics import when `List()` is used
 - [x] **Parameters in conditions** - Pre-scan conditions for parameter references before generating params
-- [x] **Lint rules added** - WAW013 (undefined refs), WAW014 (unused intrinsics import)
+- [x] **Lint rules added** - WAW013-WAW016 (undefined refs, unused imports, Ref{}/GetAtt{} style)
+- [x] **Style enforcement** - Importer never generates Ref{} or GetAtt{} (uses direct refs and field access)
 - [x] **Integration test** - TestExamplesBuild validates 12 complex templates compile
 - [x] **go mod tidy** - Importer now runs `go mod tidy` after generating scaffold files
 - [x] **go.mod replace directive** - Fixed path in generated examples
@@ -53,7 +54,7 @@ When the package name matches the `cmd` directory name, Go build fails.
 - [ ] Generated code compiles successfully (`go build ./...`) - 69/124 = 55.6%
 - [x] Unknown resource types are handled gracefully (skipped with comment)
 - [x] Variable names are valid Go identifiers
-- [x] Add linting rules to catch remaining issues (WAW013, WAW014)
+- [x] Add linting rules to catch remaining issues (WAW013-WAW016)
 - [x] Integration test to catch regressions (TestExamplesBuild)
 - [ ] No unused imports in generated code (WAW014 catches, ~21 remaining)
 - [ ] Condition references resolve correctly (~4 remaining)
