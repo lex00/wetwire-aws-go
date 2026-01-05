@@ -146,7 +146,7 @@ import (
     "fmt"
     "myapp/infra"
 
-    "github.com/lex00/wetwire/go/wetwire-aws/internal/template"
+    "github.com/lex00/wetwire-aws-go/internal/template"
 )
 
 func main() {
@@ -161,7 +161,7 @@ func main() {
 ```go
 package infra
 
-import "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
+import "github.com/lex00/wetwire-aws-go/resources/s3"
 
 var DataBucket = s3.Bucket{
     BucketName: "my-data-bucket",
@@ -228,7 +228,7 @@ All CloudFormation intrinsic functions are supported:
 | GetAZs | `GetAZs{Region: "us-east-1"}` or `GetAZs{}` |
 | ImportValue | `ImportValue{Name: "ExportedValue"}` |
 
-**Note:** Use dot import for cleaner syntax: `import . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"`
+**Note:** Use dot import for cleaner syntax: `import . "github.com/lex00/wetwire-aws-go/intrinsics"`
 
 ---
 
@@ -237,7 +237,7 @@ All CloudFormation intrinsic functions are supported:
 Built-in CloudFormation pseudo-parameters:
 
 ```go
-import "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+import "github.com/lex00/wetwire-aws-go/intrinsics"
 
 // Available pseudo-parameters
 intrinsics.AWS_REGION        // {"Ref": "AWS::Region"}
@@ -251,7 +251,7 @@ intrinsics.AWS_NO_VALUE      // {"Ref": "AWS::NoValue"}
 
 Usage:
 ```go
-import . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
 
 var MyBucket = s3.Bucket{
     BucketName: Sub{String: "${AWS::StackName}-data"},

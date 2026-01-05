@@ -5,13 +5,13 @@ Get started with `wetwire-aws` in 5 minutes.
 ## Installation
 
 ```bash
-go install github.com/lex00/wetwire/go/wetwire-aws/cmd/wetwire-aws@latest
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 ```
 
 Or add to your project:
 
 ```bash
-go get github.com/lex00/wetwire/go/wetwire-aws
+go get github.com/lex00/wetwire-aws-go
 ```
 
 ## Your First Project
@@ -30,7 +30,7 @@ myapp/
 package infra
 
 import (
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
 // DataBucket defines an S3 bucket for data storage
@@ -57,10 +57,10 @@ Reference other resources using the `Ref` and `GetAtt` intrinsics:
 package infra
 
 import (
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/iam"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/lambda"
-    . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
+    "github.com/lex00/wetwire-aws-go/resources/iam"
+    "github.com/lex00/wetwire-aws-go/resources/lambda"
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
 // DataBucket is an S3 bucket for data
@@ -141,7 +141,7 @@ myapp/
 ```go
 package infra
 
-import "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
+import "github.com/lex00/wetwire-aws-go/resources/s3"
 
 var DataBucket = s3.Bucket{
     BucketName: "data",
@@ -153,8 +153,8 @@ var DataBucket = s3.Bucket{
 package infra
 
 import (
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/lambda"
-    . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+    "github.com/lex00/wetwire-aws-go/resources/lambda"
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
 // Flat environment variable
@@ -188,8 +188,8 @@ Use generated enum constants for type safety:
 package infra
 
 import (
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/lambda"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/dynamodb"
+    "github.com/lex00/wetwire-aws-go/resources/lambda"
+    "github.com/lex00/wetwire-aws-go/resources/dynamodb"
 )
 
 var MyFunction = lambda.Function{
@@ -226,9 +226,9 @@ package main
 
 import (
     "fmt"
-    "github.com/lex00/wetwire/go/wetwire-aws/internal/template"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
-    . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+    "github.com/lex00/wetwire-aws-go/internal/template"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
 func main() {
