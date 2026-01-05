@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Integration test for importer: validates 12 complex AWS templates compile successfully
+- WAW013 linter rule: detects undefined references in generated code
+- WAW014 linter rule: detects unused intrinsics imports
+
+### Fixed
+
+- Importer: variable names with hyphens now sanitized (e.g., `Port-1ICMP` → `PortNeg1ICMP`)
+- Importer: unknown resource types skipped with comment instead of broken imports
+- Importer: intrinsics import only added when intrinsic types are actually used
+- Importer: pre-scan conditions for parameter references (fixes missing param generation)
+- Importer: runs `go mod tidy` after generating scaffold files
+- Fixed go.mod replace directive path in generated examples
+
 ## [1.0.0] - 2026-01-03
 
 ### Changed
