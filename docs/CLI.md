@@ -312,6 +312,14 @@ On completion, prints a summary:
 - Number of lint cycles required
 - Whether linting passed
 
+### Agent Prompt
+
+Copy this prompt to have your AI coding assistant (Claude Code, Cursor, etc.) run the design session for you:
+
+```
+Run `wetwire-aws design` for me interactively. When the AI asks clarifying questions, show them to me and relay my answers back. Continue until the infrastructure code is generated and validated.
+```
+
 ---
 
 ## test
