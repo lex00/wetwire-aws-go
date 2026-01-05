@@ -337,6 +337,65 @@ var MyTable = dynamodb.Table{
 	}
 }
 
+func TestAvoidPointerAssignment(t *testing.T) {
+	// Test pointer assignments are detected
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyConfig = &s3.Bucket_VersioningConfiguration{
+	Status: "Enabled",
+}
+
+var MyEncryption = &s3.Bucket_BucketEncryption{
+	ServerSideEncryptionConfiguration: nil,
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidPointerAssignment{}
+	issues := rule.Check(file, fset)
+
+	// Should detect 2 pointer assignments
+	assert.Len(t, issues, 2)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW017", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "MyConfig")
+		assert.Contains(t, issues[0].Message, "Bucket_VersioningConfiguration")
+		assert.Equal(t, "error", issues[0].Severity)
+	}
+	if len(issues) > 1 {
+		assert.Contains(t, issues[1].Message, "MyEncryption")
+	}
+}
+
+func TestAvoidPointerAssignment_ValidValueType(t *testing.T) {
+	// Test that value types don't trigger
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyConfig = s3.Bucket_VersioningConfiguration{
+	Status: "Enabled",
+}
+
+var MyBucket = s3.Bucket{
+	BucketName: "my-bucket",
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidPointerAssignment{}
+	issues := rule.Check(file, fset)
+
+	// Should not detect any issues - using value types
+	assert.Len(t, issues, 0)
+}
+
 func TestAllRules(t *testing.T) {
 	rules := AllRules()
 	assert.GreaterOrEqual(t, len(rules), 5)
@@ -347,10 +406,11 @@ func TestAllRules(t *testing.T) {
 		assert.NotEmpty(t, r.Description())
 	}
 
-	// Verify WAW011 is included
+	// Verify WAW011 and WAW017 are included
 	ruleIDs := make([]string, len(rules))
 	for i, r := range rules {
 		ruleIDs[i] = r.ID()
 	}
 	assert.Contains(t, ruleIDs, "WAW011")
+	assert.Contains(t, ruleIDs, "WAW017")
 }

@@ -19,6 +19,7 @@
 //	WAW012: Use typed enum constants instead of raw strings
 //	WAW015: Avoid explicit Ref{} - use direct variable references or Param()
 //	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
+//	WAW017: Avoid pointer assignments (&Type{}) - use value types
 package linter
 
 import (
@@ -1688,6 +1689,87 @@ func (r AvoidExplicitGetAtt) Check(file *ast.File, fset *token.FileSet) []Issue 
 	return issues
 }
 
+// AvoidPointerAssignment detects pointer assignments in top-level var declarations.
+// The AST-based value extraction expects struct literals, not pointers.
+//
+// Example:
+//
+//	// Bad - pointer assignment
+//	var MyConfig = &s3.Bucket_VersioningConfiguration{
+//	    Status: "Enabled",
+//	}
+//
+//	// Good - value assignment
+//	var MyConfig = s3.Bucket_VersioningConfiguration{
+//	    Status: "Enabled",
+//	}
+type AvoidPointerAssignment struct{}
+
+func (r AvoidPointerAssignment) ID() string { return "WAW017" }
+func (r AvoidPointerAssignment) Description() string {
+	return "Avoid pointer assignments (&Type{}) - use value types"
+}
+
+func (r AvoidPointerAssignment) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	for _, decl := range file.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.VAR {
+			continue
+		}
+
+		for _, spec := range genDecl.Specs {
+			valueSpec, ok := spec.(*ast.ValueSpec)
+			if !ok {
+				continue
+			}
+
+			for i, value := range valueSpec.Values {
+				// Check if value is a unary expression with & operator
+				unary, ok := value.(*ast.UnaryExpr)
+				if !ok || unary.Op != token.AND {
+					continue
+				}
+
+				// Check if operand is a composite literal (struct)
+				comp, ok := unary.X.(*ast.CompositeLit)
+				if !ok {
+					continue
+				}
+
+				// Get the type name for the message
+				typeName := "struct"
+				switch t := comp.Type.(type) {
+				case *ast.SelectorExpr:
+					typeName = t.Sel.Name
+				case *ast.Ident:
+					typeName = t.Name
+				}
+
+				// Get variable name
+				varName := "_"
+				if i < len(valueSpec.Names) {
+					varName = valueSpec.Names[i].Name
+				}
+
+				pos := fset.Position(unary.Pos())
+				issues = append(issues, Issue{
+					RuleID:     r.ID(),
+					Message:    fmt.Sprintf("Avoid pointer assignment for %s - use value type instead of &%s{}", varName, typeName),
+					Suggestion: fmt.Sprintf("var %s = %s{...} (remove &)", varName, typeName),
+					File:       pos.Filename,
+					Line:       pos.Line,
+					Column:     pos.Column,
+					Severity:   "error",
+				})
+			}
+		}
+	}
+
+	return issues
+}
+
 // AllRules returns all available lint rules.
 func AllRules() []Rule {
 	return []Rule{
@@ -1707,5 +1789,6 @@ func AllRules() []Rule {
 		UnusedIntrinsicsImport{},
 		AvoidExplicitRef{},
 		AvoidExplicitGetAtt{},
+		AvoidPointerAssignment{},
 	}
 }
