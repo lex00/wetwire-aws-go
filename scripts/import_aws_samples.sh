@@ -347,12 +347,6 @@ for template in "${TEMPLATES[@]}"; do
     if error_output=$("$PROJECT_ROOT/wetwire-aws" import "$template" -o "$pkg_output" 2>&1); then
         IMPORT_OK=$((IMPORT_OK + 1))
 
-        # Add replace directive for local development and tidy
-        if [ -f "$pkg_output/go.mod" ]; then
-            sed -i '' 's|// replace github.com/lex00/wetwire/go/wetwire-aws => ../path/to/wetwire-aws|replace github.com/lex00/wetwire/go/wetwire-aws => ../../..|' "$pkg_output/go.mod"
-            (cd "$pkg_output" && "$GO_BIN" mod tidy 2>/dev/null) || true
-        fi
-
         if [ "$VERBOSE" = "true" ]; then
             success "Imported: $template_name"
         fi
