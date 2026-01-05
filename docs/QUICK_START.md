@@ -194,7 +194,7 @@ import (
 
 var MyFunction = lambda.Function{
     Runtime:       lambda.RuntimePython312,    // Not "python3.12"
-    Architectures: List(lambda.ArchitectureArm64),
+    Architectures: []any{lambda.ArchitectureArm64},
 }
 
 // Flat key schema - extracted from inline slice
@@ -210,8 +210,8 @@ var MyTablePKAttr = dynamodb.AttributeDefinition{
 }
 
 var MyTable = dynamodb.Table{
-    KeySchema:            List(MyTablePK),
-    AttributeDefinitions: List(MyTablePKAttr),
+    KeySchema:            []any{MyTablePK},
+    AttributeDefinitions: []any{MyTablePKAttr},
 }
 ```
 
