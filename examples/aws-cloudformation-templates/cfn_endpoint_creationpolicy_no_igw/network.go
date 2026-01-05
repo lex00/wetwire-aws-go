@@ -22,22 +22,18 @@ var PrivateSubnet2 = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var EndpointSGTagName = Tag{
+var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable2,
+	SubnetId: PrivateSubnet2,
+}
+
+var PrivateRouteTable2TagName = Tag{
 	Key: "Name",
-	Value: "EndpointSG",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
 }
 
-var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
-	CidrIp: "0.0.0.0/0",
-	FromPort: 443,
-	IpProtocol: "tcp",
-	ToPort: 443,
-}
-
-var EndpointSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic into CloudFormation Endpoint",
-	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPortN443),
-	Tags: []any{EndpointSGTagName},
+var PrivateRouteTable2 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable2TagName},
 	VpcId: VPC,
 }
 
@@ -60,35 +56,31 @@ var PrivateSG = ec2.SecurityGroup{
 	VpcId: VPC,
 }
 
-var VPCTagName = Tag{
-	Key: "Name",
-	Value: EnvironmentName,
-}
-
-var VPC = ec2.VPC{
-	CidrBlock: VpcCIDR,
-	EnableDnsHostnames: true,
-	EnableDnsSupport: true,
-	Tags: []any{VPCTagName},
-}
-
-var PrivateRouteTable1TagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ1)"},
-}
-
-var PrivateRouteTable1 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable1TagName},
+var CfnEndpoint = ec2.VPCEndpoint{
+	PrivateDnsEnabled: true,
+	SecurityGroupIds: []any{EndpointSG},
+	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.cloudformation"},
+	SubnetIds: []any{PrivateSubnet1, PrivateSubnet2},
+	VpcEndpointType: "Interface",
 	VpcId: VPC,
 }
 
-var PrivateRouteTable2TagName = Tag{
+var EndpointSGTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+	Value: "EndpointSG",
 }
 
-var PrivateRouteTable2 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable2TagName},
+var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
+	CidrIp: "0.0.0.0/0",
+	FromPort: 443,
+	IpProtocol: "tcp",
+	ToPort: 443,
+}
+
+var EndpointSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic into CloudFormation Endpoint",
+	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPortN443),
+	Tags: []any{EndpointSGTagName},
 	VpcId: VPC,
 }
 
@@ -105,21 +97,29 @@ var PrivateSubnet1 = ec2.Subnet{
 	VpcId: VPC,
 }
 
+var PrivateRouteTable1TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ1)"},
+}
+
+var PrivateRouteTable1 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable1TagName},
+	VpcId: VPC,
+}
+
 var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	RouteTableId: PrivateRouteTable1,
 	SubnetId: PrivateSubnet1,
 }
 
-var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable2,
-	SubnetId: PrivateSubnet2,
+var VPCTagName = Tag{
+	Key: "Name",
+	Value: EnvironmentName,
 }
 
-var CfnEndpoint = ec2.VPCEndpoint{
-	PrivateDnsEnabled: true,
-	SecurityGroupIds: []any{EndpointSG},
-	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.cloudformation"},
-	SubnetIds: []any{PrivateSubnet1, PrivateSubnet2},
-	VpcEndpointType: "Interface",
-	VpcId: VPC,
+var VPC = ec2.VPC{
+	CidrBlock: VpcCIDR,
+	EnableDnsHostnames: true,
+	EnableDnsSupport: true,
+	Tags: []any{VPCTagName},
 }

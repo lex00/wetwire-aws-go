@@ -134,44 +134,30 @@ var PrivateLoadBalancerListener = elasticloadbalancingv2.Listener{
 	Protocol: enums.Elbv2ProtocolEnumHttp,
 }
 
+var PrivateRouteOne = ec2.Route{
+	DestinationCidrBlock: "0.0.0.0/0",
+	NatGatewayId: NatGatewayOne,
+	RouteTableId: PrivateRouteTableOne,
+}
+
+var PrivateLoadBalancerIngressFromECS = ec2.SecurityGroupIngress{
+	Description: "Only accept traffic from a container in the container host security group",
+	GroupId: PrivateLoadBalancerSG,
+	IpProtocol: -1,
+	SourceSecurityGroupId: EcsHostSecurityGroup,
+}
+
+var PrivateRouteTwo = ec2.Route{
+	DestinationCidrBlock: "0.0.0.0/0",
+	NatGatewayId: NatGatewayTwo,
+	RouteTableId: PrivateRouteTableTwo,
+}
+
 var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
 	Description: "Ingress from other containers in the same security group",
 	GroupId: EcsHostSecurityGroup,
 	IpProtocol: -1,
 	SourceSecurityGroupId: EcsHostSecurityGroup,
-}
-
-var PrivateSubnetTwo = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PrivateTwo", "CIDR"},
-	VpcId: VPC,
-}
-
-var PrivateLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: "30",
-}
-
-var PrivateLoadBalancer = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(PrivateLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse),
-	Scheme: "internal",
-	SecurityGroups: []any{PrivateLoadBalancerSG},
-	Subnets: []any{PrivateSubnetOne, PrivateSubnetTwo},
-}
-
-var PrivateRouteTableOneAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTableOne,
-	SubnetId: PrivateSubnetOne,
-}
-
-var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnetOne,
-}
-
-var EcsHostSecurityGroup = ec2.SecurityGroup{
-	GroupDescription: "Access to the ECS hosts that run containers",
-	VpcId: VPC,
 }
 
 var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
@@ -181,32 +167,21 @@ var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
 	SourceSecurityGroupId: PublicLoadBalancerSG,
 }
 
-var NatGatewayOne = ec2.NatGateway{
-	AllocationId: NatGatewayOneAttachment.AllocationId,
+var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PublicRouteTable,
 	SubnetId: PublicSubnetOne,
 }
 
-var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: "30",
+var EcsSecurityGroupIngressFromPrivateALB = ec2.SecurityGroupIngress{
+	Description: "Ingress from the private ALB",
+	GroupId: EcsHostSecurityGroup,
+	IpProtocol: -1,
+	SourceSecurityGroupId: PrivateLoadBalancerSG,
 }
 
-var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse),
-	Scheme: "internet-facing",
-	SecurityGroups: []any{PublicLoadBalancerSG},
-	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
-}
-
-var NatGatewayTwo = ec2.NatGateway{
-	AllocationId: NatGatewayTwoAttachment.AllocationId,
-	SubnetId: PublicSubnetTwo,
-}
-
-var PublicSubnetOne = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicOne", "CIDR"},
-	MapPublicIpOnLaunch: true,
+var PrivateSubnetTwo = ec2.Subnet{
+	AvailabilityZone: Select{1, GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PrivateTwo", "CIDR"},
 	VpcId: VPC,
 }
 
@@ -227,36 +202,22 @@ var PublicLoadBalancerListener = elasticloadbalancingv2.Listener{
 	Protocol: enums.Elbv2ProtocolEnumHttp,
 }
 
-var PublicSubnetTwo = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
-	MapPublicIpOnLaunch: true,
-	VpcId: VPC,
-}
-
 var PrivateSubnetOne = ec2.Subnet{
 	AvailabilityZone: Select{0, GetAZs{}},
 	CidrBlock: FindInMap{"SubnetConfig", "PrivateOne", "CIDR"},
 	VpcId: VPC,
 }
 
-var PrivateRouteTwo = ec2.Route{
-	DestinationCidrBlock: "0.0.0.0/0",
-	NatGatewayId: NatGatewayTwo,
-	RouteTableId: PrivateRouteTableTwo,
+var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: "30",
 }
 
-var PrivateRouteOne = ec2.Route{
-	DestinationCidrBlock: "0.0.0.0/0",
-	NatGatewayId: NatGatewayOne,
-	RouteTableId: PrivateRouteTableOne,
-}
-
-var PrivateLoadBalancerIngressFromECS = ec2.SecurityGroupIngress{
-	Description: "Only accept traffic from a container in the container host security group",
-	GroupId: PrivateLoadBalancerSG,
-	IpProtocol: -1,
-	SourceSecurityGroupId: EcsHostSecurityGroup,
+var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: List(PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse),
+	Scheme: "internet-facing",
+	SecurityGroups: []any{PublicLoadBalancerSG},
+	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
 }
 
 var PublicSubnetTwoRouteTableAssociation = ec2.SubnetRouteTableAssociation{
@@ -264,9 +225,48 @@ var PublicSubnetTwoRouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	SubnetId: PublicSubnetTwo,
 }
 
-var EcsSecurityGroupIngressFromPrivateALB = ec2.SecurityGroupIngress{
-	Description: "Ingress from the private ALB",
-	GroupId: EcsHostSecurityGroup,
-	IpProtocol: -1,
-	SourceSecurityGroupId: PrivateLoadBalancerSG,
+var PublicSubnetOne = ec2.Subnet{
+	AvailabilityZone: Select{0, GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicOne", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
+}
+
+var PublicSubnetTwo = ec2.Subnet{
+	AvailabilityZone: Select{1, GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
+}
+
+var NatGatewayTwo = ec2.NatGateway{
+	AllocationId: NatGatewayTwoAttachment.AllocationId,
+	SubnetId: PublicSubnetTwo,
+}
+
+var PrivateRouteTableOneAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTableOne,
+	SubnetId: PrivateSubnetOne,
+}
+
+var NatGatewayOne = ec2.NatGateway{
+	AllocationId: NatGatewayOneAttachment.AllocationId,
+	SubnetId: PublicSubnetOne,
+}
+
+var EcsHostSecurityGroup = ec2.SecurityGroup{
+	GroupDescription: "Access to the ECS hosts that run containers",
+	VpcId: VPC,
+}
+
+var PrivateLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: "30",
+}
+
+var PrivateLoadBalancer = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: List(PrivateLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse),
+	Scheme: "internal",
+	SecurityGroups: []any{PrivateLoadBalancerSG},
+	Subnets: []any{PrivateSubnetOne, PrivateSubnetTwo},
 }

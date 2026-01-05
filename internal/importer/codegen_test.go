@@ -490,12 +490,17 @@ Mappings:
 	if code, ok := files["main.go"]; ok {
 		// If intrinsics is imported, there should be usage of it
 		if strings.Contains(code, `wetwire-aws-go/intrinsics`) {
-			// Verify there's actual usage (Sub, Ref, etc.)
+			// Verify there's actual usage (Sub, List, Param, AWS_*, etc.)
+			// Note: Ref{} and GetAtt{} should NOT be generated (style violation)
 			hasUsage := strings.Contains(code, "Sub{") ||
-				strings.Contains(code, "Ref{") ||
+				strings.Contains(code, "List(") ||
+				strings.Contains(code, "Param(") ||
 				strings.Contains(code, "AWS_")
 			assert.True(t, hasUsage, "If intrinsics is imported, it should be used")
 		}
+		// Verify we never generate explicit Ref{} or GetAtt{} (style violations)
+		assert.False(t, strings.Contains(code, `Ref{"`), "Should not generate Ref{} - use direct variable refs")
+		assert.False(t, strings.Contains(code, `GetAtt{"`), "Should not generate GetAtt{} - use Resource.Attr")
 	}
 }
 

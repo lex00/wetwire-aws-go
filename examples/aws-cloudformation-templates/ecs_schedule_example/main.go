@@ -9,20 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/applicationautoscaling"
 )
 
-var ServiceScalingTarget = applicationautoscaling.ScalableTarget{
-	MaxCapacity: 2,
-	MinCapacity: 1,
-	ResourceId: Join{"", []any{
-	"service/",
-	ECSCluster,
-	"/",
-	Service.Name,
-}},
-	RoleARN: AutoscalingRole.Arn,
-	ScalableDimension: "ecs:service:DesiredCount",
-	ServiceNamespace: "ecs",
-}
-
 var ServiceScalingPolicyStepScalingPolicyConfigurationStepAdjustment1 = applicationautoscaling.ScalingPolicy_StepAdjustment{
 	MetricIntervalLowerBound: 0,
 	ScalingAdjustment: 200,
@@ -40,4 +26,18 @@ var ServiceScalingPolicy = applicationautoscaling.ScalingPolicy{
 	PolicyType: "StepScaling",
 	ScalingTargetId: ServiceScalingTarget,
 	StepScalingPolicyConfiguration: ServiceScalingPolicyStepScalingPolicyConfiguration,
+}
+
+var ServiceScalingTarget = applicationautoscaling.ScalableTarget{
+	MaxCapacity: 2,
+	MinCapacity: 1,
+	ResourceId: Join{"", []any{
+	"service/",
+	ECSCluster,
+	"/",
+	Service.Name,
+}},
+	RoleARN: AutoscalingRole.Arn,
+	ScalableDimension: "ecs:service:DesiredCount",
+	ServiceNamespace: "ecs",
 }

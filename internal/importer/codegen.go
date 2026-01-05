@@ -1762,9 +1762,9 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 			ctx.usedParameters[target] = true
 			return target
 		}
-		// Unknown reference - use inline Ref (needs import)
-		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-		return fmt.Sprintf("Ref{%q}", target)
+		// Unknown reference - use bare variable name (let Go compiler catch undefined)
+		// This avoids generating Ref{} which violates style guidelines
+		return target
 
 	case IntrinsicGetAtt:
 		var logicalID, attr string
@@ -1780,13 +1780,10 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				attr = fmt.Sprintf("%v", args[1])
 			}
 		}
-		// Check if it's a known resource - use attribute access (no import needed)
-		if _, ok := ctx.template.Resources[logicalID]; ok {
-			return fmt.Sprintf("%s.%s", logicalID, attr)
-		}
-		// Unknown resource - needs import
-		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-		return fmt.Sprintf("GetAtt{%q, %q}", logicalID, attr)
+		// Use attribute access pattern - Resource.Attr
+		// Even for unknown resources, use this pattern (cross-file references)
+		// This avoids generating GetAtt{} which violates style guidelines
+		return fmt.Sprintf("%s.%s", logicalID, attr)
 
 	case IntrinsicSub:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
@@ -1946,7 +1943,9 @@ func pseudoParameterToGo(ctx *codegenContext, name string) string {
 	case "AWS::NotificationARNs":
 		return "AWS_NOTIFICATION_ARNS"
 	default:
-		return fmt.Sprintf("Ref{%q}", name)
+		// Unknown pseudo-parameter - use bare name (likely a parameter or resource)
+		// This avoids generating Ref{} which violates style guidelines
+		return name
 	}
 }
 

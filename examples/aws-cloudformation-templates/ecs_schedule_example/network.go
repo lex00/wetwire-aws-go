@@ -53,6 +53,18 @@ var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
 	ToPort: "61000",
 }
 
+var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
+	TargetGroupArn: ECSTG,
+	Type_: "forward",
+}
+
+var ALBListener = elasticloadbalancingv2.Listener{
+	DefaultActions: List(ALBListenerDefaultActionForward),
+	LoadBalancerArn: ECSALB,
+	Port: "80",
+	Protocol: enums.Elbv2ProtocolEnumHttp,
+}
+
 var ECSALBListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
 	Field: "path-pattern",
 	Values: []any{"/"},
@@ -81,16 +93,4 @@ var ECSALB = elasticloadbalancingv2.LoadBalancer{
 	Scheme: "internet-facing",
 	SecurityGroups: []any{EcsSecurityGroup},
 	Subnets: SubnetId,
-}
-
-var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
-	TargetGroupArn: ECSTG,
-	Type_: "forward",
-}
-
-var ALBListener = elasticloadbalancingv2.Listener{
-	DefaultActions: List(ALBListenerDefaultActionForward),
-	LoadBalancerArn: ECSALB,
-	Port: "80",
-	Protocol: enums.Elbv2ProtocolEnumHttp,
 }
