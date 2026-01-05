@@ -45,12 +45,6 @@ var JwtResourceOptions = apigateway.Method{
 	RestApiId: RestApi,
 }
 
-var TestResourceResource = apigateway.Resource{
-	ParentId: RestApiRootResourceId,
-	PathPart: "test",
-	RestApiId: RestApi,
-}
-
 var TestResourceOptionsIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
 	Type_: "AWS_PROXY",
@@ -80,6 +74,18 @@ var TestResourceGet = apigateway.Method{
 	RestApiId: RestApi,
 }
 
+var TestResourceResource = apigateway.Resource{
+	ParentId: RestApiRootResourceId,
+	PathPart: "test",
+	RestApiId: RestApi,
+}
+
+var JwtResourceResource = apigateway.Resource{
+	ParentId: RestApiRootResourceId,
+	PathPart: "jwt",
+	RestApiId: RestApi,
+}
+
 var JwtResourceGetIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
 	Type_: "AWS_PROXY",
@@ -92,11 +98,5 @@ var JwtResourceGet = apigateway.Method{
 	HttpMethod: "GET",
 	Integration: &JwtResourceGetIntegration,
 	ResourceId: JwtResourceResource,
-	RestApiId: RestApi,
-}
-
-var JwtResourceResource = apigateway.Resource{
-	ParentId: RestApiRootResourceId,
-	PathPart: "jwt",
 	RestApiId: RestApi,
 }

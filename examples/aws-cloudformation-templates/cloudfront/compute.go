@@ -42,7 +42,39 @@ var EC2Instance = ec2.Instance{
 }
 
 var LambdaEdgeFunctionCode = lambda.Function_Code{
-	ZipFile: "'use strict';\n\n exports.handler = (event, context, callback) => {\n    console.log('Adding additional headers to CloudFront response.');\n\n    const response = event.Records[0].cf.response;\n    response.headers['strict-transport-security'] = [{\n    key: 'Strict-Transport-Security',\n    value: 'max-age=86400; includeSubdomains; preload',\n    }];\n    response.headers['x-content-type-options'] = [{\n    key: 'X-Content-Type-Options',\n    value: 'nosniff',\n    }];\n    response.headers['x-frame-options'] = [{\n        key:   'X-Frame-Options',\n        value: \"DENY\"\n    }];\n    response.headers['content-security-policy'] = [{\n        key:   'Content-Security-Policy',\n        value: \"default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'\"\n    }];\n    response.headers['x-xss-protection'] = [{\n        key:   'X-XSS-Protection',\n        value: \"1; mode=block\"\n    }];\n    response.headers['referrer-policy'] = [{\n        key:   'Referrer-Policy',\n        value: \"same-origin\"\n    }];\n    callback(null, response);\n  };\n",
+	ZipFile: `'use strict';
+
+ exports.handler = (event, context, callback) => {
+    console.log('Adding additional headers to CloudFront response.');
+
+    const response = event.Records[0].cf.response;
+    response.headers['strict-transport-security'] = [{
+    key: 'Strict-Transport-Security',
+    value: 'max-age=86400; includeSubdomains; preload',
+    }];
+    response.headers['x-content-type-options'] = [{
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+    }];
+    response.headers['x-frame-options'] = [{
+        key:   'X-Frame-Options',
+        value: "DENY"
+    }];
+    response.headers['content-security-policy'] = [{
+        key:   'Content-Security-Policy',
+        value: "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'"
+    }];
+    response.headers['x-xss-protection'] = [{
+        key:   'X-XSS-Protection',
+        value: "1; mode=block"
+    }];
+    response.headers['referrer-policy'] = [{
+        key:   'Referrer-Policy',
+        value: "same-origin"
+    }];
+    callback(null, response);
+  };
+`,
 }
 
 var LambdaEdgeFunction = lambda.Function{

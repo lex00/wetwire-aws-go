@@ -52,7 +52,14 @@ var ApiMethodMethodResponse1 = apigateway.Method_MethodResponse{
 var ApiMethodIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
 	IntegrationResponses: []any{ApiMethodIntegrationIntegrationResponse1},
-	RequestTemplates: Json{"application/json": "#set($inputRoot = $input.path('$'))\n    {\n      \"city\": \"$input.params('city')\",\n      \"time\": \"$input.params('time')\",\n      \"day\":  \"$input.params('day')\",\n      \"name\": \"$inputRoot.callerName\"\n    }\n"},
+	RequestTemplates: Json{"application/json": `#set($inputRoot = $input.path('$'))
+    {
+      "city": "$input.params('city')",
+      "time": "$input.params('time')",
+      "day":  "$input.params('day')",
+      "name": "$inputRoot.callerName"
+    }
+`},
 	TimeoutInMillis: ApigatewayTimeout,
 	Type_: "AWS",
 	Uri: Join{Delimiter: "", Values: []any{

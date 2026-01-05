@@ -11,7 +11,11 @@ import (
 )
 
 var S3TriggerLambdaFunctionCode = lambda.Function_Code{
-	ZipFile: "import json\ndef lambda_handler(event,context):\n    print(event)\n    return \"Hello... This is a test S3 trigger Lambda Function\"\n",
+	ZipFile: `import json
+def lambda_handler(event,context):
+    print(event)
+    return "Hello... This is a test S3 trigger Lambda Function"
+`,
 }
 
 var S3TriggerLambdaFunction = lambda.Function{

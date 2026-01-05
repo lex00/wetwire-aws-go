@@ -15,7 +15,15 @@ var LambdaFunctionEnvironment = lambda.Function_Environment{
 }
 
 var LambdaFunctionCode = lambda.Function_Code{
-	ZipFile: "import json\n\ndef lambda_handler(event, context):\n    print(json.dumps(event))\n    return {\n        'statusCode': 200,\n        'body': json.dumps('Hello from Lambda!')\n    }\n",
+	ZipFile: `import json
+
+def lambda_handler(event, context):
+    print(json.dumps(event))
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }
+`,
 }
 
 var LambdaFunction = lambda.Function{

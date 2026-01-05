@@ -11,7 +11,8 @@ import (
 )
 
 var MyLambdaCode = lambda.Function_Code{
-	ZipFile: "exports.handler = async (event) => { console.log(event); return {'statusCode': 200, 'body': \"OK\"}; }\n",
+	ZipFile: `exports.handler = async (event) => { console.log(event); return {'statusCode': 200, 'body': "OK"}; }
+`,
 }
 
 var MyLambda = lambda.Function{

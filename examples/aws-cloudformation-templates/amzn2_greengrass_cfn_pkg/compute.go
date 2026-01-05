@@ -12,7 +12,108 @@ import (
 )
 
 var CreateThingFunctionCode = lambda.Function_Code{
-	ZipFile: "import sys\nimport cfnresponse\nimport boto3\nfrom botocore.exceptions import ClientError\nimport json\nimport logging\nlogger = logging.getLogger()\nlogger.setLevel(logging.INFO)\n\npolicyDocument = {\n    'Version': '2012-10-17',\n    'Statement': [\n        {\n            'Effect': 'Allow',\n            'Action': 'iot:*',\n            'Resource': '*'\n        },\n        {\n            'Effect': 'Allow',\n            'Action': 'greengrass:*',\n            'Resource': '*'\n        }\n    ]\n}\n\n\ndef handler(event, context):\n    responseData = {}\n    try:\n        logger.info('Received event: {}'.format(json.dumps(event)))\n        result = cfnresponse.FAILED\n        client = boto3.client('iot')\n        thingName=event['ResourceProperties']['ThingName']\n        if event['RequestType'] == 'Create':\n            thing = client.create_thing(\n                thingName=thingName\n            )\n            response = client.create_keys_and_certificate(\n                setAsActive=True\n            )\n            certId = response['certificateId']\n            certArn = response['certificateArn']\n            certPem = response['certificatePem']\n            privateKey = response['keyPair']['PrivateKey']\n            client.create_policy(\n                policyName='{}-full-access'.format(thingName),\n                policyDocument=json.dumps(policyDocument)\n            )\n            response = client.attach_policy(\n                policyName='{}-full-access'.format(thingName),\n                target=certArn\n            )\n            response = client.attach_thing_principal(\n                thingName=thingName,\n                principal=certArn,\n            )\n            logger.info('Created thing: %s, cert: %s and policy: %s' % \n                (thingName, certId, '{}-full-access'.format(thingName)))\n            result = cfnresponse.SUCCESS\n            responseData['certificateId'] = certId\n            responseData['certificatePem'] = certPem\n            responseData['privateKey'] = privateKey\n            responseData['iotEndpoint'] = client.describe_endpoint(endpointType='iot:Data-ATS')['endpointAddress']\n        elif event['RequestType'] == 'Update':\n            logger.info('Updating thing: %s' % thingName)\n            result = cfnresponse.SUCCESS\n        elif event['RequestType'] == 'Delete':\n            logger.info('Deleting thing: %s and cert/policy' % thingName)\n            response = client.list_thing_principals(\n                thingName=thingName\n            )\n            for i in response['principals']:\n                response = client.detach_thing_principal(\n                    thingName=thingName,\n                    principal=i\n                )\n                response = client.detach_policy(\n                    policyName='{}-full-access'.format(thingName),\n                    target=i\n                )\n                response = client.update_certificate(\n                    certificateId=i.split('/')[-1],\n                    newStatus='INACTIVE'\n                )\n                response = client.delete_certificate(\n                    certificateId=i.split('/')[-1],\n                    forceDelete=True\n                )\n                response = client.delete_policy(\n                    policyName='{}-full-access'.format(thingName),\n                )\n                response = client.delete_thing(\n                    thingName=thingName\n                )\n            result = cfnresponse.SUCCESS\n    except ClientError as e:\n        logger.error('Error: {}'.format(e))\n        result = cfnresponse.FAILED\n    logger.info('Returning response of: {}, with result of: {}'.format(result, responseData))\n    sys.stdout.flush()\n    cfnresponse.send(event, context, result, responseData)\n",
+	ZipFile: `import sys
+import cfnresponse
+import boto3
+from botocore.exceptions import ClientError
+import json
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+policyDocument = {
+    'Version': '2012-10-17',
+    'Statement': [
+        {
+            'Effect': 'Allow',
+            'Action': 'iot:*',
+            'Resource': '*'
+        },
+        {
+            'Effect': 'Allow',
+            'Action': 'greengrass:*',
+            'Resource': '*'
+        }
+    ]
+}
+
+
+def handler(event, context):
+    responseData = {}
+    try:
+        logger.info('Received event: {}'.format(json.dumps(event)))
+        result = cfnresponse.FAILED
+        client = boto3.client('iot')
+        thingName=event['ResourceProperties']['ThingName']
+        if event['RequestType'] == 'Create':
+            thing = client.create_thing(
+                thingName=thingName
+            )
+            response = client.create_keys_and_certificate(
+                setAsActive=True
+            )
+            certId = response['certificateId']
+            certArn = response['certificateArn']
+            certPem = response['certificatePem']
+            privateKey = response['keyPair']['PrivateKey']
+            client.create_policy(
+                policyName='{}-full-access'.format(thingName),
+                policyDocument=json.dumps(policyDocument)
+            )
+            response = client.attach_policy(
+                policyName='{}-full-access'.format(thingName),
+                target=certArn
+            )
+            response = client.attach_thing_principal(
+                thingName=thingName,
+                principal=certArn,
+            )
+            logger.info('Created thing: %s, cert: %s and policy: %s' % 
+                (thingName, certId, '{}-full-access'.format(thingName)))
+            result = cfnresponse.SUCCESS
+            responseData['certificateId'] = certId
+            responseData['certificatePem'] = certPem
+            responseData['privateKey'] = privateKey
+            responseData['iotEndpoint'] = client.describe_endpoint(endpointType='iot:Data-ATS')['endpointAddress']
+        elif event['RequestType'] == 'Update':
+            logger.info('Updating thing: %s' % thingName)
+            result = cfnresponse.SUCCESS
+        elif event['RequestType'] == 'Delete':
+            logger.info('Deleting thing: %s and cert/policy' % thingName)
+            response = client.list_thing_principals(
+                thingName=thingName
+            )
+            for i in response['principals']:
+                response = client.detach_thing_principal(
+                    thingName=thingName,
+                    principal=i
+                )
+                response = client.detach_policy(
+                    policyName='{}-full-access'.format(thingName),
+                    target=i
+                )
+                response = client.update_certificate(
+                    certificateId=i.split('/')[-1],
+                    newStatus='INACTIVE'
+                )
+                response = client.delete_certificate(
+                    certificateId=i.split('/')[-1],
+                    forceDelete=True
+                )
+                response = client.delete_policy(
+                    policyName='{}-full-access'.format(thingName),
+                )
+                response = client.delete_thing(
+                    thingName=thingName
+                )
+            result = cfnresponse.SUCCESS
+    except ClientError as e:
+        logger.error('Error: {}'.format(e))
+        result = cfnresponse.FAILED
+    logger.info('Returning response of: {}, with result of: {}'.format(result, responseData))
+    sys.stdout.flush()
+    cfnresponse.send(event, context, result, responseData)
+`,
 }
 
 var CreateThingFunction = lambda.Function{
@@ -25,7 +126,35 @@ var CreateThingFunction = lambda.Function{
 }
 
 var GGSampleFunctionCode = lambda.Function_Code{
-	ZipFile: "import os\nfrom threading import Timer\nimport greengrasssdk\n\n\ncounter = 0\nclient = greengrasssdk.client('iot-data')\n\n\ndef telemetry():\n    '''Publish incrementing value to telemetry topic every 2 seconds'''\n    global counter\n    counter += 1\n    client.publish(\n        topic='{}/telem'.format(os.environ['CORE_NAME']),\n        payload='Example telemetry counter, value: {}'.format(counter)\n    )\n    Timer(5, telemetry).start()\n# Call telemetry() to start telemetry publish\ntelemetry()\n\n\ndef function_handler(event, context):\n    '''Echo message on /in topic to /out topic'''\n    client.publish(\n        topic='{}/out'.format(os.environ['CORE_NAME']),\n        payload=event\n    )\n",
+	ZipFile: `import os
+from threading import Timer
+import greengrasssdk
+
+
+counter = 0
+client = greengrasssdk.client('iot-data')
+
+
+def telemetry():
+    '''Publish incrementing value to telemetry topic every 2 seconds'''
+    global counter
+    counter += 1
+    client.publish(
+        topic='{}/telem'.format(os.environ['CORE_NAME']),
+        payload='Example telemetry counter, value: {}'.format(counter)
+    )
+    Timer(5, telemetry).start()
+# Call telemetry() to start telemetry publish
+telemetry()
+
+
+def function_handler(event, context):
+    '''Echo message on /in topic to /out topic'''
+    client.publish(
+        topic='{}/out'.format(os.environ['CORE_NAME']),
+        payload=event
+    )
+`,
 }
 
 var GGSampleFunction = lambda.Function{
@@ -50,7 +179,125 @@ var GroupDeploymentResetFunctionEnvironment = lambda.Function_Environment{
 }
 
 var GroupDeploymentResetFunctionCode = lambda.Function_Code{
-	ZipFile: "\"Group Deployment Reset Function\"\n\n# pylint: disable=line-too-long,logging-fstring-interpolation\n\nimport os\nimport sys\nimport json\nimport logging\nimport cfnresponse\nimport boto3\nfrom botocore.exceptions import ClientError\n\nlogger = logging.getLogger()\nlogger.setLevel(logging.INFO)\n\nsession = boto3.session.Session()\nregion = os.env[\"AWS_REGION\"]\npartition = session.get_partition_for_region(region)\nc = session.client(\"greengrass\")\niam = session.client(\"iam\")\nrole_name = f\"greengrass_cfn_{os.environ['STACK_NAME']}_ServiceRole\"\n\n\ndef find_group(thingName):\n    \"Find the group based on the name\"\n\n    response_auth = \"\"\n\n    response = c.list_groups()\n    for group in response[\"Groups\"]:\n        thingfound = False\n        group_version = c.get_group_version(\n            GroupId=group[\"Id\"], GroupVersionId=group[\"LatestVersion\"]\n        )\n\n        core_arn = group_version[\"Definition\"].get(\"CoreDefinitionVersionArn\", \"\")\n        if core_arn:\n            core_id = core_arn[\n                core_arn.index(\"/cores/\") + 7 : core_arn.index(\"/versions/\")\n            ]\n            core_version_id = core_arn[\n                core_arn.index(\"/versions/\") + 10 : len(core_arn)\n            ]\n            thingfound = False\n            response_core_version = c.get_core_definition_version(\n                CoreDefinitionId=core_id, CoreDefinitionVersionId=core_version_id\n            )\n            if \"Cores\" in response_core_version[\"Definition\"]:\n                for thing_arn in response_core_version[\"Definition\"][\"Cores\"]:\n                    if thingName == thing_arn[\"ThingArn\"].split(\"/\")[1]:\n                        thingfound = True\n                        break\n        if thingfound:\n            logger.info(f\"found thing: {thingName}, group id is: {group['Id']}\")\n            response_auth = group[\"Id\"]\n            return response_auth\n\n    return \"\"\n\n\ndef manage_greengrass_role(cmd):\n    \"Greengrass role\"\n\n    if cmd == \"CREATE\":\n        r = iam.create_role(\n            RoleName=role_name,\n            AssumeRolePolicyDocument='{\"Version\": \"2012-10-17\",\"Statement\": [{\"Effect\": \"Allow\",\"Principal\": {\"Service\": \"greengrass.amazonaws.com\"},\"Action\": \"sts:AssumeRole\"}]}',\n            Description=\"Role for CloudFormation blog post\",\n        )\n        role_arn = r[\"Role\"][\"Arn\"]\n        iam.attach_role_policy(\n            RoleName=role_name,\n            PolicyArn=f\"arn:{partition}:iam::policy/service-role/AWSGreengrassResourceAccessRolePolicy\",\n        )\n        c.associate_service_role_to_account(RoleArn=role_arn)\n        logger.info(f\"Created and associated role {role_name}\")\n    else:\n        try:\n            r = iam.get_role(RoleName=role_name)\n            role_arn = r[\"Role\"][\"Arn\"]\n            c.disassociate_service_role_from_account()\n            iam.delete_role(RoleName=role_name)\n            logger.info(f\"Disassociated and deleted role {role_name}\")\n        except ClientError:\n            return\n\n\ndef handler(event, context):\n    \"Lambda handler\"\n\n    responseData = {}\n    try:\n        logger.info(f\"Received event: {json.dumps(event)}\")\n        result = cfnresponse.FAILED\n        thingName = event[\"ResourceProperties\"][\"ThingName\"]\n        if event[\"RequestType\"] == \"Create\":\n            try:\n                c.get_service_role_for_account()\n                result = cfnresponse.SUCCESS\n            except ClientError:\n                manage_greengrass_role(\"CREATE\")\n                logger.info(\"Greengrass service role created\")\n                result = cfnresponse.SUCCESS\n        elif event[\"RequestType\"] == \"Delete\":\n            group_id = find_group(thingName)\n            logger.info(f\"Group id to delete: {group_id}\")\n            if group_id:\n                c.reset_deployments(Force=True, GroupId=group_id)\n                result = cfnresponse.SUCCESS\n                logger.info(\"Forced reset of Greengrass deployment\")\n                manage_greengrass_role(\"DELETE\")\n            else:\n                logger.error(f\"No group Id for thing: {thingName} found\")\n    except ClientError as e:\n        logger.error(f\"Error: {e}\")\n        result = cfnresponse.FAILED\n    logger.info(f\"Returning response of: {result}, with result of: {responseData}\")\n    sys.stdout.flush()\n    cfnresponse.send(event, context, result, responseData)",
+	ZipFile: `"Group Deployment Reset Function"
+
+# pylint: disable=line-too-long,logging-fstring-interpolation
+
+import os
+import sys
+import json
+import logging
+import cfnresponse
+import boto3
+from botocore.exceptions import ClientError
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+session = boto3.session.Session()
+region = os.env["AWS_REGION"]
+partition = session.get_partition_for_region(region)
+c = session.client("greengrass")
+iam = session.client("iam")
+role_name = f"greengrass_cfn_{os.environ['STACK_NAME']}_ServiceRole"
+
+
+def find_group(thingName):
+    "Find the group based on the name"
+
+    response_auth = ""
+
+    response = c.list_groups()
+    for group in response["Groups"]:
+        thingfound = False
+        group_version = c.get_group_version(
+            GroupId=group["Id"], GroupVersionId=group["LatestVersion"]
+        )
+
+        core_arn = group_version["Definition"].get("CoreDefinitionVersionArn", "")
+        if core_arn:
+            core_id = core_arn[
+                core_arn.index("/cores/") + 7 : core_arn.index("/versions/")
+            ]
+            core_version_id = core_arn[
+                core_arn.index("/versions/") + 10 : len(core_arn)
+            ]
+            thingfound = False
+            response_core_version = c.get_core_definition_version(
+                CoreDefinitionId=core_id, CoreDefinitionVersionId=core_version_id
+            )
+            if "Cores" in response_core_version["Definition"]:
+                for thing_arn in response_core_version["Definition"]["Cores"]:
+                    if thingName == thing_arn["ThingArn"].split("/")[1]:
+                        thingfound = True
+                        break
+        if thingfound:
+            logger.info(f"found thing: {thingName}, group id is: {group['Id']}")
+            response_auth = group["Id"]
+            return response_auth
+
+    return ""
+
+
+def manage_greengrass_role(cmd):
+    "Greengrass role"
+
+    if cmd == "CREATE":
+        r = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument='{"Version": "2012-10-17","Statement": [{"Effect": "Allow","Principal": {"Service": "greengrass.amazonaws.com"},"Action": "sts:AssumeRole"}]}',
+            Description="Role for CloudFormation blog post",
+        )
+        role_arn = r["Role"]["Arn"]
+        iam.attach_role_policy(
+            RoleName=role_name,
+            PolicyArn=f"arn:{partition}:iam::policy/service-role/AWSGreengrassResourceAccessRolePolicy",
+        )
+        c.associate_service_role_to_account(RoleArn=role_arn)
+        logger.info(f"Created and associated role {role_name}")
+    else:
+        try:
+            r = iam.get_role(RoleName=role_name)
+            role_arn = r["Role"]["Arn"]
+            c.disassociate_service_role_from_account()
+            iam.delete_role(RoleName=role_name)
+            logger.info(f"Disassociated and deleted role {role_name}")
+        except ClientError:
+            return
+
+
+def handler(event, context):
+    "Lambda handler"
+
+    responseData = {}
+    try:
+        logger.info(f"Received event: {json.dumps(event)}")
+        result = cfnresponse.FAILED
+        thingName = event["ResourceProperties"]["ThingName"]
+        if event["RequestType"] == "Create":
+            try:
+                c.get_service_role_for_account()
+                result = cfnresponse.SUCCESS
+            except ClientError:
+                manage_greengrass_role("CREATE")
+                logger.info("Greengrass service role created")
+                result = cfnresponse.SUCCESS
+        elif event["RequestType"] == "Delete":
+            group_id = find_group(thingName)
+            logger.info(f"Group id to delete: {group_id}")
+            if group_id:
+                c.reset_deployments(Force=True, GroupId=group_id)
+                result = cfnresponse.SUCCESS
+                logger.info("Forced reset of Greengrass deployment")
+                manage_greengrass_role("DELETE")
+            else:
+                logger.error(f"No group Id for thing: {thingName} found")
+    except ClientError as e:
+        logger.error(f"Error: {e}")
+        result = cfnresponse.FAILED
+    logger.info(f"Returning response of: {result}, with result of: {responseData}")
+    sys.stdout.flush()
+    cfnresponse.send(event, context, result, responseData)`,
 }
 
 var GroupDeploymentResetFunction = lambda.Function{
@@ -64,7 +311,63 @@ var GroupDeploymentResetFunction = lambda.Function{
 }
 
 var InstanceAZFunctionCode = lambda.Function_Code{
-	ZipFile: "import sys\nimport cfnresponse\nimport boto3\nfrom botocore.exceptions import ClientError\nimport json\nimport logging\nlogger = logging.getLogger()\nlogger.setLevel(logging.INFO)\n\nc = boto3.client('ec2')\n\n\ndef handler(event, context):\n    responseData = {}\n    try:\n        logger.info('Received event: {}'.format(json.dumps(event)))\n        result = cfnresponse.FAILED\n        if event['RequestType'] == 'Create':\n            r = c.describe_reserved_instances_offerings(\n                Filters=[\n                    {\n                        'Name': 'scope',\n                        'Values': [\n                            'Availability Zone',\n                        ]\n                    },\n                ],\n                IncludeMarketplace=False,\n                InstanceType='t3.micro',\n            )\n            x = r['ReservedInstancesOfferings']\n            while 'NextToken' in r:\n                r = c.describe_reserved_instances_offerings(\n                    Filters=[\n                        {\n                            'Name': 'scope',\n                            'Values': [\n                                'Availability Zone',\n                            ]\n                        },\n                    ],\n                    IncludeMarketplace=False,\n                    InstanceType='t3.micro',\n                    NextToken=r['NextToken']\n                )\n                x.extend(r['ReservedInstancesOfferings'])\n            responseData['AvailabilityZone'] = set(d['AvailabilityZone'] for d in x).pop()\n            result = cfnresponse.SUCCESS\n        else:\n            result = cfnresponse.SUCCESS\n    except ClientError as e:\n        logger.error('Error: {}'.format(e))\n        result = cfnresponse.FAILED\n    logger.info('Returning response of: %s, with result of: %s' % (result, responseData))\n    sys.stdout.flush()\n    cfnresponse.send(event, context, result, responseData)\n",
+	ZipFile: `import sys
+import cfnresponse
+import boto3
+from botocore.exceptions import ClientError
+import json
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+c = boto3.client('ec2')
+
+
+def handler(event, context):
+    responseData = {}
+    try:
+        logger.info('Received event: {}'.format(json.dumps(event)))
+        result = cfnresponse.FAILED
+        if event['RequestType'] == 'Create':
+            r = c.describe_reserved_instances_offerings(
+                Filters=[
+                    {
+                        'Name': 'scope',
+                        'Values': [
+                            'Availability Zone',
+                        ]
+                    },
+                ],
+                IncludeMarketplace=False,
+                InstanceType='t3.micro',
+            )
+            x = r['ReservedInstancesOfferings']
+            while 'NextToken' in r:
+                r = c.describe_reserved_instances_offerings(
+                    Filters=[
+                        {
+                            'Name': 'scope',
+                            'Values': [
+                                'Availability Zone',
+                            ]
+                        },
+                    ],
+                    IncludeMarketplace=False,
+                    InstanceType='t3.micro',
+                    NextToken=r['NextToken']
+                )
+                x.extend(r['ReservedInstancesOfferings'])
+            responseData['AvailabilityZone'] = set(d['AvailabilityZone'] for d in x).pop()
+            result = cfnresponse.SUCCESS
+        else:
+            result = cfnresponse.SUCCESS
+    except ClientError as e:
+        logger.error('Error: {}'.format(e))
+        result = cfnresponse.FAILED
+    logger.info('Returning response of: %s, with result of: %s' % (result, responseData))
+    sys.stdout.flush()
+    cfnresponse.send(event, context, result, responseData)
+`,
 }
 
 var InstanceAZFunction = lambda.Function{

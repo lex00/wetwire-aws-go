@@ -63,27 +63,40 @@ var KWOSInstance = ec2.Instance{
 	SubnetId: SubnetId,
 	Tags: []any{KWOSInstanceTagLaunchPlatform, KWOSInstanceTagLaunchUser, KWOSInstanceTagTestID, KWOSInstanceTagName, KWOSInstanceTagBudgetCode, KWOSInstanceTagTestTarget, KWOSInstanceTagAgentID, KWOSInstanceTagIsMaster, KWOSInstanceTagMasterID},
 	UserData: Base64{Join{Delimiter: "", Values: []any{
-	"#!/bin/bash\n",
-	"apt-get -y install python-pip\n",
-	"pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
-	"# Helper function\n",
-	"function error_exit\n",
-	"{\n",
+	`#!/bin/bash
+`,
+	`apt-get -y install python-pip
+`,
+	`pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+`,
+	`# Helper function
+`,
+	`function error_exit
+`,
+	`{
+`,
 	"  /usr/local/bin/cfn-signal -e 1 -r \"$1\" '",
 	KWOSWaitHandle,
-	"'\n",
-	"  exit 1\n",
-	"}\n",
-	"# Install the basic system configuration\n",
+	`'
+`,
+	`  exit 1
+`,
+	`}
+`,
+	`# Install the basic system configuration
+`,
 	"/usr/local/bin/cfn-init -s ",
 	AWS_STACK_ID,
 	" -r KWOSInstance ",
 	"         --region ",
 	AWS_REGION,
-	" || error_exit 'Failed to run cfn-init'\n",
-	"# All done so signal success\n",
+	` || error_exit 'Failed to run cfn-init'
+`,
+	`# All done so signal success
+`,
 	"/usr/local/bin/cfn-signal -e 0 -r \"KWOS setup complete\" '",
 	KWOSWaitHandle,
-	"'\n",
+	`'
+`,
 }}},
 }

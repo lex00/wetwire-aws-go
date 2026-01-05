@@ -47,5 +47,85 @@ var TargetAccountLogging = cloudformation.StackSet{
 	PermissionModel: "SERVICE_MANAGED",
 	StackInstancesGroup: []any{TargetAccountLoggingStackInstancesGroup1},
 	StackSetName: "log-setup",
-	TemplateBody: "AWSTemplateFormatVersion: \"2010-09-09\"\n\nDescription: EventBridge Rule to send CloudFormation events to a central EventBus\n\nParameters:\n  CentralEventBusArn:\n    Type: String\n  KmsKeyId:\n    Type: String\n    Description: 'The ID of an AWS Key Management Service (KMS) for Amazon SQS, or a custom KMS. To use the AWS managed KMS for Amazon SQS, specify a (default) alias ARN, alias name (for example alias/aws/sqs), key ARN, or key ID'\n    Default: alias/aws/sqs\n\nResources:\n  CloudFormationEventRule:\n    Type: AWS::Events::Rule\n    Metadata:\n      Comment: Send all cloudformation events to the central event bus\n    Properties:\n      Name: CloudFormationEventRule\n      EventBusName: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default\n      EventPattern:\n        source:\n          - aws.cloudformation\n      State: ENABLED\n      Targets:\n        - Arn: !Ref CentralEventBusArn\n          RoleArn: !GetAtt EventBridgeRole.Arn\n          Id: CentralEventBus\n          DeadLetterConfig:\n            Arn: !GetAtt DeadLetterQueue.Arn\n\n  DeadLetterQueue:\n    Type: AWS::SQS::Queue\n    Properties:\n      QueueName: CloudFormation-Logs-DLQ\n      KmsMasterKeyId: !Ref KmsKeyId\n\n  DeadLetterQueuePolicy:\n    Type: AWS::SQS::QueuePolicy\n    Properties:\n      PolicyDocument:\n        Version: \"2012-10-17\"\n        Id: AllowEventBridgeToWriteLogs\n        Statement:\n          - Sid: AllowEventBridgeToWriteLogs\n            Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: sqs:SendMessage\n            Resource: !GetAtt DeadLetterQueue.Arn\n            Condition:\n              ArnLike:\n                aws:SourceArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/CloudFormationEventRule\n      Queues:\n        - !Ref DeadLetterQueue\n\n  EventBridgeRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Version: \"2012-10-17\"\n        Statement:\n          - Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: sts:AssumeRole\n\n  EventBridgeRolePolicy:\n    Type: AWS::IAM::RolePolicy\n    Metadata:\n      Comment: Allow CloudFormation events to be written to the default event bus in the target account\n    Properties:\n      PolicyName: EventBridgeRolePolicy\n      PolicyDocument:\n        Version: \"2012-10-17\"\n        Statement:\n          - Effect: Allow\n            Action: events:PutEvents\n            Resource: !Ref CentralEventBusArn\n      RoleName: !Ref EventBridgeRole\n",
+	TemplateBody: `AWSTemplateFormatVersion: "2010-09-09"
+
+Description: EventBridge Rule to send CloudFormation events to a central EventBus
+
+Parameters:
+  CentralEventBusArn:
+    Type: String
+  KmsKeyId:
+    Type: String
+    Description: 'The ID of an AWS Key Management Service (KMS) for Amazon SQS, or a custom KMS. To use the AWS managed KMS for Amazon SQS, specify a (default) alias ARN, alias name (for example alias/aws/sqs), key ARN, or key ID'
+    Default: alias/aws/sqs
+
+Resources:
+  CloudFormationEventRule:
+    Type: AWS::Events::Rule
+    Metadata:
+      Comment: Send all cloudformation events to the central event bus
+    Properties:
+      Name: CloudFormationEventRule
+      EventBusName: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
+      EventPattern:
+        source:
+          - aws.cloudformation
+      State: ENABLED
+      Targets:
+        - Arn: !Ref CentralEventBusArn
+          RoleArn: !GetAtt EventBridgeRole.Arn
+          Id: CentralEventBus
+          DeadLetterConfig:
+            Arn: !GetAtt DeadLetterQueue.Arn
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: CloudFormation-Logs-DLQ
+      KmsMasterKeyId: !Ref KmsKeyId
+
+  DeadLetterQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Id: AllowEventBridgeToWriteLogs
+        Statement:
+          - Sid: AllowEventBridgeToWriteLogs
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt DeadLetterQueue.Arn
+            Condition:
+              ArnLike:
+                aws:SourceArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/CloudFormationEventRule
+      Queues:
+        - !Ref DeadLetterQueue
+
+  EventBridgeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+
+  EventBridgeRolePolicy:
+    Type: AWS::IAM::RolePolicy
+    Metadata:
+      Comment: Allow CloudFormation events to be written to the default event bus in the target account
+    Properties:
+      PolicyName: EventBridgeRolePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: events:PutEvents
+            Resource: !Ref CentralEventBusArn
+      RoleName: !Ref EventBridgeRole
+`,
 }

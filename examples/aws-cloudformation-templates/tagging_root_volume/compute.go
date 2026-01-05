@@ -64,5 +64,15 @@ var WindowsInstance = ec2.Instance{
 	KeyName: KeyName,
 	SubnetId: SubnetId,
 	Tags: []any{WindowsInstanceTagName},
-	UserData: Base64{"<powershell>\n  $AWS_AVAIL_ZONE=(curl http://169.254.169.254/latest/meta-data/placement/availability-zone).Content\n  $AWS_REGION=$AWS_AVAIL_ZONE.Substring(0,$AWS_AVAIL_ZONE.length-1)\n  $AWS_INSTANCE_ID=(curl http://169.254.169.254/latest/meta-data/instance-id).Content\n  $ROOT_VOLUME_IDS=((Get-EC2Instance -Region $AWS_REGION -InstanceId $AWS_INSTANCE_ID).Instances.BlockDeviceMappings | where-object DeviceName -match '/dev/sda1').Ebs.VolumeId\n  $tag = New-Object Amazon.EC2.Model.Tag\n  $tag.key = \"MyRootTag\"\n  $tag.value = \"MyRootVolumesValue\"\n  New-EC2Tag -Resource $ROOT_VOLUME_IDS -Region $AWS_REGION -Tag $tag\n</powershell>\n"},
+	UserData: Base64{`<powershell>
+  $AWS_AVAIL_ZONE=(curl http://169.254.169.254/latest/meta-data/placement/availability-zone).Content
+  $AWS_REGION=$AWS_AVAIL_ZONE.Substring(0,$AWS_AVAIL_ZONE.length-1)
+  $AWS_INSTANCE_ID=(curl http://169.254.169.254/latest/meta-data/instance-id).Content
+  $ROOT_VOLUME_IDS=((Get-EC2Instance -Region $AWS_REGION -InstanceId $AWS_INSTANCE_ID).Instances.BlockDeviceMappings | where-object DeviceName -match '/dev/sda1').Ebs.VolumeId
+  $tag = New-Object Amazon.EC2.Model.Tag
+  $tag.key = "MyRootTag"
+  $tag.value = "MyRootVolumesValue"
+  New-EC2Tag -Resource $ROOT_VOLUME_IDS -Region $AWS_REGION -Tag $tag
+</powershell>
+`},
 }

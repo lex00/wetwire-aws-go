@@ -44,6 +44,14 @@ var EcsSecurityGroupSSHinbound = ec2.SecurityGroupIngress{
 	ToPort: "22",
 }
 
+var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
+	FromPort: "31000",
+	GroupId: EcsSecurityGroup,
+	IpProtocol: "tcp",
+	SourceSecurityGroupId: EcsSecurityGroup,
+	ToPort: "61000",
+}
+
 var ECSALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
 	Key: "idle_timeout.timeout_seconds",
 	Value: "30",
@@ -55,26 +63,6 @@ var ECSALB = elasticloadbalancingv2.LoadBalancer{
 	Scheme: "internet-facing",
 	SecurityGroups: []any{EcsSecurityGroup},
 	Subnets: SubnetId,
-}
-
-var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
-	TargetGroupArn: ECSTG,
-	Type_: "forward",
-}
-
-var ALBListener = elasticloadbalancingv2.Listener{
-	DefaultActions: []any{ALBListenerDefaultActionForward},
-	LoadBalancerArn: ECSALB,
-	Port: "80",
-	Protocol: enums.Elbv2ProtocolEnumHttp,
-}
-
-var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
-	FromPort: "31000",
-	GroupId: EcsSecurityGroup,
-	IpProtocol: "tcp",
-	SourceSecurityGroupId: EcsSecurityGroup,
-	ToPort: "61000",
 }
 
 var ECSALBListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
@@ -92,4 +80,16 @@ var ECSALBListenerRule = elasticloadbalancingv2.ListenerRule{
 	Conditions: []any{ECSALBListenerRuleCondition1},
 	ListenerArn: ALBListener,
 	Priority: 1,
+}
+
+var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
+	TargetGroupArn: ECSTG,
+	Type_: "forward",
+}
+
+var ALBListener = elasticloadbalancingv2.Listener{
+	DefaultActions: []any{ALBListenerDefaultActionForward},
+	LoadBalancerArn: ECSALB,
+	Port: "80",
+	Protocol: enums.Elbv2ProtocolEnumHttp,
 }

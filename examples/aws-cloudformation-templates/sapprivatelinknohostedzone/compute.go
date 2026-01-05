@@ -15,7 +15,34 @@ var ASCPrivateLinkLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
 }
 
 var ASCPrivateLinkLambdaFunctionCode = lambda.Function_Code{
-	ZipFile: "import boto3\nimport cfnresponse\nimport logging\ndef handler(event, context):\n  print('Receive event: {} and context: {}'.format(str(event), str(context)))\n  responseData = {}\n  eventType = event['RequestType'].strip()\n  props = event['ResourceProperties']\n  try:\n    if eventType in ('Create'):\n      match props['Action']:\n        case 'EnablePrivateDNS':\n          dnsClient = boto3.client('route53')\n          ec2Client = boto3.client('ec2')\n          serviceId = props['ServiceId']\n          domainName = props['DomainName']\n          ec2Client.modify_vpc_endpoint_service_configuration(ServiceId=serviceId, PrivateDnsName=domainName)\n          validationRecord = ec2Client.describe_vpc_endpoint_service_configurations(ServiceIds=[serviceId])['ServiceConfigurations'][0]['PrivateDnsNameConfiguration']\n          responseData['validationRecord'] = validationRecord\n        case _:\n          raise Exception('Unsupported action')\n    else:\n      print('Skip on resource UPDATE and DELETE')\n    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)\n  except Exception as e:\n    logging.exception(e)\n    cfnresponse.send(event, context, cfnresponse.FAILED, responseData)\n",
+	ZipFile: `import boto3
+import cfnresponse
+import logging
+def handler(event, context):
+  print('Receive event: {} and context: {}'.format(str(event), str(context)))
+  responseData = {}
+  eventType = event['RequestType'].strip()
+  props = event['ResourceProperties']
+  try:
+    if eventType in ('Create'):
+      match props['Action']:
+        case 'EnablePrivateDNS':
+          dnsClient = boto3.client('route53')
+          ec2Client = boto3.client('ec2')
+          serviceId = props['ServiceId']
+          domainName = props['DomainName']
+          ec2Client.modify_vpc_endpoint_service_configuration(ServiceId=serviceId, PrivateDnsName=domainName)
+          validationRecord = ec2Client.describe_vpc_endpoint_service_configurations(ServiceIds=[serviceId])['ServiceConfigurations'][0]['PrivateDnsNameConfiguration']
+          responseData['validationRecord'] = validationRecord
+        case _:
+          raise Exception('Unsupported action')
+    else:
+      print('Skip on resource UPDATE and DELETE')
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+  except Exception as e:
+    logging.exception(e)
+    cfnresponse.send(event, context, cfnresponse.FAILED, responseData)
+`,
 }
 
 var ASCPrivateLinkLambdaFunction = lambda.Function{

@@ -19,7 +19,39 @@ var Ec2Volume = ec2.Volume{
 }
 
 var VolumeAutoEnableIOComplianceCheckCode = lambda.Function_Code{
-	ZipFile: "var aws  = require('aws-sdk');\nvar config = new aws.ConfigService();\nvar ec2 = new aws.EC2();\nexports.handler = function(event, context) {\n    var compliance = evaluateCompliance(event, function(compliance, event) {\n        var configurationItem = JSON.parse(event.invokingEvent).configurationItem;\n        var putEvaluationsRequest = {\n            Evaluations: [{\n                ComplianceResourceType: configurationItem.resourceType,\n                ComplianceResourceId: configurationItem.resourceId,\n                ComplianceType: compliance,\n                OrderingTimestamp: configurationItem.configurationItemCaptureTime\n            }],\n            ResultToken: event.resultToken\n        };\n        config.putEvaluations(putEvaluationsRequest, function(err, data) {\n            if (err) context.fail(err);\n            else context.succeed(data);\n        });\n    });\n};\nfunction evaluateCompliance(event, doReturn) {\n    var configurationItem = JSON.parse(event.invokingEvent).configurationItem;\n    var status = configurationItem.configurationItemStatus;\n    if (configurationItem.resourceType !== 'AWS::EC2::Volume' || event.eventLeftScope || (status !== 'OK' && status !== 'ResourceDiscovered'))\n        doReturn('NOT_APPLICABLE', event);\n    else ec2.describeVolumeAttribute({VolumeId: configurationItem.resourceId, Attribute: 'autoEnableIO'}, function(err, data) {\n        if (err) context.fail(err);\n        else if (data.AutoEnableIO.Value) doReturn('COMPLIANT', event);\n        else doReturn('NON_COMPLIANT', event);\n    });\n}\n",
+	ZipFile: `var aws  = require('aws-sdk');
+var config = new aws.ConfigService();
+var ec2 = new aws.EC2();
+exports.handler = function(event, context) {
+    var compliance = evaluateCompliance(event, function(compliance, event) {
+        var configurationItem = JSON.parse(event.invokingEvent).configurationItem;
+        var putEvaluationsRequest = {
+            Evaluations: [{
+                ComplianceResourceType: configurationItem.resourceType,
+                ComplianceResourceId: configurationItem.resourceId,
+                ComplianceType: compliance,
+                OrderingTimestamp: configurationItem.configurationItemCaptureTime
+            }],
+            ResultToken: event.resultToken
+        };
+        config.putEvaluations(putEvaluationsRequest, function(err, data) {
+            if (err) context.fail(err);
+            else context.succeed(data);
+        });
+    });
+};
+function evaluateCompliance(event, doReturn) {
+    var configurationItem = JSON.parse(event.invokingEvent).configurationItem;
+    var status = configurationItem.configurationItemStatus;
+    if (configurationItem.resourceType !== 'AWS::EC2::Volume' || event.eventLeftScope || (status !== 'OK' && status !== 'ResourceDiscovered'))
+        doReturn('NOT_APPLICABLE', event);
+    else ec2.describeVolumeAttribute({VolumeId: configurationItem.resourceId, Attribute: 'autoEnableIO'}, function(err, data) {
+        if (err) context.fail(err);
+        else if (data.AutoEnableIO.Value) doReturn('COMPLIANT', event);
+        else doReturn('NON_COMPLIANT', event);
+    });
+}
+`,
 }
 
 var VolumeAutoEnableIOComplianceCheck = lambda.Function{
