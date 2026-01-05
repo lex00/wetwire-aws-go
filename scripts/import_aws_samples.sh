@@ -132,6 +132,9 @@ EXCLUDE_TEMPLATES=(
     # Macro test events (not CloudFormation templates)
     "CloudFormation/MacrosExamples/Count/event.json"
     "CloudFormation/MacrosExamples/Count/event_bad.json"
+    # SAM templates (use AWS::Serverless resources not in CloudFormation)
+    "CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml"
+    "CloudFormation/MacrosExamples/DatetimeNow/datetimenow.json"
 )
 
 cd "$PROJECT_ROOT"
