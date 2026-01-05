@@ -39,5 +39,5 @@ var LambdaIAMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var LambdaIAMRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaIAMRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(LambdaIAMRolePolicyRoot),
+	Policies: []any{LambdaIAMRolePolicyRoot},
 }

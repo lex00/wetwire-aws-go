@@ -13,7 +13,7 @@ import (
 
 var Ec2Volume = ec2.Volume{
 	AutoEnableIO: Ec2VolumeAutoEnableIO,
-	AvailabilityZone: Select{0, GetAZs{}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	Size: "5",
 	Tags: []any{},
 }

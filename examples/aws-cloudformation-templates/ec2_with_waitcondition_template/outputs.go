@@ -16,7 +16,7 @@ var InstanceIdOutput = Output{
 
 // WebsiteURLOutput - URL for newly created KWOS deploy stack
 var WebsiteURLOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"http://",
 	KWOSInstance.PublicDnsName,
 }},

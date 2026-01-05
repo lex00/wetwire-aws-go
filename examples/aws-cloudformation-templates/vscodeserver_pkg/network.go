@@ -105,8 +105,8 @@ var InstanceSecurityGroupSecurityGroupEgress1 = ec2.SecurityGroup_Egress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "vscode-server-isg",
-	SecurityGroupEgress: List(InstanceSecurityGroupSecurityGroupEgress1),
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN8080),
+	SecurityGroupEgress: []any{InstanceSecurityGroupSecurityGroupEgress1},
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN8080},
 	Tags: []any{InstanceSecurityGroupTagName},
 	VpcId: NetworkVPC,
 }
@@ -127,7 +127,7 @@ var NetworkPrivateSubnet1SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet1Subnet = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.128.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet1SubnetTagName},
@@ -155,7 +155,7 @@ var NetworkPrivateSubnet2SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet2Subnet = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.192.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet2SubnetTagName},
@@ -173,7 +173,7 @@ var NetworkPublicSubnet1TagName = Tag{
 }
 
 var NetworkPublicSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.0.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet1TagName},
@@ -224,7 +224,7 @@ var NetworkPublicSubnet2TagName = Tag{
 }
 
 var NetworkPublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.64.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet2TagName},
@@ -280,7 +280,7 @@ var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfro
 }
 
 var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: &CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: Server.PublicDnsName,
 	Id: Sub{String: "CloudFront-${AWS::StackName}"},
 }
@@ -314,11 +314,11 @@ var CloudFrontDistributionTagName = Tag{
 }
 
 var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
-	CacheBehaviors: List(CloudFrontDistributionDistributionConfigCacheBehavior1),
+	CacheBehaviors: []any{CloudFrontDistributionDistributionConfigCacheBehavior1},
 	DefaultCacheBehavior: CloudFrontDistributionDistributionConfigDefaultCacheBehavior,
 	Enabled: true,
 	HttpVersion: "http2",
-	Origins: List(CloudFrontDistributionDistributionConfigOrigin1),
+	Origins: []any{CloudFrontDistributionDistributionConfigOrigin1},
 }
 
 var CloudFrontDistribution = cloudfront.Distribution{

@@ -39,7 +39,7 @@ var DescribeHealthRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var DescribeHealthRole = iam.Role{
 	AssumeRolePolicyDocument: DescribeHealthRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(DescribeHealthRolePolicyDescribeNeginstanceN),
+	Policies: []any{DescribeHealthRolePolicyDescribeNeginstanceN},
 }
 
 var WebServerInstanceProfile = iam.InstanceProfile{

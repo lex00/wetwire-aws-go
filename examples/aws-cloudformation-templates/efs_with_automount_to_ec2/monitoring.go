@@ -5,7 +5,6 @@
 package efs_with_automount_to_ec2
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
@@ -18,7 +17,7 @@ var CPUAlarmLow = cloudwatch.Alarm{
 	AlarmActions: []any{ScaleDownPolicy},
 	AlarmDescription: "Scale-down if CPU < 70% for 10 minutes",
 	ComparisonOperator: "LessThanThreshold",
-	Dimensions: List(CPUAlarmLowDimensionAutoScalingGroupName),
+	Dimensions: []any{CPUAlarmLowDimensionAutoScalingGroupName},
 	EvaluationPeriods: "2",
 	MetricName: "CPUUtilization",
 	Namespace: "AWS/EC2",
@@ -36,7 +35,7 @@ var CPUAlarmHigh = cloudwatch.Alarm{
 	AlarmActions: []any{ScaleUpPolicy},
 	AlarmDescription: "Scale-up if CPU > 90% for 10 minutes",
 	ComparisonOperator: "GreaterThanThreshold",
-	Dimensions: List(CPUAlarmHighDimensionAutoScalingGroupName),
+	Dimensions: []any{CPUAlarmHighDimensionAutoScalingGroupName},
 	EvaluationPeriods: "2",
 	MetricName: "CPUUtilization",
 	Namespace: "AWS/EC2",

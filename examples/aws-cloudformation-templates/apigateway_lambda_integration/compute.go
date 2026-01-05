@@ -11,7 +11,7 @@ import (
 )
 
 var LambdaFunctionCode = lambda.Function_Code{
-	ZipFile: map[string]any{"Rain::Embed": "handler.py"},
+	ZipFile: Json{"Rain::Embed": "handler.py"},
 }
 
 var LambdaFunction = lambda.Function{
@@ -28,7 +28,7 @@ var LambdaApiGatewayInvoke = lambda.Permission{
 	Action: "lambda:InvokeFunction",
 	FunctionName: LambdaFunction.Arn,
 	Principal: "apigateway.amazonaws.com",
-	SourceArn: Join{"", []any{
+	SourceArn: Join{Delimiter: "", Values: []any{
 	"arn:aws:execute-api:",
 	AWS_REGION,
 	":",

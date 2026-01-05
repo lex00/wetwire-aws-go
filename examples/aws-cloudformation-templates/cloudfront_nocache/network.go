@@ -47,7 +47,7 @@ var DistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distrib
 }
 
 var DistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: DistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: &DistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: DomainName,
 	Id: Sub{String: "CloudFront-${AWS::StackName}"},
 }
@@ -81,11 +81,11 @@ var DistributionTagName = Tag{
 }
 
 var DistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
-	CacheBehaviors: List(DistributionDistributionConfigCacheBehavior1),
+	CacheBehaviors: []any{DistributionDistributionConfigCacheBehavior1},
 	DefaultCacheBehavior: DistributionDistributionConfigDefaultCacheBehavior,
 	Enabled: true,
 	HttpVersion: "http2",
-	Origins: List(DistributionDistributionConfigOrigin1),
+	Origins: []any{DistributionDistributionConfigOrigin1},
 }
 
 var Distribution = cloudfront.Distribution{

@@ -76,5 +76,5 @@ var CodeBuildRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var CodeBuildRole = iam.Role{
 	AssumeRolePolicyDocument: CodeBuildRoleAssumeRolePolicyDocument,
-	Policies: List(CodeBuildRolePolicyCanLog, CodeBuildRolePolicyCanAccessS3, CodeBuildRolePolicyCanCreateReports),
+	Policies: []any{CodeBuildRolePolicyCanLog, CodeBuildRolePolicyCanAccessS3, CodeBuildRolePolicyCanCreateReports},
 }

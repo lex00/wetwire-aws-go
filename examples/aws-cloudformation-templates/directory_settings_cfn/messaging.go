@@ -26,6 +26,6 @@ var DirectoryMonitoringTopicSubscription1 = sns.Topic_Subscription{
 
 var DirectoryMonitoringTopic = sns.Topic{
 	KmsMasterKeyId: If{"DirectoryMonitoringSNSTopicKMSKeyCondition", DirectoryMonitoringSNSTopicKMSKey, "aws/sns"},
-	Subscription: List(DirectoryMonitoringTopicSubscription1),
+	Subscription: []any{DirectoryMonitoringTopicSubscription1},
 	Tags: []any{DirectoryMonitoringTopicTagStackName, DirectoryMonitoringTopicTagDirectoryID},
 }

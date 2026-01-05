@@ -20,17 +20,17 @@ var CentralEventBusDeadLetterConfig = events.EventBus_DeadLetterConfig{
 }
 
 var CentralEventBus = events.EventBus{
-	DeadLetterConfig: CentralEventBusDeadLetterConfig,
+	DeadLetterConfig: &CentralEventBusDeadLetterConfig,
 	Description: "A custom event bus in the central account to be used as a destination for events from a rule in target accounts",
 	Name: CentralEventBusName,
 }
 
 var CentralEventBusPolicy = events.EventBusPolicy{
 	EventBusName: CentralEventBus,
-	Statement: map[string]any{
+	Statement: Json{
 	"Action": "events:PutEvents",
-	"Condition": map[string]any{
-	"StringEquals": map[string]any{
+	"Condition": Json{
+	"StringEquals": Json{
 	"aws:PrincipalOrgID": OrgID,
 },
 },
@@ -47,18 +47,18 @@ var CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig = events.EventBus
 
 var CentralEventRuleTargetCloudFormationLogsTo = events.Rule_Target{
 	Arn: CentralEventLog.Arn,
-	DeadLetterConfig: CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig,
+	DeadLetterConfig: &CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig,
 	Id: "CloudFormationLogsToCentralGroup",
 }
 
 var CentralEventRule = events.Rule{
 	EventBusName: CentralEventBusName,
-	EventPattern: map[string]any{
-	"source": []any{map[string]any{
+	EventPattern: Json{
+	"source": []any{Json{
 	"prefix": "",
 }},
 },
 	Name: "CloudFormationLogs",
 	State: enums.EventsRuleStateEnabled,
-	Targets: List(CentralEventRuleTargetCloudFormationLogsTo),
+	Targets: []any{CentralEventRuleTargetCloudFormationLogsTo},
 }

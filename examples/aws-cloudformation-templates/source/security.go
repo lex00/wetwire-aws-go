@@ -86,6 +86,6 @@ var ReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var ReplicationRole = iam.Role{
 	AssumeRolePolicyDocument: ReplicationRoleAssumeRolePolicyDocument,
 	Description: "IAM Role used by S3 bucket replication",
-	Policies: List(ReplicationRolePolicy1),
+	Policies: []any{ReplicationRolePolicy1},
 	RoleName: Sub{String: "${AWS::StackName}-${AccountIdDestination}-role"},
 }

@@ -960,7 +960,7 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 				}
 			}
 		}
-		// Fallback: inline array
+		// Fallback: inline array ([]any{} is plain Go, no import needed)
 		var items []string
 		for _, item := range v {
 			items = append(items, valueToBlockStyleProperty(ctx, item, "", parentVarName))
@@ -1011,6 +1011,10 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
+			// Add & if field expects a pointer
+			if needsPointer {
+				return "&" + blockVarName
+			}
 			return blockVarName
 		}
 
@@ -1020,10 +1024,11 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			val := v[k]
 			items = append(items, fmt.Sprintf("\t%q: %s,", k, valueToBlockStyleProperty(ctx, val, k, parentVarName)))
 		}
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if len(items) == 0 {
-			return "map[string]any{}"
+			return "Json{}"
 		}
-		return fmt.Sprintf("map[string]any{\n%s\n}", strings.Join(items, "\n"))
+		return fmt.Sprintf("Json{\n%s\n}", strings.Join(items, "\n"))
 	}
 
 	return fmt.Sprintf("%#v", value)
@@ -1143,7 +1148,7 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 				}
 			}
 		}
-		// Fallback: inline array
+		// Fallback: inline array ([]any{} is plain Go, no import needed)
 		var items []string
 		for _, item := range v {
 			items = append(items, valueToGoForBlock(ctx, item, "", parentVarName))
@@ -1194,6 +1199,10 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
+			// Add & if field expects a pointer
+			if needsPointer {
+				return "&" + nestedVarName
+			}
 			return nestedVarName
 		}
 
@@ -1203,10 +1212,11 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			val := v[k]
 			items = append(items, fmt.Sprintf("%q: %s", k, valueToGoForBlock(ctx, val, k, parentVarName)))
 		}
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if len(items) == 0 {
-			return "map[string]any{}"
+			return "Json{}"
 		}
-		return fmt.Sprintf("map[string]any{%s}", strings.Join(items, ", "))
+		return fmt.Sprintf("Json{%s}", strings.Join(items, ", "))
 	}
 
 	return fmt.Sprintf("%#v", value)
@@ -1248,9 +1258,7 @@ func arrayToBlockStyle(ctx *codegenContext, arr []any, elemTypeName string, pare
 		return fmt.Sprintf("[]%s.%s{}", ctx.currentResource, elemTypeName)
 	}
 
-	// Use List() helper for cleaner syntax (requires intrinsics import)
-	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-	return fmt.Sprintf("List(%s)", strings.Join(varNames, ", "))
+	return fmt.Sprintf("[]any{%s}", strings.Join(varNames, ", "))
 }
 
 // generateArrayElementVarName generates a unique var name for an array element.
@@ -1320,12 +1328,13 @@ func cleanForVarName(s string) string {
 // tagsToBlockStyle converts tags to block style with separate var declarations.
 // Tags field is []any in generated resources, so we use []any{Tag{}, Tag{}, ...}
 func tagsToBlockStyle(ctx *codegenContext, value any) string {
-	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-
 	tags, ok := value.([]any)
 	if !ok || len(tags) == 0 {
 		return "[]any{}"
 	}
+
+	// Only add intrinsics import when we have tags to generate
+	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 
 	var varNames []string
 	for _, tag := range tags {
@@ -1483,7 +1492,8 @@ func valueToGoWithProperty(ctx *codegenContext, value any, indent int, propName 
 
 	case map[string]any:
 		if len(v) == 0 {
-			return "map[string]any{}"
+			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+			return "Json{}"
 		}
 		// Check if this is an intrinsic function map (single key starting with "Ref" or "Fn::")
 		if len(v) == 1 {
@@ -1529,13 +1539,14 @@ func valueToGoWithProperty(ctx *codegenContext, value any, indent int, propName 
 			return fmt.Sprintf("%s.%s{\n%s\n%s}", ctx.currentResource, ctx.currentTypeName, strings.Join(items, "\n"), indentStr)
 		}
 
-		// Fallback to map[string]any
+		// Fallback to Json{}
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
 		for _, k := range sortedKeys(v) {
 			val := v[k]
 			items = append(items, fmt.Sprintf("%s%q: %s,", nextIndent, k, valueToGoWithProperty(ctx, val, indent+1, k)))
 		}
-		return fmt.Sprintf("map[string]any{\n%s\n%s}", strings.Join(items, "\n"), indentStr)
+		return fmt.Sprintf("Json{\n%s\n%s}", strings.Join(items, "\n"), indentStr)
 	}
 
 	return fmt.Sprintf("%#v", value)
@@ -1577,14 +1588,27 @@ func getPropertyTypeName(ctx *codegenContext, propName string) string {
 		return typeName
 	}
 
-	// Fallback: Try constructing type name from property name.
-	// CloudFormation property types are flat: {ResourceType}_{PropertyTypeName}
-	typeName := ctx.currentTypeName + "_" + propName
+	// CloudFormation property types are FLAT - they use the base resource type, not nested type.
+	// e.g., Distribution_DistributionConfig has property Logging with type Distribution_Logging
+	// NOT Distribution_DistributionConfig_Logging.
+	// Extract base resource type from current type name.
+	baseResourceType := ctx.currentTypeName
+	if idx := strings.Index(ctx.currentTypeName, "_"); idx > 0 {
+		baseResourceType = ctx.currentTypeName[:idx]
+	}
 
-	// Check if this type exists in the registry
-	fullName := ctx.currentResource + "." + typeName
+	// Try flat pattern first: BaseResourceType_PropName
+	flatTypeName := baseResourceType + "_" + propName
+	fullName := ctx.currentResource + "." + flatTypeName
 	if resources.PropertyTypes[fullName] {
-		return typeName
+		return flatTypeName
+	}
+
+	// Fallback: Try nested pattern (currentTypeName_propName) for rare cases
+	nestedTypeName := ctx.currentTypeName + "_" + propName
+	fullName = ctx.currentResource + "." + nestedTypeName
+	if resources.PropertyTypes[fullName] {
+		return nestedTypeName
 	}
 
 	// Type doesn't exist, fall back to map[string]any
@@ -1615,15 +1639,29 @@ func getArrayElementTypeName(ctx *codegenContext, propName string) string {
 		return typeName
 	}
 
-	// Fallback: Try singularizing the property name.
-	// Array element types use singular form
 	singular := singularize(propName)
-	typeName := ctx.currentTypeName + "_" + singular
 
-	// Check if this type exists in the registry
-	fullName := ctx.currentResource + "." + typeName
+	// CloudFormation property types are FLAT - they use the base resource type, not nested type.
+	// e.g., Distribution_DistributionConfig has property Origins with element type Distribution_Origin
+	// NOT Distribution_DistributionConfig_Origin.
+	// Extract base resource type from current type name.
+	baseResourceType := ctx.currentTypeName
+	if idx := strings.Index(ctx.currentTypeName, "_"); idx > 0 {
+		baseResourceType = ctx.currentTypeName[:idx]
+	}
+
+	// Try flat pattern first: BaseResourceType_SingularPropName
+	flatTypeName := baseResourceType + "_" + singular
+	fullName := ctx.currentResource + "." + flatTypeName
 	if resources.PropertyTypes[fullName] {
-		return typeName
+		return flatTypeName
+	}
+
+	// Fallback: Try nested pattern (currentTypeName_singular) for rare cases
+	nestedTypeName := ctx.currentTypeName + "_" + singular
+	fullName = ctx.currentResource + "." + nestedTypeName
+	if resources.PropertyTypes[fullName] {
+		return nestedTypeName
 	}
 
 	// Type doesn't exist, fall back to []any
@@ -1734,10 +1772,42 @@ func mapToIntrinsic(m map[string]any) *IRIntrinsic {
 	return nil
 }
 
+// simplifySubString analyzes a Sub template string and returns the simplest representation:
+// - If it's just "${VarName}" with no other text, returns the variable directly
+// - If it's just "${AWS::Region}" etc., returns the pseudo-parameter constant
+// - Otherwise returns Sub{...} with positional syntax
+func simplifySubString(ctx *codegenContext, s string) string {
+	// Pattern for single variable reference: ${VarName}
+	// Match strings that are ONLY a single ${...} with no other text
+	if len(s) > 3 && s[0] == '$' && s[1] == '{' && s[len(s)-1] == '}' {
+		inner := s[2 : len(s)-1]
+		// Check no nested ${} or additional ${}
+		if !strings.Contains(inner, "${") && !strings.Contains(inner, "}") {
+			// It's a single reference like ${VarName} or ${AWS::Region}
+			if strings.HasPrefix(inner, "AWS::") {
+				// Pseudo-parameter: return constant
+				return pseudoParameterToGo(ctx, inner)
+			}
+			// Regular variable reference
+			// Check if it's a known resource or parameter
+			if _, ok := ctx.template.Resources[inner]; ok {
+				return SanitizeGoName(inner)
+			}
+			if _, ok := ctx.template.Parameters[inner]; ok {
+				return SanitizeGoName(inner)
+			}
+			// Unknown reference - still emit as variable (cross-file)
+			return SanitizeGoName(inner)
+		}
+	}
+	// Not a simple reference - use Sub{} with keyed syntax (to satisfy go vet)
+	return fmt.Sprintf("Sub{String: %q}", s)
+}
+
 // intrinsicToGo converts an IRIntrinsic to Go source code.
 // Uses function call syntax for cleaner generated code:
 //
-//	Sub("template") instead of intrinsics.Sub{String: "template"}
+//	Sub{...} with positional syntax for template strings
 //	Select(0, GetAZs()) instead of intrinsics.Select{Index: 0, List: intrinsics.GetAZs{}}
 func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 	// Note: We only add intrinsics import when we actually emit an intrinsic type.
@@ -1786,7 +1856,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		switch args := intrinsic.Args.(type) {
 		case string:
-			return fmt.Sprintf("Sub{String: %q}", args)
+			return simplifySubString(ctx, args)
 		case []any:
 			if len(args) >= 2 {
 				template := fmt.Sprintf("%v", args[0])
@@ -1794,7 +1864,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				return fmt.Sprintf("SubWithMap{String: %q, Variables: %s}", template, vars)
 			} else if len(args) == 1 {
 				template := fmt.Sprintf("%v", args[0])
-				return fmt.Sprintf("Sub{String: %q}", template)
+				return simplifySubString(ctx, template)
 			}
 		}
 		return `Sub{String: ""}`
@@ -1804,26 +1874,26 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			delimiter := valueToGo(ctx, args[0], 0)
 			values := valueToGo(ctx, args[1], 0)
-			return fmt.Sprintf("Join{%s, %s}", delimiter, values)
+			return fmt.Sprintf("Join{Delimiter: %s, Values: %s}", delimiter, values)
 		}
-		return `Join{"", nil}`
+		return `Join{Delimiter: "", Values: nil}`
 
 	case IntrinsicSelect:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			index := valueToGo(ctx, args[0], 0)
 			list := valueToGo(ctx, args[1], 0)
-			return fmt.Sprintf("Select{%s, %s}", index, list)
+			return fmt.Sprintf("Select{Index: %s, List: %s}", index, list)
 		}
-		return "Select{0, nil}"
+		return "Select{Index: 0, List: nil}"
 
 	case IntrinsicGetAZs:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-		region := fmt.Sprintf("%v", intrinsic.Args)
-		if region == "" || region == "<nil>" {
+		if intrinsic.Args == nil || intrinsic.Args == "" {
 			return "GetAZs{}"
 		}
-		return fmt.Sprintf("GetAZs{%q}", region)
+		region := valueToGo(ctx, intrinsic.Args, 0)
+		return fmt.Sprintf("GetAZs{Region: %s}", region)
 
 	case IntrinsicIf:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
@@ -2318,6 +2388,7 @@ func jsonValueToGo(ctx *codegenContext, value any) string {
 	case string:
 		return fmt.Sprintf("%q", v)
 	case []any:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
 		for _, item := range v {
 			items = append(items, jsonValueToGo(ctx, item))

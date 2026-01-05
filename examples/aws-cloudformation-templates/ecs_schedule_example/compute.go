@@ -39,7 +39,7 @@ var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
 var Service = ecs.Service{
 	Cluster: ECSCluster,
 	DesiredCount: "1",
-	LoadBalancers: List(ServiceLoadBalancer1),
+	LoadBalancers: []any{ServiceLoadBalancer1},
 	Role: ECSServiceRole,
 	TaskDefinition: TaskDefinition,
 }
@@ -50,7 +50,7 @@ var TaskDefinitionContainerDefinitionBusyboxVolumesFrom1 = ecs.TaskDefinition_Vo
 
 var TaskDefinitionContainerDefinitionBusyboxLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
-	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
+	Options: Json{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
 
 var TaskDefinitionContainerDefinitionSimpleNegappPortMapping1 = ecs.TaskDefinition_PortMapping{
@@ -64,7 +64,7 @@ var TaskDefinitionContainerDefinitionSimpleNegappMountPoint1 = ecs.TaskDefinitio
 
 var TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
-	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
+	Options: Json{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
 
 var TaskDefinitionVolumeMyNegvol = ecs.TaskDefinition_Volume{
@@ -77,28 +77,28 @@ var TaskDefinitionContainerDefinitionBusybox = ecs.TaskDefinition_ContainerDefin
 	EntryPoint: []any{"sh", "-c"},
 	Essential: false,
 	Image: "busybox",
-	LogConfiguration: TaskDefinitionContainerDefinitionBusyboxLogConfiguration,
+	LogConfiguration: &TaskDefinitionContainerDefinitionBusyboxLogConfiguration,
 	Memory: 200,
 	Name: "busybox",
-	VolumesFrom: List(TaskDefinitionContainerDefinitionBusyboxVolumesFrom1),
+	VolumesFrom: []any{TaskDefinitionContainerDefinitionBusyboxVolumesFrom1},
 }
 
 var TaskDefinitionContainerDefinitionSimpleNegapp = ecs.TaskDefinition_ContainerDefinition{
 	Cpu: "10",
 	Essential: "true",
 	Image: "httpd:2.4",
-	LogConfiguration: TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration,
+	LogConfiguration: &TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration,
 	Memory: "300",
-	MountPoints: List(TaskDefinitionContainerDefinitionSimpleNegappMountPoint1),
+	MountPoints: []any{TaskDefinitionContainerDefinitionSimpleNegappMountPoint1},
 	Name: "simple-app",
-	PortMappings: List(TaskDefinitionContainerDefinitionSimpleNegappPortMapping1),
+	PortMappings: []any{TaskDefinitionContainerDefinitionSimpleNegappPortMapping1},
 }
 
 var TaskDefinition = ecs.TaskDefinition{
-	ContainerDefinitions: List(TaskDefinitionContainerDefinitionSimpleNegapp, TaskDefinitionContainerDefinitionBusybox),
-	Family: Join{"", []any{
+	ContainerDefinitions: []any{TaskDefinitionContainerDefinitionSimpleNegapp, TaskDefinitionContainerDefinitionBusybox},
+	Family: Join{Delimiter: "", Values: []any{
 	AWS_STACK_NAME,
 	"-ecs-demo-app",
 }},
-	Volumes: List(TaskDefinitionVolumeMyNegvol),
+	Volumes: []any{TaskDefinitionVolumeMyNegvol},
 }

@@ -39,7 +39,7 @@ var InstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var InstanceRole = iam.Role{
 	AssumeRolePolicyDocument: InstanceRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(InstanceRolePolicyTaginstancepolicy),
+	Policies: []any{InstanceRolePolicyTaginstancepolicy},
 }
 
 var InstanceProfile = iam.InstanceProfile{

@@ -11,7 +11,7 @@ import (
 )
 
 var LambdaFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"ENV": EnvName, "TZ": "UTC"},
+	Variables: Json{"ENV": EnvName, "TZ": "UTC"},
 }
 
 var LambdaFunctionCode = lambda.Function_Code{
@@ -21,9 +21,9 @@ var LambdaFunctionCode = lambda.Function_Code{
 var LambdaFunction = lambda.Function{
 	Code: LambdaFunctionCode,
 	Description: "LambdaFunction using python3.12.",
-	Environment: LambdaFunctionEnvironment,
+	Environment: &LambdaFunctionEnvironment,
 	FunctionName: Sub{String: "lambda-function-${EnvName}"},
-	Handler: Sub{String: "${LambdaHandlerPath}"},
+	Handler: LambdaHandlerPath,
 	MemorySize: 128,
 	Role: LambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,

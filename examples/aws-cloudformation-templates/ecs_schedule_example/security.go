@@ -40,7 +40,7 @@ var AutoscalingRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var AutoscalingRole = iam.Role{
 	AssumeRolePolicyDocument: AutoscalingRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(AutoscalingRolePolicyServiceNegautoscalin),
+	Policies: []any{AutoscalingRolePolicyServiceNegautoscalin},
 }
 
 var EC2RolePolicyEcsNegservicePolicyDocument = PolicyDocument{
@@ -73,7 +73,7 @@ var EC2RoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var EC2Role = iam.Role{
 	AssumeRolePolicyDocument: EC2RoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(EC2RolePolicyEcsNegservice),
+	Policies: []any{EC2RolePolicyEcsNegservice},
 }
 
 var EC2InstanceProfile = iam.InstanceProfile{
@@ -111,7 +111,7 @@ var ECSEventRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var ECSEventRole = iam.Role{
 	AssumeRolePolicyDocument: ECSEventRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(ECSEventRolePolicyEcsNegservice),
+	Policies: []any{ECSEventRolePolicyEcsNegservice},
 }
 
 var ECSServiceRolePolicyEcsNegservicePolicyDocument = PolicyDocument{
@@ -144,7 +144,7 @@ var ECSServiceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var ECSServiceRole = iam.Role{
 	AssumeRolePolicyDocument: ECSServiceRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(ECSServiceRolePolicyEcsNegservice),
+	Policies: []any{ECSServiceRolePolicyEcsNegservice},
 }
 
 var LogsKmsKey = kms.Key{

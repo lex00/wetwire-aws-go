@@ -12,9 +12,9 @@ import (
 var S3BucketTagDatetimeNow = Tag{
 	Key: "DatetimeNow",
 	Value: Transform{[]any{
-	map[string]any{
+	Json{
 		"Name": "DatetimeNow",
-		"Parameters": map[string]any{
+		"Parameters": Json{
 			"format": "%Y-%m-%dT%H:%M:%SZ",
 		},
 	},

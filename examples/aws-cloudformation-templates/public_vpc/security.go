@@ -39,7 +39,7 @@ var AutoscalingRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var AutoscalingRole = iam.Role{
 	AssumeRolePolicyDocument: AutoscalingRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(AutoscalingRolePolicyServiceNegautoscalin),
+	Policies: []any{AutoscalingRolePolicyServiceNegautoscalin},
 }
 
 var EC2RolePolicyEcsNegservicePolicyDocument = PolicyDocument{
@@ -72,7 +72,7 @@ var EC2RoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var EC2Role = iam.Role{
 	AssumeRolePolicyDocument: EC2RoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(EC2RolePolicyEcsNegservice),
+	Policies: []any{EC2RolePolicyEcsNegservice},
 }
 
 var EC2InstanceProfile = iam.InstanceProfile{
@@ -110,5 +110,5 @@ var ECSRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var ECSRole = iam.Role{
 	AssumeRolePolicyDocument: ECSRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(ECSRolePolicyEcsNegservice),
+	Policies: []any{ECSRolePolicyEcsNegservice},
 }

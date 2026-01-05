@@ -20,7 +20,7 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 	Port: 80,
 	Protocol: enums.Elbv2ProtocolEnumHttp,
 	UnhealthyThresholdCount: 2,
-	VpcId: ImportValue{Join{":", []any{
+	VpcId: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"VPCId",
 }}},
@@ -37,9 +37,9 @@ var LoadBalancerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
 }
 
 var LoadBalancerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: List(LoadBalancerRuleActionForward),
-	Conditions: List(LoadBalancerRuleCondition1),
-	ListenerArn: ImportValue{Join{":", []any{
+	Actions: []any{LoadBalancerRuleActionForward},
+	Conditions: []any{LoadBalancerRuleCondition1},
+	ListenerArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateListener",
 }}},

@@ -21,7 +21,7 @@ var ECSAutoScalingGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTempl
 
 var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	DesiredCapacity: DesiredCapacity,
-	LaunchTemplate: ECSAutoScalingGroupLaunchTemplate,
+	LaunchTemplate: &ECSAutoScalingGroupLaunchTemplate,
 	MaxSize: MaxSize,
 	MinSize: "1",
 	VPCZoneIdentifier: []any{PublicSubnetOne, PublicSubnetTwo},
@@ -32,7 +32,7 @@ var ContainerInstancesLaunchTemplateDataIamInstanceProfile = ec2.LaunchTemplate_
 }
 
 var ContainerInstancesLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
-	IamInstanceProfile: ContainerInstancesLaunchTemplateDataIamInstanceProfile,
+	IamInstanceProfile: &ContainerInstancesLaunchTemplateDataIamInstanceProfile,
 	ImageId: ECSAMI,
 	InstanceType: InstanceType,
 	SecurityGroupIds: []any{EcsHostSecurityGroup},

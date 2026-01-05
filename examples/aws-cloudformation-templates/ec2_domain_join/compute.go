@@ -30,7 +30,7 @@ var myEC2InstanceSSMTagName = Tag{
 }
 
 var myEC2InstanceSSMSsmAssociation1 = ec2.Instance_SsmAssociation{
-	AssociationParameters: List(myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId, myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName, myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses),
+	AssociationParameters: []any{myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId, myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName, myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses},
 	DocumentName: myssmdocument,
 }
 
@@ -40,7 +40,7 @@ var myEC2InstanceSSM = ec2.Instance{
 	InstanceType: InstanceType,
 	KeyName: KeyPair,
 	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
-	SsmAssociations: List(myEC2InstanceSSMSsmAssociation1),
+	SsmAssociations: []any{myEC2InstanceSSMSsmAssociation1},
 	SubnetId: PublicSubnet,
 	Tags: []any{myEC2InstanceSSMTagName},
 }

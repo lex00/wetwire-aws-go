@@ -70,7 +70,7 @@ var TagVpcPeeringConnectionsLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocument,
 	Description: "Rights to Tag VPC Peering Connection",
 	Path: "/",
-	Policies: List(TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup, TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnect),
+	Policies: []any{TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup, TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnect},
 	RoleName: Sub{String: "${LambdaFunctionName}-LambdaRole"},
 	Tags: []any{TagVpcPeeringConnectionsLambdaRoleTagStackName},
 }

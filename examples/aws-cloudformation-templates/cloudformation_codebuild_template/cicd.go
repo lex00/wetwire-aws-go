@@ -28,7 +28,7 @@ var AppBuildSource = codebuild.Project_Source{
 
 var AppBuildEnvironment = codebuild.Project_Environment{
 	ComputeType: "BUILD_GENERAL1_SMALL",
-	EnvironmentVariables: List(AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR),
+	EnvironmentVariables: []any{AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR},
 	Image: DockerImage,
 	Type_: "LINUX_CONTAINER",
 }
@@ -59,7 +59,7 @@ var AppDeploySource = codebuild.Project_Source{
 
 var AppDeployEnvironment = codebuild.Project_Environment{
 	ComputeType: "BUILD_GENERAL1_SMALL",
-	EnvironmentVariables: List(AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR),
+	EnvironmentVariables: []any{AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR},
 	Image: DockerImage,
 	Type_: "LINUX_CONTAINER",
 }

@@ -31,9 +31,9 @@ var CognitoUserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfi
 }
 
 var CognitoUserPool = cognito.UserPool{
-	AdminCreateUserConfig: CognitoUserPoolAdminCreateUserConfig,
+	AdminCreateUserConfig: &CognitoUserPoolAdminCreateUserConfig,
 	AutoVerifiedAttributes: []any{"email"},
-	Schema: List(CognitoUserPoolSchemaEmail, CognitoUserPoolSchemaGivenname, CognitoUserPoolSchemaFamilyname),
+	Schema: []any{CognitoUserPoolSchemaEmail, CognitoUserPoolSchemaGivenname, CognitoUserPoolSchemaFamilyname},
 	UserPoolName: AppName,
 }
 
@@ -155,11 +155,11 @@ var SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig = wafv2.RuleGroup_Visibil
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.RuleGroup_Statement{
-	ManagedRuleGroupStatement: map[string]any{"ExcludedRules": []any{map[string]any{"Name": "NoUserAgent_HEADER"}}, "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
+	ManagedRuleGroupStatement: Json{"ExcludedRules": []any{Json{"Name": "NoUserAgent_HEADER"}}, "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = wafv2.WebACL_OverrideAction{
-	None: map[string]any{},
+	None: Json{},
 }
 
 var SiteWebACLDefaultActionAllow = wafv2.RuleGroup_AllowAction{
@@ -178,21 +178,21 @@ var SiteWebACLTagName = Tag{
 
 var SiteWebACLRuleAWSNegAWSManagedRule = wafv2.WebACL_Rule{
 	Name: "AWS-AWSManagedRulesCommonRuleSet",
-	OverrideAction: SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction,
+	OverrideAction: &SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction,
 	Priority: 0,
 	Statement: SiteWebACLRuleAWSNegAWSManagedRuleStatement,
 	VisibilityConfig: SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig,
 }
 
 var SiteWebACLDefaultAction = wafv2.WebACL_DefaultAction{
-	Allow: SiteWebACLDefaultActionAllow,
+	Allow: &SiteWebACLDefaultActionAllow,
 }
 
 var SiteWebACL = wafv2.WebACL{
 	DefaultAction: SiteWebACLDefaultAction,
 	Description: "Web ACL with AWS Managed Rules",
 	Name: Sub{String: "${AppName}-WebACLWithAMR"},
-	Rules: List(SiteWebACLRuleAWSNegAWSManagedRule),
+	Rules: []any{SiteWebACLRuleAWSNegAWSManagedRule},
 	Scope: "CLOUDFRONT",
 	Tags: []any{SiteWebACLTagName},
 	VisibilityConfig: SiteWebACLVisibilityConfig,

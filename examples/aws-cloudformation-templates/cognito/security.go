@@ -5,7 +5,6 @@
 package cognito_stack
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cognito"
 )
 
@@ -29,10 +28,10 @@ var UserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfig{
 }
 
 var UserPool = cognito.UserPool{
-	AdminCreateUserConfig: UserPoolAdminCreateUserConfig,
+	AdminCreateUserConfig: &UserPoolAdminCreateUserConfig,
 	AutoVerifiedAttributes: []any{"email"},
 	MfaConfiguration: "OFF",
-	Schema: List(UserPoolSchemaEmail, UserPoolSchemaGivenname, UserPoolSchemaFamilyname),
+	Schema: []any{UserPoolSchemaEmail, UserPoolSchemaGivenname, UserPoolSchemaFamilyname},
 	UserPoolName: AppName,
 }
 

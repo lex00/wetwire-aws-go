@@ -26,7 +26,7 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access and HTTP access on the configured port",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80},
 }
 
 var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{
@@ -56,10 +56,10 @@ var ElasticLoadBalancerAccessLoggingPolicy = elasticloadbalancing.LoadBalancer_A
 }
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
-	AccessLoggingPolicy: ElasticLoadBalancerAccessLoggingPolicy,
+	AccessLoggingPolicy: &ElasticLoadBalancerAccessLoggingPolicy,
 	AvailabilityZones: GetAZs{},
-	ConnectionDrainingPolicy: ElasticLoadBalancerConnectionDrainingPolicy,
+	ConnectionDrainingPolicy: &ElasticLoadBalancerConnectionDrainingPolicy,
 	CrossZone: "true",
-	HealthCheck: ElasticLoadBalancerHealthCheck,
-	Listeners: List(ElasticLoadBalancerListener1),
+	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	Listeners: []any{ElasticLoadBalancerListener1},
 }

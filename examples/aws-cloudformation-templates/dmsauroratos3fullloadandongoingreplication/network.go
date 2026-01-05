@@ -57,7 +57,7 @@ var AuroraSecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress
 var AuroraSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Security group for Aurora SampleDB DB Instance",
 	GroupName: "Aurora SampleDB Security Group",
-	SecurityGroupIngress: List(AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306),
+	SecurityGroupIngress: []any{AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306},
 	VpcId: VPC,
 }
 
@@ -67,7 +67,7 @@ var DBSubnet1TagApplication = Tag{
 }
 
 var DBSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{"0", GetAZs{}},
+	AvailabilityZone: Select{Index: "0", List: GetAZs{}},
 	CidrBlock: "10.0.0.0/26",
 	Tags: []any{DBSubnet1TagApplication},
 	VpcId: VPC,
@@ -79,7 +79,7 @@ var DBSubnet2TagApplication = Tag{
 }
 
 var DBSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{"1", GetAZs{}},
+	AvailabilityZone: Select{Index: "1", List: GetAZs{}},
 	CidrBlock: "10.0.0.64/26",
 	Tags: []any{DBSubnet2TagApplication},
 	VpcId: VPC,

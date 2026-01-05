@@ -20,12 +20,12 @@ var ServerTagName = Tag{
 
 var ServerBlockDeviceMappingDevxvda = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/xvda",
-	Ebs: ServerBlockDeviceMappingDevxvdaEbs,
+	Ebs: &ServerBlockDeviceMappingDevxvdaEbs,
 }
 
 var Server = ec2.Instance{
-	AvailabilityZone: Select{0, GetAZs{}},
-	BlockDeviceMappings: List(ServerBlockDeviceMappingDevxvda),
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
+	BlockDeviceMappings: []any{ServerBlockDeviceMappingDevxvda},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: LatestAMI,
 	InstanceType: InstanceType,

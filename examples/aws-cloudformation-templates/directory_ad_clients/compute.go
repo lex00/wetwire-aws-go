@@ -33,23 +33,23 @@ var DomainMember1WithInlineSsmAssociationTagName = Tag{
 }
 
 var DomainMember1WithInlineSsmAssociationSsmAssociation1 = ec2.Instance_SsmAssociation{
-	AssociationParameters: List(DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryId, DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryName),
+	AssociationParameters: []any{DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryId, DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryName},
 	DocumentName: "AWS-JoinDirectoryServiceDomain",
 }
 
 var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember1WithInlineSsmAssociation = ec2.Instance{
-	BlockDeviceMappings: List(DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1},
 	IamInstanceProfile: DomainMembersWindowsInstanceProfile,
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
 	KeyName: KeyPairName,
 	SecurityGroupIds: []any{DomainMembersSGID},
-	SsmAssociations: List(DomainMember1WithInlineSsmAssociationSsmAssociation1),
+	SsmAssociations: []any{DomainMember1WithInlineSsmAssociationSsmAssociation1},
 	SubnetId: PrivateSubnet1ID,
 	Tags: []any{DomainMember1WithInlineSsmAssociationTagName},
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember1NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
@@ -70,11 +70,11 @@ var DomainMember2WithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember2WithSsmAssociationInstance = ec2.Instance{
-	BlockDeviceMappings: List(DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1},
 	IamInstanceProfile: DomainMembersWindowsInstanceProfile,
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
@@ -105,11 +105,11 @@ var DomainMember3WithSsmAssociationTagTagName = Tag{
 
 var DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember3WithSsmAssociationTag = ec2.Instance{
-	BlockDeviceMappings: List(DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1},
 	IamInstanceProfile: DomainMembersWindowsInstanceProfile,
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
@@ -135,11 +135,11 @@ var DomainMember4LinuxWithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember4LinuxWithSsmAssociationInstance = ec2.Instance{
-	BlockDeviceMappings: List(DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1},
 	IamInstanceProfile: DomainMembersLinuxInstanceProfile,
 	ImageId: AMAZONLINUX2,
 	InstanceType: DomainMembersInstanceType,

@@ -10,7 +10,7 @@ import (
 
 // AppRunnerOutput - URL of the deployed App Runner Service
 var AppRunnerOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"https://",
 	AppRunner.ServiceUrl,
 }},

@@ -132,7 +132,7 @@ var DirectorySettingsLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: DirectorySettingsLambdaRoleAssumeRolePolicyDocument,
 	Description: Sub{String: "Rights to Setup Directory Settings for Directory ID, ${DirectoryID}"},
 	Path: "/",
-	Policies: List(DirectorySettingsLambdaRolePolicyCloudWatchLogGroup, DirectorySettingsLambdaRolePolicyDirectorySettings),
+	Policies: []any{DirectorySettingsLambdaRolePolicyCloudWatchLogGroup, DirectorySettingsLambdaRolePolicyDirectorySettings},
 	RoleName: Sub{String: "${LambdaFunctionName}-LambdaRole"},
 	Tags: []any{DirectorySettingsLambdaRoleTagStackName},
 }

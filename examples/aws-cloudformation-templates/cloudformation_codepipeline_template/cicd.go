@@ -59,47 +59,47 @@ var PipelineStageSourceActionSourceActionTypeId = codepipeline.Pipeline_ActionTy
 
 var PipelineStageDeployNegAppActionAppNegDeploy = codepipeline.Pipeline_ActionDeclaration{
 	ActionTypeId: PipelineStageDeployNegAppActionAppNegDeployActionTypeId,
-	Configuration: map[string]any{"EnvironmentVariables": "[{\"name\":\"ENVIRONMENT\",\"value\":\"SampleEnv\",\"type\":\"PLAINTEXT\"}]", "PrimarySource": "Source", "ProjectName": ImportValue{Sub{String: "${CodeBuildStack}-AppDeploy"}}},
-	InputArtifacts: List(PipelineStageDeployNegAppActionAppNegDeployInputArtifactSource, PipelineStageDeployNegAppActionAppNegDeployInputArtifactFullZip),
+	Configuration: Json{"EnvironmentVariables": "[{\"name\":\"ENVIRONMENT\",\"value\":\"SampleEnv\",\"type\":\"PLAINTEXT\"}]", "PrimarySource": "Source", "ProjectName": ImportValue{Sub{String: "${CodeBuildStack}-AppDeploy"}}},
+	InputArtifacts: []any{PipelineStageDeployNegAppActionAppNegDeployInputArtifactSource, PipelineStageDeployNegAppActionAppNegDeployInputArtifactFullZip},
 	Name: "App-Deploy",
 	RunOrder: 3,
 }
 
 var PipelineStageDeployNegAppActionApproval = codepipeline.Pipeline_ActionDeclaration{
 	ActionTypeId: PipelineStageDeployNegAppActionApprovalActionTypeId,
-	Configuration: map[string]any{"CustomData": "Review the build output and approve to deploy"},
+	Configuration: Json{"CustomData": "Review the build output and approve to deploy"},
 	Name: "Approval",
 	RunOrder: 2,
 }
 
 var PipelineStageBuildNegAppBuildActionAppNegBuild = codepipeline.Pipeline_ActionDeclaration{
 	ActionTypeId: PipelineStageBuildNegAppBuildActionAppNegBuildActionTypeId,
-	Configuration: map[string]any{"ProjectName": ImportValue{Sub{String: "${CodeBuildStack}-AppBuild"}}},
-	InputArtifacts: List(PipelineStageBuildNegAppBuildActionAppNegBuildInputArtifactSource),
+	Configuration: Json{"ProjectName": ImportValue{Sub{String: "${CodeBuildStack}-AppBuild"}}},
+	InputArtifacts: []any{PipelineStageBuildNegAppBuildActionAppNegBuildInputArtifactSource},
 	Name: "App-Build",
-	OutputArtifacts: List(PipelineStageBuildNegAppBuildActionAppNegBuildOutputArtifactFullZip),
+	OutputArtifacts: []any{PipelineStageBuildNegAppBuildActionAppNegBuildOutputArtifactFullZip},
 	RunOrder: 1,
 }
 
 var PipelineStageSourceActionSource = codepipeline.Pipeline_ActionDeclaration{
 	ActionTypeId: PipelineStageSourceActionSourceActionTypeId,
-	Configuration: map[string]any{"BranchName": "main", "PollForSourceChanges": false, "RepositoryName": ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitName"}}},
+	Configuration: Json{"BranchName": "main", "PollForSourceChanges": false, "RepositoryName": ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitName"}}},
 	Name: "Source",
-	OutputArtifacts: List(PipelineStageSourceActionSourceOutputArtifactSource),
+	OutputArtifacts: []any{PipelineStageSourceActionSourceOutputArtifactSource},
 }
 
 var PipelineStageDeployNegApp = codepipeline.Pipeline_StageDeclaration{
-	Actions: List(PipelineStageDeployNegAppActionApproval, PipelineStageDeployNegAppActionAppNegDeploy),
+	Actions: []any{PipelineStageDeployNegAppActionApproval, PipelineStageDeployNegAppActionAppNegDeploy},
 	Name: "Deploy-App",
 }
 
 var PipelineStageBuildNegAppBuild = codepipeline.Pipeline_StageDeclaration{
-	Actions: List(PipelineStageBuildNegAppBuildActionAppNegBuild),
+	Actions: []any{PipelineStageBuildNegAppBuildActionAppNegBuild},
 	Name: "Build-AppBuild",
 }
 
 var PipelineStageSource = codepipeline.Pipeline_StageDeclaration{
-	Actions: List(PipelineStageSourceActionSource),
+	Actions: []any{PipelineStageSourceActionSource},
 	Name: "Source",
 }
 
@@ -109,9 +109,9 @@ var PipelineArtifactStore = codepipeline.Pipeline_ArtifactStore{
 }
 
 var Pipeline = codepipeline.Pipeline{
-	ArtifactStore: PipelineArtifactStore,
+	ArtifactStore: &PipelineArtifactStore,
 	Name: Sub{String: "${AWS::StackName}-Code-Pipeline"},
 	RestartExecutionOnUpdate: false,
 	RoleArn: PipelineRole.Arn,
-	Stages: List(PipelineStageSource, PipelineStageBuildNegAppBuild, PipelineStageDeployNegApp),
+	Stages: []any{PipelineStageSource, PipelineStageBuildNegAppBuild, PipelineStageDeployNegApp},
 }

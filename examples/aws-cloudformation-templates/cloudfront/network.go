@@ -83,7 +83,7 @@ var OriginALBTGTagName = Tag{
 var OriginALBTG = elasticloadbalancingv2.TargetGroup{
 	HealthCheckIntervalSeconds: ALBTargetGroupHealthCheckIntervalSeconds,
 	HealthCheckPath: HealthCheckPath,
-	HealthCheckPort: Sub{String: "${OriginALBTGPort}"},
+	HealthCheckPort: OriginALBTGPort,
 	HealthCheckProtocol: HealthCheckProtocol,
 	HealthCheckTimeoutSeconds: ALBTargetGroupHealthCheckTimeoutSeconds,
 	HealthyThresholdCount: ALBTargetGroupHealthyThresholdCount,
@@ -91,9 +91,9 @@ var OriginALBTG = elasticloadbalancingv2.TargetGroup{
 	Port: OriginALBTGPort,
 	Protocol: enums.Elbv2ProtocolEnumHttp,
 	Tags: []any{OriginALBTGTagName, OriginALBTGTagEnvironment},
-	TargetGroupAttributes: List(OriginALBTGTargetGroupAttributeDeregistrationdelayt),
+	TargetGroupAttributes: []any{OriginALBTGTargetGroupAttributeDeregistrationdelayt},
 	TargetType: enums.Elbv2TargetTypeEnumInstance,
-	Targets: List(OriginALBTGTarget1),
+	Targets: []any{OriginALBTGTarget1},
 	UnhealthyThresholdCount: ALBTargetGroupUnhealthyThresholdCount,
 	VpcId: VpcId,
 }
@@ -112,6 +112,41 @@ var Tcp8080Out = ec2.SecurityGroupEgress{
 	GroupId: ALBExternalAccessSG,
 	IpProtocol: "tcp",
 	ToPort: 8080,
+}
+
+var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
+	Field: "path-pattern",
+	Values: []any{"/*"},
+}
+
+var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
+	TargetGroupArn: OriginALBTG,
+	Type_: "forward",
+}
+
+var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
+	Actions: []any{OriginALBHttpsListenerRuleActionForward},
+	Conditions: []any{OriginALBHttpsListenerRuleCondition1},
+	ListenerArn: OriginALBHttpsListener,
+	Priority: 1,
+}
+
+var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
+	TargetGroupArn: OriginALBTG,
+	Type_: "forward",
+}
+
+var OriginALBHttpsListenerCertificate1 = elasticloadbalancingv2.Listener_Certificate{
+	CertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
+}
+
+var OriginALBHttpsListener = elasticloadbalancingv2.Listener{
+	Certificates: []any{OriginALBHttpsListenerCertificate1},
+	DefaultActions: []any{OriginALBHttpsListenerDefaultActionForward},
+	LoadBalancerArn: OriginALB,
+	Port: 443,
+	Protocol: enums.Elbv2ProtocolEnumHttps,
+	SslPolicy: "ELBSecurityPolicy-FS-2018-06",
 }
 
 var OriginALBTagEnvironment = Tag{
@@ -140,7 +175,7 @@ var OriginALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.
 }
 
 var OriginALB = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(OriginALBLoadBalancerAttributeIdletimeouttimeoutse, OriginALBLoadBalancerAttributeDeletionprotectionen, OriginALBLoadBalancerAttributeRoutinghttp2enabled),
+	LoadBalancerAttributes: []any{OriginALBLoadBalancerAttributeIdletimeouttimeoutse, OriginALBLoadBalancerAttributeDeletionprotectionen, OriginALBLoadBalancerAttributeRoutinghttp2enabled},
 	Name: Sub{String: "${AppName}-${Environment}-alb"},
 	Scheme: ALBScheme,
 	SecurityGroups: []any{ALBExternalAccessSG},
@@ -168,7 +203,7 @@ var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAs
 }
 
 var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues = cloudfront.Distribution_ForwardedValues{
-	Cookies: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies,
+	Cookies: &CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies,
 	QueryString: QueryString,
 }
 
@@ -179,7 +214,7 @@ var CloudFrontDistributionDistributionConfigViewerCertificate = cloudfront.Distr
 }
 
 var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: &CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: OriginALB.DNSName,
 	Id: OriginALB,
 }
@@ -192,8 +227,8 @@ var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Di
 	AllowedMethods: []any{"GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"},
 	Compress: Compress,
 	DefaultTTL: DefaultTTL,
-	ForwardedValues: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues,
-	LambdaFunctionAssociations: List(CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1),
+	ForwardedValues: &CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues,
+	LambdaFunctionAssociations: []any{CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1},
 	MaxTTL: MaxTTL,
 	MinTTL: MinTTL,
 	SmoothStreaming: "false",
@@ -208,47 +243,12 @@ var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_Distribut
 	Enabled: true,
 	HttpVersion: "http2",
 	IPV6Enabled: IPV6Enabled,
-	Logging: CloudFrontDistributionDistributionConfigLogging,
-	Origins: List(CloudFrontDistributionDistributionConfigOrigin1),
+	Logging: &CloudFrontDistributionDistributionConfigLogging,
+	Origins: []any{CloudFrontDistributionDistributionConfigOrigin1},
 	PriceClass: PriceClass,
-	ViewerCertificate: CloudFrontDistributionDistributionConfigViewerCertificate,
+	ViewerCertificate: &CloudFrontDistributionDistributionConfigViewerCertificate,
 }
 
 var CloudFrontDistribution = cloudfront.Distribution{
 	DistributionConfig: CloudFrontDistributionDistributionConfig,
-}
-
-var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
-	Field: "path-pattern",
-	Values: []any{"/*"},
-}
-
-var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
-	TargetGroupArn: OriginALBTG,
-	Type_: "forward",
-}
-
-var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: List(OriginALBHttpsListenerRuleActionForward),
-	Conditions: List(OriginALBHttpsListenerRuleCondition1),
-	ListenerArn: OriginALBHttpsListener,
-	Priority: 1,
-}
-
-var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
-	TargetGroupArn: OriginALBTG,
-	Type_: "forward",
-}
-
-var OriginALBHttpsListenerCertificate1 = elasticloadbalancingv2.Listener_Certificate{
-	CertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
-}
-
-var OriginALBHttpsListener = elasticloadbalancingv2.Listener{
-	Certificates: List(OriginALBHttpsListenerCertificate1),
-	DefaultActions: List(OriginALBHttpsListenerDefaultActionForward),
-	LoadBalancerArn: OriginALB,
-	Port: 443,
-	Protocol: enums.Elbv2ProtocolEnumHttps,
-	SslPolicy: "ELBSecurityPolicy-FS-2018-06",
 }

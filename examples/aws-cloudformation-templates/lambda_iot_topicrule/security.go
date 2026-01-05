@@ -28,7 +28,7 @@ var MyLambdaRolePolicy1PolicyDocumentStatement0 = PolicyStatement{
 
 var MyLambdaRolePolicy1 = iam.Role_Policy{
 	PolicyDocument: MyLambdaRolePolicy1PolicyDocument,
-	PolicyName: Sub{String: "${AWS::StackName}"},
+	PolicyName: AWS_STACK_NAME,
 }
 
 var MyLambdaRoleAssumeRolePolicyDocument = PolicyDocument{
@@ -45,5 +45,5 @@ var MyLambdaRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var MyLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: MyLambdaRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(MyLambdaRolePolicy1),
+	Policies: []any{MyLambdaRolePolicy1},
 }

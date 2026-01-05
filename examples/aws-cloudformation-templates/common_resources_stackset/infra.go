@@ -35,15 +35,15 @@ var StackSetAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var StackSet = cloudformation.StackSet{
-	AutoDeployment: StackSetAutoDeployment,
+	AutoDeployment: &StackSetAutoDeployment,
 	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging",
-	OperationPreferences: StackSetOperationPreferences,
-	Parameters: List(StackSetParameter1),
+	OperationPreferences: &StackSetOperationPreferences,
+	Parameters: []any{StackSetParameter1},
 	PermissionModel: "SERVICE_MANAGED",
-	StackInstancesGroup: List(StackSetStackInstancesGroup1),
+	StackInstancesGroup: []any{StackSetStackInstancesGroup1},
 	StackSetName: "common-resources",
-	TemplateBody: map[string]any{
+	TemplateBody: Json{
 	"Rain::Embed": "common-resources-pkg.yaml",
 },
 }

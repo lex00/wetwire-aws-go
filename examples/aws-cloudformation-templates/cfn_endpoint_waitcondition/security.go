@@ -39,7 +39,7 @@ var RootRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var RootRole = iam.Role{
 	AssumeRolePolicyDocument: RootRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(RootRolePolicyRoot),
+	Policies: []any{RootRolePolicyRoot},
 }
 
 var BastionProfile = iam.InstanceProfile{

@@ -34,7 +34,7 @@ var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0 = PolicyStatement{
 
 var IAMAssumeInstanceRolePolicy1 = iam.Role_Policy{
 	PolicyDocument: IAMAssumeInstanceRolePolicy1PolicyDocument,
-	PolicyName: Join{"-", []any{
+	PolicyName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"EC2",
 	"Policy",
@@ -55,8 +55,8 @@ var IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var IAMAssumeInstanceRole = iam.Role{
 	AssumeRolePolicyDocument: IAMAssumeInstanceRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(IAMAssumeInstanceRolePolicy1),
-	RoleName: Join{"-", []any{
+	Policies: []any{IAMAssumeInstanceRolePolicy1},
+	RoleName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"EC2",
 	"Role",
@@ -64,7 +64,7 @@ var IAMAssumeInstanceRole = iam.Role{
 }
 
 var InstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: Join{"-", []any{
+	InstanceProfileName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"InstanceProfile",
 }},

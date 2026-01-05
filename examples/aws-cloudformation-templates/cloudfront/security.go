@@ -42,8 +42,26 @@ var LambdaEdgeIAMRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaEdgeIAMRoleAssumeRolePolicyDocument,
 	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole", "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"},
 	Path: "/",
-	Policies: List(LambdaEdgeIAMRolePolicyPublishNewLambdaEdge),
+	Policies: []any{LambdaEdgeIAMRolePolicyPublishNewLambdaEdge},
 	RoleName: Sub{String: "${AppName}-iam-lambda-edge-role-${Environment}"},
+}
+
+var AdministratorAccessIAMRoleAssumeRolePolicyDocument = PolicyDocument{
+	Statement: []any{AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
+	Action: []any{"sts:AssumeRole"},
+	Effect: "Allow",
+	Principal: ServicePrincipal{"ec2.amazonaws.com"},
+}
+
+var AdministratorAccessIAMRole = iam.Role{
+	AssumeRolePolicyDocument: AdministratorAccessIAMRoleAssumeRolePolicyDocument,
+	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess"}},
+	Path: "/",
+	RoleName: Sub{String: "AdministratorAccess-${AppName}"},
 }
 
 var LoggingBucketKMSKeyKeyPolicy = PolicyDocument{
@@ -74,25 +92,7 @@ var LoggingBucketKMSKey = kms.Key{
 	KeyPolicy: LoggingBucketKMSKeyKeyPolicy,
 }
 
-var AdministratorAccessIAMRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
-	Effect: "Allow",
-	Principal: ServicePrincipal{"ec2.amazonaws.com"},
-}
-
-var AdministratorAccessIAMRole = iam.Role{
-	AssumeRolePolicyDocument: AdministratorAccessIAMRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess"}},
-	Path: "/",
-	RoleName: Sub{String: "AdministratorAccess-${AppName}"},
-}
-
 var LoggingBucketKMSKeyAlias = kms.Alias{
 	AliasName: Sub{String: "alias/${AppName}/${Environment}/s3-logging-kms"},
-	TargetKeyId: Sub{String: "${LoggingBucketKMSKey}"},
+	TargetKeyId: LoggingBucketKMSKey,
 }

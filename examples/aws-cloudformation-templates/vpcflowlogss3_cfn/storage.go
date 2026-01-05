@@ -16,7 +16,7 @@ var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSid
 
 var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
 	BucketKeyEnabled: If{"VPCFlowLogsBucketKMSKeyCondition", VPCFlowLogsBucketKeyEnabled, AWS_NO_VALUE},
-	ServerSideEncryptionByDefault: VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var VPCFlowLogsBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -31,17 +31,17 @@ var VPCFlowLogsBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBloc
 }
 
 var VPCFlowLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var VPCFlowLogsBucket = s3.Bucket{
-	BucketEncryption: VPCFlowLogsBucketBucketEncryption,
+	BucketEncryption: &VPCFlowLogsBucketBucketEncryption,
 	BucketName: Sub{String: "aws-vpcflowlogs-${AWS::AccountId}-${AWS::Region}"},
-	LoggingConfiguration: If{"S3AccessLogsCondition", map[string]any{
+	LoggingConfiguration: If{"S3AccessLogsCondition", Json{
 	"DestinationBucketName": S3AccessLogsBucketName,
 }, AWS_NO_VALUE},
-	PublicAccessBlockConfiguration: VPCFlowLogsBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: VPCFlowLogsBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &VPCFlowLogsBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &VPCFlowLogsBucketVersioningConfiguration,
 }
 
 var VPCFlowLogsBucketPolicyPolicyDocument = PolicyDocument{

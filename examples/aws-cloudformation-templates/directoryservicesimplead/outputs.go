@@ -23,12 +23,12 @@ var DirectoryIDOutput = Output{
 
 // PrimaryDNSOutput - DNS IPs of the SimpleAD
 var PrimaryDNSOutput = Output{
-	Value:       Select{0, SimpleAD.DnsIpAddresses},
+	Value:       Select{Index: 0, List: SimpleAD.DnsIpAddresses},
 	Description: "DNS IPs of the SimpleAD",
 }
 
 // SecondaryDNSOutput - DNS IPs of the SimpleAD
 var SecondaryDNSOutput = Output{
-	Value:       Select{1, SimpleAD.DnsIpAddresses},
+	Value:       Select{Index: 1, List: SimpleAD.DnsIpAddresses},
 	Description: "DNS IPs of the SimpleAD",
 }

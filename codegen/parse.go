@@ -183,14 +183,16 @@ func parseProperty(name string, def spec.Property) ParsedProperty {
 		prop.CFType = def.PrimitiveType
 	} else if def.Type == "List" {
 		prop.IsList = true
+		// All lists use []any for consistent generated syntax.
+		// Preserve ItemType for PropertyTypeMap generation (needed for correct type lookups).
 		if def.PrimitiveItemType != "" {
-			prop.ItemType = primitiveToGo(def.PrimitiveItemType)
+			prop.ItemType = "any" // Primitives become any
 		} else if def.ItemType != "" {
-			prop.ItemType = def.ItemType
+			prop.ItemType = def.ItemType // Keep property type name for registry
 		} else {
 			prop.ItemType = "any"
 		}
-		prop.GoType = "[]" + prop.ItemType
+		prop.GoType = "[]any"
 	} else if def.Type == "Map" {
 		prop.IsMap = true
 		if def.PrimitiveItemType != "" {

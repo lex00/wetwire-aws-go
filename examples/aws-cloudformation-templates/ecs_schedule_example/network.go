@@ -6,7 +6,6 @@ package ecs_schedule_example
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancingv2"
 )
@@ -45,14 +44,6 @@ var EcsSecurityGroupSSHinbound = ec2.SecurityGroupIngress{
 	ToPort: "22",
 }
 
-var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
-	FromPort: "31000",
-	GroupId: EcsSecurityGroup,
-	IpProtocol: "tcp",
-	SourceSecurityGroupId: EcsSecurityGroup,
-	ToPort: "61000",
-}
-
 var ECSALBListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
 	Field: "path-pattern",
 	Values: []any{"/"},
@@ -64,23 +55,18 @@ var ECSALBListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action
 }
 
 var ECSALBListenerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: List(ECSALBListenerRuleActionForward),
-	Conditions: List(ECSALBListenerRuleCondition1),
+	Actions: []any{ECSALBListenerRuleActionForward},
+	Conditions: []any{ECSALBListenerRuleCondition1},
 	ListenerArn: ALBListener,
 	Priority: 1,
 }
 
-var ECSALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: "30",
-}
-
-var ECSALB = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(ECSALBLoadBalancerAttributeIdletimeouttimeoutse),
-	Name: "ECSALB",
-	Scheme: "internet-facing",
-	SecurityGroups: []any{EcsSecurityGroup},
-	Subnets: SubnetId,
+var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
+	FromPort: "31000",
+	GroupId: EcsSecurityGroup,
+	IpProtocol: "tcp",
+	SourceSecurityGroupId: EcsSecurityGroup,
+	ToPort: "61000",
 }
 
 var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
@@ -89,8 +75,21 @@ var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 }
 
 var ALBListener = elasticloadbalancingv2.Listener{
-	DefaultActions: List(ALBListenerDefaultActionForward),
+	DefaultActions: []any{ALBListenerDefaultActionForward},
 	LoadBalancerArn: ECSALB,
 	Port: "80",
 	Protocol: enums.Elbv2ProtocolEnumHttp,
+}
+
+var ECSALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: "30",
+}
+
+var ECSALB = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: []any{ECSALBLoadBalancerAttributeIdletimeouttimeoutse},
+	Name: "ECSALB",
+	Scheme: "internet-facing",
+	SecurityGroups: []any{EcsSecurityGroup},
+	Subnets: SubnetId,
 }

@@ -12,7 +12,7 @@ import (
 var MyDeadLetterQueue = sqs.Queue{
 	FifoQueue: "true",
 	MessageRetentionPeriod: 1209600,
-	QueueName: Join{"", []any{
+	QueueName: Join{Delimiter: "", Values: []any{
 	QueueName,
 	"Deadletter",
 	".fifo",
@@ -24,12 +24,12 @@ var SQSQueue = sqs.Queue{
 	FifoQueue: "true",
 	MaximumMessageSize: MaximumMessageSize,
 	MessageRetentionPeriod: MessageRetentionPeriod,
-	QueueName: Join{"", []any{
+	QueueName: Join{Delimiter: "", Values: []any{
 	QueueName,
 	".fifo",
 }},
 	ReceiveMessageWaitTimeSeconds: ReceiveMessageWaitTimeSeconds,
-	RedrivePolicy: If{"CreateDeadLetterQueue", map[string]any{
+	RedrivePolicy: If{"CreateDeadLetterQueue", Json{
 	"deadLetterTargetArn": MyDeadLetterQueue.Arn,
 	"maxReceiveCount": 5,
 }, AWS_NO_VALUE},

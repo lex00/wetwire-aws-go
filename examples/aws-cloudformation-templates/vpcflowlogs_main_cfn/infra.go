@@ -10,7 +10,7 @@ import (
 )
 
 var VPCFlowLogsCloudWatchStack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"VPCFlowLogsCloudWatchKMSKey": VPCFlowLogsCloudWatchKMSKey,
 	"VPCFlowLogsLogFormat": VPCFlowLogsLogFormat,
 	"VPCFlowLogsLogGroupRetention": VPCFlowLogsLogGroupRetention,
@@ -22,7 +22,7 @@ var VPCFlowLogsCloudWatchStack = cloudformation.Stack{
 }
 
 var VPCFlowLogsS3Stack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"S3AccessLogsBucketName": S3AccessLogsBucketName,
 	"VPCFlowLogsBucketKMSKey": VPCFlowLogsBucketKMSKey,
 	"VPCFlowLogsBucketKeyEnabled": VPCFlowLogsBucketKeyEnabled,

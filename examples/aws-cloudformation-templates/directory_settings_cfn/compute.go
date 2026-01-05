@@ -6,6 +6,7 @@ package directory_settings_cfn
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
@@ -15,7 +16,7 @@ var DirectorySettingsLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
 }
 
 var DirectorySettingsLambdaFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
+	Variables: Json{"LOG_LEVEL": LambdaLogLevel},
 }
 
 var DirectorySettingsLambdaFunctionCode = lambda.Function_Code{
@@ -25,12 +26,12 @@ var DirectorySettingsLambdaFunctionCode = lambda.Function_Code{
 
 var DirectorySettingsLambdaFunction = lambda.Function{
 	Code: DirectorySettingsLambdaFunctionCode,
-	Environment: DirectorySettingsLambdaFunctionEnvironment,
+	Environment: &DirectorySettingsLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "directory_settings_custom_resource.lambda_handler",
 	MemorySize: 128,
 	Role: DirectorySettingsLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,
 	Timeout: 120,
-	VpcConfig: DirectorySettingsLambdaFunctionVpcConfig,
+	VpcConfig: &DirectorySettingsLambdaFunctionVpcConfig,
 }

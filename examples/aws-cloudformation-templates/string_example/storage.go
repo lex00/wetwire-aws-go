@@ -11,9 +11,9 @@ import (
 
 var S3BucketTagShortenRight = Tag{
 	Key: "ShortenRight",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Length": 4,
 		"Operation": "MaxLength",
@@ -23,9 +23,9 @@ var S3BucketTagShortenRight = Tag{
 
 var S3BucketTagShortenLeft = Tag{
 	Key: "ShortenLeft",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Length": 4,
 		"Operation": "MaxLength",
@@ -36,9 +36,9 @@ var S3BucketTagShortenLeft = Tag{
 
 var S3BucketTagStrip = Tag{
 	Key: "Strip",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"Chars": "Tgif",
 		"InputString": InputString,
 		"Operation": "Strip",
@@ -48,9 +48,9 @@ var S3BucketTagStrip = Tag{
 
 var S3BucketTagReplace = Tag{
 	Key: "Replace",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"New": "_",
 		"Old": " ",
@@ -61,9 +61,9 @@ var S3BucketTagReplace = Tag{
 
 var S3BucketTagTitle = Tag{
 	Key: "Title",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Operation": "Title",
 	},
@@ -72,9 +72,9 @@ var S3BucketTagTitle = Tag{
 
 var S3BucketTagCapitalize = Tag{
 	Key: "Capitalize",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Operation": "Capitalize",
 	},
@@ -83,9 +83,9 @@ var S3BucketTagCapitalize = Tag{
 
 var S3BucketTagLower = Tag{
 	Key: "Lower",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Operation": "Lower",
 	},
@@ -94,9 +94,9 @@ var S3BucketTagLower = Tag{
 
 var S3BucketTagUpper = Tag{
 	Key: "Upper",
-	Value: Transform{map[string]any{
+	Value: Transform{Json{
 	"Name": "String",
-	"Parameters": map[string]any{
+	"Parameters": Json{
 		"InputString": InputString,
 		"Operation": "Upper",
 	},

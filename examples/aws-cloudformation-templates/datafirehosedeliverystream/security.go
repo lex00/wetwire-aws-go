@@ -17,7 +17,7 @@ var DeliveryRolePolicyFirehosedeliverypoliPolicyDocument = PolicyDocument{
 var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1 = PolicyStatement{
 	Action: []any{"logs:PutLogEvents"},
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/kinesisfirehose/"},
 	LogGroupName,
 	":*",
@@ -27,10 +27,10 @@ var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1 = PolicyState
 var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement0 = PolicyStatement{
 	Action: []any{"s3:AbortMultipartUpload", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads", "s3:PutObject"},
 	Effect: "Allow",
-	Resource: []any{Join{"", []any{
+	Resource: []any{Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
-}}, Join{"", []any{
+}}, Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
 	"/*",
@@ -58,5 +58,5 @@ var DeliveryRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var DeliveryRole = iam.Role{
 	AssumeRolePolicyDocument: DeliveryRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(DeliveryRolePolicyFirehosedeliverypoli),
+	Policies: []any{DeliveryRolePolicyFirehosedeliverypoli},
 }

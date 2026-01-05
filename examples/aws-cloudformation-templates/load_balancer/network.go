@@ -6,7 +6,6 @@ package load_balancer
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancingv2"
 )
@@ -21,7 +20,7 @@ var LoadBalancerSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_In
 
 var LoadBalancerSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Automatically created Security Group for ELB",
-	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPortN443),
+	SecurityGroupIngress: []any{LoadBalancerSecurityGroupSecurityGroupIngressPortN443},
 	VpcId: VPCId,
 }
 
@@ -36,7 +35,7 @@ var LoadBalancerLoadBalancerAttributeDeletionprotectionen = elasticloadbalancing
 }
 
 var LoadBalancer = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(LoadBalancerLoadBalancerAttributeDeletionprotectionen, LoadBalancerLoadBalancerAttributeRoutinghttpdropinval),
+	LoadBalancerAttributes: []any{LoadBalancerLoadBalancerAttributeDeletionprotectionen, LoadBalancerLoadBalancerAttributeRoutinghttpdropinval},
 	Scheme: "internet-facing",
 	SecurityGroups: []any{LoadBalancerSecurityGroup.GroupId},
 	Subnets: []any{PublicSubnet1, PublicSubnet2},
@@ -65,7 +64,7 @@ var TargetGroupTargetGroupAttributeDeregistrationdelayt = elasticloadbalancingv2
 var TargetGroup = elasticloadbalancingv2.TargetGroup{
 	Port: 80,
 	Protocol: enums.Elbv2ProtocolEnumHttp,
-	TargetGroupAttributes: List(TargetGroupTargetGroupAttributeDeregistrationdelayt, TargetGroupTargetGroupAttributeStickinessenabled),
+	TargetGroupAttributes: []any{TargetGroupTargetGroupAttributeDeregistrationdelayt, TargetGroupTargetGroupAttributeStickinessenabled},
 	TargetType: enums.Elbv2TargetTypeEnumIp,
 	VpcId: VPCId,
 }
@@ -80,8 +79,8 @@ var LoadBalancerListenerCertificate1 = elasticloadbalancingv2.Listener_Certifica
 }
 
 var LoadBalancerListener = elasticloadbalancingv2.Listener{
-	Certificates: List(LoadBalancerListenerCertificate1),
-	DefaultActions: List(LoadBalancerListenerDefaultActionForward),
+	Certificates: []any{LoadBalancerListenerCertificate1},
+	DefaultActions: []any{LoadBalancerListenerDefaultActionForward},
 	LoadBalancerArn: LoadBalancer,
 	Port: 443,
 	Protocol: enums.Elbv2ProtocolEnumHttps,

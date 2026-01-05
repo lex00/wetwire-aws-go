@@ -39,5 +39,5 @@ var ASCPrivateLinkLambdaRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement
 var ASCPrivateLinkLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: ASCPrivateLinkLambdaRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambda),
+	Policies: []any{ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambda},
 }

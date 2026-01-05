@@ -10,7 +10,7 @@ import (
 
 // URLOutput - URL of the sample website
 var URLOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"http://",
 	ElasticLoadBalancer.DNSName,
 }},

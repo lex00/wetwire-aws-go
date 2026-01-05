@@ -14,8 +14,8 @@ var EC2Instance = ec2.Instance{
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
-	SubnetId: Select{0, Subnets},
-	UserData: Base64{Join{"", []any{
+	SubnetId: Select{Index: 0, List: Subnets},
+	UserData: Base64{Join{Delimiter: "", Values: []any{
 	"IPAddress=",
 	IPAddress,
 }}},

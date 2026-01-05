@@ -39,5 +39,5 @@ var TransformExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var TransformExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: TransformExecutionRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(TransformExecutionRolePolicyRoot),
+	Policies: []any{TransformExecutionRolePolicyRoot},
 }

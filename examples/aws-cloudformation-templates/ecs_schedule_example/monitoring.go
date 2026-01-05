@@ -12,7 +12,7 @@ import (
 
 var CloudwatchLogsGroup = logs.LogGroup{
 	KmsKeyId: LogsKmsKey,
-	LogGroupName: Join{"-", []any{
+	LogGroupName: Join{Delimiter: "-", Values: []any{
 	"ECSLogGroup",
 	AWS_STACK_NAME,
 }},
@@ -28,7 +28,7 @@ var ALB500sAlarmScaleUp = cloudwatch.Alarm{
 	AlarmActions: []any{ServiceScalingPolicy},
 	AlarmDescription: "Alarm if our ALB generates too many HTTP 500s.",
 	ComparisonOperator: "GreaterThanThreshold",
-	Dimensions: List(ALB500sAlarmScaleUpDimensionECSService),
+	Dimensions: []any{ALB500sAlarmScaleUpDimensionECSService},
 	EvaluationPeriods: "1",
 	MetricName: "HTTPCode_ELB_5XX_Count",
 	Namespace: "AWS/ApplicationELB",

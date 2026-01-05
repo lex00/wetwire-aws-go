@@ -10,7 +10,7 @@ import (
 )
 
 var VPCPeeringAccepterTagStack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"LambdaFunctionName": LambdaFunctionName,
 	"LambdaLogLevel": LambdaLogLevel,
 	"LambdaLogsCloudWatchKMSKey": LambdaLogsCloudWatchKMSKey,
@@ -19,7 +19,7 @@ var VPCPeeringAccepterTagStack = cloudformation.Stack{
 	"PeerName": PeerName,
 	"VPCPeeringConnectionId": VPCPeeringConnectionId,
 },
-	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Accepter-Tag.cfn.yaml", Variables: map[string]any{
+	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Accepter-Tag.cfn.yaml", Variables: Json{
 	"S3Bucket": TemplatesS3BucketName,
 	"S3KeyPrefix": TemplatesS3KeyPrefix,
 	"S3Region": TemplatesS3BucketRegion,
@@ -27,16 +27,16 @@ var VPCPeeringAccepterTagStack = cloudformation.Stack{
 }
 
 var VPCPeeringUpdatesStack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"NumberOfRouteTables": NumberOfRouteTables,
 	"NumberOfSecurityGroups": NumberOfSecurityGroups,
 	"PeerName": PeerName,
 	"PeerVPCCIDR": PeerVPCCIDR,
 	"RouteTableIds": RouteTableIds,
-	"SecurityGroupIds": Join{",", SecurityGroupIds},
+	"SecurityGroupIds": Join{Delimiter: ",", Values: SecurityGroupIds},
 	"VPCPeeringConnectionId": VPCPeeringConnectionId,
 },
-	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Updates.cfn.yaml", Variables: map[string]any{
+	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Updates.cfn.yaml", Variables: Json{
 	"S3Bucket": TemplatesS3BucketName,
 	"S3KeyPrefix": TemplatesS3KeyPrefix,
 	"S3Region": TemplatesS3BucketRegion,

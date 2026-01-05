@@ -81,6 +81,6 @@ var S3TargetDMSRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var S3TargetDMSRole = iam.Role{
 	AssumeRolePolicyDocument: S3TargetDMSRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(S3TargetDMSRolePolicyS3AccessForDMSPolicy),
+	Policies: []any{S3TargetDMSRolePolicyS3AccessForDMSPolicy},
 	RoleName: "dms-s3-target-role",
 }

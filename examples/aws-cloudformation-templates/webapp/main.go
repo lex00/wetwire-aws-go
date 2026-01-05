@@ -32,13 +32,41 @@ var RestApiStage = apigateway.Stage{
 }
 
 var TestResourceResource = apigateway.Resource{
-	ParentId: Sub{String: "${RestApi.RootResourceId}"},
+	ParentId: RestApiRootResourceId,
 	PathPart: "test",
 	RestApiId: RestApi,
 }
 
+var JwtResourceOptionsIntegration = apigateway.Method_Integration{
+	IntegrationHttpMethod: "POST",
+	Type_: "AWS_PROXY",
+	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${JwtResourceHandler.Arn}/invocations"},
+}
+
+var JwtResourceOptions = apigateway.Method{
+	AuthorizationType: "NONE",
+	HttpMethod: "OPTIONS",
+	Integration: &JwtResourceOptionsIntegration,
+	ResourceId: JwtResourceResource,
+	RestApiId: RestApi,
+}
+
+var TestResourceOptionsIntegration = apigateway.Method_Integration{
+	IntegrationHttpMethod: "POST",
+	Type_: "AWS_PROXY",
+	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestResourceHandler.Arn}/invocations"},
+}
+
+var TestResourceOptions = apigateway.Method{
+	AuthorizationType: "NONE",
+	HttpMethod: "OPTIONS",
+	Integration: &TestResourceOptionsIntegration,
+	ResourceId: TestResourceResource,
+	RestApiId: RestApi,
+}
+
 var JwtResourceResource = apigateway.Resource{
-	ParentId: Sub{String: "${RestApi.RootResourceId}"},
+	ParentId: RestApiRootResourceId,
 	PathPart: "jwt",
 	RestApiId: RestApi,
 }
@@ -53,7 +81,7 @@ var TestResourceGet = apigateway.Method{
 	AuthorizationType: "COGNITO_USER_POOLS",
 	AuthorizerId: RestApiAuthorizer,
 	HttpMethod: "GET",
-	Integration: TestResourceGetIntegration,
+	Integration: &TestResourceGetIntegration,
 	ResourceId: TestResourceResource,
 	RestApiId: RestApi,
 }
@@ -68,35 +96,7 @@ var JwtResourceGet = apigateway.Method{
 	AuthorizationType: "NONE",
 	AuthorizerId: AWS_NO_VALUE,
 	HttpMethod: "GET",
-	Integration: JwtResourceGetIntegration,
-	ResourceId: JwtResourceResource,
-	RestApiId: RestApi,
-}
-
-var TestResourceOptionsIntegration = apigateway.Method_Integration{
-	IntegrationHttpMethod: "POST",
-	Type_: "AWS_PROXY",
-	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestResourceHandler.Arn}/invocations"},
-}
-
-var TestResourceOptions = apigateway.Method{
-	AuthorizationType: "NONE",
-	HttpMethod: "OPTIONS",
-	Integration: TestResourceOptionsIntegration,
-	ResourceId: TestResourceResource,
-	RestApiId: RestApi,
-}
-
-var JwtResourceOptionsIntegration = apigateway.Method_Integration{
-	IntegrationHttpMethod: "POST",
-	Type_: "AWS_PROXY",
-	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${JwtResourceHandler.Arn}/invocations"},
-}
-
-var JwtResourceOptions = apigateway.Method{
-	AuthorizationType: "NONE",
-	HttpMethod: "OPTIONS",
-	Integration: JwtResourceOptionsIntegration,
+	Integration: &JwtResourceGetIntegration,
 	ResourceId: JwtResourceResource,
 	RestApiId: RestApi,
 }

@@ -19,7 +19,7 @@ var SQSQueue = sqs.Queue{
 	MaximumMessageSize: MaximumMessageSize,
 	MessageRetentionPeriod: MessageRetentionPeriod,
 	ReceiveMessageWaitTimeSeconds: ReceiveMessageWaitTimeSeconds,
-	RedrivePolicy: If{"CreateDeadLetterQueue", map[string]any{
+	RedrivePolicy: If{"CreateDeadLetterQueue", Json{
 	"deadLetterTargetArn": MyDeadLetterQueue.Arn,
 	"maxReceiveCount": 5,
 }, AWS_NO_VALUE},

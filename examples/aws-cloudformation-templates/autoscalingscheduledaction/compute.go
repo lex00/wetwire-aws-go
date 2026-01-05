@@ -14,7 +14,7 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	SecurityGroups: []any{InstanceSecurityGroup},
-	UserData: Base64{Join{"", []any{
+	UserData: Base64{Join{Delimiter: "", Values: []any{
 	"#!/bin/bash -xe ",
 	"yum update -y aws-cfn-bootstrap ",
 	"/opt/aws/bin/cfn-init -v ",

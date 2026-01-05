@@ -20,13 +20,13 @@ var TaskDefinitionContainerDefinition1 = ecs.TaskDefinition_ContainerDefinition{
 	Image: ImageUrl,
 	Memory: ContainerMemory,
 	Name: ServiceName,
-	PortMappings: List(TaskDefinitionContainerDefinition1PortMapping1),
+	PortMappings: []any{TaskDefinitionContainerDefinition1PortMapping1},
 }
 
 var TaskDefinition = ecs.TaskDefinition{
-	ContainerDefinitions: List(TaskDefinitionContainerDefinition1),
+	ContainerDefinitions: []any{TaskDefinitionContainerDefinition1},
 	Cpu: ContainerCpu,
-	ExecutionRoleArn: ImportValue{Join{":", []any{
+	ExecutionRoleArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"ECSTaskExecutionRole",
 }}},
@@ -38,21 +38,21 @@ var TaskDefinition = ecs.TaskDefinition{
 }
 
 var ServiceNetworkConfigurationAwsvpcConfiguration = ecs.Service_AwsVpcConfiguration{
-	SecurityGroups: []any{ImportValue{Join{":", []any{
+	SecurityGroups: []any{ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"FargateContainerSecurityGroup",
 }}}},
-	Subnets: []any{ImportValue{Join{":", []any{
+	Subnets: []any{ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetOne",
-}}}, ImportValue{Join{":", []any{
+}}}, ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetTwo",
 }}}},
 }
 
 var ServiceNetworkConfiguration = ecs.Service_NetworkConfiguration{
-	AwsvpcConfiguration: ServiceNetworkConfigurationAwsvpcConfiguration,
+	AwsvpcConfiguration: &ServiceNetworkConfigurationAwsvpcConfiguration,
 }
 
 var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
@@ -67,15 +67,15 @@ var ServiceDeploymentConfiguration = ecs.Service_DeploymentConfiguration{
 }
 
 var Service = ecs.Service{
-	Cluster: ImportValue{Join{":", []any{
+	Cluster: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"ClusterName",
 }}},
-	DeploymentConfiguration: ServiceDeploymentConfiguration,
+	DeploymentConfiguration: &ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LaunchType: enums.EcsLaunchTypeFargate,
-	LoadBalancers: List(ServiceLoadBalancer1),
-	NetworkConfiguration: ServiceNetworkConfiguration,
+	LoadBalancers: []any{ServiceLoadBalancer1},
+	NetworkConfiguration: &ServiceNetworkConfiguration,
 	ServiceName: ServiceName,
 	TaskDefinition: TaskDefinition,
 }

@@ -15,11 +15,11 @@ var InstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 
 var InstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: InstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &InstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var Instance = ec2.Instance{
-	BlockDeviceMappings: List(InstanceBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{InstanceBlockDeviceMappingDevsda1},
 	ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-arm64}}",
 	InstanceType: "t4g.nano",
 	KeyName: "sample",

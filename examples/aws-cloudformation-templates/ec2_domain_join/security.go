@@ -33,27 +33,27 @@ var myInstanceProfile = iam.InstanceProfile{
 }
 
 var myssmdocument = ssm.Document{
-	Content: map[string]any{
+	Content: Json{
 	"description": "Join instances to an AWS Directory Service domain.",
-	"parameters": map[string]any{
-	"directoryId": map[string]any{
+	"parameters": Json{
+	"directoryId": Json{
 	"description": "(Required) The ID of the AWS Directory Service directory.",
 	"type": "String",
 },
-	"directoryName": map[string]any{
+	"directoryName": Json{
 	"description": "(Required) The name of the directory; for example, test.example.com",
 	"type": "String",
 },
-	"dnsIpAddresses": map[string]any{
+	"dnsIpAddresses": Json{
 	"allowedPattern": "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)",
 	"default": []any{},
 	"description": "(Optional) The IP addresses of the DNS servers in the directory. Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html",
 	"type": "StringList",
 },
 },
-	"runtimeConfig": map[string]any{
-	"aws:domainJoin": map[string]any{
-	"properties": map[string]any{
+	"runtimeConfig": Json{
+	"aws:domainJoin": Json{
+	"properties": Json{
 	"directoryId": "{{ directoryId }}",
 	"directoryName": "{{ directoryName }}",
 	"dnsIpAddresses": "{{ dnsIpAddresses }}",

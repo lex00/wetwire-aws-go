@@ -16,21 +16,21 @@ var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = ec2.EC2Fleet_
 
 var LaunchTemplateLaunchTemplateDataTagSpecification1 = ec2.CapacityReservationFleet_TagSpecification{
 	ResourceTypeProp: "instance",
-	Tags: []any{map[string]any{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}},
+	Tags: []any{Json{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}},
 }
 
 var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1 = ec2.EC2Fleet_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
+	Ebs: &LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
 }
 
 var LaunchTemplateLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
-	BlockDeviceMappings: List(LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1},
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	SecurityGroupIds: SecurityGroups,
-	TagSpecifications: List(LaunchTemplateLaunchTemplateDataTagSpecification1),
+	TagSpecifications: []any{LaunchTemplateLaunchTemplateDataTagSpecification1},
 	UserData: Base64{Sub{String: "#!/bin/bash\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchTemplate --region ${AWS::Region}\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}\n"}},
 }
 
@@ -59,10 +59,10 @@ var WebServerGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSp
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: AZs,
 	HealthCheckType: "ELB",
-	LaunchTemplate: WebServerGroupLaunchTemplate,
+	LaunchTemplate: &WebServerGroupLaunchTemplate,
 	MaxSize: "3",
 	MinSize: "1",
-	NotificationConfigurations: List(WebServerGroupNotificationConfiguration1),
+	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},
 	TargetGroupARNs: []any{TargetGroup},
 	VPCZoneIdentifier: Subnets,
 }

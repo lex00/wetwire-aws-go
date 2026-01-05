@@ -5,7 +5,6 @@
 package log_setup_management
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 
@@ -40,13 +39,13 @@ var TargetAccountLoggingAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var TargetAccountLogging = cloudformation.StackSet{
-	AutoDeployment: TargetAccountLoggingAutoDeployment,
+	AutoDeployment: &TargetAccountLoggingAutoDeployment,
 	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging. It configures logging resources in target accounts.",
-	OperationPreferences: TargetAccountLoggingOperationPreferences,
-	Parameters: List(TargetAccountLoggingParameter1, TargetAccountLoggingParameter2),
+	OperationPreferences: &TargetAccountLoggingOperationPreferences,
+	Parameters: []any{TargetAccountLoggingParameter1, TargetAccountLoggingParameter2},
 	PermissionModel: "SERVICE_MANAGED",
-	StackInstancesGroup: List(TargetAccountLoggingStackInstancesGroup1),
+	StackInstancesGroup: []any{TargetAccountLoggingStackInstancesGroup1},
 	StackSetName: "log-setup",
 	TemplateBody: "AWSTemplateFormatVersion: \"2010-09-09\"\n\nDescription: EventBridge Rule to send CloudFormation events to a central EventBus\n\nParameters:\n  CentralEventBusArn:\n    Type: String\n  KmsKeyId:\n    Type: String\n    Description: 'The ID of an AWS Key Management Service (KMS) for Amazon SQS, or a custom KMS. To use the AWS managed KMS for Amazon SQS, specify a (default) alias ARN, alias name (for example alias/aws/sqs), key ARN, or key ID'\n    Default: alias/aws/sqs\n\nResources:\n  CloudFormationEventRule:\n    Type: AWS::Events::Rule\n    Metadata:\n      Comment: Send all cloudformation events to the central event bus\n    Properties:\n      Name: CloudFormationEventRule\n      EventBusName: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default\n      EventPattern:\n        source:\n          - aws.cloudformation\n      State: ENABLED\n      Targets:\n        - Arn: !Ref CentralEventBusArn\n          RoleArn: !GetAtt EventBridgeRole.Arn\n          Id: CentralEventBus\n          DeadLetterConfig:\n            Arn: !GetAtt DeadLetterQueue.Arn\n\n  DeadLetterQueue:\n    Type: AWS::SQS::Queue\n    Properties:\n      QueueName: CloudFormation-Logs-DLQ\n      KmsMasterKeyId: !Ref KmsKeyId\n\n  DeadLetterQueuePolicy:\n    Type: AWS::SQS::QueuePolicy\n    Properties:\n      PolicyDocument:\n        Version: \"2012-10-17\"\n        Id: AllowEventBridgeToWriteLogs\n        Statement:\n          - Sid: AllowEventBridgeToWriteLogs\n            Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: sqs:SendMessage\n            Resource: !GetAtt DeadLetterQueue.Arn\n            Condition:\n              ArnLike:\n                aws:SourceArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/CloudFormationEventRule\n      Queues:\n        - !Ref DeadLetterQueue\n\n  EventBridgeRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Version: \"2012-10-17\"\n        Statement:\n          - Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: sts:AssumeRole\n\n  EventBridgeRolePolicy:\n    Type: AWS::IAM::RolePolicy\n    Metadata:\n      Comment: Allow CloudFormation events to be written to the default event bus in the target account\n    Properties:\n      PolicyName: EventBridgeRolePolicy\n      PolicyDocument:\n        Version: \"2012-10-17\"\n        Statement:\n          - Effect: Allow\n            Action: events:PutEvents\n            Resource: !Ref CentralEventBusArn\n      RoleName: !Ref EventBridgeRole\n",
 }

@@ -38,6 +38,6 @@ var AWSCloudFormationStackSetAdministrationRoleAssumeRolePolicyDocumentStatement
 
 var AWSCloudFormationStackSetAdministrationRole = iam.Role{
 	AssumeRolePolicyDocument: AWSCloudFormationStackSetAdministrationRoleAssumeRolePolicyDocument,
-	Policies: List(AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClou),
+	Policies: []any{AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClou},
 	RoleName: "AWSCloudFormationStackSetAdministrationRole",
 }

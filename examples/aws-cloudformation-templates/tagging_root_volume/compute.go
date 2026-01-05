@@ -23,12 +23,12 @@ var LinuxInstanceTagName = Tag{
 
 var LinuxInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sdm",
-	Ebs: LinuxInstanceBlockDeviceMappingDevsdmEbs,
+	Ebs: &LinuxInstanceBlockDeviceMappingDevsdmEbs,
 }
 
 var LinuxInstance = ec2.Instance{
 	AvailabilityZone: InstanceAZ,
-	BlockDeviceMappings: List(LinuxInstanceBlockDeviceMappingDevsdm),
+	BlockDeviceMappings: []any{LinuxInstanceBlockDeviceMappingDevsdm},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: LinuxAMIID,
 	InstanceType: InstanceType,
@@ -52,12 +52,12 @@ var WindowsInstanceTagName = Tag{
 
 var WindowsInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sdm",
-	Ebs: WindowsInstanceBlockDeviceMappingDevsdmEbs,
+	Ebs: &WindowsInstanceBlockDeviceMappingDevsdmEbs,
 }
 
 var WindowsInstance = ec2.Instance{
 	AvailabilityZone: InstanceAZ,
-	BlockDeviceMappings: List(WindowsInstanceBlockDeviceMappingDevsdm),
+	BlockDeviceMappings: []any{WindowsInstanceBlockDeviceMappingDevsdm},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: WindowsAMIID,
 	InstanceType: InstanceType,

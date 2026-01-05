@@ -10,7 +10,7 @@ import (
 
 // EIP1Output - Primary public IP of Eth0
 var EIP1Output = Output{
-	Value:       Join{" ", []any{
+	Value:       Join{Delimiter: " ", Values: []any{
 	"IP address",
 	EIP1,
 	"on subnet",
@@ -27,7 +27,7 @@ var InstanceIdOutput = Output{
 
 // PrimaryPrivateIPAddressOutput - Primary private IP address of Eth0
 var PrimaryPrivateIPAddressOutput = Output{
-	Value:       Join{" ", []any{
+	Value:       Join{Delimiter: " ", Values: []any{
 	"IP address",
 	Eth0.PrimaryPrivateIpAddress,
 	"on subnet",
@@ -38,9 +38,9 @@ var PrimaryPrivateIPAddressOutput = Output{
 
 // SecondaryPrivateIPAddressesOutput - Secondary private IP address of Eth0
 var SecondaryPrivateIPAddressesOutput = Output{
-	Value:       Join{" ", []any{
+	Value:       Join{Delimiter: " ", Values: []any{
 	"IP address",
-	Select{0, Eth0.SecondaryPrivateIpAddresses},
+	Select{Index: 0, List: Eth0.SecondaryPrivateIpAddresses},
 	"on subnet",
 	SubnetId,
 }},

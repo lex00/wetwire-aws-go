@@ -19,10 +19,10 @@ var ConfigRuleForVolumeTagsScope = config.ConfigRule_Scope{
 }
 
 var ConfigRuleForVolumeTags = config.ConfigRule{
-	InputParameters: map[string]any{
+	InputParameters: Json{
 	"tag1Key": "CostCenter",
 },
-	Scope: ConfigRuleForVolumeTagsScope,
+	Scope: &ConfigRuleForVolumeTagsScope,
 	Source: ConfigRuleForVolumeTagsSource,
 }
 
@@ -31,7 +31,7 @@ var DeliveryChannelConfigSnapshotDeliveryProperties = config.DeliveryChannel_Con
 }
 
 var DeliveryChannel = config.DeliveryChannel{
-	ConfigSnapshotDeliveryProperties: DeliveryChannelConfigSnapshotDeliveryProperties,
+	ConfigSnapshotDeliveryProperties: &DeliveryChannelConfigSnapshotDeliveryProperties,
 	S3BucketName: ConfigBucket,
 	SnsTopicARN: ConfigTopic,
 }
@@ -43,7 +43,7 @@ var ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1 = config.ConfigRule_Sourc
 
 var ConfigRuleForVolumeAutoEnableIOSource = config.ConfigRule_Source{
 	Owner: "CUSTOM_LAMBDA",
-	SourceDetails: List(ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1),
+	SourceDetails: []any{ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1},
 	SourceIdentifier: VolumeAutoEnableIOComplianceCheck.Arn,
 }
 
@@ -54,7 +54,7 @@ var ConfigRuleForVolumeAutoEnableIOScope = config.ConfigRule_Scope{
 
 var ConfigRuleForVolumeAutoEnableIO = config.ConfigRule{
 	ConfigRuleName: "ConfigRuleForVolumeAutoEnableIO",
-	Scope: ConfigRuleForVolumeAutoEnableIOScope,
+	Scope: &ConfigRuleForVolumeAutoEnableIOScope,
 	Source: ConfigRuleForVolumeAutoEnableIOSource,
 }
 
@@ -64,6 +64,6 @@ var ConfigRecorderRecordingGroup = config.ConfigurationRecorder_RecordingGroup{
 
 var ConfigRecorder = config.ConfigurationRecorder{
 	Name: "default",
-	RecordingGroup: ConfigRecorderRecordingGroup,
+	RecordingGroup: &ConfigRecorderRecordingGroup,
 	RoleARN: ConfigRole.Arn,
 }

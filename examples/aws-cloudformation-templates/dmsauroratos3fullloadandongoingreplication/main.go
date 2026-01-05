@@ -31,15 +31,6 @@ var DMSReplicationInstance = dms.ReplicationInstance{
 	VpcSecurityGroupIds: []any{DMSSecurityGroup},
 }
 
-var DMSReplicationTask = dms.ReplicationTask{
-	MigrationType: "full-load-and-cdc",
-	ReplicationInstanceArn: DMSReplicationInstance,
-	ReplicationTaskSettings: "{ \"Logging\" : { \"EnableLogging\" : true, \"LogComponents\": [ { \"Id\" : \"SOURCE_UNLOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"SOURCE_CAPTURE\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_LOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_APPLY\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" } ] } }",
-	SourceEndpointArn: AuroraSourceEndpoint,
-	TableMappings: "{ \"rules\": [ { \"rule-type\" : \"selection\", \"rule-id\" : \"1\", \"rule-name\" : \"1\", \"object-locator\" : { \"schema-name\" : \"dms_sample\", \"table-name\" : \"%\" }, \"rule-action\" : \"include\" } ] }",
-	TargetEndpointArn: S3TargetEndpoint,
-}
-
 var S3TargetEndpointS3Settings = dms.Endpoint_S3Settings{
 	BucketName: S3Bucket,
 	ServiceAccessRoleArn: S3TargetDMSRole.Arn,
@@ -49,5 +40,14 @@ var S3TargetEndpoint = dms.Endpoint{
 	EndpointType: "target",
 	EngineName: "S3",
 	ExtraConnectionAttributes: "addColumnName=true",
-	S3Settings: S3TargetEndpointS3Settings,
+	S3Settings: &S3TargetEndpointS3Settings,
+}
+
+var DMSReplicationTask = dms.ReplicationTask{
+	MigrationType: "full-load-and-cdc",
+	ReplicationInstanceArn: DMSReplicationInstance,
+	ReplicationTaskSettings: "{ \"Logging\" : { \"EnableLogging\" : true, \"LogComponents\": [ { \"Id\" : \"SOURCE_UNLOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"SOURCE_CAPTURE\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_LOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_APPLY\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" } ] } }",
+	SourceEndpointArn: AuroraSourceEndpoint,
+	TableMappings: "{ \"rules\": [ { \"rule-type\" : \"selection\", \"rule-id\" : \"1\", \"rule-name\" : \"1\", \"object-locator\" : { \"schema-name\" : \"dms_sample\", \"table-name\" : \"%\" }, \"rule-action\" : \"include\" } ] }",
+	TargetEndpointArn: S3TargetEndpoint,
 }

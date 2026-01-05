@@ -28,7 +28,7 @@ var PipelineRolePolicyCanAccessS3PolicyDocument = PolicyDocument{
 var PipelineRolePolicyCanAccessS3PolicyDocumentStatement1 = PolicyStatement{
 	Action: []any{"s3:GetObject", "s3:GetObjectVersion", "s3:GetBucketVersioning", "s3:PutObject", "s3:GetBucketPolicy", "s3:GetObjectAcl", "s3:PutObjectAcl", "s3:DeleteObject"},
 	Effect: "Allow",
-	Resource: []any{ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}}, SubWithMap{String: "${filename}/*", Variables: map[string]any{
+	Resource: []any{ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}}, SubWithMap{String: "${filename}/*", Variables: Json{
 	"filename": ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}},
 }}},
 }
@@ -78,7 +78,7 @@ var PipelineRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var PipelineRole = iam.Role{
 	AssumeRolePolicyDocument: PipelineRoleAssumeRolePolicyDocument,
-	Policies: List(PipelineRolePolicyCanAccessCodeCommit, PipelineRolePolicyCanAccessS3, PipelineRolePolicyCanStartCodeBuild),
+	Policies: []any{PipelineRolePolicyCanAccessCodeCommit, PipelineRolePolicyCanAccessS3, PipelineRolePolicyCanStartCodeBuild},
 }
 
 var EventRolePolicyEbNegpipelineNegexecPolicyDocument = PolicyDocument{
@@ -89,7 +89,7 @@ var EventRolePolicyEbNegpipelineNegexecPolicyDocument = PolicyDocument{
 var EventRolePolicyEbNegpipelineNegexecPolicyDocumentStatement0 = PolicyStatement{
 	Action: "codepipeline:StartPipelineExecution",
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	"arn:aws:codepipeline:",
 	AWS_REGION,
 	":",
@@ -118,5 +118,5 @@ var EventRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var EventRole = iam.Role{
 	AssumeRolePolicyDocument: EventRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(EventRolePolicyEbNegpipelineNegexec),
+	Policies: []any{EventRolePolicyEbNegpipelineNegexec},
 }

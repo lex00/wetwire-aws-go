@@ -5,7 +5,6 @@
 package ec2_domain_join
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -18,6 +17,6 @@ var InstanceSecurityGroupSecurityGroupIngressPortN3389 = ec2.SecurityGroup_Ingre
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allow http to client host",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN3389),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN3389},
 	VpcId: VPC,
 }

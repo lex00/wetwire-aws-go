@@ -17,23 +17,23 @@ var EFSFileSystem = efs.FileSystem{
 var EFSMountTarget1 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
 	SecurityGroups: []any{EFSSecurityGroup.GroupId},
-	SubnetId: Select{0, Subnets},
+	SubnetId: Select{Index: 0, List: Subnets},
 }
 
 var EFSMountTarget2 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
 	SecurityGroups: []any{EFSSecurityGroup.GroupId},
-	SubnetId: Select{1, Subnets},
+	SubnetId: Select{Index: 1, List: Subnets},
 }
 
 var EFSMountTarget3 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
 	SecurityGroups: []any{EFSSecurityGroup.GroupId},
-	SubnetId: Select{2, Subnets},
+	SubnetId: Select{Index: 2, List: Subnets},
 }
 
 var EFSMountTarget4 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
 	SecurityGroups: []any{EFSSecurityGroup.GroupId},
-	SubnetId: Select{3, Subnets},
+	SubnetId: Select{Index: 3, List: Subnets},
 }

@@ -40,5 +40,5 @@ var TransformExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: TransformExecutionRoleAssumeRolePolicyDocument,
 	ManagedPolicyArns: []any{If{"AdditionalPolicyProvided", AdditionalExecutionPolicy, AWS_NO_VALUE}},
 	Path: "/",
-	Policies: List(TransformExecutionRolePolicyRoot),
+	Policies: []any{TransformExecutionRolePolicyRoot},
 }

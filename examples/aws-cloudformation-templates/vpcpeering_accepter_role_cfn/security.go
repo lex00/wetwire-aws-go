@@ -44,6 +44,6 @@ var PeerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var PeerRole = iam.Role{
 	AssumeRolePolicyDocument: PeerRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(PeerRolePolicyAcceptVPCPeering),
+	Policies: []any{PeerRolePolicyAcceptVPCPeering},
 	Tags: []any{PeerRoleTagStackName},
 }

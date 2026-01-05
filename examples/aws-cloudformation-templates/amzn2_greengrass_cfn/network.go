@@ -5,7 +5,6 @@
 package amzn2_greengrass_cfn
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -28,7 +27,7 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allow inbound SSH access",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN22},
 	VpcId: VPC,
 }
 

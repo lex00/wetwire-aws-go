@@ -5,7 +5,6 @@
 package rds_mysql_with_read_replica
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -18,5 +17,5 @@ var DBEC2SecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress{
 
 var DBEC2SecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Open database for access",
-	SecurityGroupIngress: List(DBEC2SecurityGroupSecurityGroupIngressPortN3306),
+	SecurityGroupIngress: []any{DBEC2SecurityGroupSecurityGroupIngressPortN3306},
 }

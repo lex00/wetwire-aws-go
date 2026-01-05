@@ -39,5 +39,5 @@ var IamRoleLambdaAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var IamRoleLambda = iam.Role{
 	AssumeRolePolicyDocument: IamRoleLambdaAssumeRolePolicyDocument,
 	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"},
-	Policies: List(IamRoleLambdaPolicyElastiCacheSnapshotP),
+	Policies: []any{IamRoleLambdaPolicyElastiCacheSnapshotP},
 }

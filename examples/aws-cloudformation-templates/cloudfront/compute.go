@@ -28,11 +28,11 @@ var EC2InstanceTagName = Tag{
 
 var EC2InstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: EC2InstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &EC2InstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var EC2Instance = ec2.Instance{
-	BlockDeviceMappings: List(EC2InstanceBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{EC2InstanceBlockDeviceMappingDevsda1},
 	ImageId: EC2ImageId,
 	InstanceType: EC2InstanceType,
 	KeyName: KeyPairName,

@@ -46,6 +46,6 @@ var VPCFlowLogsRole = iam.Role{
 	AssumeRolePolicyDocument: VPCFlowLogsRoleAssumeRolePolicyDocument,
 	Description: "Rights to Publish VPC Flow Logs to CloudWatch Logs",
 	Path: "/",
-	Policies: List(VPCFlowLogsRolePolicyCloudWatchLogGroup),
+	Policies: []any{VPCFlowLogsRolePolicyCloudWatchLogGroup},
 	Tags: []any{VPCFlowLogsRoleTagStackName},
 }

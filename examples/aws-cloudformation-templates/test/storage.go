@@ -5,7 +5,6 @@
 package test
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
@@ -15,11 +14,11 @@ var BucketLifecycleConfigurationRuleEnabled = s3.Bucket_Rule{
 }
 
 var BucketLifecycleConfiguration = s3.Bucket_LifecycleConfiguration{
-	Rules: List(BucketLifecycleConfigurationRuleEnabled),
+	Rules: []any{BucketLifecycleConfigurationRuleEnabled},
 }
 
 var Bucket = s3.Bucket{
-	LifecycleConfiguration: BucketLifecycleConfiguration,
+	LifecycleConfiguration: &BucketLifecycleConfiguration,
 }
 
 var NonExplodingBucket = s3.Bucket{

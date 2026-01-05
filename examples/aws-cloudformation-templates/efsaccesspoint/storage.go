@@ -5,7 +5,6 @@
 package efsaccesspoint
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/efs"
 )
 
@@ -16,7 +15,7 @@ var EFSFileSystemFileSystemTagName = efs.FileSystem_ElasticFileSystemTag{
 
 var EFSFileSystem = efs.FileSystem{
 	Encrypted: true,
-	FileSystemTags: List(EFSFileSystemFileSystemTagName),
+	FileSystemTags: []any{EFSFileSystemFileSystemTagName},
 	PerformanceMode: "generalPurpose",
 }
 
@@ -26,7 +25,7 @@ var EFSAccessPointAccessPointTagName = efs.AccessPoint_AccessPointTag{
 }
 
 var EFSAccessPoint = efs.AccessPoint{
-	AccessPointTags: List(EFSAccessPointAccessPointTagName),
+	AccessPointTags: []any{EFSAccessPointAccessPointTagName},
 	FileSystemId: EFSFileSystem,
 }
 

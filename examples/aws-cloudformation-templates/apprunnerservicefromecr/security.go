@@ -39,5 +39,5 @@ var AppRunnerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var AppRunnerRole = iam.Role{
 	AssumeRolePolicyDocument: AppRunnerRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(AppRunnerRolePolicyRoot),
+	Policies: []any{AppRunnerRolePolicyRoot},
 }

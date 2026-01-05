@@ -38,7 +38,7 @@ var LambdaExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var LambdaExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaExecutionRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaExecutionRolePolicyRoot),
+	Policies: []any{LambdaExecutionRolePolicyRoot},
 }
 
 var ConfigRolePolicyRootPolicyDocument = PolicyDocument{
@@ -56,7 +56,7 @@ var ConfigRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
 	Action: "s3:PutObject",
 	Condition: Json{StringEquals: Json{"s3:x-amz-acl": "bucket-owner-full-control"}},
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	ConfigBucket,
 	"/AWSLogs/",
@@ -68,7 +68,7 @@ var ConfigRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
 var ConfigRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
 	Action: "s3:GetBucketAcl",
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	ConfigBucket,
 }},
@@ -93,5 +93,5 @@ var ConfigRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var ConfigRole = iam.Role{
 	AssumeRolePolicyDocument: ConfigRoleAssumeRolePolicyDocument,
 	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"},
-	Policies: List(ConfigRolePolicyRoot),
+	Policies: []any{ConfigRolePolicyRoot},
 }

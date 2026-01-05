@@ -5,7 +5,6 @@
 package rhel9_cfn_hup
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -18,5 +17,5 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access via port 22",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN22},
 }

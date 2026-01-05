@@ -16,7 +16,7 @@ var CfnEndpointOutput = Output{
 
 // PrivateSubnetsOutput - A list of the private subnets
 var PrivateSubnetsOutput = Output{
-	Value:       Join{",", []any{
+	Value:       Join{Delimiter: ",", Values: []any{
 	PrivateSubnet1,
 	PrivateSubnet2,
 }},
@@ -25,7 +25,7 @@ var PrivateSubnetsOutput = Output{
 
 // PublicSubnetsOutput - A list of the public subnets
 var PublicSubnetsOutput = Output{
-	Value:       Join{",", []any{
+	Value:       Join{Delimiter: ",", Values: []any{
 	PublicSubnet1,
 	PublicSubnet2,
 }},

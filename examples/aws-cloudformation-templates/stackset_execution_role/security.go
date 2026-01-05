@@ -62,6 +62,6 @@ var AWSCloudFormationStackSetExecutionRoleAssumeRolePolicyDocumentStatement0 = P
 
 var AWSCloudFormationStackSetExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: AWSCloudFormationStackSetExecutionRoleAssumeRolePolicyDocument,
-	Policies: List(AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicy),
+	Policies: []any{AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicy},
 	RoleName: "AWSCloudFormationStackSetExecutionRole",
 }

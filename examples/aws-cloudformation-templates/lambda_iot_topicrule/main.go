@@ -42,7 +42,7 @@ var IoTPolicyPrincipalAttachment = iot.PolicyPrincipalAttachment{
 }
 
 var IoTThing = iot.Thing{
-	ThingName: Sub{String: "${AWS::StackName}"},
+	ThingName: AWS_STACK_NAME,
 }
 
 var IoTThingPrincipalAttachment = iot.ThingPrincipalAttachment{
@@ -55,18 +55,18 @@ var IoTTopicRuleTopicRulePayloadAction1Lambda = iot.TopicRule_LambdaAction{
 }
 
 var IoTTopicRuleTopicRulePayloadAction1 = iot.TopicRule_Action{
-	Lambda: IoTTopicRuleTopicRulePayloadAction1Lambda,
+	Lambda: &IoTTopicRuleTopicRulePayloadAction1Lambda,
 }
 
 var IoTTopicRuleTopicRulePayload = iot.TopicRule_TopicRulePayload{
-	Actions: List(IoTTopicRuleTopicRulePayloadAction1),
+	Actions: []any{IoTTopicRuleTopicRulePayloadAction1},
 	AwsIotSqlVersion: "2016-03-23",
 	RuleDisabled: false,
 	Sql: " SELECT * FROM 'topic_2'",
 }
 
 var IoTTopicRule = iot.TopicRule{
-	RuleName: Sub{String: "${AWS::StackName}"},
+	RuleName: AWS_STACK_NAME,
 	TopicRulePayload: IoTTopicRuleTopicRulePayload,
 }
 

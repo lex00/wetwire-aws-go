@@ -44,7 +44,7 @@ var GreengrassResourceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var GreengrassResourceRole = iam.Role{
 	AssumeRolePolicyDocument: GreengrassResourceRoleAssumeRolePolicyDocument,
-	Policies: List(GreengrassResourceRolePolicyRoot),
+	Policies: []any{GreengrassResourceRolePolicyRoot},
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocument = PolicyDocument{
@@ -100,5 +100,5 @@ var LambdaExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var LambdaExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaExecutionRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaExecutionRolePolicyRoot),
+	Policies: []any{LambdaExecutionRolePolicyRoot},
 }

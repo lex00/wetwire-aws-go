@@ -5,7 +5,6 @@
 package dmsauroratos3fullloadandongoingreplication
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
@@ -14,7 +13,7 @@ var S3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncrypti
 }
 
 var S3BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: S3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &S3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var S3BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -25,10 +24,10 @@ var S3BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfigur
 }
 
 var S3BucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(S3BucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{S3BucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var S3Bucket = s3.Bucket{
-	BucketEncryption: S3BucketBucketEncryption,
-	PublicAccessBlockConfiguration: S3BucketPublicAccessBlockConfiguration,
+	BucketEncryption: &S3BucketBucketEncryption,
+	PublicAccessBlockConfiguration: &S3BucketPublicAccessBlockConfiguration,
 }

@@ -11,38 +11,38 @@ import (
 
 var ServiceCatalogCloudFormationProductTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var ServiceCatalogCloudFormationProductTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var ServiceCatalogCloudFormationProductTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var ServiceCatalogCloudFormationProductTagDept = Tag{
 	Key: "Dept",
-	Value: Sub{String: "${Dept}"},
+	Value: Dept,
 }
 
 var ServiceCatalogCloudFormationProductTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var ServiceCatalogCloudFormationProductTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var ServiceCatalogCloudFormationProductProvisioningArtifactParameter1 = servicecatalog.CloudFormationProduct_ProvisioningArtifactProperties{
-	Description: Sub{String: "${ProvisioningArtifactDescriptionParameter}"},
-	Info: map[string]any{"LoadTemplateFromURL": Sub{String: "${ProvisioningArtifactTemplateUrl}"}},
-	Name: Sub{String: "${ProvisioningArtifactNameParameter}"},
+	Description: ProvisioningArtifactDescriptionParameter,
+	Info: Json{"LoadTemplateFromURL": ProvisioningArtifactTemplateUrl},
+	Name: ProvisioningArtifactNameParameter,
 }
 
 var ServiceCatalogCloudFormationProduct = servicecatalog.CloudFormationProduct{
@@ -50,10 +50,10 @@ var ServiceCatalogCloudFormationProduct = servicecatalog.CloudFormationProduct{
 	Distributor: SCProductDistributor,
 	Name: SCProductName,
 	Owner: SCProductOwner,
-	ProvisioningArtifactParameters: List(ServiceCatalogCloudFormationProductProvisioningArtifactParameter1),
+	ProvisioningArtifactParameters: []any{ServiceCatalogCloudFormationProductProvisioningArtifactParameter1},
 	SupportDescription: SCProductSupport,
 	SupportEmail: SCSupportEmail,
-	SupportUrl: Sub{String: "${SCSupportUrl}"},
+	SupportUrl: SCSupportUrl,
 	Tags: []any{ServiceCatalogCloudFormationProductTagName, ServiceCatalogCloudFormationProductTagApp, ServiceCatalogCloudFormationProductTagDept, ServiceCatalogCloudFormationProductTagEnv, ServiceCatalogCloudFormationProductTagUser, ServiceCatalogCloudFormationProductTagOwner},
 }
 

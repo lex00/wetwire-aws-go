@@ -44,6 +44,6 @@ var LambdaIamRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var LambdaIamRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaIamRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaIamRolePolicyLambdaApipolicy),
+	Policies: []any{LambdaIamRolePolicyLambdaApipolicy},
 	RoleName: "LambdaRole",
 }

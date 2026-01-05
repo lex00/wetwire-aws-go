@@ -20,17 +20,17 @@ var EIP2 = ec2.EIP{
 var ENI = ec2.NetworkInterface{
 	SecondaryPrivateIpAddressCount: 2,
 	SourceDestCheck: true,
-	SubnetId: Select{"0", Subnet},
+	SubnetId: Select{Index: "0", List: Subnet},
 }
 
 var Association1 = ec2.EIPAssociation{
 	AllocationId: EIP1.AllocationId,
 	NetworkInterfaceId: ENI,
-	PrivateIpAddress: Select{"0", ENI.SecondaryPrivateIpAddresses},
+	PrivateIpAddress: Select{Index: "0", List: ENI.SecondaryPrivateIpAddresses},
 }
 
 var Association2 = ec2.EIPAssociation{
 	AllocationId: EIP2.AllocationId,
 	NetworkInterfaceId: ENI,
-	PrivateIpAddress: Select{"1", ENI.SecondaryPrivateIpAddresses},
+	PrivateIpAddress: Select{Index: "1", List: ENI.SecondaryPrivateIpAddresses},
 }
