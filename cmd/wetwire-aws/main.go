@@ -15,8 +15,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "dev"
-
 func main() {
 	rootCmd := &cobra.Command{
 		Use:   "wetwire-aws",
@@ -57,7 +55,7 @@ func newVersionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Show version information",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("wetwire-aws %s\n", version)
+			fmt.Printf("wetwire-aws %s\n", getVersion())
 		},
 	}
 }

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Version info now embedded via `runtime/debug.ReadBuildInfo()` for `go install @version`
+- Version can also be set via ldflags: `-ldflags "-X main.version=v1.0.0"`
+
 ## [1.1.0] - 2026-01-05
 
 ### Added
