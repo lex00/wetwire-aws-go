@@ -28,13 +28,13 @@ var TargetAccountLoggingParameter1 = cloudformation.StackSet_Parameter{
 	ParameterValue: CentralEventBus.Arn,
 }
 
-var TargetAccountLoggingOperationPreferences = &cloudformation.StackSet_OperationPreferences{
+var TargetAccountLoggingOperationPreferences = cloudformation.StackSet_OperationPreferences{
 	FailureToleranceCount: 0,
 	MaxConcurrentCount: 2,
 	RegionConcurrencyType: "PARALLEL",
 }
 
-var TargetAccountLoggingAutoDeployment = &cloudformation.StackSet_AutoDeployment{
+var TargetAccountLoggingAutoDeployment = cloudformation.StackSet_AutoDeployment{
 	Enabled: true,
 	RetainStacksOnAccountRemoval: true,
 }

@@ -9,12 +9,12 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var ADConnectorLambdaFunctionVpcConfig = &lambda.Function_VpcConfig{
+var ADConnectorLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
 	SecurityGroupIds: []any{ADConnectorDomainMembersSG},
 	SubnetIds: []any{"PrivateSubnet1ID", "PrivateSubnet2ID"},
 }
 
-var ADConnectorLambdaFunctionEnvironment = &lambda.Function_Environment{
+var ADConnectorLambdaFunctionEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
 }
 

@@ -19,7 +19,7 @@ var DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDire
 	Value: []any{DirectoryID},
 }
 
-var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	DeleteOnTermination: true,
 	Encrypted: true,
 	KmsKeyId: If{"EBSKMSKeyCondition", EBSKMSKey, AWS_NO_VALUE},
@@ -55,7 +55,7 @@ var DomainMember1WithInlineSsmAssociation = ec2.Instance{
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember1NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
 }
 
-var DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	DeleteOnTermination: true,
 	Encrypted: true,
 	KmsKeyId: If{"EBSKMSKeyCondition", EBSKMSKey, AWS_NO_VALUE},
@@ -85,7 +85,7 @@ var DomainMember2WithSsmAssociationInstance = ec2.Instance{
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember2NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
 }
 
-var DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	DeleteOnTermination: true,
 	Encrypted: true,
 	KmsKeyId: If{"EBSKMSKeyCondition", EBSKMSKey, AWS_NO_VALUE},
@@ -120,7 +120,7 @@ var DomainMember3WithSsmAssociationTag = ec2.Instance{
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember3NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
 }
 
-var DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	DeleteOnTermination: true,
 	Encrypted: true,
 	KmsKeyId: If{"EBSKMSKeyCondition", EBSKMSKey, AWS_NO_VALUE},

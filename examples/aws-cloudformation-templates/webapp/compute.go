@@ -10,7 +10,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var JwtResourceHandlerEnvironment = &lambda.Function_Environment{
+var JwtResourceHandlerEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"COGNITO_APP_CLIENT_ID": CognitoClient, "COGNITO_DOMAIN_PREFIX": AppName, "COGNITO_POOL_ID": CognitoUserPool, "COGNITO_REDIRECT_URI": Sub{String: "https://${SiteDistribution.DomainName}/index.html"}, "COGNITO_REGION": "us-east-1"},
 }
 
@@ -42,7 +42,7 @@ var JwtResourceRootPermission = lambda.Permission{
 	SourceArn: Sub{String: "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/"},
 }
 
-var TestResourceHandlerEnvironment = &lambda.Function_Environment{
+var TestResourceHandlerEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"TABLE_NAME": TestTable},
 }
 

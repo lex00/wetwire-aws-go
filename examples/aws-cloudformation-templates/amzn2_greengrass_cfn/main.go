@@ -16,17 +16,17 @@ var GreengrassCoreDefinition = greengrass.CoreDefinition{
 }},
 }
 
-var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs = &greengrass.FunctionDefinitionVersion_RunAs{
+var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs = greengrass.FunctionDefinitionVersion_RunAs{
 	Gid: "10",
 	Uid: "1",
 }
 
-var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution = &greengrass.FunctionDefinitionVersion_Execution{
+var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution = greengrass.FunctionDefinitionVersion_Execution{
 	IsolationMode: "GreengrassContainer",
 	RunAs: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs,
 }
 
-var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment = &greengrass.FunctionDefinitionVersion_Environment{
+var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment = greengrass.FunctionDefinitionVersion_Environment{
 	AccessSysfs: "false",
 	Execution: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
 	Variables: map[string]any{"CORE_NAME": CoreName},
@@ -54,11 +54,11 @@ var FunctionDefinitionInitialVersionFunction1 = greengrass.FunctionDefinitionVer
 }},
 }
 
-var FunctionDefinitionInitialVersionDefaultConfig = &greengrass.FunctionDefinitionVersion_DefaultConfig{
+var FunctionDefinitionInitialVersionDefaultConfig = greengrass.FunctionDefinitionVersion_DefaultConfig{
 	Execution: FunctionDefinitionInitialVersionDefaultConfigExecution,
 }
 
-var FunctionDefinitionInitialVersion = &greengrass.FunctionDefinition_FunctionDefinitionVersion{
+var FunctionDefinitionInitialVersion = greengrass.FunctionDefinition_FunctionDefinitionVersion{
 	DefaultConfig: FunctionDefinitionInitialVersionDefaultConfig,
 	Functions: List(FunctionDefinitionInitialVersionFunction1),
 }
@@ -112,6 +112,18 @@ var GreengrassCoreDefinitionVersion = greengrass.CoreDefinitionVersion{
 	Cores: List(GreengrassCoreDefinitionVersionCore1),
 }
 
+var GreengrassGroupInitialVersion = greengrass.Group_GroupVersion{
+	CoreDefinitionVersionArn: GreengrassCoreDefinitionVersion,
+	FunctionDefinitionVersionArn: FunctionDefinition.LatestVersionArn,
+	SubscriptionDefinitionVersionArn: SubscriptionDefinition.LatestVersionArn,
+}
+
+var GreengrassGroup = greengrass.Group{
+	InitialVersion: GreengrassGroupInitialVersion,
+	Name: CoreName,
+	RoleArn: GreengrassResourceRole.Arn,
+}
+
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription3 = greengrass.SubscriptionDefinitionVersion_Subscription{
 	Id: "Subscription3",
 	Source: GGSampleFunctionVersion,
@@ -142,23 +154,11 @@ var SubscriptionDefinitionInitialVersionSubscriptionSubscription1 = greengrass.S
 	Target: GGSampleFunctionVersion,
 }
 
-var SubscriptionDefinitionInitialVersion = &greengrass.SubscriptionDefinition_SubscriptionDefinitionVersion{
+var SubscriptionDefinitionInitialVersion = greengrass.SubscriptionDefinition_SubscriptionDefinitionVersion{
 	Subscriptions: List(SubscriptionDefinitionInitialVersionSubscriptionSubscription1, SubscriptionDefinitionInitialVersionSubscriptionSubscription2, SubscriptionDefinitionInitialVersionSubscriptionSubscription3),
 }
 
 var SubscriptionDefinition = greengrass.SubscriptionDefinition{
 	InitialVersion: SubscriptionDefinitionInitialVersion,
 	Name: "SubscriptionDefinition",
-}
-
-var GreengrassGroupInitialVersion = &greengrass.Group_GroupVersion{
-	CoreDefinitionVersionArn: GreengrassCoreDefinitionVersion,
-	FunctionDefinitionVersionArn: FunctionDefinition.LatestVersionArn,
-	SubscriptionDefinitionVersionArn: SubscriptionDefinition.LatestVersionArn,
-}
-
-var GreengrassGroup = greengrass.Group{
-	InitialVersion: GreengrassGroupInitialVersion,
-	Name: CoreName,
-	RoleArn: GreengrassResourceRole.Arn,
 }

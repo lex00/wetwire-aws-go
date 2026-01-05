@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	KMSMasterKeyID: KmsKey,
 	SSEAlgorithm: "aws:kms",
 }
@@ -19,18 +19,18 @@ var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1 = s3.B
 	ServerSideEncryptionByDefault: S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var S3BucketDestinationVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var S3BucketDestinationVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var S3BucketDestinationPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var S3BucketDestinationPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var S3BucketDestinationBucketEncryption = &s3.Bucket_BucketEncryption{
+var S3BucketDestinationBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1),
 }
 

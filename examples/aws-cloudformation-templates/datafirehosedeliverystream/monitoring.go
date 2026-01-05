@@ -34,18 +34,18 @@ var DeliveryStreamExtendedS3DestinationConfigurationProcessingConfigurationProce
 	Type_: "AppendDelimiterToRecord",
 }
 
-var DeliveryStreamExtendedS3DestinationConfigurationProcessingConfiguration = &kinesisfirehose.DeliveryStream_ProcessingConfiguration{
+var DeliveryStreamExtendedS3DestinationConfigurationProcessingConfiguration = kinesisfirehose.DeliveryStream_ProcessingConfiguration{
 	Enabled: true,
 	Processors: List(DeliveryStreamExtendedS3DestinationConfigurationProcessingConfigurationProcessorAppendDelimiterToRec),
 }
 
-var DeliveryStreamExtendedS3DestinationConfigurationCloudWatchLoggingOptions = &kinesisfirehose.DeliveryStream_CloudWatchLoggingOptions{
+var DeliveryStreamExtendedS3DestinationConfigurationCloudWatchLoggingOptions = kinesisfirehose.DeliveryStream_CloudWatchLoggingOptions{
 	Enabled: true,
 	LogGroupName: FirehoseLogGroup,
 	LogStreamName: FirehoseLogStream,
 }
 
-var DeliveryStreamExtendedS3DestinationConfiguration = &kinesisfirehose.DeliveryStream_ExtendedS3DestinationConfiguration{
+var DeliveryStreamExtendedS3DestinationConfiguration = kinesisfirehose.DeliveryStream_ExtendedS3DestinationConfiguration{
 	BucketARN: Join{"", []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
@@ -56,7 +56,7 @@ var DeliveryStreamExtendedS3DestinationConfiguration = &kinesisfirehose.Delivery
 	RoleARN: DeliveryRole.Arn,
 }
 
-var DeliveryStreamDeliveryStreamEncryptionConfigurationInput = &kinesisfirehose.DeliveryStream_DeliveryStreamEncryptionConfigurationInput{
+var DeliveryStreamDeliveryStreamEncryptionConfigurationInput = kinesisfirehose.DeliveryStream_DeliveryStreamEncryptionConfigurationInput{
 	KeyType: "AWS_OWNED_CMK",
 }
 

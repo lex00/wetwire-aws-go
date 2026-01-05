@@ -8,7 +8,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/secretsmanager"
 )
 
-var DBCredentialGenerateSecretString = &secretsmanager.Secret_GenerateSecretString{
+var DBCredentialGenerateSecretString = secretsmanager.Secret_GenerateSecretString{
 	ExcludeCharacters: "\"@/\\",
 	PasswordLength: 16,
 	RequireEachIncludedType: true,

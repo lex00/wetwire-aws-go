@@ -41,7 +41,7 @@ var CachePolicy = cloudfront.CachePolicy{
 	CachePolicyConfig: CachePolicyCachePolicyConfig,
 }
 
-var DistributionDistributionConfigOrigin1CustomOriginConfig = &cloudfront.Distribution_CustomOriginConfig{
+var DistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distribution_CustomOriginConfig{
 	HTTPPort: Port,
 	OriginProtocolPolicy: "http-only",
 }

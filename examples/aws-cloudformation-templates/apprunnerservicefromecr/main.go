@@ -9,17 +9,17 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/apprunner"
 )
 
-var AppRunnerSourceConfigurationImageRepositoryImageConfiguration = &apprunner.Service_ImageConfiguration{
+var AppRunnerSourceConfigurationImageRepositoryImageConfiguration = apprunner.Service_ImageConfiguration{
 	Port: TCPPORT,
 }
 
-var AppRunnerSourceConfigurationImageRepository = &apprunner.Service_ImageRepository{
+var AppRunnerSourceConfigurationImageRepository = apprunner.Service_ImageRepository{
 	ImageConfiguration: AppRunnerSourceConfigurationImageRepositoryImageConfiguration,
 	ImageIdentifier: ECRURL,
 	ImageRepositoryType: "ECR",
 }
 
-var AppRunnerSourceConfigurationAuthenticationConfiguration = &apprunner.Service_AuthenticationConfiguration{
+var AppRunnerSourceConfigurationAuthenticationConfiguration = apprunner.Service_AuthenticationConfiguration{
 	AccessRoleArn: AppRunnerRole.Arn,
 }
 

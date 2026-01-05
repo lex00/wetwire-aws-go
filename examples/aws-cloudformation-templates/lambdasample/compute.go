@@ -10,7 +10,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var LambdaFunctionEnvironment = &lambda.Function_Environment{
+var LambdaFunctionEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"ENV": EnvName, "TZ": "UTC"},
 }
 

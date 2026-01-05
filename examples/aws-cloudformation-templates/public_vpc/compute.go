@@ -14,7 +14,7 @@ import (
 var ECSCluster = ecs.Cluster{
 }
 
-var ECSAutoScalingGroupLaunchTemplate = &autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
+var ECSAutoScalingGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
 	LaunchTemplateId: ContainerInstances,
 	Version: ContainerInstances.LatestVersionNumber,
 }
@@ -27,7 +27,7 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	VPCZoneIdentifier: []any{PublicSubnetOne, PublicSubnetTwo},
 }
 
-var ContainerInstancesLaunchTemplateDataIamInstanceProfile = &ec2.LaunchTemplate_IamInstanceProfile{
+var ContainerInstancesLaunchTemplateDataIamInstanceProfile = ec2.LaunchTemplate_IamInstanceProfile{
 	Arn: EC2InstanceProfile.Arn,
 }
 

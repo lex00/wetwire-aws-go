@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var InstanceBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var InstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	VolumeSize: 32,
 }
 

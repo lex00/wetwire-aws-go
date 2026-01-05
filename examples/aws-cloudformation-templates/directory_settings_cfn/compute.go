@@ -9,12 +9,12 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var DirectorySettingsLambdaFunctionVpcConfig = &lambda.Function_VpcConfig{
+var DirectorySettingsLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
 	SecurityGroupIds: SecurityGroups,
 	SubnetIds: Subnets,
 }
 
-var DirectorySettingsLambdaFunctionEnvironment = &lambda.Function_Environment{
+var DirectorySettingsLambdaFunctionEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
 }
 

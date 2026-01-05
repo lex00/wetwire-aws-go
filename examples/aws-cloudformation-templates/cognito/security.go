@@ -24,7 +24,7 @@ var UserPoolSchemaEmail = cognito.UserPool_SchemaAttribute{
 	Required: true,
 }
 
-var UserPoolAdminCreateUserConfig = &cognito.UserPool_AdminCreateUserConfig{
+var UserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfig{
 	AllowAdminCreateUserOnly: true,
 }
 

@@ -28,7 +28,7 @@ var ServiceScalingPolicyStepScalingPolicyConfigurationStepAdjustment1 = applicat
 	ScalingAdjustment: 200,
 }
 
-var ServiceScalingPolicyStepScalingPolicyConfiguration = &applicationautoscaling.ScalingPolicy_StepScalingPolicyConfiguration{
+var ServiceScalingPolicyStepScalingPolicyConfiguration = applicationautoscaling.ScalingPolicy_StepScalingPolicyConfiguration{
 	AdjustmentType: "PercentChangeInCapacity",
 	Cooldown: 60,
 	MetricAggregationType: "Average",

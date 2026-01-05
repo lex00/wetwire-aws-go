@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var LinuxInstanceBlockDeviceMappingDevsdmEbs = &ec2.Instance_Ebs{
+var LinuxInstanceBlockDeviceMappingDevsdmEbs = ec2.Instance_Ebs{
 	DeleteOnTermination: "true",
 	Iops: "200",
 	VolumeSize: "10",
@@ -38,7 +38,7 @@ var LinuxInstance = ec2.Instance{
 	UserData: Base64{"AWS_AVAIL_ZONE=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)\nAWS_REGION=\"`echo \\\"$AWS_AVAIL_ZONE\\\" | sed 's/[a-z]$//'`\"\nAWS_INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)\nROOT_VOLUME_IDS=$(aws ec2 describe-instances --region $AWS_REGION --instance-id $AWS_INSTANCE_ID --output text --query Reservations[0].Instances[0].BlockDeviceMappings[0].Ebs.VolumeId)\naws ec2 create-tags --resources $ROOT_VOLUME_IDS --region $AWS_REGION --tags Key=MyRootTag,Value=MyRootVolumesValue\n"},
 }
 
-var WindowsInstanceBlockDeviceMappingDevsdmEbs = &ec2.Instance_Ebs{
+var WindowsInstanceBlockDeviceMappingDevsdmEbs = ec2.Instance_Ebs{
 	DeleteOnTermination: "true",
 	Iops: "200",
 	VolumeSize: "10",

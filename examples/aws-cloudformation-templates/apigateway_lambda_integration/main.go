@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/apigateway"
 )
 
-var RestApiEndpointConfiguration = &apigateway.RestApi_EndpointConfiguration{
+var RestApiEndpointConfiguration = apigateway.RestApi_EndpointConfiguration{
 	Types: []any{ApiType},
 }
 
@@ -49,7 +49,7 @@ var ApiMethodMethodResponse1 = apigateway.Method_MethodResponse{
 	StatusCode: "200",
 }
 
-var ApiMethodIntegration = &apigateway.Method_Integration{
+var ApiMethodIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
 	IntegrationResponses: List(ApiMethodIntegrationIntegrationResponse1),
 	RequestTemplates: map[string]any{"application/json": "#set($inputRoot = $input.path('$'))\n    {\n      \"city\": \"$input.params('city')\",\n      \"time\": \"$input.params('time')\",\n      \"day\":  \"$input.params('day')\",\n      \"name\": \"$inputRoot.callerName\"\n    }\n"},

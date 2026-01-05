@@ -59,6 +59,77 @@ var ADConnectorWindowsEC2DomainJoinRole = iam.Role{
 	Tags: []any{ADConnectorWindowsEC2DomainJoinRoleTagStackName},
 }
 
+var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
+	Path: "/",
+	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument = PolicyDocument{
+	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0 = PolicyStatement{
+	Action: []any{"secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"},
+	Effect: "Allow",
+	Resource: ADConnectorLinuxEC2SeamlessDomainJoinSecret,
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocument = PolicyDocument{
+	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocumentStatement0 = PolicyStatement{
+	Action: "s3:GetObject",
+	Effect: "Allow",
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-windows-downloads-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::amazon-ssm-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::amazon-ssm-packages-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::Region}-birdwatcher-prod/*"}, Sub{String: "arn:${AWS::Partition}:s3:::patch-baseline-snapshot-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-distributor-file-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-document-attachments-${AWS::Region}/*"}},
+}
+
+var ADConnectorLinuxEC2DomainJoinRoleTagStackName = Tag{
+	Key: "StackName",
+	Value: AWS_STACK_NAME,
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2S = iam.Role_Policy{
+	PolicyDocument: ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument,
+	PolicyName: "ADConnectorLinuxEC2SeamlessDomainJoinSecret",
+}
+
+var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgent = iam.Role_Policy{
+	PolicyDocument: ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocument,
+	PolicyName: "SSMAgent",
+}
+
+var ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocument = PolicyDocument{
+	Statement: []any{ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
+	Action: "sts:AssumeRole",
+	Effect: "Allow",
+	Principal: ServicePrincipal{"ec2.amazonaws.com"},
+}
+
+var ADConnectorLinuxEC2DomainJoinRole = iam.Role{
+	AssumeRolePolicyDocument: ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocument,
+	Description: Sub{String: "IAM Role to Seamlessly Join Linux EC2 Instances to ${DomainNetBiosName} Domain via AD Connector"},
+	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"}, Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMDirectoryServiceAccess"}},
+	Path: "/",
+	Policies: List(ADConnectorLinuxEC2DomainJoinRolePolicySSMAgent, ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2S),
+	RoleName: Sub{String: "${DomainNetBiosName}-LinuxEC2DomainJoinRole-ADConnector"},
+	Tags: []any{ADConnectorLinuxEC2DomainJoinRoleTagStackName},
+}
+
+var ADConnectorLinuxEC2SeamlessDomainJoinSecret = secretsmanager.Secret{
+	Description: Sub{String: "AD Credentials for Seamless Domain Join Windows/Linux EC2 instances to ${DomainNetBiosName} Domain via AD Connector"},
+	KmsKeyId: If{"SecretsManagerDomainCredentialsSecretsKMSKeyCondition", SecretsManagerDomainCredentialsSecretsKMSKey, AWS_NO_VALUE},
+	Name: Sub{String: "aws/directory-services/${ADConnectorResource}/seamless-domain-join"},
+	SecretString: Sub{String: "{ \"awsSeamlessDomainUsername\" : \"${DomainJoinUser}\", \"awsSeamlessDomainPassword\" : \"${DomainJoinUserPassword}\" }"},
+}
+
 var ADConnectorLambdaRolePolicyADConnectorServiceAcPolicyDocument = PolicyDocument{
 	Statement: []any{ADConnectorLambdaRolePolicyADConnectorServiceAcPolicyDocumentStatement0},
 	Version: "2012-10-17",
@@ -162,75 +233,4 @@ var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
 	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
 	Path: "/",
 	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
-}
-
-var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
-	Path: "/",
-	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
-}
-
-var ADConnectorLinuxEC2SeamlessDomainJoinSecret = secretsmanager.Secret{
-	Description: Sub{String: "AD Credentials for Seamless Domain Join Windows/Linux EC2 instances to ${DomainNetBiosName} Domain via AD Connector"},
-	KmsKeyId: If{"SecretsManagerDomainCredentialsSecretsKMSKeyCondition", SecretsManagerDomainCredentialsSecretsKMSKey, AWS_NO_VALUE},
-	Name: Sub{String: "aws/directory-services/${ADConnectorResource}/seamless-domain-join"},
-	SecretString: Sub{String: "{ \"awsSeamlessDomainUsername\" : \"${DomainJoinUser}\", \"awsSeamlessDomainPassword\" : \"${DomainJoinUserPassword}\" }"},
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument = PolicyDocument{
-	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"},
-	Effect: "Allow",
-	Resource: ADConnectorLinuxEC2SeamlessDomainJoinSecret,
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocument = PolicyDocument{
-	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocumentStatement0 = PolicyStatement{
-	Action: "s3:GetObject",
-	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-windows-downloads-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::amazon-ssm-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::amazon-ssm-packages-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::Region}-birdwatcher-prod/*"}, Sub{String: "arn:${AWS::Partition}:s3:::patch-baseline-snapshot-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-distributor-file-${AWS::Region}/*"}, Sub{String: "arn:${AWS::Partition}:s3:::aws-ssm-document-attachments-${AWS::Region}/*"}},
-}
-
-var ADConnectorLinuxEC2DomainJoinRoleTagStackName = Tag{
-	Key: "StackName",
-	Value: AWS_STACK_NAME,
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2S = iam.Role_Policy{
-	PolicyDocument: ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument,
-	PolicyName: "ADConnectorLinuxEC2SeamlessDomainJoinSecret",
-}
-
-var ADConnectorLinuxEC2DomainJoinRolePolicySSMAgent = iam.Role_Policy{
-	PolicyDocument: ADConnectorLinuxEC2DomainJoinRolePolicySSMAgentPolicyDocument,
-	PolicyName: "SSMAgent",
-}
-
-var ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: "sts:AssumeRole",
-	Effect: "Allow",
-	Principal: ServicePrincipal{"ec2.amazonaws.com"},
-}
-
-var ADConnectorLinuxEC2DomainJoinRole = iam.Role{
-	AssumeRolePolicyDocument: ADConnectorLinuxEC2DomainJoinRoleAssumeRolePolicyDocument,
-	Description: Sub{String: "IAM Role to Seamlessly Join Linux EC2 Instances to ${DomainNetBiosName} Domain via AD Connector"},
-	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"}, Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMDirectoryServiceAccess"}},
-	Path: "/",
-	Policies: List(ADConnectorLinuxEC2DomainJoinRolePolicySSMAgent, ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2S),
-	RoleName: Sub{String: "${DomainNetBiosName}-LinuxEC2DomainJoinRole-ADConnector"},
-	Tags: []any{ADConnectorLinuxEC2DomainJoinRoleTagStackName},
 }

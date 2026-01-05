@@ -36,7 +36,7 @@ var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
 	TargetGroupArn: TargetGroup,
 }
 
-var ServiceDeploymentConfiguration = &ecs.Service_DeploymentConfiguration{
+var ServiceDeploymentConfiguration = ecs.Service_DeploymentConfiguration{
 	MaximumPercent: 200,
 	MinimumHealthyPercent: 75,
 }

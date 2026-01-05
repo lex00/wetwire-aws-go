@@ -15,7 +15,7 @@ var DeadLetterQueue = sqs.Queue{
 	QueueName: "CloudFormation-Logs-DLQ",
 }
 
-var CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig = &events.EventBus_DeadLetterConfig{
+var CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig = events.EventBus_DeadLetterConfig{
 	Arn: DeadLetterQueue.Arn,
 }
 

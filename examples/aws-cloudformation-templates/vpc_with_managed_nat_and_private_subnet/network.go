@@ -115,7 +115,7 @@ var PublicNetworkAcl = ec2.NetworkAcl{
 	VpcId: VPC,
 }
 
-var InboundHTTPPublicNetworkAclEntryPortRange = &ec2.NetworkAclEntry_PortRange{
+var InboundHTTPPublicNetworkAclEntryPortRange = ec2.NetworkAclEntry_PortRange{
 	From: "0",
 	To: "65535",
 }
@@ -130,7 +130,7 @@ var InboundHTTPPublicNetworkAclEntry = ec2.NetworkAclEntry{
 	RuleNumber: "100",
 }
 
-var OutboundPublicNetworkAclEntryPortRange = &ec2.NetworkAclEntry_PortRange{
+var OutboundPublicNetworkAclEntryPortRange = ec2.NetworkAclEntry_PortRange{
 	From: "0",
 	To: "65535",
 }
@@ -174,6 +174,52 @@ var PublicRoute = ec2.Route{
 	RouteTableId: PublicRouteTable,
 }
 
+var PublicSubnetNetworkAclAssociation0 = ec2.SubnetNetworkAclAssociation{
+	NetworkAclId: PublicNetworkAcl,
+	SubnetId: PublicSubnet0,
+}
+
+var PublicSubnetRouteTableAssociation1 = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PublicRouteTable,
+	SubnetId: PublicSubnet1,
+}
+
+var NATGateway1 = ec2.NatGateway{
+	AllocationId: ElasticIP1.AllocationId,
+	SubnetId: PublicSubnet1,
+}
+
+var PrivateSubnet1TagName = Tag{
+	Key: "Name",
+	Value: Join{"", []any{
+	VPCName,
+	"-private-",
+	Select{1, GetAZs{}},
+}},
+}
+
+var PrivateSubnet1TagNetwork = Tag{
+	Key: "Network",
+	Value: "Private",
+}
+
+var PrivateSubnet1TagApplication = Tag{
+	Key: "Application",
+	Value: AWS_STACK_NAME,
+}
+
+var PrivateSubnet1 = ec2.Subnet{
+	AvailabilityZone: Select{1, GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "Private1", "CIDR"},
+	Tags: []any{PrivateSubnet1TagApplication, PrivateSubnet1TagNetwork, PrivateSubnet1TagName},
+	VpcId: VPC,
+}
+
+var PublicSubnetRouteTableAssociation0 = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PublicRouteTable,
+	SubnetId: PublicSubnet0,
+}
+
 var PublicSubnet1TagName = Tag{
 	Key: "Name",
 	Value: Join{"", []any{
@@ -201,19 +247,37 @@ var PublicSubnet1 = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var NATGateway1 = ec2.NatGateway{
-	AllocationId: ElasticIP1.AllocationId,
-	SubnetId: PublicSubnet1,
+var PublicSubnet0TagName = Tag{
+	Key: "Name",
+	Value: Join{"", []any{
+	VPCName,
+	"-public-",
+	Select{0, GetAZs{}},
+}},
 }
 
-var PublicSubnetRouteTableAssociation0 = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnet0,
+var PublicSubnet0TagNetwork = Tag{
+	Key: "Network",
+	Value: "Public",
 }
 
-var PublicSubnetRouteTableAssociation1 = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnet1,
+var PublicSubnet0TagApplication = Tag{
+	Key: "Application",
+	Value: AWS_STACK_NAME,
+}
+
+var PublicSubnet0 = ec2.Subnet{
+	AvailabilityZone: Select{0, GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "Public0", "CIDR"},
+	MapPublicIpOnLaunch: "true",
+	Tags: []any{PublicSubnet0TagApplication, PublicSubnet0TagNetwork, PublicSubnet0TagName},
+	VpcId: VPC,
+}
+
+var PrivateRouteToInternet1 = ec2.Route{
+	DestinationCidrBlock: "0.0.0.0/0",
+	NatGatewayId: NATGateway1,
+	RouteTableId: PrivateRouteTable1,
 }
 
 var NATGateway0 = ec2.NatGateway{
@@ -247,16 +311,15 @@ var PrivateSubnet0 = ec2.Subnet{
 	VpcId: VPC,
 }
 
+var PrivateSubnetRouteTableAssociation1 = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable1,
+	SubnetId: PrivateSubnet1,
+}
+
 var PrivateRouteToInternet0 = ec2.Route{
 	DestinationCidrBlock: "0.0.0.0/0",
 	NatGatewayId: NATGateway0,
 	RouteTableId: PrivateRouteTable0,
-}
-
-var PrivateRouteToInternet1 = ec2.Route{
-	DestinationCidrBlock: "0.0.0.0/0",
-	NatGatewayId: NATGateway1,
-	RouteTableId: PrivateRouteTable1,
 }
 
 var PrivateSubnetRouteTableAssociation0 = ec2.SubnetRouteTableAssociation{
@@ -264,70 +327,7 @@ var PrivateSubnetRouteTableAssociation0 = ec2.SubnetRouteTableAssociation{
 	SubnetId: PrivateSubnet0,
 }
 
-var PublicSubnet0TagName = Tag{
-	Key: "Name",
-	Value: Join{"", []any{
-	VPCName,
-	"-public-",
-	Select{0, GetAZs{}},
-}},
-}
-
-var PublicSubnet0TagNetwork = Tag{
-	Key: "Network",
-	Value: "Public",
-}
-
-var PublicSubnet0TagApplication = Tag{
-	Key: "Application",
-	Value: AWS_STACK_NAME,
-}
-
-var PublicSubnet0 = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "Public0", "CIDR"},
-	MapPublicIpOnLaunch: "true",
-	Tags: []any{PublicSubnet0TagApplication, PublicSubnet0TagNetwork, PublicSubnet0TagName},
-	VpcId: VPC,
-}
-
-var PublicSubnetNetworkAclAssociation0 = ec2.SubnetNetworkAclAssociation{
-	NetworkAclId: PublicNetworkAcl,
-	SubnetId: PublicSubnet0,
-}
-
-var PrivateSubnet1TagName = Tag{
-	Key: "Name",
-	Value: Join{"", []any{
-	VPCName,
-	"-private-",
-	Select{1, GetAZs{}},
-}},
-}
-
-var PrivateSubnet1TagNetwork = Tag{
-	Key: "Network",
-	Value: "Private",
-}
-
-var PrivateSubnet1TagApplication = Tag{
-	Key: "Application",
-	Value: AWS_STACK_NAME,
-}
-
-var PrivateSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "Private1", "CIDR"},
-	Tags: []any{PrivateSubnet1TagApplication, PrivateSubnet1TagNetwork, PrivateSubnet1TagName},
-	VpcId: VPC,
-}
-
 var PublicSubnetNetworkAclAssociation1 = ec2.SubnetNetworkAclAssociation{
 	NetworkAclId: PublicNetworkAcl,
 	SubnetId: PublicSubnet1,
-}
-
-var PrivateSubnetRouteTableAssociation1 = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable1,
-	SubnetId: PrivateSubnet1,
 }

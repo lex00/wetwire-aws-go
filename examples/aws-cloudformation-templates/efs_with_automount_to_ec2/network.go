@@ -36,7 +36,7 @@ var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{
 	Protocol: "HTTP",
 }
 
-var ElasticLoadBalancerHealthCheck = &elasticloadbalancing.LoadBalancer_HealthCheck{
+var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthCheck{
 	HealthyThreshold: "3",
 	Interval: "30",
 	Target: Join{"", []any{

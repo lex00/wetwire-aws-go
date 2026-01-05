@@ -30,11 +30,25 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	VPCZoneIdentifier: SubnetId,
 }
 
+var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
+	ContainerName: "simple-app",
+	ContainerPort: "80",
+	TargetGroupArn: ECSTG,
+}
+
+var Service = ecs.Service{
+	Cluster: ECSCluster,
+	DesiredCount: "1",
+	LoadBalancers: List(ServiceLoadBalancer1),
+	Role: ECSServiceRole,
+	TaskDefinition: TaskDefinition,
+}
+
 var TaskDefinitionContainerDefinitionBusyboxVolumesFrom1 = ecs.TaskDefinition_VolumeFrom{
 	SourceContainer: "simple-app",
 }
 
-var TaskDefinitionContainerDefinitionBusyboxLogConfiguration = &ecs.Service_LogConfiguration{
+var TaskDefinitionContainerDefinitionBusyboxLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
 	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
@@ -48,7 +62,7 @@ var TaskDefinitionContainerDefinitionSimpleNegappMountPoint1 = ecs.TaskDefinitio
 	SourceVolume: "my-vol",
 }
 
-var TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration = &ecs.Service_LogConfiguration{
+var TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
 	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
@@ -87,18 +101,4 @@ var TaskDefinition = ecs.TaskDefinition{
 	"-ecs-demo-app",
 }},
 	Volumes: List(TaskDefinitionVolumeMyNegvol),
-}
-
-var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
-	ContainerName: "simple-app",
-	ContainerPort: "80",
-	TargetGroupArn: ECSTG,
-}
-
-var Service = ecs.Service{
-	Cluster: ECSCluster,
-	DesiredCount: "1",
-	LoadBalancers: List(ServiceLoadBalancer1),
-	Role: ECSServiceRole,
-	TaskDefinition: TaskDefinition,
 }

@@ -114,41 +114,6 @@ var Tcp8080Out = ec2.SecurityGroupEgress{
 	ToPort: 8080,
 }
 
-var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
-	TargetGroupArn: OriginALBTG,
-	Type_: "forward",
-}
-
-var OriginALBHttpsListenerCertificate1 = elasticloadbalancingv2.Listener_Certificate{
-	CertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
-}
-
-var OriginALBHttpsListener = elasticloadbalancingv2.Listener{
-	Certificates: List(OriginALBHttpsListenerCertificate1),
-	DefaultActions: List(OriginALBHttpsListenerDefaultActionForward),
-	LoadBalancerArn: OriginALB,
-	Port: 443,
-	Protocol: enums.Elbv2ProtocolEnumHttps,
-	SslPolicy: "ELBSecurityPolicy-FS-2018-06",
-}
-
-var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
-	Field: "path-pattern",
-	Values: []any{"/*"},
-}
-
-var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
-	TargetGroupArn: OriginALBTG,
-	Type_: "forward",
-}
-
-var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: List(OriginALBHttpsListenerRuleActionForward),
-	Conditions: List(OriginALBHttpsListenerRuleCondition1),
-	ListenerArn: OriginALBHttpsListener,
-	Priority: 1,
-}
-
 var OriginALBTagEnvironment = Tag{
 	Key: "Environment",
 	Value: Environment,
@@ -184,11 +149,11 @@ var OriginALB = elasticloadbalancingv2.LoadBalancer{
 	Type_: ALBType,
 }
 
-var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies = &cloudfront.Distribution_Cookies{
+var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies = cloudfront.Distribution_Cookies{
 	Forward: ForwardCookies,
 }
 
-var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = &cloudfront.Distribution_CustomOriginConfig{
+var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distribution_CustomOriginConfig{
 	HTTPPort: 80,
 	HTTPSPort: 443,
 	OriginKeepaliveTimeout: OriginKeepaliveTimeout,
@@ -202,12 +167,12 @@ var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAs
 	LambdaFunctionARN: LambdaEdgeVersion,
 }
 
-var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues = &cloudfront.Distribution_ForwardedValues{
+var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues = cloudfront.Distribution_ForwardedValues{
 	Cookies: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies,
 	QueryString: QueryString,
 }
 
-var CloudFrontDistributionDistributionConfigViewerCertificate = &cloudfront.Distribution_ViewerCertificate{
+var CloudFrontDistributionDistributionConfigViewerCertificate = cloudfront.Distribution_ViewerCertificate{
 	AcmCertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
 	MinimumProtocolVersion: MinimumProtocolVersion,
 	SslSupportMethod: SslSupportMethod,
@@ -219,7 +184,7 @@ var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Or
 	Id: OriginALB,
 }
 
-var CloudFrontDistributionDistributionConfigLogging = &cloudfront.Distribution_Logging{
+var CloudFrontDistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
 	Bucket: Sub{String: "${LoggingBucket}.s3.amazonaws.com"},
 }
 
@@ -251,4 +216,39 @@ var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_Distribut
 
 var CloudFrontDistribution = cloudfront.Distribution{
 	DistributionConfig: CloudFrontDistributionDistributionConfig,
+}
+
+var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
+	Field: "path-pattern",
+	Values: []any{"/*"},
+}
+
+var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
+	TargetGroupArn: OriginALBTG,
+	Type_: "forward",
+}
+
+var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
+	Actions: List(OriginALBHttpsListenerRuleActionForward),
+	Conditions: List(OriginALBHttpsListenerRuleCondition1),
+	ListenerArn: OriginALBHttpsListener,
+	Priority: 1,
+}
+
+var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
+	TargetGroupArn: OriginALBTG,
+	Type_: "forward",
+}
+
+var OriginALBHttpsListenerCertificate1 = elasticloadbalancingv2.Listener_Certificate{
+	CertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
+}
+
+var OriginALBHttpsListener = elasticloadbalancingv2.Listener{
+	Certificates: List(OriginALBHttpsListenerCertificate1),
+	DefaultActions: List(OriginALBHttpsListenerDefaultActionForward),
+	LoadBalancerArn: OriginALB,
+	Port: 443,
+	Protocol: enums.Elbv2ProtocolEnumHttps,
+	SslPolicy: "ELBSecurityPolicy-FS-2018-06",
 }

@@ -9,6 +9,47 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
+var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
+	KMSMasterKeyID: LoggingBucketKMSKey.Arn,
+	SSEAlgorithm: "aws:kms",
+}
+
+var LoggingBucketOwnershipControlsRule1 = s3.Bucket_OwnershipControlsRule{
+	ObjectOwnership: "ObjectWriter",
+}
+
+var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
+	ServerSideEncryptionByDefault: LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+}
+
+var LoggingBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
+	Status: LoggingBucketVersioning,
+}
+
+var LoggingBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
+	BlockPublicAcls: true,
+	BlockPublicPolicy: true,
+	IgnorePublicAcls: true,
+	RestrictPublicBuckets: true,
+}
+
+var LoggingBucketOwnershipControls = s3.Bucket_OwnershipControls{
+	Rules: List(LoggingBucketOwnershipControlsRule1),
+}
+
+var LoggingBucketBucketEncryption = s3.Bucket_BucketEncryption{
+	ServerSideEncryptionConfiguration: List(LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1),
+}
+
+var LoggingBucket = s3.Bucket{
+	AccessControl: "LogDeliveryWrite",
+	BucketEncryption: LoggingBucketBucketEncryption,
+	BucketName: Sub{String: "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"},
+	OwnershipControls: LoggingBucketOwnershipControls,
+	PublicAccessBlockConfiguration: LoggingBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: LoggingBucketVersioningConfiguration,
+}
+
 var LoggingBucketPolicyPolicyDocument = PolicyDocument{
 	Statement: []any{LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
@@ -32,45 +73,4 @@ var LoggingBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
 var LoggingBucketPolicy = s3.BucketPolicy{
 	Bucket: LoggingBucket,
 	PolicyDocument: LoggingBucketPolicyPolicyDocument,
-}
-
-var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
-	KMSMasterKeyID: LoggingBucketKMSKey.Arn,
-	SSEAlgorithm: "aws:kms",
-}
-
-var LoggingBucketOwnershipControlsRule1 = s3.Bucket_OwnershipControlsRule{
-	ObjectOwnership: "ObjectWriter",
-}
-
-var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
-}
-
-var LoggingBucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
-	Status: LoggingBucketVersioning,
-}
-
-var LoggingBucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
-	BlockPublicAcls: true,
-	BlockPublicPolicy: true,
-	IgnorePublicAcls: true,
-	RestrictPublicBuckets: true,
-}
-
-var LoggingBucketOwnershipControls = &s3.Bucket_OwnershipControls{
-	Rules: List(LoggingBucketOwnershipControlsRule1),
-}
-
-var LoggingBucketBucketEncryption = &s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1),
-}
-
-var LoggingBucket = s3.Bucket{
-	AccessControl: "LogDeliveryWrite",
-	BucketEncryption: LoggingBucketBucketEncryption,
-	BucketName: Sub{String: "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"},
-	OwnershipControls: LoggingBucketOwnershipControls,
-	PublicAccessBlockConfiguration: LoggingBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: LoggingBucketVersioningConfiguration,
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	KMSMasterKeyID: If{"VPCFlowLogsBucketKMSKeyCondition", VPCFlowLogsBucketKMSKey, AWS_NO_VALUE},
 	SSEAlgorithm: If{"VPCFlowLogsBucketKMSKeyCondition", "aws:kms", "AES256"},
 }
@@ -19,18 +19,18 @@ var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Buc
 	ServerSideEncryptionByDefault: VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var VPCFlowLogsBucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var VPCFlowLogsBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var VPCFlowLogsBucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var VPCFlowLogsBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var VPCFlowLogsBucketBucketEncryption = &s3.Bucket_BucketEncryption{
+var VPCFlowLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1),
 }
 

@@ -9,23 +9,23 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteriaSseKmsEncryptedObjects = &s3.Bucket_SseKmsEncryptedObjects{
+var S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteriaSseKmsEncryptedObjects = s3.Bucket_SseKmsEncryptedObjects{
 	Status: "Enabled",
 }
 
-var S3BucketSourceReplicationConfigurationRuleRule1DestinationEncryptionConfiguration = &s3.Bucket_EncryptionConfiguration{
+var S3BucketSourceReplicationConfigurationRuleRule1DestinationEncryptionConfiguration = s3.Bucket_EncryptionConfiguration{
 	ReplicaKmsKeyID: Sub{String: "arn:${AWS::Partition}:kms:${AWS::Region}:${AccountIdDestination}:alias/${AWS::StackName}-${AccountIdDestination}-kms-key"},
 }
 
-var S3BucketSourceReplicationConfigurationRuleRule1DestinationAccessControlTranslation = &s3.Bucket_AccessControlTranslation{
+var S3BucketSourceReplicationConfigurationRuleRule1DestinationAccessControlTranslation = s3.Bucket_AccessControlTranslation{
 	Owner: "Destination",
 }
 
-var S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteria = &s3.Bucket_SourceSelectionCriteria{
+var S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteria = s3.Bucket_SourceSelectionCriteria{
 	SseKmsEncryptedObjects: S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteriaSseKmsEncryptedObjects,
 }
 
-var S3BucketSourceReplicationConfigurationRuleRule1Filter = &s3.Bucket_ReplicationRuleFilter{
+var S3BucketSourceReplicationConfigurationRuleRule1Filter = s3.Bucket_ReplicationRuleFilter{
 	Prefix: "",
 }
 
@@ -36,11 +36,11 @@ var S3BucketSourceReplicationConfigurationRuleRule1Destination = s3.Bucket_Repli
 	EncryptionConfiguration: S3BucketSourceReplicationConfigurationRuleRule1DestinationEncryptionConfiguration,
 }
 
-var S3BucketSourceReplicationConfigurationRuleRule1DeleteMarkerReplication = &s3.Bucket_DeleteMarkerReplication{
+var S3BucketSourceReplicationConfigurationRuleRule1DeleteMarkerReplication = s3.Bucket_DeleteMarkerReplication{
 	Status: "Disabled",
 }
 
-var S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	KMSMasterKeyID: KmsKey,
 	SSEAlgorithm: "aws:kms",
 }
@@ -60,23 +60,23 @@ var S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket
 	ServerSideEncryptionByDefault: S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var S3BucketSourceVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var S3BucketSourceVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var S3BucketSourceReplicationConfiguration = &s3.Bucket_ReplicationConfiguration{
+var S3BucketSourceReplicationConfiguration = s3.Bucket_ReplicationConfiguration{
 	Role: ReplicationRole.Arn,
 	Rules: List(S3BucketSourceReplicationConfigurationRuleRule1),
 }
 
-var S3BucketSourcePublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var S3BucketSourcePublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var S3BucketSourceBucketEncryption = &s3.Bucket_BucketEncryption{
+var S3BucketSourceBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1),
 }
 

@@ -40,7 +40,7 @@ var DMSReplicationTask = dms.ReplicationTask{
 	TargetEndpointArn: S3TargetEndpoint,
 }
 
-var S3TargetEndpointS3Settings = &dms.Endpoint_S3Settings{
+var S3TargetEndpointS3Settings = dms.Endpoint_S3Settings{
 	BucketName: S3Bucket,
 	ServiceAccessRoleArn: S3TargetDMSRole.Arn,
 }

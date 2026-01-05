@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	SSEAlgorithm: "AES256",
 }
 
@@ -17,18 +17,18 @@ var BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerS
 	ServerSideEncryptionByDefault: BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var BucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var BucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var BucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var BucketBucketEncryption = &s3.Bucket_BucketEncryption{
+var BucketBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(BucketBucketEncryptionServerSideEncryptionConfiguration1),
 }
 

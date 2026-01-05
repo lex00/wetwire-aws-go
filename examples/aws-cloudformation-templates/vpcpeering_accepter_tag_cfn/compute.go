@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var TagVpcPeeringConnectionsLambdaFunctionEnvironment = &lambda.Function_Environment{
+var TagVpcPeeringConnectionsLambdaFunctionEnvironment = lambda.Function_Environment{
 	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
 }
 

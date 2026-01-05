@@ -9,14 +9,14 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/emr"
 )
 
-var EMRClusterInstancesMasterInstanceGroup = &emr.Cluster_InstanceGroupConfig{
+var EMRClusterInstancesMasterInstanceGroup = emr.Cluster_InstanceGroupConfig{
 	InstanceCount: 1,
 	InstanceType: MasterInstanceType,
 	Market: "ON_DEMAND",
 	Name: "Master",
 }
 
-var EMRClusterInstancesCoreInstanceGroup = &emr.Cluster_InstanceGroupConfig{
+var EMRClusterInstancesCoreInstanceGroup = emr.Cluster_InstanceGroupConfig{
 	InstanceCount: NumberOfCoreInstances,
 	InstanceType: CoreInstanceType,
 	Market: "ON_DEMAND",

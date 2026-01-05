@@ -41,7 +41,7 @@ var ElasticLoadBalancerLBCookieStickinessPolicyMyLBPolicy = elasticloadbalancing
 	PolicyName: "myLBPolicy",
 }
 
-var ElasticLoadBalancerHealthCheck = &elasticloadbalancing.LoadBalancer_HealthCheck{
+var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthCheck{
 	HealthyThreshold: "3",
 	Interval: "30",
 	Target: "HTTP:80/",

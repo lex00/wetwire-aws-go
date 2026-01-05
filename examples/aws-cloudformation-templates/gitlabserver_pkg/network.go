@@ -274,7 +274,7 @@ var NetworkVPCGW = ec2.VPCGatewayAttachment{
 	VpcId: NetworkVPC,
 }
 
-var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = &cloudfront.Distribution_CustomOriginConfig{
+var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distribution_CustomOriginConfig{
 	HTTPPort: 80,
 	OriginProtocolPolicy: "http-only",
 }

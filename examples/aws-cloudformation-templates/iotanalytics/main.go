@@ -29,12 +29,12 @@ var Datastore = iotanalytics.Datastore{
 	Tags: []any{DatastoreTagProject},
 }
 
-var PipelinePipelineActivity1Datastore = &iotanalytics.Pipeline_Datastore{
+var PipelinePipelineActivity1Datastore = iotanalytics.Pipeline_Datastore{
 	DatastoreName: Sub{String: "${ProjectName}_datastore"},
 	Name: "DatastoreActivity",
 }
 
-var PipelinePipelineActivity1Channel = &iotanalytics.Pipeline_Channel{
+var PipelinePipelineActivity1Channel = iotanalytics.Pipeline_Channel{
 	ChannelName: Sub{String: "${ProjectName}_channel"},
 	Name: "ChannelActivity",
 	Next: "DatastoreActivity",
@@ -56,11 +56,11 @@ var Pipeline = iotanalytics.Pipeline{
 	Tags: []any{PipelineTagProject},
 }
 
-var SqlDatasetTrigger1Schedule = &iotanalytics.Dataset_Schedule{
+var SqlDatasetTrigger1Schedule = iotanalytics.Dataset_Schedule{
 	ScheduleExpression: ScheduleExpression,
 }
 
-var SqlDatasetAction1QueryAction = &iotanalytics.Dataset_QueryAction{
+var SqlDatasetAction1QueryAction = iotanalytics.Dataset_QueryAction{
 	SqlQuery: SqlQuery,
 }
 
@@ -73,7 +73,7 @@ var SqlDatasetTagProject = Tag{
 	Value: ProjectName,
 }
 
-var SqlDatasetRetentionPeriod = &iotanalytics.Dataset_RetentionPeriod{
+var SqlDatasetRetentionPeriod = iotanalytics.Dataset_RetentionPeriod{
 	NumberOfDays: 30,
 	Unlimited: false,
 }

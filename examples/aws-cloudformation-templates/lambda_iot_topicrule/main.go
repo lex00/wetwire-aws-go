@@ -50,7 +50,7 @@ var IoTThingPrincipalAttachment = iot.ThingPrincipalAttachment{
 	ThingName: IoTThing,
 }
 
-var IoTTopicRuleTopicRulePayloadAction1Lambda = &iot.TopicRule_LambdaAction{
+var IoTTopicRuleTopicRulePayloadAction1Lambda = iot.TopicRule_LambdaAction{
 	FunctionArn: MyLambda.Arn,
 }
 

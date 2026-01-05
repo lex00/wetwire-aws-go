@@ -16,7 +16,7 @@ var DeadLetterQueue = sqs.Queue{
 	QueueName: Sub{String: "${CentralEventBusName}-DLQ"},
 }
 
-var CentralEventBusDeadLetterConfig = &events.EventBus_DeadLetterConfig{
+var CentralEventBusDeadLetterConfig = events.EventBus_DeadLetterConfig{
 	Arn: DeadLetterQueue.Arn,
 }
 
@@ -42,7 +42,7 @@ var CentralEventBusPolicy = events.EventBusPolicy{
 	StatementId: "CentralEventBusPolicyStatement",
 }
 
-var CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig = &events.EventBus_DeadLetterConfig{
+var CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig = events.EventBus_DeadLetterConfig{
 	Arn: DeadLetterQueue.Arn,
 }
 

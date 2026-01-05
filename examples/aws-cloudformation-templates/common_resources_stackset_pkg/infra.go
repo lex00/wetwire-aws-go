@@ -23,13 +23,13 @@ var StackSetParameter1 = cloudformation.StackSet_Parameter{
 	ParameterValue: "stackset-logging-sample",
 }
 
-var StackSetOperationPreferences = &cloudformation.StackSet_OperationPreferences{
+var StackSetOperationPreferences = cloudformation.StackSet_OperationPreferences{
 	FailureToleranceCount: 0,
 	MaxConcurrentCount: 2,
 	RegionConcurrencyType: "PARALLEL",
 }
 
-var StackSetAutoDeployment = &cloudformation.StackSet_AutoDeployment{
+var StackSetAutoDeployment = cloudformation.StackSet_AutoDeployment{
 	Enabled: true,
 	RetainStacksOnAccountRemoval: true,
 }

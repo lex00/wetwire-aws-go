@@ -23,7 +23,7 @@ var TableOfBooksLocalSecondaryIndexe1KeySchema1 = dynamodb.GlobalTable_KeySchema
 	KeyType: "HASH",
 }
 
-var TableOfBooksGlobalSecondaryIndexe1ProvisionedThroughput = &dynamodb.Table_ProvisionedThroughput{
+var TableOfBooksGlobalSecondaryIndexe1ProvisionedThroughput = dynamodb.Table_ProvisionedThroughput{
 	ReadCapacityUnits: ReadCapacityUnits,
 	WriteCapacityUnits: WriteCapacityUnits,
 }
@@ -37,12 +37,12 @@ var TableOfBooksGlobalSecondaryIndexe1KeySchema1 = dynamodb.GlobalTable_KeySchem
 	KeyType: "HASH",
 }
 
-var TableOfBooksProvisionedThroughput = &dynamodb.Table_ProvisionedThroughput{
+var TableOfBooksProvisionedThroughput = dynamodb.Table_ProvisionedThroughput{
 	ReadCapacityUnits: ReadCapacityUnits,
 	WriteCapacityUnits: WriteCapacityUnits,
 }
 
-var TableOfBooksPointInTimeRecoverySpecification = &dynamodb.Table_PointInTimeRecoverySpecification{
+var TableOfBooksPointInTimeRecoverySpecification = dynamodb.Table_PointInTimeRecoverySpecification{
 	PointInTimeRecoveryEnabled: true,
 }
 

@@ -9,12 +9,12 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/dynamodb"
 )
 
-var myDynamoDBTableProvisionedThroughput = &dynamodb.Table_ProvisionedThroughput{
+var myDynamoDBTableProvisionedThroughput = dynamodb.Table_ProvisionedThroughput{
 	ReadCapacityUnits: ReadCapacityUnits,
 	WriteCapacityUnits: WriteCapacityUnits,
 }
 
-var myDynamoDBTablePointInTimeRecoverySpecification = &dynamodb.Table_PointInTimeRecoverySpecification{
+var myDynamoDBTablePointInTimeRecoverySpecification = dynamodb.Table_PointInTimeRecoverySpecification{
 	PointInTimeRecoveryEnabled: true,
 }
 

@@ -14,7 +14,7 @@ var BucketLifecycleConfigurationRuleEnabled = s3.Bucket_Rule{
 	Status: "Enabled",
 }
 
-var BucketLifecycleConfiguration = &s3.Bucket_LifecycleConfiguration{
+var BucketLifecycleConfiguration = s3.Bucket_LifecycleConfiguration{
 	Rules: List(BucketLifecycleConfigurationRuleEnabled),
 }
 

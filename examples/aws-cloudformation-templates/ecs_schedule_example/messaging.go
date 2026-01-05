@@ -10,7 +10,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/events"
 )
 
-var ECSScheduledTaskTargetTarget1EcsParameters = &events.Rule_EcsParameters{
+var ECSScheduledTaskTargetTarget1EcsParameters = events.Rule_EcsParameters{
 	TaskCount: SchedulerTasksCount,
 	TaskDefinitionArn: TaskDefinition,
 }

@@ -34,16 +34,16 @@ var StorageBucketPolicyPolicy = s3.BucketPolicy{
 	PolicyDocument: StorageBucketPolicyPolicyPolicyDocument,
 }
 
-var StorageLogBucketObjectLockConfigurationRuleDefaultRetention = &s3.Bucket_DefaultRetention{
+var StorageLogBucketObjectLockConfigurationRuleDefaultRetention = s3.Bucket_DefaultRetention{
 	Mode: "COMPLIANCE",
 	Years: 1,
 }
 
-var StorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var StorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	SSEAlgorithm: "AES256",
 }
 
-var StorageLogBucketObjectLockConfigurationRule = &s3.Bucket_ObjectLockRule{
+var StorageLogBucketObjectLockConfigurationRule = s3.Bucket_ObjectLockRule{
 	DefaultRetention: StorageLogBucketObjectLockConfigurationRuleDefaultRetention,
 }
 
@@ -51,23 +51,23 @@ var StorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Buck
 	ServerSideEncryptionByDefault: StorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var StorageLogBucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var StorageLogBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var StorageLogBucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var StorageLogBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var StorageLogBucketObjectLockConfiguration = &s3.Bucket_ObjectLockConfiguration{
+var StorageLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfiguration{
 	ObjectLockEnabled: "Enabled",
 	Rule: StorageLogBucketObjectLockConfigurationRule,
 }
 
-var StorageLogBucketBucketEncryption = &s3.Bucket_BucketEncryption{
+var StorageLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(StorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1),
 }
 
@@ -105,7 +105,7 @@ var StorageLogBucketPolicyPolicy = s3.BucketPolicy{
 	PolicyDocument: StorageLogBucketPolicyPolicyPolicyDocument,
 }
 
-var StorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var StorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	SSEAlgorithm: "AES256",
 }
 
@@ -113,18 +113,18 @@ var StorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.
 	ServerSideEncryptionByDefault: StorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var StorageReplicaBucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var StorageReplicaBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var StorageReplicaBucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var StorageReplicaBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var StorageReplicaBucketBucketEncryption = &s3.Bucket_BucketEncryption{
+var StorageReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(StorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1),
 }
 
@@ -165,7 +165,7 @@ var StorageBucketReplicationConfigurationRuleEnabledDestination = s3.Bucket_Repl
 	Bucket: StorageReplicaBucket.Arn,
 }
 
-var StorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = &s3.Bucket_ServerSideEncryptionByDefault{
+var StorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	SSEAlgorithm: "AES256",
 }
 
@@ -178,27 +178,27 @@ var StorageBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_
 	ServerSideEncryptionByDefault: StorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
-var StorageBucketVersioningConfiguration = &s3.Bucket_VersioningConfiguration{
+var StorageBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 	Status: "Enabled",
 }
 
-var StorageBucketReplicationConfiguration = &s3.Bucket_ReplicationConfiguration{
+var StorageBucketReplicationConfiguration = s3.Bucket_ReplicationConfiguration{
 	Role: StorageReplicationRole.Arn,
 	Rules: List(StorageBucketReplicationConfigurationRuleEnabled),
 }
 
-var StorageBucketPublicAccessBlockConfiguration = &s3.Bucket_PublicAccessBlockConfiguration{
+var StorageBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
 	BlockPublicAcls: true,
 	BlockPublicPolicy: true,
 	IgnorePublicAcls: true,
 	RestrictPublicBuckets: true,
 }
 
-var StorageBucketLoggingConfiguration = &s3.Bucket_LoggingConfiguration{
+var StorageBucketLoggingConfiguration = s3.Bucket_LoggingConfiguration{
 	DestinationBucketName: StorageLogBucket,
 }
 
-var StorageBucketBucketEncryption = &s3.Bucket_BucketEncryption{
+var StorageBucketBucketEncryption = s3.Bucket_BucketEncryption{
 	ServerSideEncryptionConfiguration: List(StorageBucketBucketEncryptionServerSideEncryptionConfiguration1),
 }
 

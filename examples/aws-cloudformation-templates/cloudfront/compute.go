@@ -11,7 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var EC2InstanceBlockDeviceMappingDevsda1Ebs = &ec2.Instance_Ebs{
+var EC2InstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 	VolumeSize: BootVolSize,
 	VolumeType: BootVolType,
 }

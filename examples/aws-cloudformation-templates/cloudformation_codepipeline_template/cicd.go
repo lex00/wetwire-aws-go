@@ -103,7 +103,7 @@ var PipelineStageSource = codepipeline.Pipeline_StageDeclaration{
 	Name: "Source",
 }
 
-var PipelineArtifactStore = &codepipeline.Pipeline_ArtifactStore{
+var PipelineArtifactStore = codepipeline.Pipeline_ArtifactStore{
 	Location: ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3Bucket"}},
 	Type_: "S3",
 }

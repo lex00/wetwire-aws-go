@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
-var ASCPrivateLinkLambdaFunctionVpcConfig = &lambda.Function_VpcConfig{
+var ASCPrivateLinkLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
 	SecurityGroupIds: SecurityGroups,
 	SubnetIds: Subnets,
 }

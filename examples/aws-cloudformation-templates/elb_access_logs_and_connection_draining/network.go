@@ -35,7 +35,7 @@ var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{
 	Protocol: "HTTP",
 }
 
-var ElasticLoadBalancerHealthCheck = &elasticloadbalancing.LoadBalancer_HealthCheck{
+var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthCheck{
 	HealthyThreshold: "3",
 	Interval: "30",
 	Target: "HTTP:80/",
@@ -43,12 +43,12 @@ var ElasticLoadBalancerHealthCheck = &elasticloadbalancing.LoadBalancer_HealthCh
 	UnhealthyThreshold: "5",
 }
 
-var ElasticLoadBalancerConnectionDrainingPolicy = &elasticloadbalancing.LoadBalancer_ConnectionDrainingPolicy{
+var ElasticLoadBalancerConnectionDrainingPolicy = elasticloadbalancing.LoadBalancer_ConnectionDrainingPolicy{
 	Enabled: "true",
 	Timeout: "300",
 }
 
-var ElasticLoadBalancerAccessLoggingPolicy = &elasticloadbalancing.LoadBalancer_AccessLoggingPolicy{
+var ElasticLoadBalancerAccessLoggingPolicy = elasticloadbalancing.LoadBalancer_AccessLoggingPolicy{
 	EmitInterval: "60",
 	Enabled: "true",
 	S3BucketName: LogsBucket,

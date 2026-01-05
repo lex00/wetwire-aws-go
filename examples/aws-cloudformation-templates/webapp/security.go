@@ -26,7 +26,7 @@ var CognitoUserPoolSchemaEmail = cognito.UserPool_SchemaAttribute{
 	Required: true,
 }
 
-var CognitoUserPoolAdminCreateUserConfig = &cognito.UserPool_AdminCreateUserConfig{
+var CognitoUserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfig{
 	AllowAdminCreateUserOnly: true,
 }
 
@@ -158,11 +158,11 @@ var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.RuleGroup_Statement{
 	ManagedRuleGroupStatement: map[string]any{"ExcludedRules": []any{map[string]any{"Name": "NoUserAgent_HEADER"}}, "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
 }
 
-var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = &wafv2.WebACL_OverrideAction{
+var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = wafv2.WebACL_OverrideAction{
 	None: map[string]any{},
 }
 
-var SiteWebACLDefaultActionAllow = &wafv2.RuleGroup_AllowAction{
+var SiteWebACLDefaultActionAllow = wafv2.RuleGroup_AllowAction{
 }
 
 var SiteWebACLVisibilityConfig = wafv2.WebACL_VisibilityConfig{

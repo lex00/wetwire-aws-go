@@ -14,7 +14,7 @@ var ConfigRuleForVolumeTagsSource = config.ConfigRule_Source{
 	SourceIdentifier: "REQUIRED_TAGS",
 }
 
-var ConfigRuleForVolumeTagsScope = &config.ConfigRule_Scope{
+var ConfigRuleForVolumeTagsScope = config.ConfigRule_Scope{
 	ComplianceResourceTypes: []any{"AWS::EC2::Volume"},
 }
 
@@ -26,7 +26,7 @@ var ConfigRuleForVolumeTags = config.ConfigRule{
 	Source: ConfigRuleForVolumeTagsSource,
 }
 
-var DeliveryChannelConfigSnapshotDeliveryProperties = &config.DeliveryChannel_ConfigSnapshotDeliveryProperties{
+var DeliveryChannelConfigSnapshotDeliveryProperties = config.DeliveryChannel_ConfigSnapshotDeliveryProperties{
 	DeliveryFrequency: "Six_Hours",
 }
 
@@ -47,7 +47,7 @@ var ConfigRuleForVolumeAutoEnableIOSource = config.ConfigRule_Source{
 	SourceIdentifier: VolumeAutoEnableIOComplianceCheck.Arn,
 }
 
-var ConfigRuleForVolumeAutoEnableIOScope = &config.ConfigRule_Scope{
+var ConfigRuleForVolumeAutoEnableIOScope = config.ConfigRule_Scope{
 	ComplianceResourceId: Ec2Volume,
 	ComplianceResourceTypes: []any{"AWS::EC2::Volume"},
 }
@@ -58,7 +58,7 @@ var ConfigRuleForVolumeAutoEnableIO = config.ConfigRule{
 	Source: ConfigRuleForVolumeAutoEnableIOSource,
 }
 
-var ConfigRecorderRecordingGroup = &config.ConfigurationRecorder_RecordingGroup{
+var ConfigRecorderRecordingGroup = config.ConfigurationRecorder_RecordingGroup{
 	ResourceTypes: []any{"AWS::EC2::Volume"},
 }
 

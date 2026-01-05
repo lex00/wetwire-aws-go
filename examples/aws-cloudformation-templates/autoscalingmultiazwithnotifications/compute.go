@@ -10,7 +10,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = &ec2.EC2Fleet_EbsBlockDevice{
+var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = ec2.EC2Fleet_EbsBlockDevice{
 	VolumeSize: 32,
 }
 
@@ -51,7 +51,7 @@ var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_Noti
 	TopicARN: NotificationTopic,
 }
 
-var WebServerGroupLaunchTemplate = &autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
+var WebServerGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
 	LaunchTemplateId: LaunchTemplate,
 	Version: LaunchTemplate.LatestVersionNumber,
 }

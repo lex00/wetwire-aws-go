@@ -1033,12 +1033,9 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 func generatePropertyBlock(ctx *codegenContext, block propertyBlock) string {
 	var lines []string
 
-	// Pointer types need & prefix
-	if block.isPointer {
-		lines = append(lines, fmt.Sprintf("var %s = &%s{", block.varName, block.typeName))
-	} else {
-		lines = append(lines, fmt.Sprintf("var %s = %s{", block.varName, block.typeName))
-	}
+	// Always use value types (no & prefix) for AST extraction compatibility
+	// The consuming code will take addresses as needed
+	lines = append(lines, fmt.Sprintf("var %s = %s{", block.varName, block.typeName))
 
 	// Set type context from block type name (e.g., "s3.Bucket_BucketEncryption" -> "Bucket_BucketEncryption")
 	// This is needed for nested property type resolution

@@ -37,7 +37,7 @@ var TaskDefinition = ecs.TaskDefinition{
 	TaskRoleArn: If{"HasCustomRole", Role, AWS_NO_VALUE},
 }
 
-var ServiceNetworkConfigurationAwsvpcConfiguration = &ecs.Service_AwsVpcConfiguration{
+var ServiceNetworkConfigurationAwsvpcConfiguration = ecs.Service_AwsVpcConfiguration{
 	SecurityGroups: []any{ImportValue{Join{":", []any{
 	StackName,
 	"FargateContainerSecurityGroup",
@@ -51,7 +51,7 @@ var ServiceNetworkConfigurationAwsvpcConfiguration = &ecs.Service_AwsVpcConfigur
 }}}},
 }
 
-var ServiceNetworkConfiguration = &ecs.Service_NetworkConfiguration{
+var ServiceNetworkConfiguration = ecs.Service_NetworkConfiguration{
 	AwsvpcConfiguration: ServiceNetworkConfigurationAwsvpcConfiguration,
 }
 
@@ -61,7 +61,7 @@ var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
 	TargetGroupArn: TargetGroup,
 }
 
-var ServiceDeploymentConfiguration = &ecs.Service_DeploymentConfiguration{
+var ServiceDeploymentConfiguration = ecs.Service_DeploymentConfiguration{
 	MaximumPercent: 200,
 	MinimumHealthyPercent: 75,
 }

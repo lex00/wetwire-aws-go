@@ -23,11 +23,11 @@ var OriginAccessControl = cloudfront.OriginAccessControl{
 	OriginAccessControlConfig: OriginAccessControlOriginAccessControlConfig,
 }
 
-var DistributionDistributionConfigOriginRainNegbuildNegorigiS3OriginConfig = &cloudfront.Distribution_S3OriginConfig{
+var DistributionDistributionConfigOriginRainNegbuildNegorigiS3OriginConfig = cloudfront.Distribution_S3OriginConfig{
 	OriginAccessIdentity: "",
 }
 
-var DistributionDistributionConfigViewerCertificate = &cloudfront.Distribution_ViewerCertificate{
+var DistributionDistributionConfigViewerCertificate = cloudfront.Distribution_ViewerCertificate{
 	CloudFrontDefaultCertificate: true,
 }
 
@@ -38,7 +38,7 @@ var DistributionDistributionConfigOriginRainNegbuildNegorigi = cloudfront.Distri
 	S3OriginConfig: DistributionDistributionConfigOriginRainNegbuildNegorigiS3OriginConfig,
 }
 
-var DistributionDistributionConfigLogging = &cloudfront.Distribution_Logging{
+var DistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
 	Bucket: CloudFrontLogsBucket.RegionalDomainName,
 }
 
