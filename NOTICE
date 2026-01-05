@@ -1,5 +1,11 @@
 wetwire-aws-go
-Copyright 2026 Albert Artigues
+Copyright (c) 2026 Albert Artigues <albert.a.artigues@gmail.com>
+
+This project is licensed under the MIT License.
+
+---
+
+Third-Party Attributions:
 
 This product includes software developed at Amazon Web Services, Inc.
 (https://aws.amazon.com/).
