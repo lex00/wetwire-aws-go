@@ -194,7 +194,7 @@ import (
 
 var MyFunction = lambda.Function{
     Runtime:       lambda.RuntimePython312,    // Not "python3.12"
-    Architectures: []string{lambda.ArchitectureArm64},
+    Architectures: List(lambda.ArchitectureArm64),
 }
 
 // Flat key schema - extracted from inline slice
@@ -210,8 +210,8 @@ var MyTablePKAttr = dynamodb.AttributeDefinition{
 }
 
 var MyTable = dynamodb.Table{
-    KeySchema:            []dynamodb.KeySchema{MyTablePK},
-    AttributeDefinitions: []dynamodb.AttributeDefinition{MyTablePKAttr},
+    KeySchema:            List(MyTablePK),
+    AttributeDefinitions: List(MyTablePKAttr),
 }
 ```
 
@@ -244,7 +244,7 @@ func main() {
     t.AddParameter("Environment", template.Parameter{
         Type:          "String",
         Default:       "dev",
-        AllowedValues: []string{"dev", "staging", "prod"},
+        AllowedValues: List("dev", "staging", "prod"),
     })
 
     // Add outputs - use typed intrinsics, not raw maps
