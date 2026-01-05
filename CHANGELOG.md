@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-01-05
+
+### Fixed
+
+- Importer: detect parameters referenced in `!Sub` template strings (e.g., `!Sub ${LambdaHandlerPath}`)
+
 ## [1.2.0] - 2026-01-05
 
 ### Added
@@ -131,7 +137,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Block-style code generation with typed property types
 - 254/254 AWS sample templates import successfully (100% success rate)
 
-[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/lex00/wetwire-aws-go/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/lex00/wetwire-aws-go/releases/tag/v1.0.0
 [0.4.1]: https://github.com/lex00/wetwire-aws-go/compare/v0.4.0...v0.4.1
