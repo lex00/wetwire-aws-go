@@ -124,14 +124,14 @@ Initialize a new wetwire-aws project.
 
 ```bash
 # Create a new project
-wetwire-aws init -o myapp/
+wetwire-aws init myapp
 ```
 
-### Options
+### Arguments
 
-| Option | Description |
-|--------|-------------|
-| `-o, --output DIR` | Output directory (required) |
+| Argument | Description |
+|----------|-------------|
+| `project-name` | Name/path for the new project (required) |
 
 ### Generated Structure
 
@@ -139,8 +139,9 @@ wetwire-aws init -o myapp/
 myapp/
 ├── go.mod
 ├── main.go
+├── .gitignore
 └── infra/
-    └── storage.go
+    └── resources.go
 ```
 
 **main.go:**
@@ -149,28 +150,28 @@ package main
 
 import (
     "fmt"
-    "myapp/infra"
 
-    "github.com/lex00/wetwire-aws-go/internal/template"
+    _ "myapp/infra" // Register resources
 )
 
 func main() {
-    t := template.New()
-    t.Description = "My Application"
-    // Add resources from infra package
-    fmt.Println(t.ToJSON())
+    fmt.Println("Run: wetwire-aws build ./infra/...")
 }
 ```
 
-**infra/storage.go:**
+**infra/resources.go:**
 ```go
 package infra
 
-import "github.com/lex00/wetwire-aws-go/resources/s3"
+import (
+    "github.com/lex00/wetwire-aws-go/s3"
+    // ... other common imports
+)
 
-var DataBucket = s3.Bucket{
-    BucketName: "my-data-bucket",
-}
+// Example bucket - uncomment and modify:
+// var MyBucket = s3.Bucket{
+//     BucketName: "my-bucket",
+// }
 ```
 
 ---
@@ -268,7 +269,9 @@ var MyBucket = s3.Bucket{
 
 ## design
 
-AI-assisted infrastructure design. Starts an interactive session to generate infrastructure code.
+AI-assisted infrastructure design. Starts an interactive session where you describe infrastructure in natural language and the AI generates wetwire-aws Go code.
+
+**Requires:** `wetwire-core-go` (AI orchestration) and an Anthropic API key in `ANTHROPIC_API_KEY`.
 
 ```bash
 # Start design session with a prompt
@@ -276,43 +279,61 @@ wetwire-aws design "Create a serverless API with Lambda and API Gateway"
 
 # Specify output directory
 wetwire-aws design -o ./myproject "Create an S3 bucket with encryption"
+
+# Disable streaming for batch output
+wetwire-aws design -s=false "Create a VPC with public and private subnets"
 ```
 
 ### Options
 
 | Option | Description |
 |--------|-------------|
-| `prompt` | Natural language description of infrastructure |
-| `-o, --output` | Output directory (default: current dir) |
-| `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
-| `-s, --stream` | Stream AI responses (default: true) |
+| `prompt` | Natural language description of infrastructure (required) |
+| `-o, --output` | Output directory (default: `.`) |
+| `-l, --max-lint-cycles` | Maximum lint/fix cycles before giving up (default: 3) |
+| `-s, --stream` | Stream AI responses to terminal (default: true) |
 
-### Workflow
+### How It Works
 
-1. AI asks clarifying questions about requirements
-2. Generates Go code using wetwire-aws patterns
-3. Runs linter and auto-fixes issues
-4. Builds CloudFormation template
-5. Validates with cfn-lint-go
+The `design` command uses the `wetwire-core-go` runner agent to orchestrate an AI-driven workflow:
+
+1. **Clarification**: AI asks questions about your requirements (reads from stdin)
+2. **Code Generation**: Generates Go code using wetwire-aws patterns
+3. **Lint Cycle**: Runs `wetwire-aws lint` and auto-fixes issues (up to `--max-lint-cycles`)
+4. **Build**: Runs `wetwire-aws build` to generate CloudFormation template
+5. **Validation**: Validates template with `cfn-lint-go` library
+
+Press `Ctrl+C` to stop the session at any time.
+
+### Output
+
+On completion, prints a summary:
+- List of generated files
+- Number of lint cycles required
+- Whether linting passed
 
 ---
 
 ## test
 
-Run automated persona-based testing to evaluate code generation quality.
+Run automated persona-based testing to evaluate AI code generation quality. Unlike `design`, this command uses an AI persona to simulate user responses instead of reading from stdin.
+
+**Requires:** `wetwire-core-go` (AI orchestration) and an Anthropic API key in `ANTHROPIC_API_KEY`.
 
 ```bash
-# Run with default persona
+# Run with default persona (intermediate)
 wetwire-aws test "Create an S3 bucket with versioning"
 
 # Use a specific persona
 wetwire-aws test --persona beginner "Create a Lambda function"
 
-# Track test scenario
-wetwire-aws test --scenario "s3-encryption" "Create encrypted bucket"
+# Track test scenario and stream output
+wetwire-aws test --scenario "s3-encryption" --stream "Create encrypted bucket"
 ```
 
 ### Personas
+
+Personas simulate different user skill levels and communication styles:
 
 | Persona | Description |
 |---------|-------------|
@@ -326,11 +347,31 @@ wetwire-aws test --scenario "s3-encryption" "Create encrypted bucket"
 
 | Option | Description |
 |--------|-------------|
-| `prompt` | Infrastructure description to test |
-| `-p, --persona` | Persona to use (default: intermediate) |
-| `-S, --scenario` | Scenario name for tracking |
-| `-o, --output` | Output directory |
+| `prompt` | Infrastructure description to test (required) |
+| `-p, --persona` | Persona to use (default: `intermediate`) |
+| `-S, --scenario` | Scenario name for tracking/reporting (default: `default`) |
+| `-o, --output` | Output directory (default: `.`) |
 | `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
+| `-s, --stream` | Stream AI responses to terminal (default: false) |
+
+### How It Works
+
+The `test` command runs the same workflow as `design`, but replaces human input with AI-simulated responses:
+
+1. **AI Developer**: A second AI (the "developer persona") responds to clarifying questions
+2. **Code Generation**: Runner agent generates wetwire-aws Go code
+3. **Lint Cycle**: Runs `wetwire-aws lint` with auto-fix
+4. **Build**: Generates CloudFormation template
+5. **Validation**: Validates with `cfn-lint-go`
+6. **Results**: Writes session results to output directory
+
+### Output
+
+Writes test results to the output directory and prints:
+- Persona and scenario used
+- List of generated files
+- Number of lint cycles and pass status
+- Number of questions asked during session
 
 ---
 
@@ -362,16 +403,49 @@ wetwire-aws list ./infra/...
 
 ## CloudFormation Validation
 
-The `design` and `test` commands automatically validate generated templates using **cfn-lint-go**, which checks for:
+The `design` and `test` commands automatically validate generated templates using **cfn-lint-go** (used as a Go library, not a CLI tool). Validation checks for:
 
-- Valid resource types and properties
-- Correct intrinsic function usage
+- Valid resource types and properties per AWS CloudFormation specification
+- Correct intrinsic function usage (Ref, GetAtt, Sub, etc.)
 - Best practices and security recommendations
-- AWS CloudFormation specification compliance
+- Required properties and valid enum values
+
+Validation runs after a successful build. Errors fail the workflow; warnings are reported but don't block.
+
+---
+
+## Dependencies
+
+### wetwire-core-go
+
+The `design` and `test` commands require [wetwire-core-go](https://github.com/lex00/wetwire-core-go), which provides:
+
+- **Runner Agent**: Orchestrates the AI-driven code generation workflow
+- **Personas**: Simulated user personas for automated testing
+- **Session Tracking**: Records questions, responses, and results
+
+Install via go.mod (already included as a dependency).
+
+### cfn-lint-go
+
+CloudFormation template validation uses [cfn-lint-go](https://github.com/lex00/cfn-lint-go) as a **library dependency** (not a CLI tool). This ensures:
+
+- Consistent validation across all wetwire-aws installations
+- No external tool installation required
+- Version-controlled validation rules
+
+The library validates templates against the official AWS CloudFormation resource specification.
+
+### Anthropic API
+
+The `design` and `test` commands require an Anthropic API key:
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
 
 ---
 
 ## See Also
 
 - [Quick Start](QUICK_START.md) - Create your first project
-- [Intrinsic Functions](INTRINSICS.md) - Full intrinsics reference

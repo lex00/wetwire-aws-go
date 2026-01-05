@@ -8,7 +8,7 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 - All CLI commands implemented (build, validate, list, lint, init, import)
 - **184 AWS services** with typed enum constants
-- 252/254 AWS sample templates import successfully (99% success rate)
+- 254/254 AWS sample templates import successfully (100% success rate)
 
 See [CHANGELOG.md](CHANGELOG.md) for release details.
 
@@ -146,8 +146,6 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 - [Quick Start](docs/QUICK_START.md)
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
-- [Implementation Checklist](../../docs/research/ImplementationChecklist.md)
-- [Go Design Decisions](../../docs/research/Go.md)
 
 ## Related Packages
 

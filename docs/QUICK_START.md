@@ -115,7 +115,7 @@ wetwire-aws build ./infra > template.json
 wetwire-aws build ./infra --format yaml
 
 # Initialize a new project
-wetwire-aws init -o myapp/
+wetwire-aws init myapp
 
 # Lint code for issues
 wetwire-aws lint ./infra
@@ -217,49 +217,6 @@ var MyTable = dynamodb.Table{
 
 ---
 
-## Template Building (Programmatic)
-
-For programmatic template building, use the `template` package:
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/lex00/wetwire-aws-go/internal/template"
-    "github.com/lex00/wetwire-aws-go/resources/s3"
-    . "github.com/lex00/wetwire-aws-go/intrinsics"
-)
-
-func main() {
-    t := template.New()
-    t.Description = "My Application Stack"
-
-    // Add resources
-    t.AddResource("DataBucket", s3.Bucket{
-        BucketName: "my-data",
-    })
-
-    // Add parameters
-    t.AddParameter("Environment", template.Parameter{
-        Type:          "String",
-        Default:       "dev",
-        AllowedValues: List("dev", "staging", "prod"),
-    })
-
-    // Add outputs - use typed intrinsics, not raw maps
-    t.AddOutput("BucketArn", template.Output{
-        Value:       DataBucket.Arn,  // GetAtt via field access
-        Description: "Data bucket ARN",
-    })
-
-    json, _ := t.ToJSON()
-    fmt.Println(string(json))
-}
-```
-
----
-
 ## Deploy
 
 ```bash
@@ -278,5 +235,4 @@ aws cloudformation deploy \
 ## Next Steps
 
 - See the full [CLI Reference](CLI.md)
-- Learn about [Intrinsic Functions](INTRINSICS.md)
 - Explore the generated resource types

@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Module path alignment: changed from `github.com/lex00/wetwire-aws` to
-  `github.com/lex00/wetwire/go/wetwire-aws` to match actual repository location
+  `github.com/lex00/wetwire-aws-go` to match actual repository location
 - This enables proper pkg.go.dev indexing and `go install` from the correct path
 
 ### Changed
