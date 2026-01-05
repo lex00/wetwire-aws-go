@@ -6,7 +6,6 @@ package autoscalingmultiazwithnotifications
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancingv2"
 )
@@ -20,13 +19,13 @@ var LoadBalancerSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_In
 
 var LoadBalancerSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allows inbound traffic on port 443",
-	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPortN443),
+	SecurityGroupIngress: []any{LoadBalancerSecurityGroupSecurityGroupIngressPortN443},
 	VpcId: VPC,
 }
 
 var ElasticLoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	Scheme: "internet-facing",
-	SecurityGroups: Any(LoadBalancerSecurityGroup),
+	SecurityGroups: []any{LoadBalancerSecurityGroup},
 	Subnets: Subnets,
 	Type_: "application",
 }
@@ -47,7 +46,7 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access and HTTP from the load balancer only",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80},
 }
 
 var TargetGroup = elasticloadbalancingv2.TargetGroup{
@@ -69,8 +68,8 @@ var LoadBalancerListenerCertificate1 = elasticloadbalancingv2.Listener_Certifica
 }
 
 var LoadBalancerListener = elasticloadbalancingv2.Listener{
-	Certificates: List(LoadBalancerListenerCertificate1),
-	DefaultActions: List(LoadBalancerListenerDefaultActionForward),
+	Certificates: []any{LoadBalancerListenerCertificate1},
+	DefaultActions: []any{LoadBalancerListenerDefaultActionForward},
 	LoadBalancerArn: ElasticLoadBalancer,
 	Port: 443,
 	Protocol: enums.Elbv2ProtocolEnumHttps,

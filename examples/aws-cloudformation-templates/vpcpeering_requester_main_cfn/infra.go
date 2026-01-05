@@ -10,14 +10,14 @@ import (
 )
 
 var VPCPeeringRequesterSetupStack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"PeerName": PeerName,
 	"PeerOwnerId": PeerOwnerId,
 	"PeerRoleARN": PeerRoleARN,
 	"PeerVPCID": PeerVPCID,
 	"VPCID": VPCID,
 },
-	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Requester-Setup.cfn.yaml", Variables: map[string]any{
+	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Requester-Setup.cfn.yaml", Variables: Json{
 	"S3Bucket": TemplatesS3BucketName,
 	"S3KeyPrefix": TemplatesS3KeyPrefix,
 	"S3Region": TemplatesS3BucketRegion,
@@ -25,7 +25,7 @@ var VPCPeeringRequesterSetupStack = cloudformation.Stack{
 }
 
 var VPCPeeringUpdatesStack = cloudformation.Stack{
-	Parameters: map[string]any{
+	Parameters: Json{
 	"NumberOfRouteTables": NumberOfRouteTables,
 	"NumberOfSecurityGroups": NumberOfSecurityGroups,
 	"PeerName": PeerName,
@@ -34,7 +34,7 @@ var VPCPeeringUpdatesStack = cloudformation.Stack{
 	"SecurityGroupIds": Join{Delimiter: ",", Values: SecurityGroupIds},
 	"VPCPeeringConnectionId": VPCPeeringRequesterSetupStack.Outputs.VPCPeeringConnectionId,
 },
-	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Updates.cfn.yaml", Variables: map[string]any{
+	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Updates.cfn.yaml", Variables: Json{
 	"S3Bucket": TemplatesS3BucketName,
 	"S3KeyPrefix": TemplatesS3KeyPrefix,
 	"S3Region": TemplatesS3BucketRegion,

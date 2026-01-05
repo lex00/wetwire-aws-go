@@ -10,12 +10,12 @@ import (
 )
 
 var DescribeHealthRolePolicyDescribeNeginstanceNPolicyDocument = PolicyDocument{
-	Statement: Any(DescribeHealthRolePolicyDescribeNeginstanceNPolicyDocumentStatement0),
+	Statement: []any{DescribeHealthRolePolicyDescribeNeginstanceNPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var DescribeHealthRolePolicyDescribeNeginstanceNPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("elasticloadbalancing:DescribeInstanceHealth"),
+	Action: []any{"elasticloadbalancing:DescribeInstanceHealth"},
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,12 +26,12 @@ var DescribeHealthRolePolicyDescribeNeginstanceN = iam.Role_Policy{
 }
 
 var DescribeHealthRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(DescribeHealthRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{DescribeHealthRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var DescribeHealthRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -39,10 +39,10 @@ var DescribeHealthRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var DescribeHealthRole = iam.Role{
 	AssumeRolePolicyDocument: DescribeHealthRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(DescribeHealthRolePolicyDescribeNeginstanceN),
+	Policies: []any{DescribeHealthRolePolicyDescribeNeginstanceN},
 }
 
 var WebServerInstanceProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: Any(DescribeHealthRole),
+	Roles: []any{DescribeHealthRole},
 }

@@ -13,7 +13,7 @@ var EC2Instance = ec2.Instance{
 	ImageId: FindInMap{"AWSRegionArch2AMI", AWS_REGION, FindInMap{"AWSInstanceType2Arch", InstanceType, "Arch"}},
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
+	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash -xe\nsudo apt-get update -y\nsudo apt-get -y install python3-pip\nmkdir -p /opt/aws/\nsudo pip3 install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz\nsudo ln -s /usr/local/init/ubuntu/cfn-hup /etc/init.d/cfn-hup\n/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --configsets full_install --region ${AWS::Region}\n/usr/local/bin/cfn-signal -e $?  --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}\n"}},
 }

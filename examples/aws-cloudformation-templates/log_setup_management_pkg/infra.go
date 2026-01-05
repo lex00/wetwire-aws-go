@@ -5,17 +5,16 @@
 package log_setup_management_pkg
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 
 var TargetAccountLoggingStackInstancesGroup1DeploymentTargets = cloudformation.StackSet_DeploymentTargets{
-	OrganizationalUnitIds: Any(OUID),
+	OrganizationalUnitIds: []any{OUID},
 }
 
 var TargetAccountLoggingStackInstancesGroup1 = cloudformation.StackSet_StackInstances{
 	DeploymentTargets: TargetAccountLoggingStackInstancesGroup1DeploymentTargets,
-	Regions: Any("us-east-1", "us-west-2"),
+	Regions: []any{"us-east-1", "us-west-2"},
 }
 
 var TargetAccountLoggingParameter1 = cloudformation.StackSet_Parameter{
@@ -36,12 +35,12 @@ var TargetAccountLoggingAutoDeployment = cloudformation.StackSet_AutoDeployment{
 
 var TargetAccountLogging = cloudformation.StackSet{
 	AutoDeployment: &TargetAccountLoggingAutoDeployment,
-	Capabilities: Any("CAPABILITY_IAM"),
+	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging. It configures logging resources in target accounts.",
 	OperationPreferences: &TargetAccountLoggingOperationPreferences,
-	Parameters: List(TargetAccountLoggingParameter1),
+	Parameters: []any{TargetAccountLoggingParameter1},
 	PermissionModel: "SERVICE_MANAGED",
-	StackInstancesGroup: List(TargetAccountLoggingStackInstancesGroup1),
+	StackInstancesGroup: []any{TargetAccountLoggingStackInstancesGroup1},
 	StackSetName: "log-setup",
 	TemplateBody: "AWSTemplateFormatVersion: '2010-09-09'\n\nDescription: EventBridge Rule to send CloudFormation events to a central EventBus\n\nParameters:\n\n  CentralEventBusArn:\n    Type: String\n\nResources:\n\n  CloudFormationEventRule:\n    Type: AWS::Events::Rule\n    Metadata:\n      Comment: Send all cloudformation events to the central event bus\n    Properties:\n      Name: CloudFormationEventRule\n      EventBusName: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default\n      EventPattern:\n        source:\n          - aws.cloudformation\n      State: ENABLED\n      Targets:\n        - Arn: !Ref CentralEventBusArn \n          RoleArn: !GetAtt EventBridgeRole.Arn\n          Id: CentralEventBus\n          DeadLetterConfig:\n            Arn: !GetAtt DeadLetterQueue.Arn\n\n  DeadLetterQueue:\n    Type: AWS::SQS::Queue\n    Properties:\n      QueueName: CloudFormation-Logs-DLQ\n\n  DeadLetterQueuePolicy:\n    Type: AWS::SQS::QueuePolicy\n    Properties:\n      PolicyDocument:\n        Version: \"2012-10-17\"\n        Id: AllowEventBridgeToWriteLogs\n        Statement:\n          - Sid: AllowEventBridgeToWriteLogs\n            Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: sqs:SendMessage\n            Resource: !GetAtt DeadLetterQueue.Arn\n            Condition:\n              ArnLike:\n                aws:SourceArn: !Sub \"arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/CloudFormationEventRule\"\n      Queues:\n        - !Ref DeadLetterQueue\n\n  EventBridgeRole:\n    Type: AWS::IAM::Role\n    Properties:\n      AssumeRolePolicyDocument:\n        Version: '2012-10-17'\n        Statement:\n          - Effect: Allow\n            Principal:\n              Service: events.amazonaws.com\n            Action: 'sts:AssumeRole'\n\n  EventBridgeRolePolicy:\n    Type: AWS::IAM::RolePolicy\n    Metadata: \n      Comment: Allow CloudFormation events to be written to the default event bus in the target account\n    Properties:\n      PolicyName: EventBridgeRolePolicy\n      PolicyDocument:\n        Version: '2012-10-17'\n        Statement:\n          - Effect: Allow\n            Action: 'events:PutEvents'\n            Resource: !Ref CentralEventBusArn \n      RoleName: !Ref EventBridgeRole",
 }

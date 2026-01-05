@@ -46,7 +46,7 @@ var GGSampleFunctionVersion = lambda.Version{
 }
 
 var GroupDeploymentResetFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"STACK_NAME": AWS_STACK_NAME},
+	Variables: Json{"STACK_NAME": AWS_STACK_NAME},
 }
 
 var GroupDeploymentResetFunctionCode = lambda.Function_Code{

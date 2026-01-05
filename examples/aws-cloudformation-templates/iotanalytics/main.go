@@ -51,7 +51,7 @@ var PipelinePipelineActivity1 = iotanalytics.Pipeline_Activity{
 }
 
 var Pipeline = iotanalytics.Pipeline{
-	PipelineActivities: List(PipelinePipelineActivity1),
+	PipelineActivities: []any{PipelinePipelineActivity1},
 	PipelineName: Sub{String: "${ProjectName}_pipeline"},
 	Tags: []any{PipelineTagProject},
 }
@@ -84,9 +84,9 @@ var SqlDatasetAction1 = iotanalytics.Dataset_Action{
 }
 
 var SqlDataset = iotanalytics.Dataset{
-	Actions: List(SqlDatasetAction1),
+	Actions: []any{SqlDatasetAction1},
 	DatasetName: Sub{String: "${ProjectName}_dataset"},
 	RetentionPeriod: &SqlDatasetRetentionPeriod,
 	Tags: []any{SqlDatasetTagProject},
-	Triggers: List(SqlDatasetTrigger1),
+	Triggers: []any{SqlDatasetTrigger1},
 }

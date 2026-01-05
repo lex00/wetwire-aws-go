@@ -10,7 +10,7 @@ import (
 )
 
 var RestApiEndpointConfiguration = apigateway.RestApi_EndpointConfiguration{
-	Types: Any(ApiType),
+	Types: []any{ApiType},
 }
 
 var RestApi = apigateway.RestApi{
@@ -23,22 +23,16 @@ var RequestModel = apigateway.Model{
 	ContentType: "application/json",
 	Name: "MyModel",
 	RestApiId: RestApi,
-	Schema: map[string]any{
+	Schema: Json{
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"properties": map[string]any{
-	"callerName": map[string]any{
+	"properties": Json{
+	"callerName": Json{
 	"type": "string",
 },
 },
 	"title": "MyModel",
 	"type": "object",
 },
-}
-
-var ApiResource = apigateway.Resource{
-	ParentId: RestApi.RootResourceId,
-	PathPart: "{city}",
-	RestApiId: RestApi,
 }
 
 var ApiMethodIntegrationIntegrationResponse1 = apigateway.Method_IntegrationResponse{
@@ -51,8 +45,8 @@ var ApiMethodMethodResponse1 = apigateway.Method_MethodResponse{
 
 var ApiMethodIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
-	IntegrationResponses: List(ApiMethodIntegrationIntegrationResponse1),
-	RequestTemplates: map[string]any{"application/json": "#set($inputRoot = $input.path('$'))\n    {\n      \"city\": \"$input.params('city')\",\n      \"time\": \"$input.params('time')\",\n      \"day\":  \"$input.params('day')\",\n      \"name\": \"$inputRoot.callerName\"\n    }\n"},
+	IntegrationResponses: []any{ApiMethodIntegrationIntegrationResponse1},
+	RequestTemplates: Json{"application/json": "#set($inputRoot = $input.path('$'))\n    {\n      \"city\": \"$input.params('city')\",\n      \"time\": \"$input.params('time')\",\n      \"day\":  \"$input.params('day')\",\n      \"name\": \"$inputRoot.callerName\"\n    }\n"},
 	TimeoutInMillis: ApigatewayTimeout,
 	Type_: "AWS",
 	Uri: Join{Delimiter: "", Values: []any{
@@ -70,15 +64,21 @@ var ApiMethod = apigateway.Method{
 	AuthorizationType: "NONE",
 	HttpMethod: "ANY",
 	Integration: &ApiMethodIntegration,
-	MethodResponses: List(ApiMethodMethodResponse1),
-	RequestModels: map[string]any{
+	MethodResponses: []any{ApiMethodMethodResponse1},
+	RequestModels: Json{
 	"application/json": RequestModel,
 },
-	RequestParameters: map[string]any{
+	RequestParameters: Json{
 	"method.request.header.day": "true",
 	"method.request.path.city": "true",
 	"method.request.querystring.time": "true",
 },
 	ResourceId: ApiResource,
+	RestApiId: RestApi,
+}
+
+var ApiResource = apigateway.Resource{
+	ParentId: RestApi.RootResourceId,
+	PathPart: "{city}",
 	RestApiId: RestApi,
 }

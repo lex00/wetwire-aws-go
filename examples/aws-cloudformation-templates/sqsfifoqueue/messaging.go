@@ -29,7 +29,7 @@ var SQSQueue = sqs.Queue{
 	".fifo",
 }},
 	ReceiveMessageWaitTimeSeconds: ReceiveMessageWaitTimeSeconds,
-	RedrivePolicy: If{"CreateDeadLetterQueue", map[string]any{
+	RedrivePolicy: If{"CreateDeadLetterQueue", Json{
 	"deadLetterTargetArn": MyDeadLetterQueue.Arn,
 	"maxReceiveCount": 5,
 }, AWS_NO_VALUE},

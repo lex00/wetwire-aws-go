@@ -17,7 +17,7 @@ var ASCPrivateLinkNLBLoadBalancerAttributeLoadbalancingcrosszo = elasticloadbala
 }
 
 var ASCPrivateLinkNLB = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(ASCPrivateLinkNLBLoadBalancerAttributeLoadbalancingcrosszo),
+	LoadBalancerAttributes: []any{ASCPrivateLinkNLBLoadBalancerAttributeLoadbalancingcrosszo},
 	Scheme: "internal",
 	Subnets: Subnets,
 	Type_: "network",
@@ -35,7 +35,7 @@ var ASCPrivateLinkTargetGroup = elasticloadbalancingv2.TargetGroup{
 	Port: 443,
 	Protocol: If{"SapUseHttps", enums.Elbv2ProtocolEnumTls, enums.Elbv2ProtocolEnumTcp},
 	TargetType: enums.Elbv2TargetTypeEnumIp,
-	Targets: List(ASCPrivateLinkTargetGroupTarget1),
+	Targets: []any{ASCPrivateLinkTargetGroupTarget1},
 	VpcId: VpcId,
 }
 
@@ -49,8 +49,8 @@ var ASCPrivateLinkListenerCertificate1 = elasticloadbalancingv2.Listener_Certifi
 }
 
 var ASCPrivateLinkListener = elasticloadbalancingv2.Listener{
-	Certificates: List(ASCPrivateLinkListenerCertificate1),
-	DefaultActions: List(ASCPrivateLinkListenerDefaultActionForward),
+	Certificates: []any{ASCPrivateLinkListenerCertificate1},
+	DefaultActions: []any{ASCPrivateLinkListenerDefaultActionForward},
 	LoadBalancerArn: ASCPrivateLinkNLB,
 	Port: 443,
 	Protocol: enums.Elbv2ProtocolEnumTls,
@@ -59,10 +59,10 @@ var ASCPrivateLinkListener = elasticloadbalancingv2.Listener{
 
 var ASCPrivateLinkVPCES = ec2.VPCEndpointService{
 	AcceptanceRequired: false,
-	NetworkLoadBalancerArns: Any(ASCPrivateLinkNLB),
+	NetworkLoadBalancerArns: []any{ASCPrivateLinkNLB},
 }
 
 var ASCPrivateLinkVPCESPermission = ec2.VPCEndpointServicePermissions{
-	AllowedPrincipals: Any("appflow.amazonaws.com"),
+	AllowedPrincipals: []any{"appflow.amazonaws.com"},
 	ServiceId: ASCPrivateLinkVPCES,
 }

@@ -5,7 +5,6 @@
 package dmsauroratos3fullloadandongoingreplication
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/dms"
 )
 
@@ -20,7 +19,7 @@ var AuroraSourceEndpoint = dms.Endpoint{
 
 var DMSReplicationSubnetGroup = dms.ReplicationSubnetGroup{
 	ReplicationSubnetGroupDescription: "Subnets available for DMS",
-	SubnetIds: Any(DBSubnet1, DBSubnet2),
+	SubnetIds: []any{DBSubnet1, DBSubnet2},
 }
 
 var DMSReplicationInstance = dms.ReplicationInstance{
@@ -29,7 +28,7 @@ var DMSReplicationInstance = dms.ReplicationInstance{
 	ReplicationInstanceClass: "dms.t3.medium",
 	ReplicationInstanceIdentifier: "aurora-s3-repinstance-sampledb",
 	ReplicationSubnetGroupIdentifier: DMSReplicationSubnetGroup,
-	VpcSecurityGroupIds: Any(DMSSecurityGroup),
+	VpcSecurityGroupIds: []any{DMSSecurityGroup},
 }
 
 var S3TargetEndpointS3Settings = dms.Endpoint_S3Settings{

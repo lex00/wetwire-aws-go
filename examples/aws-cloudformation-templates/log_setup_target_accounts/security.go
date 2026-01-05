@@ -10,7 +10,7 @@ import (
 )
 
 var EventBridgeRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(EventBridgeRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{EventBridgeRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -25,7 +25,7 @@ var EventBridgeRole = iam.Role{
 }
 
 var EventBridgeRolePolicyPolicyDocument = PolicyDocument{
-	Statement: Any(EventBridgeRolePolicyPolicyDocumentStatement0),
+	Statement: []any{EventBridgeRolePolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 

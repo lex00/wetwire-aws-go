@@ -10,12 +10,12 @@ import (
 )
 
 var DeliveryRolePolicyFirehosedeliverypoliPolicyDocument = PolicyDocument{
-	Statement: Any(DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement0, DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1),
+	Statement: []any{DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement0, DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("logs:PutLogEvents"),
+	Action: []any{"logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Join{Delimiter: "", Values: []any{
 	Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/kinesisfirehose/"},
@@ -25,16 +25,16 @@ var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement1 = PolicyState
 }
 
 var DeliveryRolePolicyFirehosedeliverypoliPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("s3:AbortMultipartUpload", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads", "s3:PutObject"),
+	Action: []any{"s3:AbortMultipartUpload", "s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads", "s3:PutObject"},
 	Effect: "Allow",
-	Resource: Any(Join{Delimiter: "", Values: []any{
+	Resource: []any{Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
 }}, Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
 	"/*",
-}}),
+}}},
 }
 
 var DeliveryRolePolicyFirehosedeliverypoli = iam.Role_Policy{
@@ -43,7 +43,7 @@ var DeliveryRolePolicyFirehosedeliverypoli = iam.Role_Policy{
 }
 
 var DeliveryRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(DeliveryRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{DeliveryRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -58,5 +58,5 @@ var DeliveryRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var DeliveryRole = iam.Role{
 	AssumeRolePolicyDocument: DeliveryRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(DeliveryRolePolicyFirehosedeliverypoli),
+	Policies: []any{DeliveryRolePolicyFirehosedeliverypoli},
 }

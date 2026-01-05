@@ -29,7 +29,7 @@ var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExe
 var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment = greengrass.FunctionDefinitionVersion_Environment{
 	AccessSysfs: "false",
 	Execution: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
-	Variables: map[string]any{"CORE_NAME": CoreName},
+	Variables: Json{"CORE_NAME": CoreName},
 }
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfiguration = greengrass.FunctionDefinitionVersion_FunctionConfiguration{
@@ -60,7 +60,7 @@ var FunctionDefinitionInitialVersionDefaultConfig = greengrass.FunctionDefinitio
 
 var FunctionDefinitionInitialVersion = greengrass.FunctionDefinition_FunctionDefinitionVersion{
 	DefaultConfig: &FunctionDefinitionInitialVersionDefaultConfig,
-	Functions: List(FunctionDefinitionInitialVersionFunction1),
+	Functions: []any{FunctionDefinitionInitialVersionFunction1},
 }
 
 var FunctionDefinition = greengrass.FunctionDefinition{
@@ -109,7 +109,7 @@ var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core
 
 var GreengrassCoreDefinitionVersion = greengrass.CoreDefinitionVersion{
 	CoreDefinitionId: GreengrassCoreDefinition,
-	Cores: List(GreengrassCoreDefinitionVersionCore1),
+	Cores: []any{GreengrassCoreDefinitionVersionCore1},
 }
 
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription3 = greengrass.SubscriptionDefinitionVersion_Subscription{
@@ -143,7 +143,7 @@ var SubscriptionDefinitionInitialVersionSubscriptionSubscription1 = greengrass.S
 }
 
 var SubscriptionDefinitionInitialVersion = greengrass.SubscriptionDefinition_SubscriptionDefinitionVersion{
-	Subscriptions: List(SubscriptionDefinitionInitialVersionSubscriptionSubscription1, SubscriptionDefinitionInitialVersionSubscriptionSubscription2, SubscriptionDefinitionInitialVersionSubscriptionSubscription3),
+	Subscriptions: []any{SubscriptionDefinitionInitialVersionSubscriptionSubscription1, SubscriptionDefinitionInitialVersionSubscriptionSubscription2, SubscriptionDefinitionInitialVersionSubscriptionSubscription3},
 }
 
 var SubscriptionDefinition = greengrass.SubscriptionDefinition{

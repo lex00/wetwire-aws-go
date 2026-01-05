@@ -5,7 +5,6 @@
 package autoscalingmultiazwithnotifications
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
@@ -15,10 +14,10 @@ var CPUAlarmHighDimensionAutoScalingGroupName = cloudwatch.Alarm_Dimension{
 }
 
 var CPUAlarmHigh = cloudwatch.Alarm{
-	AlarmActions: Any(WebServerScaleUpPolicy),
+	AlarmActions: []any{WebServerScaleUpPolicy},
 	AlarmDescription: "Scale-up if CPU > 90% for 10 minutes",
 	ComparisonOperator: "GreaterThanThreshold",
-	Dimensions: List(CPUAlarmHighDimensionAutoScalingGroupName),
+	Dimensions: []any{CPUAlarmHighDimensionAutoScalingGroupName},
 	EvaluationPeriods: 2,
 	MetricName: "CPUUtilization",
 	Namespace: "AWS/EC2",
@@ -33,10 +32,10 @@ var CPUAlarmLowDimensionAutoScalingGroupName = cloudwatch.Alarm_Dimension{
 }
 
 var CPUAlarmLow = cloudwatch.Alarm{
-	AlarmActions: Any(WebServerScaleDownPolicy),
+	AlarmActions: []any{WebServerScaleDownPolicy},
 	AlarmDescription: "Scale-down if CPU < 70% for 10 minutes",
 	ComparisonOperator: "LessThanThreshold",
-	Dimensions: List(CPUAlarmLowDimensionAutoScalingGroupName),
+	Dimensions: []any{CPUAlarmLowDimensionAutoScalingGroupName},
 	EvaluationPeriods: 2,
 	MetricName: "CPUUtilization",
 	Namespace: "AWS/EC2",

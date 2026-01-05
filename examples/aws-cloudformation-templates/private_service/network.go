@@ -28,7 +28,7 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 
 var LoadBalancerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
 	Field: "path-pattern",
-	Values: Any(Path),
+	Values: []any{Path},
 }
 
 var LoadBalancerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
@@ -37,8 +37,8 @@ var LoadBalancerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
 }
 
 var LoadBalancerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: List(LoadBalancerRuleActionForward),
-	Conditions: List(LoadBalancerRuleCondition1),
+	Actions: []any{LoadBalancerRuleActionForward},
+	Conditions: []any{LoadBalancerRuleCondition1},
 	ListenerArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateListener",

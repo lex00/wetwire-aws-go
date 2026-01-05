@@ -20,7 +20,7 @@
 //	WAW015: Avoid explicit Ref{} - use direct variable references or Param()
 //	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
 //	WAW017: Avoid pointer assignments (&Type{}) - use value types
-//	WAW018: Avoid []any slices - use Any() helper function
+//	WAW018: Use Json{} instead of map[string]any{} for cleaner syntax
 package linter
 
 import (
@@ -1771,23 +1771,30 @@ func (r AvoidPointerAssignment) Check(file *ast.File, fset *token.FileSet) []Iss
 	return issues
 }
 
-// AvoidAnySlice detects []any slice literals that should use Any() helper.
+// PreferJsonType detects map[string]any{} literals and suggests using Json{} instead.
+// The Json type is cleaner and provides better readability.
 //
 // Example:
 //
-//	// Bad - []any slice
-//	Tags: []any{Tag1, Tag2, Tag3},
+//	// Bad - verbose map syntax
+//	CustomOriginConfig: map[string]any{
+//	    "HTTPPort": 80,
+//	    "HTTPSPort": 443,
+//	}
 //
-//	// Good - Any() helper
-//	Tags: Any(Tag1, Tag2, Tag3),
-type AvoidAnySlice struct{}
+//	// Good - use Json type alias
+//	CustomOriginConfig: Json{
+//	    "HTTPPort": 80,
+//	    "HTTPSPort": 443,
+//	}
+type PreferJsonType struct{}
 
-func (r AvoidAnySlice) ID() string { return "WAW018" }
-func (r AvoidAnySlice) Description() string {
-	return "Avoid []any slices - use Any() helper function"
+func (r PreferJsonType) ID() string { return "WAW018" }
+func (r PreferJsonType) Description() string {
+	return "Use Json{} instead of map[string]any{} for cleaner syntax"
 }
 
-func (r AvoidAnySlice) Check(file *ast.File, fset *token.FileSet) []Issue {
+func (r PreferJsonType) Check(file *ast.File, fset *token.FileSet) []Issue {
 	var issues []Issue
 
 	ast.Inspect(file, func(n ast.Node) bool {
@@ -1796,24 +1803,29 @@ func (r AvoidAnySlice) Check(file *ast.File, fset *token.FileSet) []Issue {
 			return true
 		}
 
-		// Check if this is []any type
-		arrType, ok := comp.Type.(*ast.ArrayType)
-		if !ok {
+		// Check if this is map[string]any
+		if !isMapStringAny(comp.Type) {
 			return true
 		}
 
-		// Check if element type is "any"
-		elemIdent, ok := arrType.Elt.(*ast.Ident)
-		if !ok || elemIdent.Name != "any" {
-			return true
+		// Skip maps that are intrinsic functions (those are handled by WAW002)
+		// Check if it has a single key-value pair with an intrinsic key
+		if len(comp.Elts) == 1 {
+			if kv, ok := comp.Elts[0].(*ast.KeyValueExpr); ok {
+				if keyLit, ok := kv.Key.(*ast.BasicLit); ok && keyLit.Kind == token.STRING {
+					keyValue := strings.Trim(keyLit.Value, `"`)
+					if _, isIntrinsic := intrinsicKeys[keyValue]; isIntrinsic {
+						return true // Skip intrinsic patterns, handled by WAW002
+					}
+				}
+			}
 		}
 
-		// Found []any{...}
 		pos := fset.Position(comp.Pos())
 		issues = append(issues, Issue{
 			RuleID:     r.ID(),
-			Message:    "Use Any() helper instead of []any{...}",
-			Suggestion: "Any(...)",
+			Message:    "Use Json{} instead of map[string]any{} for cleaner syntax",
+			Suggestion: "Json{...}",
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
@@ -1846,6 +1858,6 @@ func AllRules() []Rule {
 		AvoidExplicitRef{},
 		AvoidExplicitGetAtt{},
 		AvoidPointerAssignment{},
-		AvoidAnySlice{},
+		PreferJsonType{},
 	}
 }

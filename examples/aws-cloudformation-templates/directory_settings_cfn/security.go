@@ -15,7 +15,7 @@ var DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleTagStackName = Tag{
 }
 
 var DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -28,7 +28,7 @@ var DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleAssumeRolePolicyDocumentStatem
 var DirectoryConsoleDelegatedAccessEC2ReadOnlyRole = iam.Role{
 	AssumeRolePolicyDocument: DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleAssumeRolePolicyDocument,
 	Description: "IAM Role for Directory Service 'AWS Management Console' Delegated Access for \"EC2 ReadOnly\"",
-	ManagedPolicyArns: Any(Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess"}),
+	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess"}},
 	Path: "/",
 	Tags: []any{DirectoryConsoleDelegatedAccessEC2ReadOnlyRoleTagStackName},
 }
@@ -39,7 +39,7 @@ var DirectoryConsoleDelegatedAccessSecurityAuditRoleTagStackName = Tag{
 }
 
 var DirectoryConsoleDelegatedAccessSecurityAuditRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(DirectoryConsoleDelegatedAccessSecurityAuditRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{DirectoryConsoleDelegatedAccessSecurityAuditRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -52,18 +52,18 @@ var DirectoryConsoleDelegatedAccessSecurityAuditRoleAssumeRolePolicyDocumentStat
 var DirectoryConsoleDelegatedAccessSecurityAuditRole = iam.Role{
 	AssumeRolePolicyDocument: DirectoryConsoleDelegatedAccessSecurityAuditRoleAssumeRolePolicyDocument,
 	Description: "IAM Role for Directory Service 'AWS Management Console' Delegated Access for \"Security Audit\"",
-	ManagedPolicyArns: Any(Sub{String: "arn:${AWS::Partition}:iam::aws:policy/SecurityAudit"}),
+	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/SecurityAudit"}},
 	Path: "/",
 	Tags: []any{DirectoryConsoleDelegatedAccessSecurityAuditRoleTagStackName},
 }
 
 var DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocument = PolicyDocument{
-	Statement: Any(DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement0, DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement1, DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement2),
+	Statement: []any{DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement0, DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement1, DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
 var DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement2 = PolicyStatement{
-	Action: Any("ds:CreateAlias", "ds:EnableSso", "ds:DisableSso"),
+	Action: []any{"ds:CreateAlias", "ds:EnableSso", "ds:DisableSso"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:ds:${AWS::Region}:${AWS::AccountId}:directory/${DirectoryID}"},
 	Sid: "AliasSso",
@@ -77,19 +77,19 @@ var DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement1 =
 }
 
 var DirectorySettingsLambdaRolePolicyDirectorySettingsPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("ds:RegisterEventTopic", "ds:DeregisterEventTopic", "ds:DescribeEventTopics"),
+	Action: []any{"ds:RegisterEventTopic", "ds:DeregisterEventTopic", "ds:DescribeEventTopics"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:ds:${AWS::Region}:${AWS::AccountId}:directory/${DirectoryID}"},
 	Sid: "SnsTopic",
 }
 
 var DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocument = PolicyDocument{
-	Statement: Any(DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1),
+	Statement: []any{DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var DirectorySettingsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("logs:CreateLogStream", "logs:PutLogEvents"),
+	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:${DirectorySettingsLambdaLogsLogGroup}:log-stream:*"},
 	Sid: "CreateLogStreamAndEvents",
@@ -118,7 +118,7 @@ var DirectorySettingsLambdaRolePolicyCloudWatchLogGroup = iam.Role_Policy{
 }
 
 var DirectorySettingsLambdaRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(DirectorySettingsLambdaRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{DirectorySettingsLambdaRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -132,7 +132,7 @@ var DirectorySettingsLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: DirectorySettingsLambdaRoleAssumeRolePolicyDocument,
 	Description: Sub{String: "Rights to Setup Directory Settings for Directory ID, ${DirectoryID}"},
 	Path: "/",
-	Policies: List(DirectorySettingsLambdaRolePolicyCloudWatchLogGroup, DirectorySettingsLambdaRolePolicyDirectorySettings),
+	Policies: []any{DirectorySettingsLambdaRolePolicyCloudWatchLogGroup, DirectorySettingsLambdaRolePolicyDirectorySettings},
 	RoleName: Sub{String: "${LambdaFunctionName}-LambdaRole"},
 	Tags: []any{DirectorySettingsLambdaRoleTagStackName},
 }

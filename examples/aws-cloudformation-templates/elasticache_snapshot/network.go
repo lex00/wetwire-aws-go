@@ -57,7 +57,7 @@ var RedisSecurityGroupSecurityGroupIngressPortN6379 = ec2.SecurityGroup_Ingress{
 
 var RedisSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "RedisSecurityGroup",
-	SecurityGroupIngress: List(RedisSecurityGroupSecurityGroupIngressPortN6379),
+	SecurityGroupIngress: []any{RedisSecurityGroupSecurityGroupIngressPortN6379},
 	VpcId: VPC,
 }
 

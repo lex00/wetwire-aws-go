@@ -40,8 +40,8 @@ var ADConnectorDomainMembersSGSecurityGroupEgress1 = ec2.SecurityGroup_Egress{
 
 var ADConnectorDomainMembersSG = ec2.SecurityGroup{
 	GroupDescription: Sub{String: "${DomainNetBiosName} Domain Members SG via AD Connector"},
-	SecurityGroupEgress: List(ADConnectorDomainMembersSGSecurityGroupEgress1),
-	SecurityGroupIngress: List(ADConnectorDomainMembersSGSecurityGroupIngress1, ADConnectorDomainMembersSGSecurityGroupIngress2, ADConnectorDomainMembersSGSecurityGroupIngress3),
+	SecurityGroupEgress: []any{ADConnectorDomainMembersSGSecurityGroupEgress1},
+	SecurityGroupIngress: []any{ADConnectorDomainMembersSGSecurityGroupIngress1, ADConnectorDomainMembersSGSecurityGroupIngress2, ADConnectorDomainMembersSGSecurityGroupIngress3},
 	Tags: []any{ADConnectorDomainMembersSGTagName},
 	VpcId: VPCID,
 }
@@ -53,7 +53,7 @@ var DHCPOptionsTagName = Tag{
 
 var DHCPOptions = ec2.DHCPOptions{
 	DomainName: DomainDNSName,
-	DomainNameServers: Any(DomainDNSServers),
+	DomainNameServers: []any{DomainDNSServers},
 	Tags: []any{DHCPOptionsTagName},
 }
 

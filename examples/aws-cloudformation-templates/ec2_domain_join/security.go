@@ -11,49 +11,49 @@ import (
 )
 
 var myEC2SSMRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(myEC2SSMRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{myEC2SSMRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var myEC2SSMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
 
 var myEC2SSMRole = iam.Role{
 	AssumeRolePolicyDocument: myEC2SSMRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"},
 	RoleName: "DemoEC2SSMRole",
 }
 
 var myInstanceProfile = iam.InstanceProfile{
 	InstanceProfileName: "myEC2SSMRole",
-	Roles: Any("DemoEC2SSMRole"),
+	Roles: []any{"DemoEC2SSMRole"},
 }
 
 var myssmdocument = ssm.Document{
-	Content: map[string]any{
+	Content: Json{
 	"description": "Join instances to an AWS Directory Service domain.",
-	"parameters": map[string]any{
-	"directoryId": map[string]any{
+	"parameters": Json{
+	"directoryId": Json{
 	"description": "(Required) The ID of the AWS Directory Service directory.",
 	"type": "String",
 },
-	"directoryName": map[string]any{
+	"directoryName": Json{
 	"description": "(Required) The name of the directory; for example, test.example.com",
 	"type": "String",
 },
-	"dnsIpAddresses": map[string]any{
+	"dnsIpAddresses": Json{
 	"allowedPattern": "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)",
 	"default": []any{},
 	"description": "(Optional) The IP addresses of the DNS servers in the directory. Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html",
 	"type": "StringList",
 },
 },
-	"runtimeConfig": map[string]any{
-	"aws:domainJoin": map[string]any{
-	"properties": map[string]any{
+	"runtimeConfig": Json{
+	"aws:domainJoin": Json{
+	"properties": Json{
 	"directoryId": "{{ directoryId }}",
 	"directoryName": "{{ directoryName }}",
 	"dnsIpAddresses": "{{ dnsIpAddresses }}",

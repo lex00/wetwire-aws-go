@@ -28,7 +28,7 @@ var LinuxInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 
 var LinuxInstance = ec2.Instance{
 	AvailabilityZone: InstanceAZ,
-	BlockDeviceMappings: List(LinuxInstanceBlockDeviceMappingDevsdm),
+	BlockDeviceMappings: []any{LinuxInstanceBlockDeviceMappingDevsdm},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: LinuxAMIID,
 	InstanceType: InstanceType,
@@ -57,7 +57,7 @@ var WindowsInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 
 var WindowsInstance = ec2.Instance{
 	AvailabilityZone: InstanceAZ,
-	BlockDeviceMappings: List(WindowsInstanceBlockDeviceMappingDevsdm),
+	BlockDeviceMappings: []any{WindowsInstanceBlockDeviceMappingDevsdm},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: WindowsAMIID,
 	InstanceType: InstanceType,

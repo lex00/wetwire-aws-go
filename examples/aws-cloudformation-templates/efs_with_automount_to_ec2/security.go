@@ -10,7 +10,7 @@ import (
 )
 
 var IAMAssumeInstanceRolePolicy1PolicyDocument = PolicyDocument{
-	Statement: Any(IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2),
+	Statement: []any{IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
@@ -21,13 +21,13 @@ var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2 = PolicyStatement{
 }
 
 var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("s3:Get*", "s3:List*"),
+	Action: []any{"s3:Get*", "s3:List*"},
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("ec2:DescribeTags"),
+	Action: []any{"ec2:DescribeTags"},
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -42,12 +42,12 @@ var IAMAssumeInstanceRolePolicy1 = iam.Role_Policy{
 }
 
 var IAMAssumeInstanceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -55,7 +55,7 @@ var IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var IAMAssumeInstanceRole = iam.Role{
 	AssumeRolePolicyDocument: IAMAssumeInstanceRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(IAMAssumeInstanceRolePolicy1),
+	Policies: []any{IAMAssumeInstanceRolePolicy1},
 	RoleName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"EC2",
@@ -69,5 +69,5 @@ var InstanceProfile = iam.InstanceProfile{
 	"InstanceProfile",
 }},
 	Path: "/",
-	Roles: Any(IAMAssumeInstanceRole),
+	Roles: []any{IAMAssumeInstanceRole},
 }

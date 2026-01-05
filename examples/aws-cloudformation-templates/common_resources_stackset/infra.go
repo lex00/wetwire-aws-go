@@ -10,12 +10,12 @@ import (
 )
 
 var StackSetStackInstancesGroup1DeploymentTargets = cloudformation.StackSet_DeploymentTargets{
-	OrganizationalUnitIds: Any(OUID),
+	OrganizationalUnitIds: []any{OUID},
 }
 
 var StackSetStackInstancesGroup1 = cloudformation.StackSet_StackInstances{
 	DeploymentTargets: StackSetStackInstancesGroup1DeploymentTargets,
-	Regions: Any("us-east-1", "us-west-2"),
+	Regions: []any{"us-east-1", "us-west-2"},
 }
 
 var StackSetParameter1 = cloudformation.StackSet_Parameter{
@@ -36,14 +36,14 @@ var StackSetAutoDeployment = cloudformation.StackSet_AutoDeployment{
 
 var StackSet = cloudformation.StackSet{
 	AutoDeployment: &StackSetAutoDeployment,
-	Capabilities: Any("CAPABILITY_IAM"),
+	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging",
 	OperationPreferences: &StackSetOperationPreferences,
-	Parameters: List(StackSetParameter1),
+	Parameters: []any{StackSetParameter1},
 	PermissionModel: "SERVICE_MANAGED",
-	StackInstancesGroup: List(StackSetStackInstancesGroup1),
+	StackInstancesGroup: []any{StackSetStackInstancesGroup1},
 	StackSetName: "common-resources",
-	TemplateBody: map[string]any{
+	TemplateBody: Json{
 	"Rain::Embed": "common-resources-pkg.yaml",
 },
 }

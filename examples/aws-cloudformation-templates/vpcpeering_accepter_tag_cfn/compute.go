@@ -6,11 +6,12 @@ package vpcpeering_accepter_tag_cfn
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
 var TagVpcPeeringConnectionsLambdaFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
+	Variables: Json{"LOG_LEVEL": LambdaLogLevel},
 }
 
 var TagVpcPeeringConnectionsLambdaFunctionCode = lambda.Function_Code{

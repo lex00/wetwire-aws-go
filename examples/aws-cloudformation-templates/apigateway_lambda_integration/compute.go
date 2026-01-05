@@ -11,7 +11,7 @@ import (
 )
 
 var LambdaFunctionCode = lambda.Function_Code{
-	ZipFile: map[string]any{"Rain::Embed": "handler.py"},
+	ZipFile: Json{"Rain::Embed": "handler.py"},
 }
 
 var LambdaFunction = lambda.Function{

@@ -58,7 +58,7 @@ var NeptuneDBClusterParameterGroup = neptune.DBClusterParameterGroup{
 	Description: Sub{String: "CloudFormation managed Neptune DB Cluster Parameter Group - ${Env}-${AppName}-cluster-parameter-group"},
 	Family: "neptune1",
 	Name: Sub{String: "${Env}-${AppName}-neptune-cluster-parameter-group"},
-	Parameters: map[string]any{
+	Parameters: Json{
 	"neptune_enable_audit_log": If{"EnableAuditLogUpload", 1, 0},
 },
 	Tags: []any{NeptuneDBClusterParameterGroupTagName, NeptuneDBClusterParameterGroupTagApp, NeptuneDBClusterParameterGroupTagCompliance, NeptuneDBClusterParameterGroupTagEnv, NeptuneDBClusterParameterGroupTagUser, NeptuneDBClusterParameterGroupTagOwner, NeptuneDBClusterParameterGroupTagTier, NeptuneDBClusterParameterGroupTagVersion, NeptuneDBClusterParameterGroupTagStorage},
@@ -113,7 +113,7 @@ var NeptuneDBParameterGroup = neptune.DBParameterGroup{
 	Description: Sub{String: "CloudFormation managed Neptune DB Parameter Group - ${Env}-${AppName}-parameter-group"},
 	Family: "neptune1",
 	Name: Sub{String: "${Env}-${AppName}-parameter-group"},
-	Parameters: map[string]any{
+	Parameters: Json{
 	"neptune_query_timeout": NeptuneQueryTimeout,
 },
 	Tags: []any{NeptuneDBParameterGroupTagName, NeptuneDBParameterGroupTagApp, NeptuneDBParameterGroupTagCompliance, NeptuneDBParameterGroupTagEnv, NeptuneDBParameterGroupTagUser, NeptuneDBParameterGroupTagOwner, NeptuneDBParameterGroupTagTier, NeptuneDBParameterGroupTagVersion, NeptuneDBParameterGroupTagStorage},
@@ -167,7 +167,7 @@ var NeptuneDBSubnetGroupTagName = Tag{
 var NeptuneDBSubnetGroup = neptune.DBSubnetGroup{
 	DBSubnetGroupDescription: Sub{String: "CloudFormation managed Neptune DB Subnet Group - ${Env}-${AppName}-subnet-group"},
 	DBSubnetGroupName: NeptuneDBSubnetGroupName,
-	SubnetIds: Any(ImportValue{Sub{String: "${VPCStack}-PrivateSubnet1"}}, ImportValue{Sub{String: "${VPCStack}-PrivateSubnet2"}}),
+	SubnetIds: []any{ImportValue{Sub{String: "${VPCStack}-PrivateSubnet1"}}, ImportValue{Sub{String: "${VPCStack}-PrivateSubnet2"}}},
 	Tags: []any{NeptuneDBSubnetGroupTagName, NeptuneDBSubnetGroupTagApp, NeptuneDBSubnetGroupTagCompliance, NeptuneDBSubnetGroupTagEnv, NeptuneDBSubnetGroupTagUser, NeptuneDBSubnetGroupTagOwner, NeptuneDBSubnetGroupTagTier, NeptuneDBSubnetGroupTagVersion, NeptuneDBSubnetGroupTagStorage},
 }
 
@@ -227,7 +227,7 @@ var NeptuneDBCluster = neptune.DBCluster{
 	PreferredMaintenanceWindow: NeptuneDBClusterPreferredMaintenanceWindow,
 	StorageEncrypted: StorageEncrypted,
 	Tags: []any{NeptuneDBClusterTagName, NeptuneDBClusterTagApp, NeptuneDBClusterTagCompliance, NeptuneDBClusterTagEnv, NeptuneDBClusterTagUser, NeptuneDBClusterTagOwner, NeptuneDBClusterTagTier, NeptuneDBClusterTagVersion, NeptuneDBClusterTagStorage},
-	VpcSecurityGroupIds: Any(NeptuneDBSG),
+	VpcSecurityGroupIds: []any{NeptuneDBSG},
 }
 
 var NeptuneDBInstanceTagStorage = Tag{

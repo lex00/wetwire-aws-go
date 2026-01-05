@@ -10,12 +10,12 @@ import (
 )
 
 var TransformExecutionRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(TransformExecutionRolePolicyRootPolicyDocumentStatement0),
+	Statement: []any{TransformExecutionRolePolicyRootPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var TransformExecutionRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:*"),
+	Action: []any{"logs:*"},
 	Effect: "Allow",
 	Resource: "arn:aws:logs:*:*:*",
 }
@@ -26,19 +26,19 @@ var TransformExecutionRolePolicyRoot = iam.Role_Policy{
 }
 
 var TransformExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(TransformExecutionRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{TransformExecutionRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var TransformExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var TransformExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: TransformExecutionRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any(If{"AdditionalPolicyProvided", AdditionalExecutionPolicy, AWS_NO_VALUE}),
+	ManagedPolicyArns: []any{If{"AdditionalPolicyProvided", AdditionalExecutionPolicy, AWS_NO_VALUE}},
 	Path: "/",
-	Policies: List(TransformExecutionRolePolicyRoot),
+	Policies: []any{TransformExecutionRolePolicyRoot},
 }

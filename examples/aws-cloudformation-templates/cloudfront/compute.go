@@ -32,11 +32,11 @@ var EC2InstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 }
 
 var EC2Instance = ec2.Instance{
-	BlockDeviceMappings: List(EC2InstanceBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{EC2InstanceBlockDeviceMappingDevsda1},
 	ImageId: EC2ImageId,
 	InstanceType: EC2InstanceType,
 	KeyName: KeyPairName,
-	SecurityGroupIds: Any(EC2InstanceSG, ALBExternalAccessSG),
+	SecurityGroupIds: []any{EC2InstanceSG, ALBExternalAccessSG},
 	SubnetId: PublicSubnetId1,
 	Tags: []any{EC2InstanceTagName, EC2InstanceTagEnvironment},
 }

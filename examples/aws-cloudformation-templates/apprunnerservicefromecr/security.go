@@ -10,12 +10,12 @@ import (
 )
 
 var AppRunnerRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(AppRunnerRolePolicyRootPolicyDocumentStatement0),
+	Statement: []any{AppRunnerRolePolicyRootPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var AppRunnerRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("ecr:GetDownloadUrlForLayer", "ecr:BatchGetImage", "ecr:DescribeImages", "ecr:GetAuthorizationToken", "ecr:BatchCheckLayerAvailability"),
+	Action: []any{"ecr:GetDownloadUrlForLayer", "ecr:BatchGetImage", "ecr:DescribeImages", "ecr:GetAuthorizationToken", "ecr:BatchCheckLayerAvailability"},
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,12 +26,12 @@ var AppRunnerRolePolicyRoot = iam.Role_Policy{
 }
 
 var AppRunnerRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(AppRunnerRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{AppRunnerRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var AppRunnerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"build.apprunner.amazonaws.com"},
 }
@@ -39,5 +39,5 @@ var AppRunnerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var AppRunnerRole = iam.Role{
 	AssumeRolePolicyDocument: AppRunnerRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(AppRunnerRolePolicyRoot),
+	Policies: []any{AppRunnerRolePolicyRoot},
 }

@@ -16,7 +16,7 @@ var RedisParameterGroup = elasticache.ParameterGroup{
 
 var RedisSubnetGroup = elasticache.SubnetGroup{
 	Description: "RedisSubnetGroup",
-	SubnetIds: Any(PublicSubnetA, PublicSubnetB),
+	SubnetIds: []any{PublicSubnetA, PublicSubnetB},
 }
 
 var RedisReplicationGroup = elasticache.ReplicationGroup{
@@ -27,7 +27,7 @@ var RedisReplicationGroup = elasticache.ReplicationGroup{
 	Engine: "redis",
 	EngineVersion: "2.8.24",
 	NumCacheClusters: "2",
-	PreferredCacheClusterAZs: Any(FindInMap{"AWSRegion2AZ", AWS_REGION, "A"}, FindInMap{"AWSRegion2AZ", AWS_REGION, "B"}),
+	PreferredCacheClusterAZs: []any{FindInMap{"AWSRegion2AZ", AWS_REGION, "A"}, FindInMap{"AWSRegion2AZ", AWS_REGION, "B"}},
 	ReplicationGroupDescription: "RedisReplicationGroup",
-	SecurityGroupIds: Any(RedisSecurityGroup),
+	SecurityGroupIds: []any{RedisSecurityGroup},
 }

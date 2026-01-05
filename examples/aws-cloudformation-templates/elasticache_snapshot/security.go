@@ -10,12 +10,12 @@ import (
 )
 
 var IamRoleLambdaPolicyElastiCacheSnapshotPPolicyDocument = PolicyDocument{
-	Statement: Any(IamRoleLambdaPolicyElastiCacheSnapshotPPolicyDocumentStatement0),
+	Statement: []any{IamRoleLambdaPolicyElastiCacheSnapshotPPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var IamRoleLambdaPolicyElastiCacheSnapshotPPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("elasticache:ModifyReplicationGroup"),
+	Action: []any{"elasticache:ModifyReplicationGroup"},
 	Effect: "Allow",
 	Resource: RedisReplicationGroup,
 }
@@ -26,18 +26,18 @@ var IamRoleLambdaPolicyElastiCacheSnapshotP = iam.Role_Policy{
 }
 
 var IamRoleLambdaAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(IamRoleLambdaAssumeRolePolicyDocumentStatement0),
+	Statement: []any{IamRoleLambdaAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var IamRoleLambdaAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var IamRoleLambda = iam.Role{
 	AssumeRolePolicyDocument: IamRoleLambdaAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"),
-	Policies: List(IamRoleLambdaPolicyElastiCacheSnapshotP),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"},
+	Policies: []any{IamRoleLambdaPolicyElastiCacheSnapshotP},
 }

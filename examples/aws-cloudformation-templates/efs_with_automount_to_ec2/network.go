@@ -26,7 +26,7 @@ var ELBSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 
 var ELBSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable public access HTTP and HTTPS",
-	SecurityGroupIngress: List(ELBSecurityGroupSecurityGroupIngressPortN80, ELBSecurityGroupSecurityGroupIngressPortN443),
+	SecurityGroupIngress: []any{ELBSecurityGroupSecurityGroupIngressPortN80, ELBSecurityGroupSecurityGroupIngressPortN443},
 	VpcId: VPC,
 }
 
@@ -51,8 +51,8 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	CrossZone: "true",
 	HealthCheck: &ElasticLoadBalancerHealthCheck,
-	Listeners: List(ElasticLoadBalancerListener1),
-	SecurityGroups: Any(ELBSecurityGroup),
+	Listeners: []any{ElasticLoadBalancerListener1},
+	SecurityGroups: []any{ELBSecurityGroup},
 	Subnets: Subnets,
 }
 
@@ -72,7 +72,7 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH public access and HTTP from the load balancer only",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80},
 	VpcId: VPC,
 }
 
@@ -85,6 +85,6 @@ var EFSSecurityGroupSecurityGroupIngressPortN2049 = ec2.SecurityGroup_Ingress{
 
 var EFSSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable NFS access from EC2",
-	SecurityGroupIngress: List(EFSSecurityGroupSecurityGroupIngressPortN2049),
+	SecurityGroupIngress: []any{EFSSecurityGroupSecurityGroupIngressPortN2049},
 	VpcId: VPC,
 }

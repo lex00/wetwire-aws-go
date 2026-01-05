@@ -17,5 +17,5 @@ var NotificationTopicSubscription1 = sns.Topic_Subscription{
 var NotificationTopic = sns.Topic{
 	DisplayName: Sub{String: "${AWS::StackName}-NotificationTopic"},
 	KmsMasterKeyId: KmsKeyArn,
-	Subscription: List(NotificationTopicSubscription1),
+	Subscription: []any{NotificationTopicSubscription1},
 }

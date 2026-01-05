@@ -56,7 +56,7 @@ var SiteDistributionDistributionConfig = cloudfront.Distribution_DistributionCon
 	HttpVersion: "http2",
 	IPV6Enabled: true,
 	Logging: &SiteDistributionDistributionConfigLogging,
-	Origins: List(SiteDistributionDistributionConfigOrigin1),
+	Origins: []any{SiteDistributionDistributionConfigOrigin1},
 	ViewerCertificate: &SiteDistributionDistributionConfigViewerCertificate,
 	WebACLId: SiteWebACL.Arn,
 }

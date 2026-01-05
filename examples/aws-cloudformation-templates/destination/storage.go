@@ -31,7 +31,7 @@ var S3BucketDestinationPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBl
 }
 
 var S3BucketDestinationBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var S3BucketDestination = s3.Bucket{
@@ -42,7 +42,7 @@ var S3BucketDestination = s3.Bucket{
 }
 
 var S3BucketDestinationPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(S3BucketDestinationPolicyPolicyDocumentStatement0, S3BucketDestinationPolicyPolicyDocumentStatement1),
+	Statement: []any{S3BucketDestinationPolicyPolicyDocumentStatement0, S3BucketDestinationPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -50,16 +50,16 @@ var S3BucketDestinationPolicyPolicyDocumentStatement1 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: SubWithMap{String: "${varBucketArn}/*", Variables: map[string]any{
+	Resource: SubWithMap{String: "${varBucketArn}/*", Variables: Json{
 	"varBucketArn": S3BucketDestination.Arn,
 }},
 }
 
 var S3BucketDestinationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("s3:ReplicateDelete", "s3:ReplicateObject", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"),
+	Action: []any{"s3:ReplicateDelete", "s3:ReplicateObject", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"},
 	Effect: "Allow",
 	Principal: AWSPrincipal{AccountIdSource},
-	Resource: SubWithMap{String: "${varBucketArn}/*", Variables: map[string]any{
+	Resource: SubWithMap{String: "${varBucketArn}/*", Variables: Json{
 	"varBucketArn": S3BucketDestination.Arn,
 }},
 	Sid: "Allow source account access to destination bucket",

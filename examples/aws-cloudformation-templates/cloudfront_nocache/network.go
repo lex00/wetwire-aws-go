@@ -15,7 +15,7 @@ var CachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginQueryStr
 
 var CachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginHeadersConfig = cloudfront.CachePolicy_HeadersConfig{
 	HeaderBehavior: "whitelist",
-	Headers: Any("Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"),
+	Headers: []any{"Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"},
 }
 
 var CachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginCookiesConfig = cloudfront.CachePolicy_CookiesConfig{
@@ -53,7 +53,7 @@ var DistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
 }
 
 var DistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution_DefaultCacheBehavior{
-	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
+	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
 	CachePolicyId: CachePolicy,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
 	TargetOriginId: Sub{String: "CloudFront-${AWS::StackName}"},
@@ -61,7 +61,7 @@ var DistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution
 }
 
 var DistributionDistributionConfigCacheBehavior1 = cloudfront.Distribution_CacheBehavior{
-	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
+	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
 	CachePolicyId: "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
 	Compress: false,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
@@ -81,11 +81,11 @@ var DistributionTagName = Tag{
 }
 
 var DistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
-	CacheBehaviors: List(DistributionDistributionConfigCacheBehavior1),
+	CacheBehaviors: []any{DistributionDistributionConfigCacheBehavior1},
 	DefaultCacheBehavior: DistributionDistributionConfigDefaultCacheBehavior,
 	Enabled: true,
 	HttpVersion: "http2",
-	Origins: List(DistributionDistributionConfigOrigin1),
+	Origins: []any{DistributionDistributionConfigOrigin1},
 }
 
 var Distribution = cloudfront.Distribution{

@@ -11,7 +11,7 @@ import (
 )
 
 var LambdaFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"ENV": EnvName, "TZ": "UTC"},
+	Variables: Json{"ENV": EnvName, "TZ": "UTC"},
 }
 
 var LambdaFunctionCode = lambda.Function_Code{

@@ -57,7 +57,7 @@ var AuroraSecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress
 var AuroraSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Security group for Aurora SampleDB DB Instance",
 	GroupName: "Aurora SampleDB Security Group",
-	SecurityGroupIngress: List(AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306),
+	SecurityGroupIngress: []any{AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306},
 	VpcId: VPC,
 }
 

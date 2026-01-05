@@ -14,7 +14,7 @@ var EC2Instance = ec2.Instance{
 	ImageId: InstanceAMI,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
+	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash\nrpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region} --configsets default\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}\n"}},
 }

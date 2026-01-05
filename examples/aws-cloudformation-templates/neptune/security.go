@@ -10,21 +10,21 @@ import (
 )
 
 var NeptuneCloudWatchPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(NeptuneCloudWatchPolicyPolicyDocumentStatement0, NeptuneCloudWatchPolicyPolicyDocumentStatement1),
+	Statement: []any{NeptuneCloudWatchPolicyPolicyDocumentStatement0, NeptuneCloudWatchPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var NeptuneCloudWatchPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("logs:CreateLogStream", "logs:PutLogEvents", "logs:DescribeLogStreams", "logs:GetLogEvents"),
+	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents", "logs:DescribeLogStreams", "logs:GetLogEvents"},
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:logs:*:*:log-group:/aws/neptune/*:log-stream:*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:logs:*:*:log-group:/aws/neptune/*:log-stream:*"}},
 	Sid: "EnableLogStreams",
 }
 
 var NeptuneCloudWatchPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogGroup", "logs:PutRetentionPolicy"),
+	Action: []any{"logs:CreateLogGroup", "logs:PutRetentionPolicy"},
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:logs:*:*:log-group:/aws/neptune/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:logs:*:*:log-group:/aws/neptune/*"}},
 	Sid: "EnableLogGroups",
 }
 
@@ -35,14 +35,14 @@ var NeptuneCloudWatchPolicy = iam.ManagedPolicy{
 }
 
 var NeptuneS3PolicyPolicyDocument = PolicyDocument{
-	Statement: Any(NeptuneS3PolicyPolicyDocumentStatement0),
+	Statement: []any{NeptuneS3PolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var NeptuneS3PolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("s3:Get*", "s3:List*"),
+	Action: []any{"s3:Get*", "s3:List*"},
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::*"}},
 	Sid: "AllowNeptuneAccessToS3",
 }
 
@@ -53,7 +53,7 @@ var NeptuneS3Policy = iam.ManagedPolicy{
 }
 
 var NeptuneRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(NeptuneRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{NeptuneRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -65,6 +65,6 @@ var NeptuneRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var NeptuneRole = iam.Role{
 	AssumeRolePolicyDocument: NeptuneRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any(NeptuneCloudWatchPolicy, NeptuneS3Policy),
+	ManagedPolicyArns: []any{NeptuneCloudWatchPolicy, NeptuneS3Policy},
 	RoleName: Sub{String: "${Env}-${AppName}-neptune-iam-role-${AWS::Region}"},
 }

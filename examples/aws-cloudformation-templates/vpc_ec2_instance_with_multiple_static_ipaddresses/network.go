@@ -18,7 +18,7 @@ var SSHSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 
 var SSHSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access via port 22",
-	SecurityGroupIngress: List(SSHSecurityGroupSecurityGroupIngressPortN22),
+	SecurityGroupIngress: []any{SSHSecurityGroupSecurityGroupIngressPortN22},
 	VpcId: VpcId,
 }
 
@@ -44,8 +44,8 @@ var Eth0PrivateIpAddress1 = ec2.NetworkInterface_PrivateIpAddressSpecification{
 
 var Eth0 = ec2.NetworkInterface{
 	Description: "eth0",
-	GroupSet: Any(SSHSecurityGroup),
-	PrivateIpAddresses: List(Eth0PrivateIpAddress1, Eth0PrivateIpAddress2),
+	GroupSet: []any{SSHSecurityGroup},
+	PrivateIpAddresses: []any{Eth0PrivateIpAddress1, Eth0PrivateIpAddress2},
 	SourceDestCheck: "true",
 	SubnetId: SubnetId,
 	Tags: []any{Eth0TagName, Eth0TagInterface},

@@ -10,27 +10,27 @@ import (
 )
 
 var PipelineRolePolicyCanStartCodeBuildPolicyDocument = PolicyDocument{
-	Statement: Any(PipelineRolePolicyCanStartCodeBuildPolicyDocumentStatement0),
+	Statement: []any{PipelineRolePolicyCanStartCodeBuildPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var PipelineRolePolicyCanStartCodeBuildPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("codebuild:BatchGetBuilds", "codebuild:StartBuild"),
+	Action: []any{"codebuild:BatchGetBuilds", "codebuild:StartBuild"},
 	Effect: "Allow",
-	Resource: Any(ImportValue{Sub{String: "${CodeBuildStack}-AppBuildArn"}}, ImportValue{Sub{String: "${CodeBuildStack}-AppDeployArn"}}),
+	Resource: []any{ImportValue{Sub{String: "${CodeBuildStack}-AppBuildArn"}}, ImportValue{Sub{String: "${CodeBuildStack}-AppDeployArn"}}},
 }
 
 var PipelineRolePolicyCanAccessS3PolicyDocument = PolicyDocument{
-	Statement: Any(PipelineRolePolicyCanAccessS3PolicyDocumentStatement0, PipelineRolePolicyCanAccessS3PolicyDocumentStatement1),
+	Statement: []any{PipelineRolePolicyCanAccessS3PolicyDocumentStatement0, PipelineRolePolicyCanAccessS3PolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var PipelineRolePolicyCanAccessS3PolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("s3:GetObject", "s3:GetObjectVersion", "s3:GetBucketVersioning", "s3:PutObject", "s3:GetBucketPolicy", "s3:GetObjectAcl", "s3:PutObjectAcl", "s3:DeleteObject"),
+	Action: []any{"s3:GetObject", "s3:GetObjectVersion", "s3:GetBucketVersioning", "s3:PutObject", "s3:GetBucketPolicy", "s3:GetObjectAcl", "s3:PutObjectAcl", "s3:DeleteObject"},
 	Effect: "Allow",
-	Resource: Any(ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}}, SubWithMap{String: "${filename}/*", Variables: map[string]any{
+	Resource: []any{ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}}, SubWithMap{String: "${filename}/*", Variables: Json{
 	"filename": ImportValue{Sub{String: "${CodeBuildStack}-PipelineS3BucketArn"}},
-}}),
+}}},
 }
 
 var PipelineRolePolicyCanAccessS3PolicyDocumentStatement0 = PolicyStatement{
@@ -40,14 +40,14 @@ var PipelineRolePolicyCanAccessS3PolicyDocumentStatement0 = PolicyStatement{
 }
 
 var PipelineRolePolicyCanAccessCodeCommitPolicyDocument = PolicyDocument{
-	Statement: Any(PipelineRolePolicyCanAccessCodeCommitPolicyDocumentStatement0),
+	Statement: []any{PipelineRolePolicyCanAccessCodeCommitPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var PipelineRolePolicyCanAccessCodeCommitPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("codecommit:GetBranch", "codecommit:GetCommit", "codecommit:UploadArchive", "codecommit:GetUploadArchiveStatus"),
+	Action: []any{"codecommit:GetBranch", "codecommit:GetCommit", "codecommit:UploadArchive", "codecommit:GetUploadArchiveStatus"},
 	Effect: "Allow",
-	Resource: Any(ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitArn"}}),
+	Resource: []any{ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitArn"}}},
 }
 
 var PipelineRolePolicyCanStartCodeBuild = iam.Role_Policy{
@@ -66,23 +66,23 @@ var PipelineRolePolicyCanAccessCodeCommit = iam.Role_Policy{
 }
 
 var PipelineRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(PipelineRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{PipelineRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var PipelineRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"codepipeline.amazonaws.com"},
 }
 
 var PipelineRole = iam.Role{
 	AssumeRolePolicyDocument: PipelineRoleAssumeRolePolicyDocument,
-	Policies: List(PipelineRolePolicyCanAccessCodeCommit, PipelineRolePolicyCanAccessS3, PipelineRolePolicyCanStartCodeBuild),
+	Policies: []any{PipelineRolePolicyCanAccessCodeCommit, PipelineRolePolicyCanAccessS3, PipelineRolePolicyCanStartCodeBuild},
 }
 
 var EventRolePolicyEbNegpipelineNegexecPolicyDocument = PolicyDocument{
-	Statement: Any(EventRolePolicyEbNegpipelineNegexecPolicyDocumentStatement0),
+	Statement: []any{EventRolePolicyEbNegpipelineNegexecPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -105,7 +105,7 @@ var EventRolePolicyEbNegpipelineNegexec = iam.Role_Policy{
 }
 
 var EventRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(EventRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{EventRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -118,5 +118,5 @@ var EventRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var EventRole = iam.Role{
 	AssumeRolePolicyDocument: EventRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(EventRolePolicyEbNegpipelineNegexec),
+	Policies: []any{EventRolePolicyEbNegpipelineNegexec},
 }

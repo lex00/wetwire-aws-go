@@ -639,7 +639,7 @@ func generateRegistry(services []*Service, outputDir string, dryRun bool) error 
 			// qualifiedKey is already the qualified type name
 			parentTypeName := qualifiedKey
 			for propName, prop := range pt.Properties {
-				// Skip primitives and any
+				// Skip primitives and any (but not []any - list properties)
 				if prop.GoType == "any" || prop.GoType == "" {
 					continue
 				}

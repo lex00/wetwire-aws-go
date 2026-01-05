@@ -10,26 +10,26 @@ import (
 )
 
 var IoTPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(IoTPolicyPolicyDocumentStatement0, IoTPolicyPolicyDocumentStatement1, IoTPolicyPolicyDocumentStatement2),
+	Statement: []any{IoTPolicyPolicyDocumentStatement0, IoTPolicyPolicyDocumentStatement1, IoTPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
 var IoTPolicyPolicyDocumentStatement2 = PolicyStatement{
 	Action: "iot:Subscribe",
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/*"}},
 }
 
 var IoTPolicyPolicyDocumentStatement1 = PolicyStatement{
 	Action: "iot:*",
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/${AWS::StackName}"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_1"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_2"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/sdk/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/${AWS::StackName}"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_1"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_2"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/sdk/*"}},
 }
 
 var IoTPolicyPolicyDocumentStatement0 = PolicyStatement{
 	Action: "iot:Connect",
 	Effect: "Allow",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:client/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:client/*"}},
 }
 
 var IoTPolicy = iot.Policy{
@@ -59,7 +59,7 @@ var IoTTopicRuleTopicRulePayloadAction1 = iot.TopicRule_Action{
 }
 
 var IoTTopicRuleTopicRulePayload = iot.TopicRule_TopicRulePayload{
-	Actions: List(IoTTopicRuleTopicRulePayloadAction1),
+	Actions: []any{IoTTopicRuleTopicRulePayloadAction1},
 	AwsIotSqlVersion: "2016-03-23",
 	RuleDisabled: false,
 	Sql: " SELECT * FROM 'topic_2'",
@@ -71,7 +71,7 @@ var IoTTopicRule = iot.TopicRule{
 }
 
 var OpenIoTStarPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(OpenIoTStarPolicyPolicyDocumentStatement0),
+	Statement: []any{OpenIoTStarPolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 

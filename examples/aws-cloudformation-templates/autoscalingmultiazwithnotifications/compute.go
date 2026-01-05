@@ -16,7 +16,7 @@ var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = ec2.EC2Fleet_
 
 var LaunchTemplateLaunchTemplateDataTagSpecification1 = ec2.CapacityReservationFleet_TagSpecification{
 	ResourceTypeProp: "instance",
-	Tags: Any(map[string]any{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}),
+	Tags: []any{Json{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}},
 }
 
 var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1 = ec2.EC2Fleet_BlockDeviceMapping{
@@ -25,12 +25,12 @@ var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1 = ec2.EC2Fleet_Blo
 }
 
 var LaunchTemplateLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
-	BlockDeviceMappings: List(LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1),
+	BlockDeviceMappings: []any{LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1},
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	SecurityGroupIds: SecurityGroups,
-	TagSpecifications: List(LaunchTemplateLaunchTemplateDataTagSpecification1),
+	TagSpecifications: []any{LaunchTemplateLaunchTemplateDataTagSpecification1},
 	UserData: Base64{Sub{String: "#!/bin/bash\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchTemplate --region ${AWS::Region}\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}\n"}},
 }
 
@@ -47,7 +47,7 @@ var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
 }
 
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
-	NotificationTypes: Any("autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"),
+	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
 	TopicARN: NotificationTopic,
 }
 
@@ -62,8 +62,8 @@ var WebServerGroup = autoscaling.AutoScalingGroup{
 	LaunchTemplate: &WebServerGroupLaunchTemplate,
 	MaxSize: "3",
 	MinSize: "1",
-	NotificationConfigurations: List(WebServerGroupNotificationConfiguration1),
-	TargetGroupARNs: Any(TargetGroup),
+	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},
+	TargetGroupARNs: []any{TargetGroup},
 	VPCZoneIdentifier: Subnets,
 }
 

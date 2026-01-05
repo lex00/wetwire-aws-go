@@ -30,11 +30,11 @@ var S3BucketNotificationPublicAccessBlockConfiguration = s3.Bucket_PublicAccessB
 }
 
 var S3BucketNotificationNotificationConfiguration = s3.Bucket_NotificationConfiguration{
-	LambdaConfigurations: List(S3BucketNotificationNotificationConfigurationLambdaConfiguration1),
+	LambdaConfigurations: []any{S3BucketNotificationNotificationConfigurationLambdaConfiguration1},
 }
 
 var S3BucketNotificationBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(S3BucketNotificationBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{S3BucketNotificationBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var S3BucketNotification = s3.Bucket{

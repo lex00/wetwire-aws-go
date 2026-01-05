@@ -17,7 +17,7 @@ var ContainerInstances = autoscaling.LaunchConfiguration{
 	IamInstanceProfile: EC2InstanceProfile,
 	ImageId: ECSAMI,
 	InstanceType: InstanceType,
-	SecurityGroups: Any(EcsHostSecurityGroup),
+	SecurityGroups: []any{EcsHostSecurityGroup},
 	UserData: Base64{Sub{String: "#!/bin/bash -xe\necho ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}\n"}},
 }
 
@@ -26,5 +26,5 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	LaunchConfigurationName: ContainerInstances,
 	MaxSize: MaxSize,
 	MinSize: 1,
-	VPCZoneIdentifier: Any(PrivateSubnetOne, PrivateSubnetTwo),
+	VPCZoneIdentifier: []any{PrivateSubnetOne, PrivateSubnetTwo},
 }

@@ -29,7 +29,7 @@ var BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfigurat
 }
 
 var BucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(BucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{BucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var Bucket = s3.Bucket{
@@ -40,7 +40,7 @@ var Bucket = s3.Bucket{
 }
 
 var BucketPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(BucketPolicyPolicyDocumentStatement0, BucketPolicyPolicyDocumentStatement1, BucketPolicyPolicyDocumentStatement2),
+	Statement: []any{BucketPolicyPolicyDocumentStatement0, BucketPolicyPolicyDocumentStatement1, BucketPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
@@ -48,7 +48,7 @@ var BucketPolicyPolicyDocumentStatement2 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}"}, Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}"}, Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}/*"}},
 }
 
 var BucketPolicyPolicyDocumentStatement1 = PolicyStatement{

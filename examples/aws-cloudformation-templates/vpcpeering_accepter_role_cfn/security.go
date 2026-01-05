@@ -10,7 +10,7 @@ import (
 )
 
 var PeerRolePolicyAcceptVPCPeeringPolicyDocument = PolicyDocument{
-	Statement: Any(PeerRolePolicyAcceptVPCPeeringPolicyDocumentStatement0),
+	Statement: []any{PeerRolePolicyAcceptVPCPeeringPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -31,7 +31,7 @@ var PeerRolePolicyAcceptVPCPeering = iam.Role_Policy{
 }
 
 var PeerRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(PeerRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{PeerRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -44,6 +44,6 @@ var PeerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var PeerRole = iam.Role{
 	AssumeRolePolicyDocument: PeerRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(PeerRolePolicyAcceptVPCPeering),
+	Policies: []any{PeerRolePolicyAcceptVPCPeering},
 	Tags: []any{PeerRoleTagStackName},
 }

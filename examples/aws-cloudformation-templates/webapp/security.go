@@ -32,8 +32,8 @@ var CognitoUserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfi
 
 var CognitoUserPool = cognito.UserPool{
 	AdminCreateUserConfig: &CognitoUserPoolAdminCreateUserConfig,
-	AutoVerifiedAttributes: Any("email"),
-	Schema: List(CognitoUserPoolSchemaEmail, CognitoUserPoolSchemaGivenname, CognitoUserPoolSchemaFamilyname),
+	AutoVerifiedAttributes: []any{"email"},
+	Schema: []any{CognitoUserPoolSchemaEmail, CognitoUserPoolSchemaGivenname, CognitoUserPoolSchemaFamilyname},
 	UserPoolName: AppName,
 }
 
@@ -43,28 +43,28 @@ var CognitoDomain = cognito.UserPoolDomain{
 }
 
 var JwtResourceHandlerRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(JwtResourceHandlerRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{JwtResourceHandlerRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var JwtResourceHandlerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var JwtResourceHandlerRole = iam.Role{
 	AssumeRolePolicyDocument: JwtResourceHandlerRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"},
 }
 
 var SiteCloudFrontLogsReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(SiteCloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{SiteCloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var SiteCloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -75,24 +75,24 @@ var SiteCloudFrontLogsReplicationRole = iam.Role{
 }
 
 var SiteCloudFrontLogsReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement0, SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement1, SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement2),
+	Statement: []any{SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement0, SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement1, SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
 var SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
+	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
+	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var SiteCloudFrontLogsReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
+	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"},
 }
@@ -104,12 +104,12 @@ var SiteCloudFrontLogsReplicationPolicy = iam.RolePolicy{
 }
 
 var SiteContentReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(SiteContentReplicationRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{SiteContentReplicationRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var SiteContentReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -120,24 +120,24 @@ var SiteContentReplicationRole = iam.Role{
 }
 
 var SiteContentReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteContentReplicationPolicyPolicyDocumentStatement0, SiteContentReplicationPolicyPolicyDocumentStatement1, SiteContentReplicationPolicyPolicyDocumentStatement2),
+	Statement: []any{SiteContentReplicationPolicyPolicyDocumentStatement0, SiteContentReplicationPolicyPolicyDocumentStatement1, SiteContentReplicationPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
 var SiteContentReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
+	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var SiteContentReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
+	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var SiteContentReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
+	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}"},
 }
@@ -155,11 +155,11 @@ var SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig = wafv2.RuleGroup_Visibil
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.RuleGroup_Statement{
-	ManagedRuleGroupStatement: map[string]any{"ExcludedRules": Any(map[string]any{"Name": "NoUserAgent_HEADER"}), "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
+	ManagedRuleGroupStatement: Json{"ExcludedRules": []any{Json{"Name": "NoUserAgent_HEADER"}}, "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = wafv2.WebACL_OverrideAction{
-	None: map[string]any{},
+	None: Json{},
 }
 
 var SiteWebACLDefaultActionAllow = wafv2.RuleGroup_AllowAction{
@@ -192,48 +192,48 @@ var SiteWebACL = wafv2.WebACL{
 	DefaultAction: SiteWebACLDefaultAction,
 	Description: "Web ACL with AWS Managed Rules",
 	Name: Sub{String: "${AppName}-WebACLWithAMR"},
-	Rules: List(SiteWebACLRuleAWSNegAWSManagedRule),
+	Rules: []any{SiteWebACLRuleAWSNegAWSManagedRule},
 	Scope: "CLOUDFRONT",
 	Tags: []any{SiteWebACLTagName},
 	VisibilityConfig: SiteWebACLVisibilityConfig,
 }
 
 var CognitoClient = cognito.UserPoolClient{
-	AllowedOAuthFlows: Any("code"),
+	AllowedOAuthFlows: []any{"code"},
 	AllowedOAuthFlowsUserPoolClient: true,
-	AllowedOAuthScopes: Any("phone", "email", "openid"),
-	CallbackURLs: Any(Sub{String: "https://${SiteDistribution.DomainName}/index.html"}),
+	AllowedOAuthScopes: []any{"phone", "email", "openid"},
+	CallbackURLs: []any{Sub{String: "https://${SiteDistribution.DomainName}/index.html"}},
 	ClientName: AppName,
 	GenerateSecret: false,
-	SupportedIdentityProviders: Any("COGNITO"),
+	SupportedIdentityProviders: []any{"COGNITO"},
 	UserPoolId: CognitoUserPool,
 }
 
 var TestResourceHandlerRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(TestResourceHandlerRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{TestResourceHandlerRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var TestResourceHandlerRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var TestResourceHandlerRole = iam.Role{
 	AssumeRolePolicyDocument: TestResourceHandlerRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"},
 }
 
 var TestResourceHandlerPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(TestResourceHandlerPolicyPolicyDocumentStatement0),
+	Statement: []any{TestResourceHandlerPolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var TestResourceHandlerPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan", "dynamodb:BatchWriteItem", "dynamodb:PutItem", "dynamodb:UpdateItem"),
+	Action: []any{"dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan", "dynamodb:BatchWriteItem", "dynamodb:PutItem", "dynamodb:UpdateItem"},
 	Effect: "Allow",
-	Resource: Any(TestTable.Arn),
+	Resource: []any{TestTable.Arn},
 }
 
 var TestResourceHandlerPolicy = iam.RolePolicy{

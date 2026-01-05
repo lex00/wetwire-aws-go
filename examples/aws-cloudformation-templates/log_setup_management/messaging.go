@@ -28,10 +28,10 @@ var CentralEventBus = events.EventBus{
 
 var CentralEventBusPolicy = events.EventBusPolicy{
 	EventBusName: CentralEventBus,
-	Statement: map[string]any{
+	Statement: Json{
 	"Action": "events:PutEvents",
-	"Condition": map[string]any{
-	"StringEquals": map[string]any{
+	"Condition": Json{
+	"StringEquals": Json{
 	"aws:PrincipalOrgID": OrgID,
 },
 },
@@ -54,12 +54,12 @@ var CentralEventRuleTargetCloudFormationLogsTo = events.Rule_Target{
 
 var CentralEventRule = events.Rule{
 	EventBusName: CentralEventBusName,
-	EventPattern: map[string]any{
-	"source": Any(map[string]any{
+	EventPattern: Json{
+	"source": []any{Json{
 	"prefix": "",
-}),
+}},
 },
 	Name: "CloudFormationLogs",
 	State: enums.EventsRuleStateEnabled,
-	Targets: List(CentralEventRuleTargetCloudFormationLogsTo),
+	Targets: []any{CentralEventRuleTargetCloudFormationLogsTo},
 }

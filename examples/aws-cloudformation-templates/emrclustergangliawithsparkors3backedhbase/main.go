@@ -33,12 +33,12 @@ var EMRClusterInstances = emr.Cluster_JobFlowInstancesConfig{
 
 var EMRClusterConfiguration2 = emr.Cluster_Configuration{
 	Classification: "hbase",
-	ConfigurationProperties: map[string]any{"hbase.emr.storageMode": "s3"},
+	ConfigurationProperties: Json{"hbase.emr.storageMode": "s3"},
 }
 
 var EMRClusterConfiguration1 = emr.Cluster_Configuration{
 	Classification: "hbase-site",
-	ConfigurationProperties: map[string]any{"hbase.rootdir": S3DataUri},
+	ConfigurationProperties: Json{"hbase.rootdir": S3DataUri},
 }
 
 var EMRClusterApplicationGanglia = emr.Cluster_Application{
@@ -46,9 +46,9 @@ var EMRClusterApplicationGanglia = emr.Cluster_Application{
 }
 
 var EMRCluster = emr.Cluster{
-	Applications: List(EMRClusterApplicationGanglia),
+	Applications: []any{EMRClusterApplicationGanglia},
 	AutoScalingRole: "EMR_AutoScaling_DefaultRole",
-	Configurations: List(EMRClusterConfiguration1, EMRClusterConfiguration2),
+	Configurations: []any{EMRClusterConfiguration1, EMRClusterConfiguration2},
 	Instances: EMRClusterInstances,
 	JobFlowRole: EMRClusterinstanceProfile,
 	LogUri: LogUri,

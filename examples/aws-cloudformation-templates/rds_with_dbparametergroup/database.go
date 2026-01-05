@@ -5,13 +5,14 @@
 package rds_with_dbparametergroup
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/rds"
 )
 
 var MyRDSParamGroup = rds.DBParameterGroup{
 	Description: "CloudFormation Sample Database Parameter Group",
 	Family: "MySQL8.0",
-	Parameters: map[string]any{
+	Parameters: Json{
 	"autocommit": "1",
 	"general_log": "1",
 },

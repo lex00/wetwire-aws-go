@@ -10,19 +10,19 @@ import (
 )
 
 var LambdaRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(LambdaRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{LambdaRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var LambdaRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var LambdaRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/AWSLambdaExecute", "arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess", "arn:aws:iam::aws:policy/AmazonKinesisFullAccess"),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/AWSLambdaExecute", "arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess", "arn:aws:iam::aws:policy/AmazonKinesisFullAccess"},
 	Path: "/",
 	RoleName: "lambda-role",
 }

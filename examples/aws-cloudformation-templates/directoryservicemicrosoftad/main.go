@@ -5,12 +5,11 @@
 package directoryservicemicrosoftad
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/directoryservice"
 )
 
 var rMSDirectoryVpcSettings = directoryservice.MicrosoftAD_VpcSettings{
-	SubnetIds: Any(pPrivateSubnet1, pPrivateSubnet2),
+	SubnetIds: []any{pPrivateSubnet1, pPrivateSubnet2},
 	VpcId: pVPCID,
 }
 

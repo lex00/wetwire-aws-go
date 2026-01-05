@@ -303,7 +303,7 @@ func TestValueToGo(t *testing.T) {
 		{"float", 3.14, "3.14"},
 		{"string", "hello", `"hello"`},
 		{"empty slice", []any{}, "[]any{}"},
-		{"empty map", map[string]any{}, "map[string]any{}"},
+		{"empty map", map[string]any{}, "Json{}"},
 	}
 
 	for _, tt := range tests {
@@ -423,8 +423,10 @@ Resources:
 
 	// Should NOT contain hyphen in variable name
 	assert.NotContains(t, code, "Port-1", "Should not have hyphen in variable name")
-	// Should have sanitized name
-	assert.Contains(t, code, "PortNeg1", "Should use Neg prefix for negative numbers")
+	// Should generate typed struct for security group ingress rules
+	assert.Contains(t, code, "ec2.SecurityGroup_Ingress{", "Should use typed SecurityGroup_Ingress struct")
+	// Should contain the -1 port value
+	assert.Contains(t, code, "FromPort: -1", "Should contain negative port value")
 }
 
 // TestGenerateCode_UnknownResourceType tests that unknown resource types are handled gracefully.

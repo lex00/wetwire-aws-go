@@ -26,5 +26,5 @@ var ECSScheduledTask = events.Rule{
 	Description: "Creating a Schedule with CloudFormation as an example",
 	ScheduleExpression: If{"CronRate", CronSchedule, RateSchedule},
 	State: enums.EventsRuleStateEnabled,
-	Targets: List(ECSScheduledTaskTargetTarget1),
+	Targets: []any{ECSScheduledTaskTargetTarget1},
 }

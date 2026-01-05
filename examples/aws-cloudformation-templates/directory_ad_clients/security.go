@@ -11,7 +11,7 @@ import (
 
 var JoinDomainAssociationInstancesTargetInstanceIds = ssm.Association_Target{
 	Key: "InstanceIds",
-	Values: Any(DomainMember2WithSsmAssociationInstance, DomainMember4LinuxWithSsmAssociationInstance),
+	Values: []any{DomainMember2WithSsmAssociationInstance, DomainMember4LinuxWithSsmAssociationInstance},
 }
 
 var JoinDomainAssociationInstancesOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
@@ -25,9 +25,9 @@ var JoinDomainAssociationInstances = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaInstances-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
 	OutputLocation: &JoinDomainAssociationInstancesOutputLocation,
-	Parameters: map[string]any{
-	"directoryId": Any(DirectoryID),
-	"directoryName": Any(DirectoryName),
+	Parameters: Json{
+	"directoryId": []any{DirectoryID},
+	"directoryName": []any{DirectoryName},
 	"dnsIpAddresses": If{"DomainDNSServersCondition", []any{
 	If{"DomainDNSServer1Condition", DomainDNSServer1, AWS_NO_VALUE},
 	If{"DomainDNSServer2Condition", DomainDNSServer2, AWS_NO_VALUE},
@@ -35,12 +35,12 @@ var JoinDomainAssociationInstances = ssm.Association{
 	If{"DomainDNSServer4Condition", DomainDNSServer4, AWS_NO_VALUE},
 }, AWS_NO_VALUE},
 },
-	Targets: List(JoinDomainAssociationInstancesTargetInstanceIds),
+	Targets: []any{JoinDomainAssociationInstancesTargetInstanceIds},
 }
 
 var JoinDomainAssociationTagsTargetTagDomainJoin = ssm.Association_Target{
 	Key: "tag:DomainJoin",
-	Values: Any(DirectoryName),
+	Values: []any{DirectoryName},
 }
 
 var JoinDomainAssociationTagsOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
@@ -54,9 +54,9 @@ var JoinDomainAssociationTags = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaTags-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
 	OutputLocation: &JoinDomainAssociationTagsOutputLocation,
-	Parameters: map[string]any{
-	"directoryId": Any(DirectoryID),
-	"directoryName": Any(DirectoryName),
+	Parameters: Json{
+	"directoryId": []any{DirectoryID},
+	"directoryName": []any{DirectoryName},
 	"dnsIpAddresses": If{"DomainDNSServersCondition", []any{
 	If{"DomainDNSServer1Condition", DomainDNSServer1, AWS_NO_VALUE},
 	If{"DomainDNSServer2Condition", DomainDNSServer2, AWS_NO_VALUE},
@@ -64,5 +64,5 @@ var JoinDomainAssociationTags = ssm.Association{
 	If{"DomainDNSServer4Condition", DomainDNSServer4, AWS_NO_VALUE},
 }, AWS_NO_VALUE},
 },
-	Targets: List(JoinDomainAssociationTagsTargetTagDomainJoin),
+	Targets: []any{JoinDomainAssociationTagsTargetTagDomainJoin},
 }

@@ -10,12 +10,12 @@ import (
 )
 
 var KmsKeyKeyPolicy = PolicyDocument{
-	Statement: Any(KmsKeyKeyPolicyStatement0, KmsKeyKeyPolicyStatement1),
+	Statement: []any{KmsKeyKeyPolicyStatement0, KmsKeyKeyPolicyStatement1},
 	Version: "2012-10-17",
 }
 
 var KmsKeyKeyPolicyStatement1 = PolicyStatement{
-	Action: Any("kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:DescribeKey"),
+	Action: []any{"kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:DescribeKey"},
 	Effect: "Allow",
 	Principal: AWSPrincipal{Sub{String: "arn:${AWS::Partition}:iam::${AccountIdSource}:root"}},
 	Resource: "*",

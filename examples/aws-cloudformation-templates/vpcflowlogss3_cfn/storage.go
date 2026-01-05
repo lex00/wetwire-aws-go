@@ -31,13 +31,13 @@ var VPCFlowLogsBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBloc
 }
 
 var VPCFlowLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var VPCFlowLogsBucket = s3.Bucket{
 	BucketEncryption: &VPCFlowLogsBucketBucketEncryption,
 	BucketName: Sub{String: "aws-vpcflowlogs-${AWS::AccountId}-${AWS::Region}"},
-	LoggingConfiguration: If{"S3AccessLogsCondition", map[string]any{
+	LoggingConfiguration: If{"S3AccessLogsCondition", Json{
 	"DestinationBucketName": S3AccessLogsBucketName,
 }, AWS_NO_VALUE},
 	PublicAccessBlockConfiguration: &VPCFlowLogsBucketPublicAccessBlockConfiguration,
@@ -45,7 +45,7 @@ var VPCFlowLogsBucket = s3.Bucket{
 }
 
 var VPCFlowLogsBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(VPCFlowLogsBucketPolicyPolicyDocumentStatement0, VPCFlowLogsBucketPolicyPolicyDocumentStatement1, VPCFlowLogsBucketPolicyPolicyDocumentStatement2),
+	Statement: []any{VPCFlowLogsBucketPolicyPolicyDocumentStatement0, VPCFlowLogsBucketPolicyPolicyDocumentStatement1, VPCFlowLogsBucketPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
@@ -53,7 +53,7 @@ var VPCFlowLogsBucketPolicyPolicyDocumentStatement2 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: "*",
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}"}, Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}"}, Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}/*"}},
 	Sid: "DenyNonSSLRequests",
 }
 

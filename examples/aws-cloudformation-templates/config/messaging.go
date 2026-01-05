@@ -13,7 +13,7 @@ var ConfigTopic = sns.Topic{
 }
 
 var ConfigTopicPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(ConfigTopicPolicyPolicyDocumentStatement0),
+	Statement: []any{ConfigTopicPolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -26,5 +26,5 @@ var ConfigTopicPolicyPolicyDocumentStatement0 = PolicyStatement{
 
 var ConfigTopicPolicy = sns.TopicPolicy{
 	PolicyDocument: ConfigTopicPolicyPolicyDocument,
-	Topics: Any(ConfigTopic),
+	Topics: []any{ConfigTopic},
 }

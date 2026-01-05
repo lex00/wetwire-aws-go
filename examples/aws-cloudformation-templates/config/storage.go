@@ -5,7 +5,6 @@
 package config_stack
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
@@ -25,7 +24,7 @@ var ConfigBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConf
 }
 
 var ConfigBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(ConfigBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{ConfigBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var ConfigBucket = s3.Bucket{

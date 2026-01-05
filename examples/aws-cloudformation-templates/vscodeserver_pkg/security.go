@@ -15,7 +15,7 @@ var InstanceRoleTagName = Tag{
 }
 
 var InstanceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(InstanceRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{InstanceRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -31,16 +31,16 @@ var InstanceRole = iam.Role{
 }
 
 var InstanceProfile = iam.InstanceProfile{
-	Roles: Any(InstanceRole),
+	Roles: []any{InstanceRole},
 }
 
 var InstanceRolePolicyPolicyDocument = PolicyDocument{
-	Statement: Any(InstanceRolePolicyPolicyDocumentStatement0),
+	Statement: []any{InstanceRolePolicyPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var InstanceRolePolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("ec2messages:*", "ssm:UpdateInstanceInformation", "ssmmessages:*", "secretsmanager:GetSecretValue"),
+	Action: []any{"ec2messages:*", "ssm:UpdateInstanceInformation", "ssmmessages:*", "secretsmanager:GetSecretValue"},
 	Effect: "Allow",
 	Resource: "*",
 }

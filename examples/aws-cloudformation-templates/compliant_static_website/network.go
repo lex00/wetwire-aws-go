@@ -56,7 +56,7 @@ var DistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
 	HttpVersion: "http2",
 	IPV6Enabled: true,
 	Logging: &DistributionDistributionConfigLogging,
-	Origins: List(DistributionDistributionConfigOriginRainNegbuildNegorigi),
+	Origins: []any{DistributionDistributionConfigOriginRainNegbuildNegorigi},
 	ViewerCertificate: &DistributionDistributionConfigViewerCertificate,
 	WebACLId: WebACL,
 }

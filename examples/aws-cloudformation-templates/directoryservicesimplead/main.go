@@ -10,7 +10,7 @@ import (
 )
 
 var SimpleADVpcSettings = directoryservice.SimpleAD_VpcSettings{
-	SubnetIds: Any(Select{Index: "0", List: PrivateSubnet1}, Select{Index: "0", List: PrivateSubnet2}),
+	SubnetIds: []any{Select{Index: "0", List: PrivateSubnet1}, Select{Index: "0", List: PrivateSubnet2}},
 	VpcId: Select{Index: "0", List: VPCID},
 }
 

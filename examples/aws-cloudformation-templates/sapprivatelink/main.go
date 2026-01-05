@@ -5,7 +5,6 @@
 package sapprivatelink
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/certificatemanager"
 )
 
@@ -16,7 +15,7 @@ var ASCPrivateLinkCertificateDomainValidationOption1 = certificatemanager.Certif
 
 var ASCPrivateLinkCertificate = certificatemanager.Certificate{
 	DomainName: DomainName,
-	DomainValidationOptions: List(ASCPrivateLinkCertificateDomainValidationOption1),
+	DomainValidationOptions: []any{ASCPrivateLinkCertificateDomainValidationOption1},
 	ValidationMethod: "DNS",
 }
 

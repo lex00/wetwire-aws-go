@@ -10,12 +10,12 @@ import (
 )
 
 var VPCFlowLogsRolePolicyCloudWatchLogGroupPolicyDocument = PolicyDocument{
-	Statement: Any(VPCFlowLogsRolePolicyCloudWatchLogGroupPolicyDocumentStatement0),
+	Statement: []any{VPCFlowLogsRolePolicyCloudWatchLogGroupPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var VPCFlowLogsRolePolicyCloudWatchLogGroupPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogStream", "logs:PutLogEvents", "logs:DescribeLogGroups", "logs:DescribeLogStreams"),
+	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents", "logs:DescribeLogGroups", "logs:DescribeLogStreams"},
 	Effect: "Allow",
 	Resource: VPCFlowLogsLogGroup.Arn,
 	Sid: "CloudWatchLogs",
@@ -32,7 +32,7 @@ var VPCFlowLogsRolePolicyCloudWatchLogGroup = iam.Role_Policy{
 }
 
 var VPCFlowLogsRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(VPCFlowLogsRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{VPCFlowLogsRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -46,6 +46,6 @@ var VPCFlowLogsRole = iam.Role{
 	AssumeRolePolicyDocument: VPCFlowLogsRoleAssumeRolePolicyDocument,
 	Description: "Rights to Publish VPC Flow Logs to CloudWatch Logs",
 	Path: "/",
-	Policies: List(VPCFlowLogsRolePolicyCloudWatchLogGroup),
+	Policies: []any{VPCFlowLogsRolePolicyCloudWatchLogGroup},
 	Tags: []any{VPCFlowLogsRoleTagStackName},
 }

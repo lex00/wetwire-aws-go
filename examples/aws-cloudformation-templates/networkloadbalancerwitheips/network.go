@@ -36,7 +36,7 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 	Name: "MyTargets",
 	Port: 10,
 	Protocol: enums.Elbv2ProtocolEnumTcp,
-	TargetGroupAttributes: List(TargetGroupTargetGroupAttributeDeregistrationdelayt),
+	TargetGroupAttributes: []any{TargetGroupTargetGroupAttributeDeregistrationdelayt},
 	VpcId: Select{Index: "0", List: VPC},
 }
 
@@ -52,7 +52,7 @@ var loadBalancerSubnetMapping1 = elasticloadbalancingv2.LoadBalancer_SubnetMappi
 
 var loadBalancer = elasticloadbalancingv2.LoadBalancer{
 	IpAddressType: ELBIpAddressType,
-	SubnetMappings: List(loadBalancerSubnetMapping1, loadBalancerSubnetMapping2),
+	SubnetMappings: []any{loadBalancerSubnetMapping1, loadBalancerSubnetMapping2},
 	Type_: ELBType,
 }
 
@@ -62,7 +62,7 @@ var ListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 }
 
 var Listener = elasticloadbalancingv2.Listener{
-	DefaultActions: List(ListenerDefaultActionForward),
+	DefaultActions: []any{ListenerDefaultActionForward},
 	LoadBalancerArn: loadBalancer,
 	Port: "80",
 	Protocol: enums.Elbv2ProtocolEnumTcp,

@@ -23,6 +23,6 @@ var EC2Instance = ec2.Instance{
 	ImageId: LatestAMI,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	NetworkInterfaces: List(EC2InstanceNetworkInterface1),
+	NetworkInterfaces: []any{EC2InstanceNetworkInterface1},
 	Tags: []any{EC2InstanceTagName},
 }

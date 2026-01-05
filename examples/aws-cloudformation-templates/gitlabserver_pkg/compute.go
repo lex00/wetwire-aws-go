@@ -25,11 +25,11 @@ var ServerBlockDeviceMappingDevxvda = ec2.Instance_BlockDeviceMapping{
 
 var Server = ec2.Instance{
 	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
-	BlockDeviceMappings: List(ServerBlockDeviceMappingDevxvda),
+	BlockDeviceMappings: []any{ServerBlockDeviceMappingDevxvda},
 	IamInstanceProfile: InstanceProfile,
 	ImageId: LatestAMI,
 	InstanceType: InstanceType,
-	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
+	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
 	SubnetId: NetworkPublicSubnet1.SubnetId,
 	Tags: []any{ServerTagName},
 	UserData: Base64{Sub{String: "#!/bin/bash\n\nset -eou pipefail\n\nlocal_ip=$(ec2-metadata | grep \"^local-ipv4: \" | cut -d \" \" -f 2)\n\n# Install cfn-signal\nyum install -y aws-cfn-bootstrap\n\n# Install postfix\nyum install -y postfix\nsystemctl enable postfix\nsystemctl start postfix\n\n# Get the yum repo\ncurl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash\n\n# Install gitlab and run it on the local ip\nexport EXTERNAL_URL=\"http://$local_ip\" \nyum install -y gitlab-ee\n\n# Tell CloudFormation we're ready to go\n# This is a variable for the Sub intrisic function, not a bash variable\ncfn-signal -s true --stack ${AWS::StackName} --resource Server --region ${AWS::Region}"}},

@@ -5,7 +5,6 @@
 package ec2_instance_with_ephemeral_drives
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -18,5 +17,5 @@ var EC2SecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 
 var EC2SecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "SSH access",
-	SecurityGroupIngress: List(EC2SecurityGroupSecurityGroupIngressPortN22),
+	SecurityGroupIngress: []any{EC2SecurityGroupSecurityGroupIngressPortN22},
 }

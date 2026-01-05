@@ -59,7 +59,7 @@ var KWOSInstance = ec2.Instance{
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	Monitoring: false,
-	SecurityGroupIds: Any(KWOSSecurityGroup),
+	SecurityGroupIds: []any{KWOSSecurityGroup},
 	SubnetId: SubnetId,
 	Tags: []any{KWOSInstanceTagLaunchPlatform, KWOSInstanceTagLaunchUser, KWOSInstanceTagTestID, KWOSInstanceTagName, KWOSInstanceTagBudgetCode, KWOSInstanceTagTestTarget, KWOSInstanceTagAgentID, KWOSInstanceTagIsMaster, KWOSInstanceTagMasterID},
 	UserData: Base64{Join{Delimiter: "", Values: []any{

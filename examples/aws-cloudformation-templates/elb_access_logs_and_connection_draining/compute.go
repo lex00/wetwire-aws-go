@@ -13,14 +13,14 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: Any(InstanceSecurityGroup),
+	SecurityGroups: []any{InstanceSecurityGroup},
 	UserData: Base64{Sub{String: "#!/bin/bash -xe          \nyum update -y aws-cfn-bootstrap \n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} \\\n         --resource LaunchConfig \\\n         --region ${AWS::Region}\n\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} \\\n         --resource WebServerGroup \\\n         --region ${AWS::Region} \n"}},
 }
 
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: GetAZs{},
 	LaunchConfigurationName: LaunchConfig,
-	LoadBalancerNames: Any(ElasticLoadBalancer),
+	LoadBalancerNames: []any{ElasticLoadBalancer},
 	MaxSize: 2,
 	MinSize: 2,
 }

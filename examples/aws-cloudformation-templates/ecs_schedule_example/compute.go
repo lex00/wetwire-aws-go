@@ -18,7 +18,7 @@ var ContainerInstances = autoscaling.LaunchConfiguration{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: Any(EcsSecurityGroup),
+	SecurityGroups: []any{EcsSecurityGroup},
 	UserData: Base64{Sub{String: "#!/bin/bash -xe\necho ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} \\\n    --resource ECSAutoScalingGroup \\\n    --region ${AWS::Region}\n"}},
 }
 
@@ -39,7 +39,7 @@ var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
 var Service = ecs.Service{
 	Cluster: ECSCluster,
 	DesiredCount: "1",
-	LoadBalancers: List(ServiceLoadBalancer1),
+	LoadBalancers: []any{ServiceLoadBalancer1},
 	Role: ECSServiceRole,
 	TaskDefinition: TaskDefinition,
 }
@@ -50,7 +50,7 @@ var TaskDefinitionContainerDefinitionBusyboxVolumesFrom1 = ecs.TaskDefinition_Vo
 
 var TaskDefinitionContainerDefinitionBusyboxLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
-	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
+	Options: Json{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
 
 var TaskDefinitionContainerDefinitionSimpleNegappPortMapping1 = ecs.TaskDefinition_PortMapping{
@@ -64,7 +64,7 @@ var TaskDefinitionContainerDefinitionSimpleNegappMountPoint1 = ecs.TaskDefinitio
 
 var TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration = ecs.Service_LogConfiguration{
 	LogDriver: "awslogs",
-	Options: map[string]any{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
+	Options: Json{"awslogs-group": CloudwatchLogsGroup, "awslogs-region": AWS_REGION, "awslogs-stream-prefix": "ecs-demo-app"},
 }
 
 var TaskDefinitionVolumeMyNegvol = ecs.TaskDefinition_Volume{
@@ -72,15 +72,15 @@ var TaskDefinitionVolumeMyNegvol = ecs.TaskDefinition_Volume{
 }
 
 var TaskDefinitionContainerDefinitionBusybox = ecs.TaskDefinition_ContainerDefinition{
-	Command: Any("/bin/sh -c \"while true; do echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p>' > top; /bin/date > date ; echo '</div></body></html>' > bottom; cat top date bottom > /usr/local/apache2/htdocs/index.html ; sleep 1; done\""),
+	Command: []any{"/bin/sh -c \"while true; do echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p>' > top; /bin/date > date ; echo '</div></body></html>' > bottom; cat top date bottom > /usr/local/apache2/htdocs/index.html ; sleep 1; done\""},
 	Cpu: 10,
-	EntryPoint: Any("sh", "-c"),
+	EntryPoint: []any{"sh", "-c"},
 	Essential: false,
 	Image: "busybox",
 	LogConfiguration: &TaskDefinitionContainerDefinitionBusyboxLogConfiguration,
 	Memory: 200,
 	Name: "busybox",
-	VolumesFrom: List(TaskDefinitionContainerDefinitionBusyboxVolumesFrom1),
+	VolumesFrom: []any{TaskDefinitionContainerDefinitionBusyboxVolumesFrom1},
 }
 
 var TaskDefinitionContainerDefinitionSimpleNegapp = ecs.TaskDefinition_ContainerDefinition{
@@ -89,16 +89,16 @@ var TaskDefinitionContainerDefinitionSimpleNegapp = ecs.TaskDefinition_Container
 	Image: "httpd:2.4",
 	LogConfiguration: &TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration,
 	Memory: "300",
-	MountPoints: List(TaskDefinitionContainerDefinitionSimpleNegappMountPoint1),
+	MountPoints: []any{TaskDefinitionContainerDefinitionSimpleNegappMountPoint1},
 	Name: "simple-app",
-	PortMappings: List(TaskDefinitionContainerDefinitionSimpleNegappPortMapping1),
+	PortMappings: []any{TaskDefinitionContainerDefinitionSimpleNegappPortMapping1},
 }
 
 var TaskDefinition = ecs.TaskDefinition{
-	ContainerDefinitions: List(TaskDefinitionContainerDefinitionSimpleNegapp, TaskDefinitionContainerDefinitionBusybox),
+	ContainerDefinitions: []any{TaskDefinitionContainerDefinitionSimpleNegapp, TaskDefinitionContainerDefinitionBusybox},
 	Family: Join{Delimiter: "", Values: []any{
 	AWS_STACK_NAME,
 	"-ecs-demo-app",
 }},
-	Volumes: List(TaskDefinitionVolumeMyNegvol),
+	Volumes: []any{TaskDefinitionVolumeMyNegvol},
 }

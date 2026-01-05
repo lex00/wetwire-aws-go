@@ -5,7 +5,6 @@
 package dynamodb_table
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/dynamodb"
 )
 
@@ -29,8 +28,8 @@ var myDynamoDBTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 }
 
 var myDynamoDBTable = dynamodb.Table{
-	AttributeDefinitions: List(myDynamoDBTableAttributeDefinition1),
-	KeySchema: List(myDynamoDBTableKeySchema1),
+	AttributeDefinitions: []any{myDynamoDBTableAttributeDefinition1},
+	KeySchema: []any{myDynamoDBTableKeySchema1},
 	PointInTimeRecoverySpecification: &myDynamoDBTablePointInTimeRecoverySpecification,
 	ProvisionedThroughput: &myDynamoDBTableProvisionedThroughput,
 }

@@ -14,22 +14,6 @@ import (
 var ECSCluster = ecs.Cluster{
 }
 
-var ContainerInstancesLaunchTemplateDataIamInstanceProfile = ec2.LaunchTemplate_IamInstanceProfile{
-	Arn: EC2InstanceProfile.Arn,
-}
-
-var ContainerInstancesLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
-	IamInstanceProfile: &ContainerInstancesLaunchTemplateDataIamInstanceProfile,
-	ImageId: ECSAMI,
-	InstanceType: InstanceType,
-	SecurityGroupIds: Any(EcsHostSecurityGroup),
-	UserData: Base64{Sub{String: "#!/bin/bash -xe\necho ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}\n"}},
-}
-
-var ContainerInstances = ec2.LaunchTemplate{
-	LaunchTemplateData: ContainerInstancesLaunchTemplateData,
-}
-
 var ECSAutoScalingGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
 	LaunchTemplateId: ContainerInstances,
 	Version: ContainerInstances.LatestVersionNumber,
@@ -40,5 +24,21 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	LaunchTemplate: &ECSAutoScalingGroupLaunchTemplate,
 	MaxSize: MaxSize,
 	MinSize: "1",
-	VPCZoneIdentifier: Any(PublicSubnetOne, PublicSubnetTwo),
+	VPCZoneIdentifier: []any{PublicSubnetOne, PublicSubnetTwo},
+}
+
+var ContainerInstancesLaunchTemplateDataIamInstanceProfile = ec2.LaunchTemplate_IamInstanceProfile{
+	Arn: EC2InstanceProfile.Arn,
+}
+
+var ContainerInstancesLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
+	IamInstanceProfile: &ContainerInstancesLaunchTemplateDataIamInstanceProfile,
+	ImageId: ECSAMI,
+	InstanceType: InstanceType,
+	SecurityGroupIds: []any{EcsHostSecurityGroup},
+	UserData: Base64{Sub{String: "#!/bin/bash -xe\necho ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}\n"}},
+}
+
+var ContainerInstances = ec2.LaunchTemplate{
+	LaunchTemplateData: ContainerInstancesLaunchTemplateData,
 }

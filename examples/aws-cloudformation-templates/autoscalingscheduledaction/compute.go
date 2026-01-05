@@ -13,7 +13,7 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 	ImageId: FindInMap{"AWSRegionArch2AMI", AWS_REGION, FindInMap{"AWSInstanceType2Arch", InstanceType, "Arch"}},
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: Any(InstanceSecurityGroup),
+	SecurityGroups: []any{InstanceSecurityGroup},
 	UserData: Base64{Join{Delimiter: "", Values: []any{
 	"#!/bin/bash -xe ",
 	"yum update -y aws-cfn-bootstrap ",
@@ -37,7 +37,7 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: GetAZs{},
 	LaunchConfigurationName: LaunchConfig,
-	LoadBalancerNames: Any(ElasticLoadBalancer),
+	LoadBalancerNames: []any{ElasticLoadBalancer},
 	MaxSize: 5,
 	MinSize: 2,
 }

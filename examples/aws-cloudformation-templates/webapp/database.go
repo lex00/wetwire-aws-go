@@ -21,8 +21,8 @@ var TestTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 }
 
 var TestTable = dynamodb.Table{
-	AttributeDefinitions: List(TestTableAttributeDefinition1),
+	AttributeDefinitions: []any{TestTableAttributeDefinition1},
 	BillingMode: enums.DynamodbBillingModePayPerRequest,
-	KeySchema: List(TestTableKeySchema1),
+	KeySchema: []any{TestTableKeySchema1},
 	TableName: Sub{String: "${AppName}-test"},
 }

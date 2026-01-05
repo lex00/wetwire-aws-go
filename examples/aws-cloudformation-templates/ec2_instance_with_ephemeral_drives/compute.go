@@ -15,10 +15,10 @@ var EC2InstanceBlockDeviceMappingDevsdc = ec2.Instance_BlockDeviceMapping{
 }
 
 var EC2Instance = ec2.Instance{
-	BlockDeviceMappings: List(EC2InstanceBlockDeviceMappingDevsdc),
+	BlockDeviceMappings: []any{EC2InstanceBlockDeviceMappingDevsdc},
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: Any(EC2SecurityGroup),
+	SecurityGroups: []any{EC2SecurityGroup},
 	SubnetId: Select{Index: 0, List: Subnets},
 }

@@ -10,18 +10,18 @@ import (
 )
 
 var GreengrassResourceRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(GreengrassResourceRolePolicyRootPolicyDocumentStatement0, GreengrassResourceRolePolicyRootPolicyDocumentStatement1),
+	Statement: []any{GreengrassResourceRolePolicyRootPolicyDocumentStatement0, GreengrassResourceRolePolicyRootPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var GreengrassResourceRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("iot:*"),
+	Action: []any{"iot:*"},
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var GreengrassResourceRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"),
+	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:*:*:*"},
 }
@@ -32,7 +32,7 @@ var GreengrassResourceRolePolicyRoot = iam.Role_Policy{
 }
 
 var GreengrassResourceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(GreengrassResourceRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{GreengrassResourceRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -44,40 +44,40 @@ var GreengrassResourceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var GreengrassResourceRole = iam.Role{
 	AssumeRolePolicyDocument: GreengrassResourceRoleAssumeRolePolicyDocument,
-	Policies: List(GreengrassResourceRolePolicyRoot),
+	Policies: []any{GreengrassResourceRolePolicyRoot},
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(LambdaExecutionRolePolicyRootPolicyDocumentStatement0, LambdaExecutionRolePolicyRootPolicyDocumentStatement1, LambdaExecutionRolePolicyRootPolicyDocumentStatement2, LambdaExecutionRolePolicyRootPolicyDocumentStatement3, LambdaExecutionRolePolicyRootPolicyDocumentStatement4),
+	Statement: []any{LambdaExecutionRolePolicyRootPolicyDocumentStatement0, LambdaExecutionRolePolicyRootPolicyDocumentStatement1, LambdaExecutionRolePolicyRootPolicyDocumentStatement2, LambdaExecutionRolePolicyRootPolicyDocumentStatement3, LambdaExecutionRolePolicyRootPolicyDocumentStatement4},
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement4 = PolicyStatement{
-	Action: Any("iam:CreateRole", "iam:AttachRolePolicy", "iam:GetRole", "iam:DeleteRole", "iam:PassRole"),
+	Action: []any{"iam:CreateRole", "iam:AttachRolePolicy", "iam:GetRole", "iam:DeleteRole", "iam:PassRole"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/greengrass_cfn_${AWS::StackName}_ServiceRole"},
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement3 = PolicyStatement{
-	Action: Any("ec2:DescribeReservedInstancesOfferings"),
+	Action: []any{"ec2:DescribeReservedInstancesOfferings"},
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement2 = PolicyStatement{
-	Action: Any("greengrass:*"),
+	Action: []any{"greengrass:*"},
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("iot:*"),
+	Action: []any{"iot:*"},
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"),
+	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:*:*:*"},
 }
@@ -88,7 +88,7 @@ var LambdaExecutionRolePolicyRoot = iam.Role_Policy{
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(LambdaExecutionRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{LambdaExecutionRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -100,5 +100,5 @@ var LambdaExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 
 var LambdaExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaExecutionRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaExecutionRolePolicyRoot),
+	Policies: []any{LambdaExecutionRolePolicyRoot},
 }

@@ -5,7 +5,6 @@
 package dynamodb_secondary_indexes
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/dynamodb"
 )
 
@@ -48,7 +47,7 @@ var TableOfBooksPointInTimeRecoverySpecification = dynamodb.Table_PointInTimeRec
 
 var TableOfBooksLocalSecondaryIndexe1 = dynamodb.Table_LocalSecondaryIndex{
 	IndexName: "LanguageIndex",
-	KeySchema: List(TableOfBooksLocalSecondaryIndexe1KeySchema1, TableOfBooksLocalSecondaryIndexe1KeySchema2),
+	KeySchema: []any{TableOfBooksLocalSecondaryIndexe1KeySchema1, TableOfBooksLocalSecondaryIndexe1KeySchema2},
 	Projection: TableOfBooksLocalSecondaryIndexe1Projection,
 }
 
@@ -64,7 +63,7 @@ var TableOfBooksKeySchema1 = dynamodb.Table_KeySchema{
 
 var TableOfBooksGlobalSecondaryIndexe1 = dynamodb.Table_GlobalSecondaryIndex{
 	IndexName: "TitleIndex",
-	KeySchema: List(TableOfBooksGlobalSecondaryIndexe1KeySchema1),
+	KeySchema: []any{TableOfBooksGlobalSecondaryIndexe1KeySchema1},
 	Projection: TableOfBooksGlobalSecondaryIndexe1Projection,
 	ProvisionedThroughput: &TableOfBooksGlobalSecondaryIndexe1ProvisionedThroughput,
 }
@@ -85,10 +84,10 @@ var TableOfBooksAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 }
 
 var TableOfBooks = dynamodb.Table{
-	AttributeDefinitions: List(TableOfBooksAttributeDefinition1, TableOfBooksAttributeDefinition2, TableOfBooksAttributeDefinition3),
-	GlobalSecondaryIndexes: List(TableOfBooksGlobalSecondaryIndexe1),
-	KeySchema: List(TableOfBooksKeySchema1, TableOfBooksKeySchema2),
-	LocalSecondaryIndexes: List(TableOfBooksLocalSecondaryIndexe1),
+	AttributeDefinitions: []any{TableOfBooksAttributeDefinition1, TableOfBooksAttributeDefinition2, TableOfBooksAttributeDefinition3},
+	GlobalSecondaryIndexes: []any{TableOfBooksGlobalSecondaryIndexe1},
+	KeySchema: []any{TableOfBooksKeySchema1, TableOfBooksKeySchema2},
+	LocalSecondaryIndexes: []any{TableOfBooksLocalSecondaryIndexe1},
 	PointInTimeRecoverySpecification: &TableOfBooksPointInTimeRecoverySpecification,
 	ProvisionedThroughput: &TableOfBooksProvisionedThroughput,
 }

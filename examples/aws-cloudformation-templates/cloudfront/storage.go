@@ -34,11 +34,11 @@ var LoggingBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockCon
 }
 
 var LoggingBucketOwnershipControls = s3.Bucket_OwnershipControls{
-	Rules: List(LoggingBucketOwnershipControlsRule1),
+	Rules: []any{LoggingBucketOwnershipControlsRule1},
 }
 
 var LoggingBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var LoggingBucket = s3.Bucket{
@@ -51,7 +51,7 @@ var LoggingBucket = s3.Bucket{
 }
 
 var LoggingBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1),
+	Statement: []any{LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -59,14 +59,14 @@ var LoggingBucketPolicyPolicyDocumentStatement1 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
 }
 
 var LoggingBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
 	Action: "s3:PutObject",
 	Effect: "Allow",
 	Principal: AWSPrincipal{Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"}},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
 	Sid: "LoggingBucketPermissions",
 }
 

@@ -10,12 +10,12 @@ import (
 )
 
 var LambdaExecutionRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(LambdaExecutionRolePolicyRootPolicyDocumentStatement0),
+	Statement: []any{LambdaExecutionRolePolicyRootPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:*", "config:PutEvaluations", "ec2:DescribeVolumeAttribute"),
+	Action: []any{"logs:*", "config:PutEvaluations", "ec2:DescribeVolumeAttribute"},
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,23 +26,23 @@ var LambdaExecutionRolePolicyRoot = iam.Role_Policy{
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(LambdaExecutionRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{LambdaExecutionRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var LambdaExecutionRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaExecutionRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaExecutionRolePolicyRoot),
+	Policies: []any{LambdaExecutionRolePolicyRoot},
 }
 
 var ConfigRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: Any(ConfigRolePolicyRootPolicyDocumentStatement0, ConfigRolePolicyRootPolicyDocumentStatement1, ConfigRolePolicyRootPolicyDocumentStatement2),
+	Statement: []any{ConfigRolePolicyRootPolicyDocumentStatement0, ConfigRolePolicyRootPolicyDocumentStatement1, ConfigRolePolicyRootPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
@@ -80,18 +80,18 @@ var ConfigRolePolicyRoot = iam.Role_Policy{
 }
 
 var ConfigRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(ConfigRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{ConfigRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var ConfigRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"config.amazonaws.com"},
 }
 
 var ConfigRole = iam.Role{
 	AssumeRolePolicyDocument: ConfigRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"),
-	Policies: List(ConfigRolePolicyRoot),
+	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"},
+	Policies: []any{ConfigRolePolicyRoot},
 }

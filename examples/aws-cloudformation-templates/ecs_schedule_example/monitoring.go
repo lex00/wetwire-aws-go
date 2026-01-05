@@ -25,10 +25,10 @@ var ALB500sAlarmScaleUpDimensionECSService = cloudwatch.Alarm_Dimension{
 }
 
 var ALB500sAlarmScaleUp = cloudwatch.Alarm{
-	AlarmActions: Any(ServiceScalingPolicy),
+	AlarmActions: []any{ServiceScalingPolicy},
 	AlarmDescription: "Alarm if our ALB generates too many HTTP 500s.",
 	ComparisonOperator: "GreaterThanThreshold",
-	Dimensions: List(ALB500sAlarmScaleUpDimensionECSService),
+	Dimensions: []any{ALB500sAlarmScaleUpDimensionECSService},
 	EvaluationPeriods: "1",
 	MetricName: "HTTPCode_ELB_5XX_Count",
 	Namespace: "AWS/ApplicationELB",

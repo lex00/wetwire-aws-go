@@ -19,7 +19,7 @@ var PrivateInstance = ec2.Instance{
 	ImageId: LinuxAMI,
 	InstanceType: "t2.micro",
 	KeyName: KeyName,
-	SecurityGroupIds: Any(PrivateSG),
+	SecurityGroupIds: []any{PrivateSG},
 	SubnetId: PrivateSubnet1,
 	Tags: []any{PrivateInstanceTagName},
 	UserData: Base64{Sub{String: "#!/bin/bash -x\ndate > /tmp/datefile\ncat /tmp/datefile\n# Signal the status from instance\n/opt/aws/bin/cfn-signal -e $? -d \"This was all private.\" -r \"Build Process Complete\" '${PrivateWaitHandle}'\n"}},
@@ -35,7 +35,7 @@ var BastionInstance = ec2.Instance{
 	ImageId: LinuxAMI,
 	InstanceType: "t2.micro",
 	KeyName: KeyName,
-	SecurityGroupIds: Any(BastionSG),
+	SecurityGroupIds: []any{BastionSG},
 	SubnetId: PublicSubnet1,
 	Tags: []any{BastionInstanceTagName},
 }

@@ -10,24 +10,24 @@ import (
 )
 
 var TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocument = PolicyDocument{
-	Statement: Any(TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0),
+	Statement: []any{TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("ec2:CreateTags", "ec2:DeleteTags"),
+	Action: []any{"ec2:CreateTags", "ec2:DeleteTags"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:vpc-peering-connection/*"},
 	Sid: "Tagging",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocument = PolicyDocument{
-	Statement: Any(TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1),
+	Statement: []any{TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("logs:CreateLogStream", "logs:PutLogEvents"),
+	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:${TagVpcPeeringConnectionsLambdaLogsLogGroup}:log-stream:*"},
 	Sid: "CreateLogStreamAndEvents",
@@ -56,7 +56,7 @@ var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup = iam.Role_Policy
 }
 
 var TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
@@ -70,7 +70,7 @@ var TagVpcPeeringConnectionsLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocument,
 	Description: "Rights to Tag VPC Peering Connection",
 	Path: "/",
-	Policies: List(TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup, TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnect),
+	Policies: []any{TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup, TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnect},
 	RoleName: Sub{String: "${LambdaFunctionName}-LambdaRole"},
 	Tags: []any{TagVpcPeeringConnectionsLambdaRoleTagStackName},
 }

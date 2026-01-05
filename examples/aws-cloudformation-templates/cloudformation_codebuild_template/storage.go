@@ -25,7 +25,7 @@ var PipelineS3BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlock
 }
 
 var PipelineS3BucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var PipelineS3Bucket = s3.Bucket{

@@ -19,11 +19,11 @@ var TaskDefinitionContainerDefinition1 = ecs.TaskDefinition_ContainerDefinition{
 	Image: ImageUrl,
 	Memory: ContainerMemory,
 	Name: ServiceName,
-	PortMappings: List(TaskDefinitionContainerDefinition1PortMapping1),
+	PortMappings: []any{TaskDefinitionContainerDefinition1PortMapping1},
 }
 
 var TaskDefinition = ecs.TaskDefinition{
-	ContainerDefinitions: List(TaskDefinitionContainerDefinition1),
+	ContainerDefinitions: []any{TaskDefinitionContainerDefinition1},
 	Cpu: ContainerCpu,
 	Family: ServiceName,
 	Memory: ContainerMemory,
@@ -48,7 +48,7 @@ var Service = ecs.Service{
 }}},
 	DeploymentConfiguration: &ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
-	LoadBalancers: List(ServiceLoadBalancer1),
+	LoadBalancers: []any{ServiceLoadBalancer1},
 	ServiceName: ServiceName,
 	TaskDefinition: TaskDefinition,
 }

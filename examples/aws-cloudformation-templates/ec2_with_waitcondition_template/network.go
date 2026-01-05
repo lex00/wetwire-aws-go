@@ -5,7 +5,6 @@
 package ec2_with_waitcondition_template
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -46,6 +45,6 @@ var KWOSSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 
 var KWOSSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable HTTP access via port 80/22/443 and ICMP access via port *",
-	SecurityGroupIngress: List(KWOSSecurityGroupSecurityGroupIngressPortN80, KWOSSecurityGroupSecurityGroupIngressPortN8888, KWOSSecurityGroupSecurityGroupIngressPortN443, KWOSSecurityGroupSecurityGroupIngressPortNeg1ICMP, KWOSSecurityGroupSecurityGroupIngressPortN22),
+	SecurityGroupIngress: []any{KWOSSecurityGroupSecurityGroupIngressPortN80, KWOSSecurityGroupSecurityGroupIngressPortN8888, KWOSSecurityGroupSecurityGroupIngressPortN443, KWOSSecurityGroupSecurityGroupIngressPortNeg1ICMP, KWOSSecurityGroupSecurityGroupIngressPortN22},
 	VpcId: VpcId,
 }

@@ -41,7 +41,7 @@ var ServiceCatalogCloudFormationProductTagName = Tag{
 
 var ServiceCatalogCloudFormationProductProvisioningArtifactParameter1 = servicecatalog.CloudFormationProduct_ProvisioningArtifactProperties{
 	Description: ProvisioningArtifactDescriptionParameter,
-	Info: map[string]any{"LoadTemplateFromURL": ProvisioningArtifactTemplateUrl},
+	Info: Json{"LoadTemplateFromURL": ProvisioningArtifactTemplateUrl},
 	Name: ProvisioningArtifactNameParameter,
 }
 
@@ -50,7 +50,7 @@ var ServiceCatalogCloudFormationProduct = servicecatalog.CloudFormationProduct{
 	Distributor: SCProductDistributor,
 	Name: SCProductName,
 	Owner: SCProductOwner,
-	ProvisioningArtifactParameters: List(ServiceCatalogCloudFormationProductProvisioningArtifactParameter1),
+	ProvisioningArtifactParameters: []any{ServiceCatalogCloudFormationProductProvisioningArtifactParameter1},
 	SupportDescription: SCProductSupport,
 	SupportEmail: SCSupportEmail,
 	SupportUrl: SCSupportUrl,

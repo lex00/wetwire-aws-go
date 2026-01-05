@@ -15,11 +15,11 @@ var ConfigRuleForVolumeTagsSource = config.ConfigRule_Source{
 }
 
 var ConfigRuleForVolumeTagsScope = config.ConfigRule_Scope{
-	ComplianceResourceTypes: Any("AWS::EC2::Volume"),
+	ComplianceResourceTypes: []any{"AWS::EC2::Volume"},
 }
 
 var ConfigRuleForVolumeTags = config.ConfigRule{
-	InputParameters: map[string]any{
+	InputParameters: Json{
 	"tag1Key": "CostCenter",
 },
 	Scope: &ConfigRuleForVolumeTagsScope,
@@ -43,13 +43,13 @@ var ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1 = config.ConfigRule_Sourc
 
 var ConfigRuleForVolumeAutoEnableIOSource = config.ConfigRule_Source{
 	Owner: "CUSTOM_LAMBDA",
-	SourceDetails: List(ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1),
+	SourceDetails: []any{ConfigRuleForVolumeAutoEnableIOSourceSourceDetail1},
 	SourceIdentifier: VolumeAutoEnableIOComplianceCheck.Arn,
 }
 
 var ConfigRuleForVolumeAutoEnableIOScope = config.ConfigRule_Scope{
 	ComplianceResourceId: Ec2Volume,
-	ComplianceResourceTypes: Any("AWS::EC2::Volume"),
+	ComplianceResourceTypes: []any{"AWS::EC2::Volume"},
 }
 
 var ConfigRuleForVolumeAutoEnableIO = config.ConfigRule{
@@ -59,7 +59,7 @@ var ConfigRuleForVolumeAutoEnableIO = config.ConfigRule{
 }
 
 var ConfigRecorderRecordingGroup = config.ConfigurationRecorder_RecordingGroup{
-	ResourceTypes: Any("AWS::EC2::Volume"),
+	ResourceTypes: []any{"AWS::EC2::Volume"},
 }
 
 var ConfigRecorder = config.ConfigurationRecorder{

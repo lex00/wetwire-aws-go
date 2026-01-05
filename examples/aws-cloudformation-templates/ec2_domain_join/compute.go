@@ -11,17 +11,17 @@ import (
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses = ec2.Instance_AssociationParameter{
 	Key: "dnsIpAddresses",
-	Value: Any(ADDnsIpAddresses1, ADDnsIpAddresses2),
+	Value: []any{ADDnsIpAddresses1, ADDnsIpAddresses2},
 }
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName = ec2.Instance_AssociationParameter{
 	Key: "directoryName",
-	Value: Any(ADDirectoryName),
+	Value: []any{ADDirectoryName},
 }
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId = ec2.Instance_AssociationParameter{
 	Key: "directoryId",
-	Value: Any(ADDirectoryId),
+	Value: []any{ADDirectoryId},
 }
 
 var myEC2InstanceSSMTagName = Tag{
@@ -30,7 +30,7 @@ var myEC2InstanceSSMTagName = Tag{
 }
 
 var myEC2InstanceSSMSsmAssociation1 = ec2.Instance_SsmAssociation{
-	AssociationParameters: List(myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId, myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName, myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses),
+	AssociationParameters: []any{myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId, myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName, myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses},
 	DocumentName: myssmdocument,
 }
 
@@ -39,8 +39,8 @@ var myEC2InstanceSSM = ec2.Instance{
 	ImageId: AMI,
 	InstanceType: InstanceType,
 	KeyName: KeyPair,
-	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
-	SsmAssociations: List(myEC2InstanceSSMSsmAssociation1),
+	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
+	SsmAssociations: []any{myEC2InstanceSSMSsmAssociation1},
 	SubnetId: PublicSubnet,
 	Tags: []any{myEC2InstanceSSMTagName},
 }

@@ -10,7 +10,7 @@ import (
 )
 
 var SiteCloudFrontLogsBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement1),
+	Statement: []any{SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -19,14 +19,14 @@ var SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement1 = PolicyStateme
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsBucketAccessPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsBucketAccessPolicy = s3.BucketPolicy{
@@ -68,7 +68,7 @@ var SiteCloudFrontLogsLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockCon
 }
 
 var SiteCloudFrontLogsLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteCloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteCloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteCloudFrontLogsLogBucket = s3.Bucket{
@@ -81,7 +81,7 @@ var SiteCloudFrontLogsLogBucket = s3.Bucket{
 }
 
 var SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement1),
+	Statement: []any{SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -90,14 +90,14 @@ var SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement1 = PolicyStat
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsLogBucketAccessPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsLogBucketAccessPolicy = s3.BucketPolicy{
@@ -125,7 +125,7 @@ var SiteCloudFrontLogsReplicaBucketPublicAccessBlockConfiguration = s3.Bucket_Pu
 }
 
 var SiteCloudFrontLogsReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteCloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteCloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteCloudFrontLogsReplicaBucket = s3.Bucket{
@@ -137,7 +137,7 @@ var SiteCloudFrontLogsReplicaBucket = s3.Bucket{
 }
 
 var SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement1),
+	Statement: []any{SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement0, SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -146,14 +146,14 @@ var SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement1 = Policy
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsReplicaBucketAccessPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteCloudFrontLogsReplicaBucketAccessPolicy = s3.BucketPolicy{
@@ -188,7 +188,7 @@ var SiteCloudFrontLogsBucketVersioningConfiguration = s3.Bucket_VersioningConfig
 
 var SiteCloudFrontLogsBucketReplicationConfiguration = s3.Bucket_ReplicationConfiguration{
 	Role: SiteCloudFrontLogsReplicationRole.Arn,
-	Rules: List(SiteCloudFrontLogsBucketReplicationConfigurationRuleEnabled),
+	Rules: []any{SiteCloudFrontLogsBucketReplicationConfigurationRuleEnabled},
 }
 
 var SiteCloudFrontLogsBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -199,7 +199,7 @@ var SiteCloudFrontLogsBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAcc
 }
 
 var SiteCloudFrontLogsBucketOwnershipControls = s3.Bucket_OwnershipControls{
-	Rules: List(SiteCloudFrontLogsBucketOwnershipControlsRule1),
+	Rules: []any{SiteCloudFrontLogsBucketOwnershipControlsRule1},
 }
 
 var SiteCloudFrontLogsBucketLoggingConfiguration = s3.Bucket_LoggingConfiguration{
@@ -207,7 +207,7 @@ var SiteCloudFrontLogsBucketLoggingConfiguration = s3.Bucket_LoggingConfiguratio
 }
 
 var SiteCloudFrontLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteCloudFrontLogsBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteCloudFrontLogsBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteCloudFrontLogsBucket = s3.Bucket{
@@ -255,7 +255,7 @@ var SiteContentLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfigurat
 }
 
 var SiteContentLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteContentLogBucket = s3.Bucket{
@@ -268,7 +268,7 @@ var SiteContentLogBucket = s3.Bucket{
 }
 
 var SiteContentLogBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteContentLogBucketAccessPolicyPolicyDocumentStatement0, SiteContentLogBucketAccessPolicyPolicyDocumentStatement1),
+	Statement: []any{SiteContentLogBucketAccessPolicyPolicyDocumentStatement0, SiteContentLogBucketAccessPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -277,14 +277,14 @@ var SiteContentLogBucketAccessPolicyPolicyDocumentStatement1 = PolicyStatement{
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentLogBucketAccessPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-logs-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentLogBucketAccessPolicy = s3.BucketPolicy{
@@ -312,7 +312,7 @@ var SiteContentReplicaBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAcc
 }
 
 var SiteContentReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteContentReplicaBucket = s3.Bucket{
@@ -324,7 +324,7 @@ var SiteContentReplicaBucket = s3.Bucket{
 }
 
 var SiteContentReplicaBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement0, SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement1),
+	Statement: []any{SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement0, SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
@@ -333,14 +333,14 @@ var SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement1 = PolicyStateme
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentReplicaBucketAccessPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentReplicaBucketAccessPolicy = s3.BucketPolicy{
@@ -371,7 +371,7 @@ var SiteContentBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration
 
 var SiteContentBucketReplicationConfiguration = s3.Bucket_ReplicationConfiguration{
 	Role: SiteContentReplicationRole.Arn,
-	Rules: List(SiteContentBucketReplicationConfigurationRuleEnabled),
+	Rules: []any{SiteContentBucketReplicationConfigurationRuleEnabled},
 }
 
 var SiteContentBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -386,7 +386,7 @@ var SiteContentBucketLoggingConfiguration = s3.Bucket_LoggingConfiguration{
 }
 
 var SiteContentBucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(SiteContentBucketBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{SiteContentBucketBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var SiteContentBucket = s3.Bucket{
@@ -400,7 +400,7 @@ var SiteContentBucket = s3.Bucket{
 }
 
 var SiteContentBucketAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: Any(SiteContentBucketAccessPolicyPolicyDocumentStatement0, SiteContentBucketAccessPolicyPolicyDocumentStatement1, SiteContentBucketAccessPolicyPolicyDocumentStatement2),
+	Statement: []any{SiteContentBucketAccessPolicyPolicyDocumentStatement0, SiteContentBucketAccessPolicyPolicyDocumentStatement1, SiteContentBucketAccessPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
 }
 
@@ -409,14 +409,14 @@ var SiteContentBucketAccessPolicyPolicyDocumentStatement2 = PolicyStatement{
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentBucketAccessPolicyPolicyDocumentStatement1 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}/*"}),
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-content-${AWS::Region}-${AWS::AccountId}/*"}},
 }
 
 var SiteContentBucketAccessPolicyPolicyDocumentStatement0 = PolicyStatement{

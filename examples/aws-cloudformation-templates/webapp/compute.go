@@ -11,7 +11,7 @@ import (
 )
 
 var JwtResourceHandlerEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"COGNITO_APP_CLIENT_ID": CognitoClient, "COGNITO_DOMAIN_PREFIX": AppName, "COGNITO_POOL_ID": CognitoUserPool, "COGNITO_REDIRECT_URI": Sub{String: "https://${SiteDistribution.DomainName}/index.html"}, "COGNITO_REGION": "us-east-1"},
+	Variables: Json{"COGNITO_APP_CLIENT_ID": CognitoClient, "COGNITO_DOMAIN_PREFIX": AppName, "COGNITO_POOL_ID": CognitoUserPool, "COGNITO_REDIRECT_URI": Sub{String: "https://${SiteDistribution.DomainName}/index.html"}, "COGNITO_REGION": "us-east-1"},
 }
 
 var JwtResourceHandlerCode = lambda.Function_Code{
@@ -43,7 +43,7 @@ var JwtResourceRootPermission = lambda.Permission{
 }
 
 var TestResourceHandlerEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"TABLE_NAME": TestTable},
+	Variables: Json{"TABLE_NAME": TestTable},
 }
 
 var TestResourceHandlerCode = lambda.Function_Code{

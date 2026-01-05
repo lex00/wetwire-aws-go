@@ -16,7 +16,7 @@ var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOrig
 
 var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginHeadersConfig = cloudfront.CachePolicy_HeadersConfig{
 	HeaderBehavior: "whitelist",
-	Headers: Any("Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"),
+	Headers: []any{"Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"},
 }
 
 var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginCookiesConfig = cloudfront.CachePolicy_CookiesConfig{
@@ -105,8 +105,8 @@ var InstanceSecurityGroupSecurityGroupEgress1 = ec2.SecurityGroup_Egress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "vscode-server-isg",
-	SecurityGroupEgress: List(InstanceSecurityGroupSecurityGroupEgress1),
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN8080),
+	SecurityGroupEgress: []any{InstanceSecurityGroupSecurityGroupEgress1},
+	SecurityGroupIngress: []any{InstanceSecurityGroupSecurityGroupIngressPortN8080},
 	Tags: []any{InstanceSecurityGroupTagName},
 	VpcId: NetworkVPC,
 }
@@ -286,7 +286,7 @@ var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Or
 }
 
 var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution_DefaultCacheBehavior{
-	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
+	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
 	CachePolicyId: CloudFrontCachePolicy,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
 	TargetOriginId: Sub{String: "CloudFront-${AWS::StackName}"},
@@ -294,7 +294,7 @@ var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Di
 }
 
 var CloudFrontDistributionDistributionConfigCacheBehavior1 = cloudfront.Distribution_CacheBehavior{
-	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
+	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
 	CachePolicyId: "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
 	Compress: false,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
@@ -314,11 +314,11 @@ var CloudFrontDistributionTagName = Tag{
 }
 
 var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
-	CacheBehaviors: List(CloudFrontDistributionDistributionConfigCacheBehavior1),
+	CacheBehaviors: []any{CloudFrontDistributionDistributionConfigCacheBehavior1},
 	DefaultCacheBehavior: CloudFrontDistributionDistributionConfigDefaultCacheBehavior,
 	Enabled: true,
 	HttpVersion: "http2",
-	Origins: List(CloudFrontDistributionDistributionConfigOrigin1),
+	Origins: []any{CloudFrontDistributionDistributionConfigOrigin1},
 }
 
 var CloudFrontDistribution = cloudfront.Distribution{

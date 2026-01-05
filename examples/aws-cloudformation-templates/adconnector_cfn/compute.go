@@ -11,12 +11,12 @@ import (
 )
 
 var ADConnectorLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
-	SecurityGroupIds: Any(ADConnectorDomainMembersSG),
-	SubnetIds: Any("PrivateSubnet1ID", "PrivateSubnet2ID"),
+	SecurityGroupIds: []any{ADConnectorDomainMembersSG},
+	SubnetIds: []any{"PrivateSubnet1ID", "PrivateSubnet2ID"},
 }
 
 var ADConnectorLambdaFunctionEnvironment = lambda.Function_Environment{
-	Variables: map[string]any{"LOG_LEVEL": LambdaLogLevel},
+	Variables: Json{"LOG_LEVEL": LambdaLogLevel},
 }
 
 var ADConnectorLambdaFunctionCode = lambda.Function_Code{

@@ -14,7 +14,7 @@ var EC2Instance = ec2.Instance{
 	ImageId: FindInMap{"RegionMap", AWS_REGION, CentOSVersion},
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
+	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash\nrpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm\nyum update -y\nyum install python3 -y\ncurl -O https://bootstrap.pypa.io/get-pip.py\n# Install pip using python3\npython3 get-pip.py\nexport PATH=$PATH:/usr/local/bin\npip3 install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz\ncfn-init -v --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region} --configsets default\ncfn-signal -e $? --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}\n"}},
 }

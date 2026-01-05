@@ -11,7 +11,7 @@ import (
 )
 
 var EnableShapshotCode = lambda.Function_Code{
-	ZipFile: map[string]any{"Rain::Embed": "elastic-code.js"},
+	ZipFile: Json{"Rain::Embed": "elastic-code.js"},
 }
 
 var EnableShapshot = lambda.Function{

@@ -10,18 +10,18 @@ import (
 )
 
 var LambdaIamRolePolicyLambdaApipolicyPolicyDocument = PolicyDocument{
-	Statement: Any(LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement0, LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement1),
+	Statement: []any{LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement0, LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement1},
 	Version: "2012-10-17",
 }
 
 var LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: Any("logs:CreateLogStream", "logs:PutLogEvents"),
+	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${LambdaFunctionName}:*"},
 }
 
 var LambdaIamRolePolicyLambdaApipolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogGroup"),
+	Action: []any{"logs:CreateLogGroup"},
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"},
 }
@@ -32,18 +32,18 @@ var LambdaIamRolePolicyLambdaApipolicy = iam.Role_Policy{
 }
 
 var LambdaIamRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(LambdaIamRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{LambdaIamRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var LambdaIamRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
 
 var LambdaIamRole = iam.Role{
 	AssumeRolePolicyDocument: LambdaIamRoleAssumeRolePolicyDocument,
-	Policies: List(LambdaIamRolePolicyLambdaApipolicy),
+	Policies: []any{LambdaIamRolePolicyLambdaApipolicy},
 	RoleName: "LambdaRole",
 }

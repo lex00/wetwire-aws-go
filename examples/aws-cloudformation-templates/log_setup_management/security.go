@@ -10,12 +10,12 @@ import (
 )
 
 var CentralEventLogKeyKeyPolicy = PolicyDocument{
-	Statement: Any(CentralEventLogKeyKeyPolicyStatement0, CentralEventLogKeyKeyPolicyStatement1),
+	Statement: []any{CentralEventLogKeyKeyPolicyStatement0, CentralEventLogKeyKeyPolicyStatement1},
 	Version: "2012-10-17",
 }
 
 var CentralEventLogKeyKeyPolicyStatement1 = PolicyStatement{
-	Action: Any("kms:Encrypt*", "kms:Decrypt*", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:Describe*"),
+	Action: []any{"kms:Encrypt*", "kms:Decrypt*", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:Describe*"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logs.amazonaws.com"},
 	Resource: Sub{String: "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*"},
@@ -23,7 +23,7 @@ var CentralEventLogKeyKeyPolicyStatement1 = PolicyStatement{
 }
 
 var CentralEventLogKeyKeyPolicyStatement0 = PolicyStatement{
-	Action: Any("kms:Create*", "kms:Describe*", "kms:Enable*", "kms:List*", "kms:Put*", "kms:Update*", "kms:Revoke*", "kms:Disable*", "kms:Get*", "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion", "kms:GenerateDataKey", "kms:TagResource", "kms:UntagResource"),
+	Action: []any{"kms:Create*", "kms:Describe*", "kms:Enable*", "kms:List*", "kms:Put*", "kms:Update*", "kms:Revoke*", "kms:Disable*", "kms:Get*", "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion", "kms:GenerateDataKey", "kms:TagResource", "kms:UntagResource"},
 	Effect: "Allow",
 	Principal: AWSPrincipal{Sub{String: "arn:aws:iam::${AWS::AccountId}:role/Admin"}},
 	Resource: Sub{String: "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*"},

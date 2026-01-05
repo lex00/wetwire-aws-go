@@ -20,11 +20,11 @@ var TaskDefinitionContainerDefinition1 = ecs.TaskDefinition_ContainerDefinition{
 	Image: ImageUrl,
 	Memory: ContainerMemory,
 	Name: ServiceName,
-	PortMappings: List(TaskDefinitionContainerDefinition1PortMapping1),
+	PortMappings: []any{TaskDefinitionContainerDefinition1PortMapping1},
 }
 
 var TaskDefinition = ecs.TaskDefinition{
-	ContainerDefinitions: List(TaskDefinitionContainerDefinition1),
+	ContainerDefinitions: []any{TaskDefinitionContainerDefinition1},
 	Cpu: ContainerCpu,
 	ExecutionRoleArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
@@ -33,23 +33,23 @@ var TaskDefinition = ecs.TaskDefinition{
 	Family: ServiceName,
 	Memory: ContainerMemory,
 	NetworkMode: enums.EcsNetworkModeAwsvpc,
-	RequiresCompatibilities: Any("FARGATE"),
+	RequiresCompatibilities: []any{"FARGATE"},
 	TaskRoleArn: If{"HasCustomRole", Role, AWS_NO_VALUE},
 }
 
 var ServiceNetworkConfigurationAwsvpcConfiguration = ecs.Service_AwsVpcConfiguration{
 	AssignPublicIp: "ENABLED",
-	SecurityGroups: Any(ImportValue{Join{Delimiter: ":", Values: []any{
+	SecurityGroups: []any{ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"FargateContainerSecurityGroup",
-}}}),
-	Subnets: Any(ImportValue{Join{Delimiter: ":", Values: []any{
+}}}},
+	Subnets: []any{ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetOne",
 }}}, ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetTwo",
-}}}),
+}}}},
 }
 
 var ServiceNetworkConfiguration = ecs.Service_NetworkConfiguration{
@@ -75,7 +75,7 @@ var Service = ecs.Service{
 	DeploymentConfiguration: &ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LaunchType: enums.EcsLaunchTypeFargate,
-	LoadBalancers: List(ServiceLoadBalancer1),
+	LoadBalancers: []any{ServiceLoadBalancer1},
 	NetworkConfiguration: &ServiceNetworkConfiguration,
 	ServiceName: ServiceName,
 	TaskDefinition: TaskDefinition,

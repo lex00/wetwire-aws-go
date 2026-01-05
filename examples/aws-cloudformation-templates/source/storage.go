@@ -66,7 +66,7 @@ var S3BucketSourceVersioningConfiguration = s3.Bucket_VersioningConfiguration{
 
 var S3BucketSourceReplicationConfiguration = s3.Bucket_ReplicationConfiguration{
 	Role: ReplicationRole.Arn,
-	Rules: List(S3BucketSourceReplicationConfigurationRuleRule1),
+	Rules: []any{S3BucketSourceReplicationConfigurationRuleRule1},
 }
 
 var S3BucketSourcePublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -77,7 +77,7 @@ var S3BucketSourcePublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockCo
 }
 
 var S3BucketSourceBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: List(S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1),
+	ServerSideEncryptionConfiguration: []any{S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1},
 }
 
 var S3BucketSource = s3.Bucket{

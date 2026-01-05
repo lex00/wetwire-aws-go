@@ -10,12 +10,12 @@ import (
 )
 
 var ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambdaPolicyDocument = PolicyDocument{
-	Statement: Any(ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambdaPolicyDocumentStatement0),
+	Statement: []any{ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambdaPolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambdaPolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents", "ec2:DescribeVpcEndpointServiceConfigurations", "ec2:ModifyVpcEndpointServiceConfiguration"),
+	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents", "ec2:DescribeVpcEndpointServiceConfigurations", "ec2:ModifyVpcEndpointServiceConfiguration"},
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,12 +26,12 @@ var ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambda = iam.Role_Policy{
 }
 
 var ASCPrivateLinkLambdaRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: Any(ASCPrivateLinkLambdaRoleAssumeRolePolicyDocumentStatement0),
+	Statement: []any{ASCPrivateLinkLambdaRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
 }
 
 var ASCPrivateLinkLambdaRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: Any("sts:AssumeRole"),
+	Action: []any{"sts:AssumeRole"},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
@@ -39,5 +39,5 @@ var ASCPrivateLinkLambdaRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement
 var ASCPrivateLinkLambdaRole = iam.Role{
 	AssumeRolePolicyDocument: ASCPrivateLinkLambdaRoleAssumeRolePolicyDocument,
 	Path: "/",
-	Policies: List(ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambda),
+	Policies: []any{ASCPrivateLinkLambdaRolePolicyASCPrivateLinkLambda},
 }
