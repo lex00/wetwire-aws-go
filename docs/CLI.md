@@ -9,6 +9,11 @@ The `wetwire-aws` command provides tools for generating and validating CloudForm
 | `wetwire-aws build` | Generate CloudFormation template from Go source |
 | `wetwire-aws lint` | Lint code for issues |
 | `wetwire-aws init` | Initialize a new project |
+| `wetwire-aws import` | Import CloudFormation template to Go code |
+| `wetwire-aws design` | AI-assisted infrastructure design |
+| `wetwire-aws test` | Run automated persona-based testing |
+| `wetwire-aws validate` | Validate resources and references |
+| `wetwire-aws list` | List discovered resources |
 
 ```bash
 wetwire-aws --help     # Show help
@@ -258,6 +263,111 @@ var MyBucket = s3.Bucket{
     BucketName: Sub{String: "${AWS::StackName}-data"},
 }
 ```
+
+---
+
+## design
+
+AI-assisted infrastructure design. Starts an interactive session to generate infrastructure code.
+
+```bash
+# Start design session with a prompt
+wetwire-aws design "Create a serverless API with Lambda and API Gateway"
+
+# Specify output directory
+wetwire-aws design -o ./myproject "Create an S3 bucket with encryption"
+```
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `prompt` | Natural language description of infrastructure |
+| `-o, --output` | Output directory (default: current dir) |
+| `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
+| `-s, --stream` | Stream AI responses (default: true) |
+
+### Workflow
+
+1. AI asks clarifying questions about requirements
+2. Generates Go code using wetwire-aws patterns
+3. Runs linter and auto-fixes issues
+4. Builds CloudFormation template
+5. Validates with cfn-lint-go
+
+---
+
+## test
+
+Run automated persona-based testing to evaluate code generation quality.
+
+```bash
+# Run with default persona
+wetwire-aws test "Create an S3 bucket with versioning"
+
+# Use a specific persona
+wetwire-aws test --persona beginner "Create a Lambda function"
+
+# Track test scenario
+wetwire-aws test --scenario "s3-encryption" "Create encrypted bucket"
+```
+
+### Personas
+
+| Persona | Description |
+|---------|-------------|
+| `beginner` | New to AWS, asks many clarifying questions |
+| `intermediate` | Familiar with AWS basics (default) |
+| `expert` | Deep AWS knowledge, asks advanced questions |
+| `terse` | Gives minimal responses |
+| `verbose` | Provides detailed context |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `prompt` | Infrastructure description to test |
+| `-p, --persona` | Persona to use (default: intermediate) |
+| `-S, --scenario` | Scenario name for tracking |
+| `-o, --output` | Output directory |
+| `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
+
+---
+
+## validate
+
+Validate resources and check dependencies.
+
+```bash
+wetwire-aws validate ./infra/...
+wetwire-aws validate ./infra/... --format json
+```
+
+### Checks Performed
+
+- **Reference validity**: All resource references point to defined resources
+- **Dependency graph**: Validates resource dependencies exist
+
+---
+
+## list
+
+List discovered resources in a package.
+
+```bash
+wetwire-aws list ./infra/...
+```
+
+---
+
+## CloudFormation Validation
+
+The `design` and `test` commands automatically validate generated templates using **cfn-lint-go**, which checks for:
+
+- Valid resource types and properties
+- Correct intrinsic function usage
+- Best practices and security recommendations
+- AWS CloudFormation specification compliance
 
 ---
 

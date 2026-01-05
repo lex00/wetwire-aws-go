@@ -149,6 +149,41 @@ var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
 	Priority: 1,
 }
 
+var OriginALBTagEnvironment = Tag{
+	Key: "Environment",
+	Value: Environment,
+}
+
+var OriginALBTagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${AppName}-${Environment}-alb"},
+}
+
+var OriginALBLoadBalancerAttributeRoutinghttp2enabled = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "routing.http2.enabled",
+	Value: ALBAttributeRoutingHttp2,
+}
+
+var OriginALBLoadBalancerAttributeDeletionprotectionen = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "deletion_protection.enabled",
+	Value: ALBAttributeDeletionProtection,
+}
+
+var OriginALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: ALBAttributeIdleTimeOut,
+}
+
+var OriginALB = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: List(OriginALBLoadBalancerAttributeIdletimeouttimeoutse, OriginALBLoadBalancerAttributeDeletionprotectionen, OriginALBLoadBalancerAttributeRoutinghttp2enabled),
+	Name: Sub{String: "${AppName}-${Environment}-alb"},
+	Scheme: ALBScheme,
+	SecurityGroups: []any{ALBExternalAccessSG},
+	Subnets: []any{PublicSubnetId1, PublicSubnetId2},
+	Tags: []any{OriginALBTagName, OriginALBTagEnvironment},
+	Type_: ALBType,
+}
+
 var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies = &cloudfront.Distribution_Cookies{
 	Forward: ForwardCookies,
 }
@@ -216,39 +251,4 @@ var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_Distribut
 
 var CloudFrontDistribution = cloudfront.Distribution{
 	DistributionConfig: CloudFrontDistributionDistributionConfig,
-}
-
-var OriginALBTagEnvironment = Tag{
-	Key: "Environment",
-	Value: Environment,
-}
-
-var OriginALBTagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${AppName}-${Environment}-alb"},
-}
-
-var OriginALBLoadBalancerAttributeRoutinghttp2enabled = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "routing.http2.enabled",
-	Value: ALBAttributeRoutingHttp2,
-}
-
-var OriginALBLoadBalancerAttributeDeletionprotectionen = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "deletion_protection.enabled",
-	Value: ALBAttributeDeletionProtection,
-}
-
-var OriginALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: ALBAttributeIdleTimeOut,
-}
-
-var OriginALB = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(OriginALBLoadBalancerAttributeIdletimeouttimeoutse, OriginALBLoadBalancerAttributeDeletionprotectionen, OriginALBLoadBalancerAttributeRoutinghttp2enabled),
-	Name: Sub{String: "${AppName}-${Environment}-alb"},
-	Scheme: ALBScheme,
-	SecurityGroups: []any{ALBExternalAccessSG},
-	Subnets: []any{PublicSubnetId1, PublicSubnetId2},
-	Tags: []any{OriginALBTagName, OriginALBTagEnvironment},
-	Type_: ALBType,
 }

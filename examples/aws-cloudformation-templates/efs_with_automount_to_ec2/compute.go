@@ -18,13 +18,6 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 	UserData: Base64{Sub{String: "\"#!/bin/bash -x\\n\",\n\"export LC_CTYPE=en_US.UTF-8\\n\",\n\"export LC_ALL=en_US.UTF-8\\n\",\n\"apt-get update\\n\",\n\"apt-get install -y curl nfs-common\\n\",\n\"EC2_REGION=${AWS::Region}\\n\",\n\"DIR_TGT=/mnt/efs/\\n\",\n\"EFS_FILE_SYSTEM_ID=${EFSFileSystem}\\n\"\n\"mkdir -p $DIR_TGT\\n\",\n\"DIR_SRC=$EFS_FILE_SYSTEM_ID.efs.$EC2_REGION.amazonaws.com\\n\",\n\"mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 $DIR_SRC:/ $DIR_TGT\\n\""}},
 }
 
-var ScaleDownPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: AutoScalingGroup,
-	Cooldown: "60",
-	ScalingAdjustment: "-1",
-}
-
 var AutoScalingGroup = autoscaling.AutoScalingGroup{
 	LaunchConfigurationName: LaunchConfig,
 	LoadBalancerNames: []any{ElasticLoadBalancer},
@@ -38,4 +31,11 @@ var ScaleUpPolicy = autoscaling.ScalingPolicy{
 	AutoScalingGroupName: AutoScalingGroup,
 	Cooldown: "60",
 	ScalingAdjustment: "1",
+}
+
+var ScaleDownPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: AutoScalingGroup,
+	Cooldown: "60",
+	ScalingAdjustment: "-1",
 }

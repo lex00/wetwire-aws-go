@@ -74,11 +74,6 @@ var LoggingBucketKMSKey = kms.Key{
 	KeyPolicy: LoggingBucketKMSKeyKeyPolicy,
 }
 
-var LoggingBucketKMSKeyAlias = kms.Alias{
-	AliasName: Sub{String: "alias/${AppName}/${Environment}/s3-logging-kms"},
-	TargetKeyId: Sub{String: "${LoggingBucketKMSKey}"},
-}
-
 var AdministratorAccessIAMRoleAssumeRolePolicyDocument = PolicyDocument{
 	Statement: []any{AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
@@ -95,4 +90,9 @@ var AdministratorAccessIAMRole = iam.Role{
 	ManagedPolicyArns: []any{Sub{String: "arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess"}},
 	Path: "/",
 	RoleName: Sub{String: "AdministratorAccess-${AppName}"},
+}
+
+var LoggingBucketKMSKeyAlias = kms.Alias{
+	AliasName: Sub{String: "alias/${AppName}/${Environment}/s3-logging-kms"},
+	TargetKeyId: Sub{String: "${LoggingBucketKMSKey}"},
 }
