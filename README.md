@@ -6,7 +6,7 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 **v1.0.0 - All Core Features Complete**
 
-- All CLI commands implemented (build, validate, list, lint, init, import)
+- All CLI commands implemented (build, validate, list, lint, init, import, design, test)
 - **184 AWS services** with typed enum constants
 - 254/254 AWS sample templates import successfully (100% success rate)
 
@@ -61,14 +61,16 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 
 ## CLI Commands
 
-| Command | Status | Description |
-|---------|--------|-------------|
-| `build` | ✅ Complete | Generate CloudFormation template |
-| `validate` | ✅ Complete | Validate resources and references |
-| `list` | ✅ Complete | List discovered resources |
-| `lint` | ✅ Complete | Check for issues (16 rules, --fix support) |
-| `init` | ✅ Complete | Initialize new project |
-| `import` | ✅ Complete | Import CF template to Go code |
+| Command | Description |
+|---------|-------------|
+| `build` | Generate CloudFormation template from Go source |
+| `validate` | Validate resources and references |
+| `list` | List discovered resources |
+| `lint` | Check for issues (16 rules, --fix support) |
+| `init` | Initialize new project |
+| `import` | Import CloudFormation template to Go code |
+| `design` | AI-assisted infrastructure design (requires wetwire-core-go) |
+| `test` | Automated persona-based testing (requires wetwire-core-go) |
 
 ## Implementation Status
 
@@ -103,15 +105,19 @@ wetwire-aws/
 │   ├── list.go            # list command
 │   ├── lint.go            # lint command
 │   ├── init.go            # init command
-│   └── import.go          # import command
+│   ├── import.go          # import command
+│   ├── design.go          # design command (AI-assisted)
+│   └── test.go            # test command (persona testing)
 ├── internal/
 │   ├── discover/          # AST-based resource discovery
 │   ├── importer/          # CloudFormation template importer
 │   │   ├── ir.go          # Intermediate representation types
 │   │   ├── parser.go      # YAML/JSON template parser
 │   │   └── codegen.go     # Go code generator
+│   ├── linter/            # Lint rules (WAW001-WAW016)
 │   ├── serialize/         # JSON/YAML serialization
-│   └── template/          # Template builder with topo sort
+│   ├── template/          # Template builder with topo sort
+│   └── validation/        # cfn-lint-go integration
 ├── intrinsics/
 │   ├── intrinsics.go      # Ref, GetAtt, Sub, Join, etc.
 │   └── pseudo.go          # AWS pseudo-parameters
@@ -147,10 +153,18 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
 
+## Dependencies
+
+The `design` and `test` commands require:
+- [wetwire-core-go](https://github.com/lex00/wetwire-core-go) - AI orchestration and personas
+- [cfn-lint-go](https://github.com/lex00/cfn-lint-go) - CloudFormation template validation
+- `ANTHROPIC_API_KEY` environment variable
+
 ## Related Packages
 
-- [wetwire-agent](../wetwire-agent/) - AI agent for infrastructure design
-- [wetwire-aws (Python)](../../python/packages/wetwire-aws/) - Python implementation
+- [wetwire-core-go](https://github.com/lex00/wetwire-core-go) - AI agent orchestration
+- [cfn-lint-go](https://github.com/lex00/cfn-lint-go) - CloudFormation linter (Go port)
+- [cloudformation-schema-go](https://github.com/lex00/cloudformation-schema-go) - CF resource types
 
 ## License
 
