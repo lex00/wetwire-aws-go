@@ -1,0 +1,54 @@
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.RXL20taKM1/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.json ===
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/go.mod
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/cmd/main.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/infra.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/main.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/README.md
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/CLAUDE.md
+
+Running go mod tidy...
+go: finding module for package github.com/lex00/wetwire-aws-go/resources/serverless
+go: datetimenow imports
+	github.com/lex00/wetwire-aws-go/resources/serverless: module github.com/lex00/wetwire-aws-go@latest found (v1.0.0, replaced by ../../..), but does not contain package github.com/lex00/wetwire-aws-go/resources/serverless
+Error: go mod tidy failed: exit status 1
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+go mod tidy failed: exit status 1
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.RXL20taKM1/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml ===
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/go.mod
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/cmd/main.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/main.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/infra.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/README.md
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/CLAUDE.md
+
+Running go mod tidy...
+go: finding module for package github.com/lex00/wetwire-aws-go/resources/serverless
+go: datetimenow imports
+	github.com/lex00/wetwire-aws-go/resources/serverless: module github.com/lex00/wetwire-aws-go@latest found (v1.0.0, replaced by ../../..), but does not contain package github.com/lex00/wetwire-aws-go/resources/serverless
+Error: go mod tidy failed: exit status 1
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+go mod tidy failed: exit status 1
+

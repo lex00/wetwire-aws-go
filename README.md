@@ -4,11 +4,11 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 ## Status
 
-**v0.4.0 - All Core Features Complete**
+**v1.0.0 - All Core Features Complete**
 
 - All CLI commands implemented (build, validate, list, lint, init, import)
 - **184 AWS services** with typed enum constants
-- 254/254 AWS sample templates import successfully (100% success rate)
+- 252/254 AWS sample templates import successfully (99% success rate)
 
 See [CHANGELOG.md](CHANGELOG.md) for release details.
 
@@ -18,10 +18,10 @@ See [CHANGELOG.md](CHANGELOG.md) for release details.
 package infra
 
 import (
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/iam"
-    "github.com/lex00/wetwire/go/wetwire-aws/resources/lambda"
-    . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
+    "github.com/lex00/wetwire-aws-go/resources/iam"
+    "github.com/lex00/wetwire-aws-go/resources/lambda"
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
 // Direct type declaration - no wrappers, no registration
@@ -36,7 +36,7 @@ var ProcessorRole = iam.Role{
 // Environment extracted to flat variable
 var ProcessorEnv = lambda.Environment{
     Variables: Json{
-        "BUCKET": Ref{"DataBucket"},
+        "BUCKET": DataBucket,  // Direct resource reference
     },
 }
 
@@ -56,7 +56,7 @@ wetwire-aws build ./infra > template.json
 ## Installation
 
 ```bash
-go install github.com/lex00/wetwire/go/wetwire-aws/cmd/wetwire-aws@latest
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 ```
 
 ## CLI Commands
@@ -66,7 +66,7 @@ go install github.com/lex00/wetwire/go/wetwire-aws/cmd/wetwire-aws@latest
 | `build` | ✅ Complete | Generate CloudFormation template |
 | `validate` | ✅ Complete | Validate resources and references |
 | `list` | ✅ Complete | List discovered resources |
-| `lint` | ✅ Complete | Check for issues (6 rules, --fix support) |
+| `lint` | ✅ Complete | Check for issues (16 rules, --fix support) |
 | `init` | ✅ Complete | Initialize new project |
 | `import` | ✅ Complete | Import CF template to Go code |
 
@@ -81,7 +81,7 @@ go install github.com/lex00/wetwire/go/wetwire-aws/cmd/wetwire-aws@latest
 - **Template Builder**: Build CF template with topological ordering
 - **Cycle Detection**: Detect circular dependencies
 - **JSON/YAML Output**: Serialize to CF template format
-- **Linter**: 6 rules (WAW001-WAW006) with auto-fix support
+- **Linter**: 16 rules (WAW001-WAW016) with auto-fix support
 - **Code Generator**: Generate Go types from CloudFormation spec
 
 ### What's Missing
@@ -156,4 +156,4 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 
 ## License
 
-Apache 2.0 - See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.
+MIT - See [LICENSE](LICENSE) for details. See [NOTICE](NOTICE) for Apache 2.0 acknowledgements covering AWS contributions.

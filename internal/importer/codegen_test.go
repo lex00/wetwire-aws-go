@@ -374,6 +374,136 @@ func TestToPascalCase(t *testing.T) {
 	}
 }
 
+// TestCleanForVarName_NegativeNumbers tests that negative numbers are properly sanitized.
+// Bug: Port-1 becomes Port-1ICMP which is an invalid Go identifier.
+func TestCleanForVarName_NegativeNumbers(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"-1", "Neg1"},
+		{"22", "N22"},
+		{"443", "N443"},
+		{"-1ICMP", "Neg1ICMP"},
+		{"port-80", "PortNeg80"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := cleanForVarName(tt.input)
+			assert.Equal(t, tt.expected, result)
+			// Verify it's a valid Go identifier
+			assert.True(t, isValidGoIdentifier(result), "Result should be valid Go identifier: %s", result)
+		})
+	}
+}
+
+// TestGenerateCode_SecurityGroupWithNegativePort tests code generation for
+// security groups with negative port numbers (like -1 for all ports).
+// Bug: Generates invalid variable names like "Port-1ICMP".
+func TestGenerateCode_SecurityGroupWithNegativePort(t *testing.T) {
+	content := []byte(`
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Test SG
+      SecurityGroupIngress:
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: "0.0.0.0/0"
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "sg_test")
+	code := files["network.go"]
+
+	// Should NOT contain hyphen in variable name
+	assert.NotContains(t, code, "Port-1", "Should not have hyphen in variable name")
+	// Should have sanitized name
+	assert.Contains(t, code, "PortNeg1", "Should use Neg prefix for negative numbers")
+}
+
+// TestGenerateCode_UnknownResourceType tests that unknown resource types are handled gracefully.
+// Bug: Generates import to "resources/unknown" which doesn't exist.
+func TestGenerateCode_UnknownResourceType(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyCustomResource:
+    Type: Custom::MyResource
+    Properties:
+      Foo: bar
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "custom")
+
+	// Should NOT generate import to resources/unknown
+	for _, code := range files {
+		assert.NotContains(t, code, `resources/unknown`, "Should not import resources/unknown")
+	}
+}
+
+// TestGenerateCode_NoUnusedImports tests that intrinsics import is only added when used.
+// Bug: Intrinsics imported even when no intrinsic types are used.
+func TestGenerateCode_NoUnusedImports(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "static-bucket-name"
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "nointrinsics")
+	code := files["storage.go"]
+
+	// Should NOT have intrinsics import since no intrinsics are used
+	assert.NotContains(t, code, `wetwire-aws-go/intrinsics`, "Should not import intrinsics when not used")
+}
+
+// TestGenerateCode_MappingsNoUnusedImports tests that mappings-only files don't have unused imports.
+func TestGenerateCode_MappingsNoUnusedImports(t *testing.T) {
+	content := []byte(`
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-12345
+    us-west-2:
+      AMI: ami-67890
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "mappingsonly")
+
+	// If main.go is generated for mappings, it should not have unused intrinsics import
+	if code, ok := files["main.go"]; ok {
+		// If intrinsics is imported, there should be usage of it
+		if strings.Contains(code, `wetwire-aws-go/intrinsics`) {
+			// Verify there's actual usage (Sub, List, Param, AWS_*, etc.)
+			// Note: Ref{} and GetAtt{} should NOT be generated (style violation)
+			hasUsage := strings.Contains(code, "Sub{") ||
+				strings.Contains(code, "List(") ||
+				strings.Contains(code, "Param(") ||
+				strings.Contains(code, "AWS_")
+			assert.True(t, hasUsage, "If intrinsics is imported, it should be used")
+		}
+		// Verify we never generate explicit Ref{} or GetAtt{} (style violations)
+		assert.False(t, strings.Contains(code, `Ref{"`), "Should not generate Ref{} - use direct variable refs")
+		assert.False(t, strings.Contains(code, `GetAtt{"`), "Should not generate GetAtt{} - use Resource.Attr")
+	}
+}
+
 func TestGenerateCode_DependencyOrder(t *testing.T) {
 	content := []byte(`
 Resources:

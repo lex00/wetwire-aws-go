@@ -31,14 +31,14 @@ var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	Listeners: List(ElasticLoadBalancerListener1),
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: "22",
 	IpProtocol: "tcp",
 	ToPort: "22",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	FromPort: "80",
 	IpProtocol: "tcp",
 	SourceSecurityGroupName: ElasticLoadBalancer.SourceSecurityGroup.GroupName,
@@ -48,5 +48,5 @@ var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access and HTTP access on the inbound port",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort80, InstanceSecurityGroupSecurityGroupIngressPort22),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN80, InstanceSecurityGroupSecurityGroupIngressPortN22),
 }

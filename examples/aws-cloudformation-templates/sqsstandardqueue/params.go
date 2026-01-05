@@ -23,6 +23,9 @@ var MessageRetentionPeriod = Param("MessageRetentionPeriod")
 // ReceiveMessageWaitTimeSeconds - Specifies the duration, in seconds, that the ReceiveMessage action call waits...
 var ReceiveMessageWaitTimeSeconds = Param("ReceiveMessageWaitTimeSeconds")
 
+// UsedeadletterQueue - A dead-letter queue is a queue that other (source) queues can target for mess...
+var UsedeadletterQueue = Param("UsedeadletterQueue")
+
 // VisibilityTimeout - Time in seconds. This should be longer than the time it would take to process...
 var VisibilityTimeout = Param("VisibilityTimeout")
 

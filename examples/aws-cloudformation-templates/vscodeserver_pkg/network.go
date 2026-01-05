@@ -89,7 +89,7 @@ var InstanceSecurityGroupTagName = Tag{
 	Value: "vscode-server-isg",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort8080 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN8080 = ec2.SecurityGroup_Ingress{
 	Description: "Allow HTTP from com.amazonaws.global.cloudfront.origin-facing",
 	FromPort: 8080,
 	IpProtocol: "tcp",
@@ -106,7 +106,7 @@ var InstanceSecurityGroupSecurityGroupEgress1 = ec2.SecurityGroup_Egress{
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "vscode-server-isg",
 	SecurityGroupEgress: List(InstanceSecurityGroupSecurityGroupEgress1),
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort8080),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN8080),
 	Tags: []any{InstanceSecurityGroupTagName},
 	VpcId: NetworkVPC,
 }

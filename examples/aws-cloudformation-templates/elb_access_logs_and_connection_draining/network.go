@@ -10,14 +10,14 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancing"
 )
 
-var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "80",
 	IpProtocol: "tcp",
 	ToPort: "80",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: "22",
 	IpProtocol: "tcp",
@@ -26,7 +26,7 @@ var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access and HTTP access on the configured port",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort22, InstanceSecurityGroupSecurityGroupIngressPort80),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
 }
 
 var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{

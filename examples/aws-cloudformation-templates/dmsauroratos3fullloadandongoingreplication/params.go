@@ -11,6 +11,12 @@ import (
 // ClientIP - The IP address range that can be used to connect to the RDS instances from yo...
 var ClientIP = Param("ClientIP")
 
+// ExistsDMSCloudwatchRole - If the dms-cloudwatch-logs-role exists in your account, please enter Y, else ...
+var ExistsDMSCloudwatchRole = Param("ExistsDMSCloudwatchRole")
+
+// ExistsDMSVPCRole - If the dms-vpc-role exists in your account, please enter Y, else enter N
+var ExistsDMSVPCRole = Param("ExistsDMSVPCRole")
+
 // SnapshotIdentifier - The ARN of the Aurora DB Cluster Snapshot used to populate the Aurora DB Clus...
 var SnapshotIdentifier = Param("SnapshotIdentifier")
 

@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// Applications - Please select which application will be installed on the cluster this would b...
+var Applications = Param("Applications")
+
 // CoreInstanceType - Instance type to be used for core instances.
 var CoreInstanceType = Param("CoreInstanceType")
 

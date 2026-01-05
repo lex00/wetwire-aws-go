@@ -23,4 +23,7 @@ var PortfolioDisplayName = Param("PortfolioDisplayName")
 // PortfolioProviderName - Please specify the Portfolio Provider Name.
 var PortfolioProviderName = Param("PortfolioProviderName")
 
+// ShareThisPortfolio - Please specify if this Portfolio will be Shared with additonal accounts?
+var ShareThisPortfolio = Param("ShareThisPortfolio")
+
 var ConditionShareThisPortfolioCondition = Equals{ShareThisPortfolio, "true"}

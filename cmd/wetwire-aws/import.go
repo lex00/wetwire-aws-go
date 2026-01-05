@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -92,6 +93,18 @@ Examples:
 				}
 
 				fmt.Printf("Generated: %s\n", outPath)
+			}
+
+			// Run go mod tidy if scaffold files were generated
+			if !noScaffold && !singleFile {
+				fmt.Println("\nRunning go mod tidy...")
+				tidyCmd := exec.Command("go", "mod", "tidy")
+				tidyCmd.Dir = outputDir
+				tidyCmd.Stdout = os.Stdout
+				tidyCmd.Stderr = os.Stderr
+				if err := tidyCmd.Run(); err != nil {
+					return fmt.Errorf("go mod tidy failed: %w", err)
+				}
 			}
 
 			// Print summary

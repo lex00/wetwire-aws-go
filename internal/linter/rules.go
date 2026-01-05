@@ -17,6 +17,8 @@
 //	WAW010: Flatten inline typed struct literals to named var declarations
 //	WAW011: Validate enum property values against allowed values
 //	WAW012: Use typed enum constants instead of raw strings
+//	WAW015: Avoid explicit Ref{} - use direct variable references or Param()
+//	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
 package linter
 
 import (
@@ -1373,6 +1375,319 @@ func (r PreferEnumConstant) Check(file *ast.File, fset *token.FileSet) []Issue {
 	return issues
 }
 
+// UndefinedReference detects identifiers that look like resource/parameter
+// references but might not be defined (useful for catching import codegen issues).
+//
+// This is a heuristic check - it flags PascalCase identifiers used in
+// field values that aren't common patterns like intrinsics or type names.
+type UndefinedReference struct{}
+
+func (r UndefinedReference) ID() string { return "WAW013" }
+func (r UndefinedReference) Description() string {
+	return "Potential undefined reference (resource or parameter)"
+}
+
+// knownIdentifiers are common identifiers that shouldn't be flagged
+var knownIdentifiers = map[string]bool{
+	"true": true, "false": true, "nil": true,
+	// Intrinsics from dot import
+	"Sub": true, "Ref": true, "GetAtt": true, "Join": true, "Select": true,
+	"If": true, "Equals": true, "And": true, "Or": true, "Not": true,
+	"Base64": true, "Split": true, "FindInMap": true, "Cidr": true,
+	"GetAZs": true, "ImportValue": true, "Condition": true, "Transform": true,
+	// Pseudo-parameters
+	"AWS_REGION": true, "AWS_ACCOUNT_ID": true, "AWS_STACK_NAME": true,
+	"AWS_STACK_ID": true, "AWS_PARTITION": true, "AWS_URL_SUFFIX": true,
+	"AWS_NO_VALUE": true, "AWS_NOTIFICATION_ARNS": true,
+	// Helper functions
+	"List": true, "Param": true, "Output": true,
+	// Policy types
+	"PolicyDocument": true, "PolicyStatement": true, "DenyStatement": true,
+	"ServicePrincipal": true, "AWSPrincipal": true, "AllPrincipal": true,
+	"FederatedPrincipal": true, "Json": true, "Any": true, "Tag": true,
+}
+
+func (r UndefinedReference) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	// Collect all defined identifiers in this file
+	defined := make(map[string]bool)
+	for _, decl := range file.Decls {
+		if genDecl, ok := decl.(*ast.GenDecl); ok && genDecl.Tok == token.VAR {
+			for _, spec := range genDecl.Specs {
+				if valueSpec, ok := spec.(*ast.ValueSpec); ok {
+					for _, name := range valueSpec.Names {
+						defined[name.Name] = true
+					}
+				}
+			}
+		}
+	}
+
+	// Check for undefined references in field values
+	ast.Inspect(file, func(n ast.Node) bool {
+		kv, ok := n.(*ast.KeyValueExpr)
+		if !ok {
+			return true
+		}
+
+		// Check if value is a bare identifier
+		ident, ok := kv.Value.(*ast.Ident)
+		if !ok {
+			return true
+		}
+
+		name := ident.Name
+
+		// Skip known identifiers
+		if knownIdentifiers[name] {
+			return true
+		}
+
+		// Skip if defined in this file
+		if defined[name] {
+			return true
+		}
+
+		// Flag PascalCase identifiers that look like resource/param references
+		if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
+			pos := fset.Position(ident.Pos())
+			issues = append(issues, Issue{
+				RuleID:     r.ID(),
+				Message:    fmt.Sprintf("Potentially undefined reference: %s (check if resource/parameter is defined)", name),
+				Suggestion: "// Ensure " + name + " is defined or imported",
+				File:       pos.Filename,
+				Line:       pos.Line,
+				Column:     pos.Column,
+				Severity:   "warning",
+			})
+		}
+
+		return true
+	})
+
+	return issues
+}
+
+// UnusedIntrinsicsImport detects when the intrinsics package is imported
+// but no intrinsic types are used in the file.
+type UnusedIntrinsicsImport struct{}
+
+func (r UnusedIntrinsicsImport) ID() string { return "WAW014" }
+func (r UnusedIntrinsicsImport) Description() string {
+	return "Intrinsics package imported but not used"
+}
+
+// intrinsicTypeNames are types from the intrinsics package
+var intrinsicTypeNames = map[string]bool{
+	"Sub": true, "SubWithMap": true, "Ref": true, "GetAtt": true,
+	"Join": true, "Select": true, "If": true, "Equals": true,
+	"And": true, "Or": true, "Not": true, "Base64": true,
+	"Split": true, "FindInMap": true, "Cidr": true, "GetAZs": true,
+	"ImportValue": true, "Condition": true, "Transform": true,
+	"List": true, "Param": true, "Output": true,
+	"PolicyDocument": true, "PolicyStatement": true, "DenyStatement": true,
+	"ServicePrincipal": true, "AWSPrincipal": true, "AllPrincipal": true,
+	"FederatedPrincipal": true, "Json": true, "Any": true, "Tag": true,
+	// Pseudo-parameters (these are actually constants, not types)
+	"AWS_REGION": true, "AWS_ACCOUNT_ID": true, "AWS_STACK_NAME": true,
+	"AWS_STACK_ID": true, "AWS_PARTITION": true, "AWS_URL_SUFFIX": true,
+	"AWS_NO_VALUE": true, "AWS_NOTIFICATION_ARNS": true,
+}
+
+func (r UnusedIntrinsicsImport) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	// Check if intrinsics is imported as dot import
+	var intrinsicsImport *ast.ImportSpec
+	for _, imp := range file.Imports {
+		if imp.Path != nil && strings.Contains(imp.Path.Value, "intrinsics") {
+			if imp.Name != nil && imp.Name.Name == "." {
+				intrinsicsImport = imp
+				break
+			}
+		}
+	}
+
+	if intrinsicsImport == nil {
+		return issues // No dot import of intrinsics
+	}
+
+	// Check if any intrinsic types are used
+	intrinsicsUsed := false
+	ast.Inspect(file, func(n ast.Node) bool {
+		if intrinsicsUsed {
+			return false // Already found usage, stop searching
+		}
+
+		switch node := n.(type) {
+		case *ast.Ident:
+			if intrinsicTypeNames[node.Name] {
+				intrinsicsUsed = true
+				return false
+			}
+		case *ast.CompositeLit:
+			// Check for struct literal type like Sub{...}
+			if ident, ok := node.Type.(*ast.Ident); ok {
+				if intrinsicTypeNames[ident.Name] {
+					intrinsicsUsed = true
+					return false
+				}
+			}
+		}
+		return true
+	})
+
+	if !intrinsicsUsed {
+		pos := fset.Position(intrinsicsImport.Pos())
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    "Intrinsics package imported but no intrinsic types used",
+			Suggestion: "// Remove unused import or use intrinsic types",
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "error",
+		})
+	}
+
+	return issues
+}
+
+// AvoidExplicitRef detects explicit Ref{} struct literals.
+// Prefer direct variable references for resources or Param() for parameters.
+//
+// Example:
+//
+//	// Bad - explicit Ref{}
+//	Bucket: Ref{"MyBucket"},
+//	VpcId: Ref{"VpcIdParam"},
+//
+//	// Good - direct reference for resources
+//	Bucket: MyBucket,
+//
+//	// Good - Param() helper for parameters
+//	VpcId: VpcIdParam,  // where VpcIdParam = Param("VpcIdParam")
+type AvoidExplicitRef struct{}
+
+func (r AvoidExplicitRef) ID() string { return "WAW015" }
+func (r AvoidExplicitRef) Description() string {
+	return "Avoid explicit Ref{} - use direct variable references or Param()"
+}
+
+func (r AvoidExplicitRef) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		comp, ok := n.(*ast.CompositeLit)
+		if !ok {
+			return true
+		}
+
+		// Check if this is a Ref{...} struct literal
+		ident, ok := comp.Type.(*ast.Ident)
+		if !ok || ident.Name != "Ref" {
+			return true
+		}
+
+		// Get the reference name if available
+		refName := ""
+		if len(comp.Elts) > 0 {
+			if lit, ok := comp.Elts[0].(*ast.BasicLit); ok {
+				refName = strings.Trim(lit.Value, `"`)
+			}
+		}
+
+		pos := fset.Position(comp.Pos())
+		msg := "Avoid Ref{} - use direct variable reference or Param() helper"
+		suggestion := "Use direct variable reference for resources, Param() for parameters"
+		if refName != "" {
+			suggestion = fmt.Sprintf("For resources: use %s directly. For parameters: var %s = Param(\"%s\")", refName, refName, refName)
+		}
+
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    msg,
+			Suggestion: suggestion,
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "warning",
+		})
+
+		return true
+	})
+
+	return issues
+}
+
+// AvoidExplicitGetAtt detects explicit GetAtt{} struct literals.
+// Prefer resource.Attr field access for GetAtt functionality.
+//
+// Example:
+//
+//	// Bad - explicit GetAtt{}
+//	Role: GetAtt{"MyRole", "Arn"},
+//
+//	// Good - field access
+//	Role: MyRole.Arn,
+type AvoidExplicitGetAtt struct{}
+
+func (r AvoidExplicitGetAtt) ID() string { return "WAW016" }
+func (r AvoidExplicitGetAtt) Description() string {
+	return "Avoid explicit GetAtt{} - use resource.Attr field access"
+}
+
+func (r AvoidExplicitGetAtt) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		comp, ok := n.(*ast.CompositeLit)
+		if !ok {
+			return true
+		}
+
+		// Check if this is a GetAtt{...} struct literal
+		ident, ok := comp.Type.(*ast.Ident)
+		if !ok || ident.Name != "GetAtt" {
+			return true
+		}
+
+		// Get the resource and attribute names if available
+		resourceName := ""
+		attrName := ""
+		if len(comp.Elts) >= 2 {
+			if lit, ok := comp.Elts[0].(*ast.BasicLit); ok {
+				resourceName = strings.Trim(lit.Value, `"`)
+			}
+			if lit, ok := comp.Elts[1].(*ast.BasicLit); ok {
+				attrName = strings.Trim(lit.Value, `"`)
+			}
+		}
+
+		pos := fset.Position(comp.Pos())
+		msg := "Avoid GetAtt{} - use resource.Attr field access"
+		suggestion := "Use Resource.Attr field access instead"
+		if resourceName != "" && attrName != "" {
+			suggestion = fmt.Sprintf("Use %s.%s instead", resourceName, attrName)
+		}
+
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    msg,
+			Suggestion: suggestion,
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "warning",
+		})
+
+		return true
+	})
+
+	return issues
+}
+
 // AllRules returns all available lint rules.
 func AllRules() []Rule {
 	return []Rule{
@@ -1388,5 +1703,9 @@ func AllRules() []Rule {
 		InlineTypedStruct{},
 		InvalidEnumValue{},
 		PreferEnumConstant{},
+		UndefinedReference{},
+		UnusedIntrinsicsImport{},
+		AvoidExplicitRef{},
+		AvoidExplicitGetAtt{},
 	}
 }

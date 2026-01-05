@@ -8,6 +8,12 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// CreateVPCFlowLogsToCloudWatch - Create VPC flow logs for the VPC and publish them to CloudWatch
+var CreateVPCFlowLogsToCloudWatch = Param("CreateVPCFlowLogsToCloudWatch")
+
+// CreateVPCFlowLogsToS3 - Create VPC flow logs for the VPC and publish them to S3
+var CreateVPCFlowLogsToS3 = Param("CreateVPCFlowLogsToS3")
+
 // S3AccessLogsBucketName - (Optional) S3 Server Access Logs bucket name for where Amazon S3 should store...
 var S3AccessLogsBucketName = Param("S3AccessLogsBucketName")
 

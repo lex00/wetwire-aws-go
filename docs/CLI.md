@@ -9,6 +9,11 @@ The `wetwire-aws` command provides tools for generating and validating CloudForm
 | `wetwire-aws build` | Generate CloudFormation template from Go source |
 | `wetwire-aws lint` | Lint code for issues |
 | `wetwire-aws init` | Initialize a new project |
+| `wetwire-aws import` | Import CloudFormation template to Go code |
+| `wetwire-aws design` | AI-assisted infrastructure design |
+| `wetwire-aws test` | Run automated persona-based testing |
+| `wetwire-aws validate` | Validate resources and references |
+| `wetwire-aws list` | List discovered resources |
 
 ```bash
 wetwire-aws --help     # Show help
@@ -146,7 +151,7 @@ import (
     "fmt"
     "myapp/infra"
 
-    "github.com/lex00/wetwire/go/wetwire-aws/internal/template"
+    "github.com/lex00/wetwire-aws-go/internal/template"
 )
 
 func main() {
@@ -161,7 +166,7 @@ func main() {
 ```go
 package infra
 
-import "github.com/lex00/wetwire/go/wetwire-aws/resources/s3"
+import "github.com/lex00/wetwire-aws-go/resources/s3"
 
 var DataBucket = s3.Bucket{
     BucketName: "my-data-bucket",
@@ -208,27 +213,28 @@ aws cloudformation deploy \
 
 ## Intrinsic Functions
 
-All CloudFormation intrinsic functions are supported:
+All CloudFormation intrinsic functions are supported. **Prefer direct references over explicit intrinsics:**
 
-| Function | Go API |
-|----------|--------|
-| Ref | `Ref{"MyResource"}` |
-| GetAtt | `GetAtt{"MyResource", "Arn"}` |
-| Sub | `Sub{String: "${AWS::StackName}-bucket"}` |
-| SubWithMap | `SubWithMap{String: "...", Variables: Json{...}}` |
-| Join | `Join{Delimiter: ",", Values: []any{"a", "b"}}` |
-| If | `If{Condition: "IsProd", IfTrue: val1, IfFalse: val2}` |
-| Equals | `Equals{Left: value1, Right: value2}` |
-| And/Or/Not | `And{Conditions: []any{...}}`, `Or{...}`, `Not{...}` |
-| FindInMap | `FindInMap{MapName: "...", TopKey: "...", SecondKey: "..."}` |
-| Select | `Select{Index: 0, List: GetAZs{}}` |
-| Split | `Split{Delimiter: ",", String: "a,b,c"}` |
-| Base64 | `Base64{Value: "Hello"}` |
-| Cidr | `Cidr{IpBlock: "10.0.0.0/16", Count: 256, CidrBits: 8}` |
-| GetAZs | `GetAZs{Region: "us-east-1"}` or `GetAZs{}` |
-| ImportValue | `ImportValue{Name: "ExportedValue"}` |
+| Function | Preferred Style | Alternative |
+|----------|-----------------|-------------|
+| Ref (resource) | `MyBucket` | Direct variable reference |
+| Ref (parameter) | `Param("VpcId")` | Helper function |
+| GetAtt | `MyBucket.Arn` | Field access on resource |
+| Sub | `Sub{String: "${AWS::StackName}-bucket"}` | - |
+| SubWithMap | `SubWithMap{String: "...", Variables: Json{...}}` | - |
+| Join | `Join{Delimiter: ",", Values: []any{"a", "b"}}` | - |
+| If | `If{Condition: "IsProd", IfTrue: val1, IfFalse: val2}` | - |
+| Equals | `Equals{Value1: x, Value2: y}` | - |
+| And/Or/Not | `And{Conditions: []any{...}}` | - |
+| FindInMap | `FindInMap{MapName: "...", TopKey: "...", SecondKey: "..."}` | - |
+| Select | `Select{Index: 0, List: GetAZs{}}` | - |
+| Split | `Split{Delimiter: ",", Source: "a,b,c"}` | - |
+| Base64 | `Base64{Value: "Hello"}` | - |
+| Cidr | `Cidr{IPBlock: "10.0.0.0/16", Count: 256, CidrBits: 8}` | - |
+| GetAZs | `GetAZs{}` or `GetAZs{Region: "us-east-1"}` | - |
+| ImportValue | `ImportValue{ExportName: "Value"}` | - |
 
-**Note:** Use dot import for cleaner syntax: `import . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"`
+**Note:** Use dot import for cleaner syntax: `import . "github.com/lex00/wetwire-aws-go/intrinsics"`
 
 ---
 
@@ -237,7 +243,7 @@ All CloudFormation intrinsic functions are supported:
 Built-in CloudFormation pseudo-parameters:
 
 ```go
-import "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+import "github.com/lex00/wetwire-aws-go/intrinsics"
 
 // Available pseudo-parameters
 intrinsics.AWS_REGION        // {"Ref": "AWS::Region"}
@@ -251,12 +257,117 @@ intrinsics.AWS_NO_VALUE      // {"Ref": "AWS::NoValue"}
 
 Usage:
 ```go
-import . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
 
 var MyBucket = s3.Bucket{
     BucketName: Sub{String: "${AWS::StackName}-data"},
 }
 ```
+
+---
+
+## design
+
+AI-assisted infrastructure design. Starts an interactive session to generate infrastructure code.
+
+```bash
+# Start design session with a prompt
+wetwire-aws design "Create a serverless API with Lambda and API Gateway"
+
+# Specify output directory
+wetwire-aws design -o ./myproject "Create an S3 bucket with encryption"
+```
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `prompt` | Natural language description of infrastructure |
+| `-o, --output` | Output directory (default: current dir) |
+| `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
+| `-s, --stream` | Stream AI responses (default: true) |
+
+### Workflow
+
+1. AI asks clarifying questions about requirements
+2. Generates Go code using wetwire-aws patterns
+3. Runs linter and auto-fixes issues
+4. Builds CloudFormation template
+5. Validates with cfn-lint-go
+
+---
+
+## test
+
+Run automated persona-based testing to evaluate code generation quality.
+
+```bash
+# Run with default persona
+wetwire-aws test "Create an S3 bucket with versioning"
+
+# Use a specific persona
+wetwire-aws test --persona beginner "Create a Lambda function"
+
+# Track test scenario
+wetwire-aws test --scenario "s3-encryption" "Create encrypted bucket"
+```
+
+### Personas
+
+| Persona | Description |
+|---------|-------------|
+| `beginner` | New to AWS, asks many clarifying questions |
+| `intermediate` | Familiar with AWS basics (default) |
+| `expert` | Deep AWS knowledge, asks advanced questions |
+| `terse` | Gives minimal responses |
+| `verbose` | Provides detailed context |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `prompt` | Infrastructure description to test |
+| `-p, --persona` | Persona to use (default: intermediate) |
+| `-S, --scenario` | Scenario name for tracking |
+| `-o, --output` | Output directory |
+| `-l, --max-lint-cycles` | Maximum lint/fix cycles (default: 3) |
+
+---
+
+## validate
+
+Validate resources and check dependencies.
+
+```bash
+wetwire-aws validate ./infra/...
+wetwire-aws validate ./infra/... --format json
+```
+
+### Checks Performed
+
+- **Reference validity**: All resource references point to defined resources
+- **Dependency graph**: Validates resource dependencies exist
+
+---
+
+## list
+
+List discovered resources in a package.
+
+```bash
+wetwire-aws list ./infra/...
+```
+
+---
+
+## CloudFormation Validation
+
+The `design` and `test` commands automatically validate generated templates using **cfn-lint-go**, which checks for:
+
+- Valid resource types and properties
+- Correct intrinsic function usage
+- Best practices and security recommendations
+- AWS CloudFormation specification compliance
 
 ---
 

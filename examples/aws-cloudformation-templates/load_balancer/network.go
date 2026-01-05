@@ -11,7 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancingv2"
 )
 
-var LoadBalancerSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
+var LoadBalancerSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	Description: "Allow from anyone on port 443",
 	FromPort: 443,
@@ -21,7 +21,7 @@ var LoadBalancerSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ing
 
 var LoadBalancerSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Automatically created Security Group for ELB",
-	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPort443),
+	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPortN443),
 	VpcId: VPCId,
 }
 

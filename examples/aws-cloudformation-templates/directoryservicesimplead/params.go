@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// CreateAlias - Only required for applications which need a URL to connect to the directory
+var CreateAlias = Param("CreateAlias")
+
 // DomainName - FQDN of the domain for this directory
 var DomainName = Param("DomainName")
 

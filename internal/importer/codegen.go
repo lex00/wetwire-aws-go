@@ -300,12 +300,15 @@ func GenerateTemplateFiles(packageName string, modulePath string) map[string]str
 	}
 	files["go.mod"] = fmt.Sprintf(`module %s
 
-go 1.22
+go 1.23.0
 
-require github.com/lex00/wetwire-aws-go v0.1.0
+require (
+	github.com/lex00/cloudformation-schema-go v1.0.0
+	github.com/lex00/wetwire-aws-go v1.0.0
+)
 
-// For local development, uncomment and adjust the path:
-// replace github.com/lex00/wetwire-aws-go => ../path/to/wetwire-aws
+// For local development:
+replace github.com/lex00/wetwire-aws-go => ../../..
 `, modulePath)
 
 	// cmd/main.go - Entry point placeholder
@@ -511,6 +514,10 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 		categoryImports[category] = imports
 	}
 
+	// Pre-scan conditions for parameter references before generating params
+	// This ensures parameters used in conditions are included
+	prescanConditionsForParams(ctx)
+
 	// Generate params.go if there are used parameters or conditions
 	paramsCode, paramsImports := generateParams(ctx)
 	conditionsCode := generateConditions(ctx)
@@ -569,8 +576,12 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 	// If there are only mappings and no main resources, still generate main.go
 	if _, hasMain := categoryCode["main"]; !hasMain {
 		if mappingsCode := generateMappings(ctx); mappingsCode != "" {
+			// Only add intrinsics import if mappings actually use intrinsics
+			// (ctx.imports was populated during generateMappings)
 			imports := make(map[string]bool)
-			imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+			if ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] {
+				imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+			}
 			files["main.go"] = buildFile(ctx.packageName, "Mappings", imports, mappingsCode)
 		}
 	}
@@ -631,7 +642,6 @@ func generateParams(ctx *codegenContext) (string, map[string]bool) {
 // generateOutputs generates output declarations and returns code + imports.
 func generateOutputs(ctx *codegenContext) (string, map[string]bool) {
 	imports := make(map[string]bool)
-	imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 
 	var sections []string
 	for _, logicalID := range sortedKeys(ctx.template.Outputs) {
@@ -642,6 +652,9 @@ func generateOutputs(ctx *codegenContext) (string, map[string]bool) {
 	if len(sections) == 0 {
 		return "", nil
 	}
+
+	// Output type requires intrinsics import
+	imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 
 	return strings.Join(sections, "\n\n"), imports
 }
@@ -669,6 +682,38 @@ func generateResourcesByIDs(ctx *codegenContext, resourceIDs []string) (string, 
 	ctx.imports = savedImports
 
 	return strings.Join(sections, "\n\n"), categoryImports
+}
+
+// prescanConditionsForParams scans all condition expressions for parameter references
+// and marks them as used. This must be called before generateParams to ensure
+// parameters used only in conditions are included.
+func prescanConditionsForParams(ctx *codegenContext) {
+	for _, condition := range ctx.template.Conditions {
+		scanExprForParams(ctx, condition.Expression)
+	}
+}
+
+// scanExprForParams recursively scans an expression for parameter references.
+func scanExprForParams(ctx *codegenContext, expr any) {
+	switch v := expr.(type) {
+	case *IRIntrinsic:
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if _, ok := ctx.template.Parameters[target]; ok {
+				ctx.usedParameters[target] = true
+			}
+		}
+		// Recurse into intrinsic args
+		scanExprForParams(ctx, v.Args)
+	case []any:
+		for _, elem := range v {
+			scanExprForParams(ctx, elem)
+		}
+	case map[string]any:
+		for _, val := range v {
+			scanExprForParams(ctx, val)
+		}
+	}
 }
 
 // generateConditions generates condition declarations.
@@ -784,9 +829,8 @@ func generateResource(ctx *codegenContext, resource *IRResource) string {
 	// Resolve resource type to Go module and type
 	module, typeName := resolveResourceType(resource.ResourceType)
 	if module == "" {
-		lines = append(lines, fmt.Sprintf("// Unknown resource type: %s", resource.ResourceType))
-		module = "unknown"
-		typeName = "Resource"
+		// Skip unknown resource types entirely - don't generate broken code
+		return fmt.Sprintf("// Skipped unknown resource type: %s (%s)", resource.LogicalID, resource.ResourceType)
 	}
 
 	// Add import
@@ -1207,7 +1251,8 @@ func arrayToBlockStyle(ctx *codegenContext, arr []any, elemTypeName string, pare
 		return fmt.Sprintf("[]%s.%s{}", ctx.currentResource, elemTypeName)
 	}
 
-	// Use List() helper for cleaner syntax
+	// Use List() helper for cleaner syntax (requires intrinsics import)
+	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 	return fmt.Sprintf("List(%s)", strings.Join(varNames, ", "))
 }
 
@@ -1229,9 +1274,9 @@ func generateArrayElementVarName(ctx *codegenContext, parentVarName string, prop
 	// For security group rules, use port info
 	if suffix == "" {
 		if fromPort, ok := props["FromPort"]; ok {
-			suffix = fmt.Sprintf("Port%v", fromPort)
+			suffix = fmt.Sprintf("Port%s", cleanForVarName(fmt.Sprintf("%v", fromPort)))
 			if proto, ok := props["IpProtocol"].(string); ok && proto != "tcp" {
-				suffix += strings.ToUpper(proto)
+				suffix += strings.ToUpper(cleanForVarName(proto))
 			}
 		}
 	}
@@ -1698,7 +1743,8 @@ func mapToIntrinsic(m map[string]any) *IRIntrinsic {
 //	Sub("template") instead of intrinsics.Sub{String: "template"}
 //	Select(0, GetAZs()) instead of intrinsics.Select{Index: 0, List: intrinsics.GetAZs{}}
 func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
-	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+	// Note: We only add intrinsics import when we actually emit an intrinsic type.
+	// Ref/GetAtt to known resources/parameters use bare identifiers, no import needed.
 
 	switch intrinsic.Type {
 	case IntrinsicRef:
@@ -1716,8 +1762,9 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 			ctx.usedParameters[target] = true
 			return target
 		}
-		// Unknown reference - use inline Ref
-		return fmt.Sprintf("Ref{%q}", target)
+		// Unknown reference - use bare variable name (let Go compiler catch undefined)
+		// This avoids generating Ref{} which violates style guidelines
+		return target
 
 	case IntrinsicGetAtt:
 		var logicalID, attr string
@@ -1733,13 +1780,13 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				attr = fmt.Sprintf("%v", args[1])
 			}
 		}
-		// Check if it's a known resource - use attribute access
-		if _, ok := ctx.template.Resources[logicalID]; ok {
-			return fmt.Sprintf("%s.%s", logicalID, attr)
-		}
-		return fmt.Sprintf("intrinsics.GetAtt(%q, %q)", logicalID, attr)
+		// Use attribute access pattern - Resource.Attr
+		// Even for unknown resources, use this pattern (cross-file references)
+		// This avoids generating GetAtt{} which violates style guidelines
+		return fmt.Sprintf("%s.%s", logicalID, attr)
 
 	case IntrinsicSub:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		switch args := intrinsic.Args.(type) {
 		case string:
 			return fmt.Sprintf("Sub{String: %q}", args)
@@ -1756,6 +1803,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return `Sub{String: ""}`
 
 	case IntrinsicJoin:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			delimiter := valueToGo(ctx, args[0], 0)
 			values := valueToGo(ctx, args[1], 0)
@@ -1764,6 +1812,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return `Join{"", nil}`
 
 	case IntrinsicSelect:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			index := valueToGo(ctx, args[0], 0)
 			list := valueToGo(ctx, args[1], 0)
@@ -1772,6 +1821,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return "Select{0, nil}"
 
 	case IntrinsicGetAZs:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		region := fmt.Sprintf("%v", intrinsic.Args)
 		if region == "" || region == "<nil>" {
 			return "GetAZs{}"
@@ -1779,6 +1829,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return fmt.Sprintf("GetAZs{%q}", region)
 
 	case IntrinsicIf:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 3 {
 			condName := fmt.Sprintf("%v", args[0])
 			trueVal := valueToGo(ctx, args[1], 0)
@@ -1788,6 +1839,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return `If{"", nil, nil}`
 
 	case IntrinsicEquals:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			val1 := valueToGo(ctx, args[0], 0)
 			val2 := valueToGo(ctx, args[1], 0)
@@ -1796,6 +1848,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return "Equals{nil, nil}"
 
 	case IntrinsicAnd:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok {
 			values := valueToGo(ctx, args, 0)
 			return fmt.Sprintf("And{%s}", values)
@@ -1803,6 +1856,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return "And{nil}"
 
 	case IntrinsicOr:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok {
 			values := valueToGo(ctx, args, 0)
 			return fmt.Sprintf("Or{%s}", values)
@@ -1810,14 +1864,17 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return "Or{nil}"
 
 	case IntrinsicNot:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		condition := valueToGo(ctx, intrinsic.Args, 0)
 		return fmt.Sprintf("Not{%s}", condition)
 
 	case IntrinsicCondition:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		condName := fmt.Sprintf("%v", intrinsic.Args)
 		return fmt.Sprintf("Condition{%q}", condName)
 
 	case IntrinsicFindInMap:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 3 {
 			mapName := fmt.Sprintf("%v", args[0])
 			topKey := valueToGo(ctx, args[1], 0)
@@ -1827,10 +1884,12 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return `FindInMap{"", nil, nil}`
 
 	case IntrinsicBase64:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		value := valueToGo(ctx, intrinsic.Args, 0)
 		return fmt.Sprintf("Base64{%s}", value)
 
 	case IntrinsicCidr:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 3 {
 			ipBlock := valueToGo(ctx, args[0], 0)
 			count := valueToGo(ctx, args[1], 0)
@@ -1840,10 +1899,12 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return "Cidr{nil, nil, nil}"
 
 	case IntrinsicImportValue:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		value := valueToGo(ctx, intrinsic.Args, 0)
 		return fmt.Sprintf("ImportValue{%s}", value)
 
 	case IntrinsicSplit:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			delimiter := valueToGo(ctx, args[0], 0)
 			source := valueToGo(ctx, args[1], 0)
@@ -1852,6 +1913,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		return `Split{"", nil}`
 
 	case IntrinsicTransform:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		value := valueToGo(ctx, intrinsic.Args, 0)
 		return fmt.Sprintf("Transform{%s}", value)
 	}
@@ -1881,7 +1943,9 @@ func pseudoParameterToGo(ctx *codegenContext, name string) string {
 	case "AWS::NotificationARNs":
 		return "AWS_NOTIFICATION_ARNS"
 	default:
-		return fmt.Sprintf("Ref{%q}", name)
+		// Unknown pseudo-parameter - use bare name (likely a parameter or resource)
+		// This avoids generating Ref{} which violates style guidelines
+		return name
 	}
 }
 

@@ -8,11 +8,8 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-// CreateDirectoryAlias - Create an alias for the directory. The alias is used to construct the access ...
-var CreateDirectoryAlias = Param("CreateDirectoryAlias")
-
-// DirectoryAlias - (Optional) Specifies an alias to be assigned to the directory, such as http:/...
-var DirectoryAlias = Param("DirectoryAlias")
+// CreateDirectoryConsoleDelegatedAccessRoles - Create sample IAM ROLES that can be used to delegate users/groups access to c...
+var CreateDirectoryConsoleDelegatedAccessRoles = Param("CreateDirectoryConsoleDelegatedAccessRoles")
 
 // DirectoryID - Directory ID that will have settings updated
 var DirectoryID = Param("DirectoryID")
@@ -22,9 +19,6 @@ var DirectoryMonitoringEmail = Param("DirectoryMonitoringEmail")
 
 // DirectoryMonitoringSNSTopicKMSKey - (Optional) KMS Key ID to use for encrypting the directory monitoring SNS topi...
 var DirectoryMonitoringSNSTopicKMSKey = Param("DirectoryMonitoringSNSTopicKMSKey")
-
-// EnableDirectorySSO - Enable single sign-on for a directory. Single sign-on allows users in your di...
-var EnableDirectorySSO = Param("EnableDirectorySSO")
 
 // LambdaFunctionName - Lambda Function Name for Custom Resource
 var LambdaFunctionName = Param("LambdaFunctionName")

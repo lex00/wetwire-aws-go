@@ -39,6 +39,13 @@ var LaunchTemplate = ec2.LaunchTemplate{
 	LaunchTemplateName: Sub{String: "${AWS::StackName}-LaunchTemplate"},
 }
 
+var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: WebServerGroup,
+	Cooldown: "60",
+	ScalingAdjustment: -1,
+}
+
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
 	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
 	TopicARN: NotificationTopic,
@@ -65,11 +72,4 @@ var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
 	AutoScalingGroupName: WebServerGroup,
 	Cooldown: "60",
 	ScalingAdjustment: 1,
-}
-
-var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: WebServerGroup,
-	Cooldown: "60",
-	ScalingAdjustment: -1,
 }

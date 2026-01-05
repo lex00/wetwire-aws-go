@@ -23,6 +23,9 @@ var DBUser = Param("DBUser")
 // EC2SecurityGroup - The EC2 security group that contains instances that need access to the database
 var EC2SecurityGroup = Param("EC2SecurityGroup")
 
+// EnableReadReplica - Enable the ReadReplica
+var EnableReadReplica = Param("EnableReadReplica")
+
 // MultiAZ - Multi-AZ master database
 var MultiAZ = Param("MultiAZ")
 

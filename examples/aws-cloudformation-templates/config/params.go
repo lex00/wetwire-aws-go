@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// DeliveryChannelExists - Do you have an exisiting AWS Config delivery channel?
+var DeliveryChannelExists = Param("DeliveryChannelExists")
+
 var Ec2VolumeAutoEnableIO = Param("Ec2VolumeAutoEnableIO")
 
 var CreateDeliveryChannelCondition = Equals{DeliveryChannelExists, "false"}

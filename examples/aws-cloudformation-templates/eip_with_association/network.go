@@ -12,7 +12,7 @@ import (
 var IPAddress = ec2.EIP{
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: "22",
 	IpProtocol: "tcp",
@@ -21,7 +21,7 @@ var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort22),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22),
 }
 
 var IPAssoc = ec2.EIPAssociation{

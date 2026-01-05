@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Integration test for importer: validates 12 complex AWS templates compile successfully
+- WAW013 linter rule: detects undefined references in generated code
+- WAW014 linter rule: detects unused intrinsics imports
+- WAW015 linter rule: detects explicit Ref{} (prefer direct variable refs or Param())
+- WAW016 linter rule: detects explicit GetAtt{} (prefer Resource.Attr field access)
+- CLI documentation for design, test, validate, list commands
+
+### Fixed
+
+- Importer: never generates Ref{} or GetAtt{} patterns (always uses direct refs and field access)
+
+- Importer: variable names with hyphens now sanitized (e.g., `Port-1ICMP` → `PortNeg1ICMP`)
+- Importer: unknown resource types skipped with comment instead of broken imports
+- Importer: intrinsics import only added when intrinsic types are actually used
+- Importer: pre-scan conditions for parameter references (fixes missing param generation)
+- Importer: runs `go mod tidy` after generating scaffold files
+- Fixed go.mod replace directive path in generated examples
+
 ## [1.0.0] - 2026-01-03
 
 ### Changed
@@ -89,6 +109,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/lex00/wetwire-aws-go/releases/tag/v1.0.0
-[0.4.1]: https://github.com/lex00/wetwire/compare/wetwire-aws-v0.4.0...wetwire-aws-v0.4.1
-[0.4.0]: https://github.com/lex00/wetwire/releases/tag/wetwire-aws-v0.4.0
-[0.1.0]: https://github.com/lex00/wetwire/go/wetwire-aws/releases/tag/v0.1.0
+[0.4.1]: https://github.com/lex00/wetwire-aws-go/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/lex00/wetwire-aws-go/releases/tag/v0.4.0
+[0.1.0]: https://github.com/lex00/wetwire-aws-go/releases/tag/v0.1.0

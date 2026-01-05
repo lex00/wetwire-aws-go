@@ -7,7 +7,6 @@ package sapprivatelink
 import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/certificatemanager"
-	"github.com/lex00/wetwire-aws-go/resources/unknown"
 )
 
 var ASCPrivateLinkCertificateDomainValidationOption1 = certificatemanager.Certificate_DomainValidationOption{
@@ -21,11 +20,4 @@ var ASCPrivateLinkCertificate = certificatemanager.Certificate{
 	ValidationMethod: "DNS",
 }
 
-// Unknown resource type: Custom::CustomResource
-var ASCPrivateLinkEnablePrivateDNS = unknown.Resource{
-	Action: "EnablePrivateDNS",
-	DomainName: DomainName,
-	HostedZoneId: HostedZone,
-	ServiceId: ASCPrivateLinkVPCES,
-	ServiceToken: ASCPrivateLinkLambdaFunction.Arn,
-}
+// Skipped unknown resource type: ASCPrivateLinkEnablePrivateDNS (Custom::CustomResource)

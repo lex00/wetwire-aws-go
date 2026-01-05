@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var EC2SecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var EC2SecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: "22",
 	IpProtocol: "tcp",
@@ -18,5 +18,5 @@ var EC2SecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var EC2SecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "SSH access",
-	SecurityGroupIngress: List(EC2SecurityGroupSecurityGroupIngressPort22),
+	SecurityGroupIngress: List(EC2SecurityGroupSecurityGroupIngressPortN22),
 }
