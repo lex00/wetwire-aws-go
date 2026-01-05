@@ -17,6 +17,12 @@ var CreateVPCFlowLogsToS3 = Param("CreateVPCFlowLogsToS3")
 // S3AccessLogsBucketName - (Optional) S3 Server Access Logs bucket name for where Amazon S3 should store...
 var S3AccessLogsBucketName = Param("S3AccessLogsBucketName")
 
+// TemplatesS3BucketName - Templates S3 bucket name for the CloudFormation templates. S3 bucket name can...
+var TemplatesS3BucketName = Param("TemplatesS3BucketName")
+
+// TemplatesS3BucketRegion - The AWS Region where the Templates S3 bucket (TemplatesS3BucketName) is hosted.
+var TemplatesS3BucketRegion = Param("TemplatesS3BucketRegion")
+
 // VPCFlowLogsBucketKMSKey - (Optional) KMS Key ID or ARN to use for the default encryption. If empty, ser...
 var VPCFlowLogsBucketKMSKey = Param("VPCFlowLogsBucketKMSKey")
 

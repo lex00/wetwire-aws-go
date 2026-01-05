@@ -62,11 +62,21 @@ var PublicRoute = ec2.Route{
 	RouteTableId: PublicRouteTable,
 }
 
-var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
-	Description: "Ingress from other hosts in the same security group",
+var EcsHostSecurityGroup = ec2.SecurityGroup{
+	GroupDescription: "Access to the ECS hosts that run containers",
+	VpcId: VPC,
+}
+
+var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
+	Description: "Ingress from the public ALB",
 	GroupId: EcsHostSecurityGroup,
 	IpProtocol: -1,
-	SourceSecurityGroupId: EcsHostSecurityGroup,
+	SourceSecurityGroupId: PublicLoadBalancerSG,
+}
+
+var PublicSubnetTwoRouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PublicRouteTable,
+	SubnetId: PublicSubnetTwo,
 }
 
 var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
@@ -81,14 +91,11 @@ var PublicSubnetOne = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var PublicSubnetTwoRouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnetTwo,
-}
-
-var EcsHostSecurityGroup = ec2.SecurityGroup{
-	GroupDescription: "Access to the ECS hosts that run containers",
-	VpcId: VPC,
+var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
+	Description: "Ingress from other hosts in the same security group",
+	GroupId: EcsHostSecurityGroup,
+	IpProtocol: -1,
+	SourceSecurityGroupId: EcsHostSecurityGroup,
 }
 
 var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
@@ -103,11 +110,11 @@ var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
 }
 
-var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
-	Description: "Ingress from the public ALB",
-	GroupId: EcsHostSecurityGroup,
-	IpProtocol: -1,
-	SourceSecurityGroupId: PublicLoadBalancerSG,
+var PublicSubnetTwo = ec2.Subnet{
+	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
 }
 
 var PublicLoadBalancerListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
@@ -120,11 +127,4 @@ var PublicLoadBalancerListener = elasticloadbalancingv2.Listener{
 	LoadBalancerArn: PublicLoadBalancer,
 	Port: 80,
 	Protocol: enums.Elbv2ProtocolEnumHttp,
-}
-
-var PublicSubnetTwo = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
-	MapPublicIpOnLaunch: true,
-	VpcId: VPC,
 }

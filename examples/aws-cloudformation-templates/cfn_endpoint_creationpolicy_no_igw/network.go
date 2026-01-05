@@ -28,6 +28,11 @@ var PrivateSG = ec2.SecurityGroup{
 	VpcId: VPC,
 }
 
+var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable2,
+	SubnetId: PrivateSubnet2,
+}
+
 var EndpointSGTagName = Tag{
 	Key: "Name",
 	Value: "EndpointSG",
@@ -47,19 +52,6 @@ var EndpointSG = ec2.SecurityGroup{
 	VpcId: VPC,
 }
 
-var PrivateSubnet2TagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
-}
-
-var PrivateSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
-	CidrBlock: PrivateSubnet2CIDR,
-	MapPublicIpOnLaunch: false,
-	Tags: []any{PrivateSubnet2TagName},
-	VpcId: VPC,
-}
-
 var PrivateSubnet1TagName = Tag{
 	Key: "Name",
 	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ1)"},
@@ -73,11 +65,6 @@ var PrivateSubnet1 = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable1,
-	SubnetId: PrivateSubnet1,
-}
-
 var PrivateRouteTable1TagName = Tag{
 	Key: "Name",
 	Value: Sub{String: "${EnvironmentName} Private Routes (AZ1)"},
@@ -88,9 +75,19 @@ var PrivateRouteTable1 = ec2.RouteTable{
 	VpcId: VPC,
 }
 
-var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable2,
-	SubnetId: PrivateSubnet2,
+var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable1,
+	SubnetId: PrivateSubnet1,
+}
+
+var PrivateRouteTable2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+}
+
+var PrivateRouteTable2 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable2TagName},
+	VpcId: VPC,
 }
 
 var VPCTagName = Tag{
@@ -114,12 +111,15 @@ var CfnEndpoint = ec2.VPCEndpoint{
 	VpcId: VPC,
 }
 
-var PrivateRouteTable2TagName = Tag{
+var PrivateSubnet2TagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
 }
 
-var PrivateRouteTable2 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable2TagName},
+var PrivateSubnet2 = ec2.Subnet{
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
+	CidrBlock: PrivateSubnet2CIDR,
+	MapPublicIpOnLaunch: false,
+	Tags: []any{PrivateSubnet2TagName},
 	VpcId: VPC,
 }

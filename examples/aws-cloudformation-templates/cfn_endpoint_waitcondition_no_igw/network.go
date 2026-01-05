@@ -9,6 +9,40 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
+var EndpointSGTagName = Tag{
+	Key: "Name",
+	Value: "EndpointSG",
+}
+
+var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
+	CidrIp: "0.0.0.0/0",
+	FromPort: 443,
+	IpProtocol: "tcp",
+	ToPort: 443,
+}
+
+var EndpointSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic into CloudFormation Endpoint",
+	SecurityGroupIngress: []any{EndpointSGSecurityGroupIngressPortN443},
+	Tags: []any{EndpointSGTagName},
+	VpcId: VPC,
+}
+
+var PrivateRouteTable1TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ1)"},
+}
+
+var PrivateRouteTable1 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable1TagName},
+	VpcId: VPC,
+}
+
+var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable1,
+	SubnetId: PrivateSubnet1,
+}
+
 var PrivateRouteTable2TagName = Tag{
 	Key: "Name",
 	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
@@ -19,9 +53,51 @@ var PrivateRouteTable2 = ec2.RouteTable{
 	VpcId: VPC,
 }
 
-var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable1,
-	SubnetId: PrivateSubnet1,
+var S3EndpointPolicyDocument = PolicyDocument{
+	Statement: []any{S3EndpointPolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var S3EndpointPolicyDocumentStatement0 = PolicyStatement{
+	Action: []any{"s3:PutObject"},
+	Effect: "Allow",
+	Principal: "*",
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::cloudformation-waitcondition-${AWS::Region}/*"}},
+}
+
+var S3Endpoint = ec2.VPCEndpoint{
+	PolicyDocument: S3EndpointPolicyDocument,
+	RouteTableIds: []any{PrivateRouteTable1, PrivateRouteTable2},
+	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.s3"},
+	VpcEndpointType: "Gateway",
+	VpcId: VPC,
+}
+
+var PrivateSubnet2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
+}
+
+var PrivateSubnet2 = ec2.Subnet{
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
+	CidrBlock: PrivateSubnet2CIDR,
+	MapPublicIpOnLaunch: false,
+	Tags: []any{PrivateSubnet2TagName},
+	VpcId: VPC,
+}
+
+var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable2,
+	SubnetId: PrivateSubnet2,
+}
+
+var CfnEndpoint = ec2.VPCEndpoint{
+	PrivateDnsEnabled: true,
+	SecurityGroupIds: []any{EndpointSG},
+	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.cloudformation"},
+	SubnetIds: []any{PrivateSubnet1, PrivateSubnet2},
+	VpcEndpointType: "Interface",
+	VpcId: VPC,
 }
 
 var PrivateSubnet1TagName = Tag{
@@ -56,25 +132,6 @@ var PrivateSG = ec2.SecurityGroup{
 	VpcId: VPC,
 }
 
-var EndpointSGTagName = Tag{
-	Key: "Name",
-	Value: "EndpointSG",
-}
-
-var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
-	CidrIp: "0.0.0.0/0",
-	FromPort: 443,
-	IpProtocol: "tcp",
-	ToPort: 443,
-}
-
-var EndpointSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic into CloudFormation Endpoint",
-	SecurityGroupIngress: []any{EndpointSGSecurityGroupIngressPortN443},
-	Tags: []any{EndpointSGTagName},
-	VpcId: VPC,
-}
-
 var VPCTagName = Tag{
 	Key: "Name",
 	Value: EnvironmentName,
@@ -85,61 +142,4 @@ var VPC = ec2.VPC{
 	EnableDnsHostnames: true,
 	EnableDnsSupport: true,
 	Tags: []any{VPCTagName},
-}
-
-var PrivateSubnet2TagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
-}
-
-var PrivateSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
-	CidrBlock: PrivateSubnet2CIDR,
-	MapPublicIpOnLaunch: false,
-	Tags: []any{PrivateSubnet2TagName},
-	VpcId: VPC,
-}
-
-var PrivateRouteTable1TagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ1)"},
-}
-
-var PrivateRouteTable1 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable1TagName},
-	VpcId: VPC,
-}
-
-var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable2,
-	SubnetId: PrivateSubnet2,
-}
-
-var CfnEndpoint = ec2.VPCEndpoint{
-	PrivateDnsEnabled: true,
-	SecurityGroupIds: []any{EndpointSG},
-	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.cloudformation"},
-	SubnetIds: []any{PrivateSubnet1, PrivateSubnet2},
-	VpcEndpointType: "Interface",
-	VpcId: VPC,
-}
-
-var S3EndpointPolicyDocument = PolicyDocument{
-	Statement: []any{S3EndpointPolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var S3EndpointPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:PutObject"},
-	Effect: "Allow",
-	Principal: "*",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::cloudformation-waitcondition-${AWS::Region}/*"}},
-}
-
-var S3Endpoint = ec2.VPCEndpoint{
-	PolicyDocument: S3EndpointPolicyDocument,
-	RouteTableIds: []any{PrivateRouteTable1, PrivateRouteTable2},
-	ServiceName: Sub{String: "com.amazonaws.${AWS::Region}.s3"},
-	VpcEndpointType: "Gateway",
-	VpcId: VPC,
 }

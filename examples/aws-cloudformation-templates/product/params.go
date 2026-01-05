@@ -8,6 +8,27 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// AppName - Please specify the Application Name. Used for tagging and resource names. Man...
+var AppName = Param("AppName")
+
+// Dept - Please specify the Department. Used for tagging
+var Dept = Param("Dept")
+
+// Env - Please specify the target Environment. Used for tagging and resource names. M...
+var Env = Param("Env")
+
+// Owner - Please specify the Owner. Used for tagging
+var Owner = Param("Owner")
+
+// ProvisioningArtifactDescriptionParameter - Please specify ServiceCatalog Product Artifact Description.
+var ProvisioningArtifactDescriptionParameter = Param("ProvisioningArtifactDescriptionParameter")
+
+// ProvisioningArtifactNameParameter - Please specify ServiceCatalog Product Artifact Name.
+var ProvisioningArtifactNameParameter = Param("ProvisioningArtifactNameParameter")
+
+// ProvisioningArtifactTemplateUrl - Please specify the S3 URL of the template
+var ProvisioningArtifactTemplateUrl = Param("ProvisioningArtifactTemplateUrl")
+
 // SCProductDescription - Please specify ServiceCatalog Product Name Description.
 var SCProductDescription = Param("SCProductDescription")
 
@@ -25,3 +46,12 @@ var SCProductSupport = Param("SCProductSupport")
 
 // SCSupportEmail - Please specify ServiceCatalog Product Support Email.
 var SCSupportEmail = Param("SCSupportEmail")
+
+// SCSupportUrl - Please specify ServiceCatalog Product Support URL.
+var SCSupportUrl = Param("SCSupportUrl")
+
+// ServiceCatalogPortfolioStackName - Please specify the Service Catalog Portfolio Stack Name.
+var ServiceCatalogPortfolioStackName = Param("ServiceCatalogPortfolioStackName")
+
+// User - Please specify the User. Used for tagging
+var User = Param("User")

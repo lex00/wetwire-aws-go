@@ -14,6 +14,15 @@ var AccountIdOfChildAWSAccount = Param("AccountIdOfChildAWSAccount")
 // ActivateProductTagOptions - Activate Custom Tag Options? Used for portfolio tagging
 var ActivateProductTagOptions = Param("ActivateProductTagOptions")
 
+// Dept - Please specify the Department. Used for tagging
+var Dept = Param("Dept")
+
+// Env - Please specify the target Environment. Used for tagging and resource names. M...
+var Env = Param("Env")
+
+// Owner - Please specify the Owner. Used for tagging
+var Owner = Param("Owner")
+
 // PortfolioDescription - Please specify the Portfolio Description.
 var PortfolioDescription = Param("PortfolioDescription")
 
@@ -23,7 +32,22 @@ var PortfolioDisplayName = Param("PortfolioDisplayName")
 // PortfolioProviderName - Please specify the Portfolio Provider Name.
 var PortfolioProviderName = Param("PortfolioProviderName")
 
+// ProductDept - Please specify the Department. Used for tagging
+var ProductDept = Param("ProductDept")
+
+// ProductEnv - Please specify the target Environment. Used for tagging and resource names. M...
+var ProductEnv = Param("ProductEnv")
+
+// ProductOwner - Please specify the Owner. Used for tagging
+var ProductOwner = Param("ProductOwner")
+
+// ProductUser - Please specify the User. Used for tagging
+var ProductUser = Param("ProductUser")
+
 // ShareThisPortfolio - Please specify if this Portfolio will be Shared with additonal accounts?
 var ShareThisPortfolio = Param("ShareThisPortfolio")
+
+// User - Please specify the User. Used for tagging
+var User = Param("User")
 
 var ConditionShareThisPortfolioCondition = Equals{ShareThisPortfolio, "true"}

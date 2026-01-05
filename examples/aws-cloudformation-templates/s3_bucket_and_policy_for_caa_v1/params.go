@@ -10,3 +10,6 @@ import (
 
 // BucketName - The name of the S3 Bucket to create, make this unique
 var BucketName = Param("BucketName")
+
+// PublisherAccountID - The AWS account ID with whom you are sharing access
+var PublisherAccountID = Param("PublisherAccountID")

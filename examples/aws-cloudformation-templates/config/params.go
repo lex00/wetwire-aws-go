@@ -13,4 +13,6 @@ var DeliveryChannelExists = Param("DeliveryChannelExists")
 
 var Ec2VolumeAutoEnableIO = Param("Ec2VolumeAutoEnableIO")
 
+var Ec2VolumeTagKey = Param("Ec2VolumeTagKey")
+
 var CreateDeliveryChannelCondition = Equals{DeliveryChannelExists, "false"}

@@ -8,6 +8,12 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// ADConnectorDescription - Description for the directory
+var ADConnectorDescription = Param("ADConnectorDescription")
+
+// ADConnectorSize - Size of the directory
+var ADConnectorSize = Param("ADConnectorSize")
+
 // CreateADConnectorDomainMembersSG - Create Domain Members Security Group. Note, using allow any type rules, restr...
 var CreateADConnectorDomainMembersSG = Param("CreateADConnectorDomainMembersSG")
 
@@ -26,6 +32,15 @@ var DomainDNSName = Param("DomainDNSName")
 // DomainDNSServers - DNS or domain controller servers for the on-premises directory.
 var DomainDNSServers = Param("DomainDNSServers")
 
+// DomainJoinUser - Username of a user in the existing directory
+var DomainJoinUser = Param("DomainJoinUser")
+
+// DomainJoinUserPassword - Password for the existing user account
+var DomainJoinUserPassword = Param("DomainJoinUserPassword")
+
+// DomainNetBiosName - Short name of your existing directory, such as CORP
+var DomainNetBiosName = Param("DomainNetBiosName")
+
 // LambdaFunctionName - Lambda Function Name for Custom Resource.
 var LambdaFunctionName = Param("LambdaFunctionName")
 
@@ -43,6 +58,12 @@ var LambdaS3BucketName = Param("LambdaS3BucketName")
 
 // LambdaZipFileName - Amazon S3 key of the deployment package.
 var LambdaZipFileName = Param("LambdaZipFileName")
+
+// PrivateSubnet1ID - ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)
+var PrivateSubnet1ID = Param("PrivateSubnet1ID")
+
+// PrivateSubnet2ID - ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)
+var PrivateSubnet2ID = Param("PrivateSubnet2ID")
 
 // SSMLogsBucketName - (Optional) SSM Logs bucket name for where Systems Manager logs should store l...
 var SSMLogsBucketName = Param("SSMLogsBucketName")

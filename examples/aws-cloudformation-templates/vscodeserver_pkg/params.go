@@ -11,3 +11,6 @@ import (
 var InstanceType = Param("InstanceType")
 
 var LatestAMI = Param("LatestAMI")
+
+// SecretName - The name of the secrets manager secret that stores the password to be used fo...
+var SecretName = Param("SecretName")

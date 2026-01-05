@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// ACMCertificateIdentifier - The AWS Certificate Manager (ACM) certificate identifier.
+var ACMCertificateIdentifier = Param("ACMCertificateIdentifier")
+
 // ALBAttributeDeletionProtection - Origin ALB Target Group Unhealthy Threshold Count.
 var ALBAttributeDeletionProtection = Param("ALBAttributeDeletionProtection")
 
@@ -40,6 +43,9 @@ var ALBType = Param("ALBType")
 
 // AlternateDomainNames - CNAMEs (alternate domain names), if any, for the distribution. Example. mydom...
 var AlternateDomainNames = Param("AlternateDomainNames")
+
+// AppName - Application environment name.
+var AppName = Param("AppName")
 
 // BootVolSize - EC2 Instance Boot volume size.
 var BootVolSize = Param("BootVolSize")

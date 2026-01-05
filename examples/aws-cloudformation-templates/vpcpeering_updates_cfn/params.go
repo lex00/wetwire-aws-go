@@ -14,6 +14,9 @@ var NumberOfRouteTables = Param("NumberOfRouteTables")
 // NumberOfSecurityGroups - Number of Security Group IDs. This must match your selections in the list of ...
 var NumberOfSecurityGroups = Param("NumberOfSecurityGroups")
 
+// PeerName - Name of the VPC Peer
+var PeerName = Param("PeerName")
+
 // PeerVPCCIDR - CIDR of the VPC Peer
 var PeerVPCCIDR = Param("PeerVPCCIDR")
 

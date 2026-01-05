@@ -39,11 +39,11 @@ var LaunchTemplate = ec2.LaunchTemplate{
 	LaunchTemplateName: Sub{String: "${AWS::StackName}-LaunchTemplate"},
 }
 
-var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
+var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
 	AdjustmentType: "ChangeInCapacity",
 	AutoScalingGroupName: WebServerGroup,
 	Cooldown: "60",
-	ScalingAdjustment: -1,
+	ScalingAdjustment: 1,
 }
 
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
@@ -67,9 +67,9 @@ var WebServerGroup = autoscaling.AutoScalingGroup{
 	VPCZoneIdentifier: Subnets,
 }
 
-var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
+var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
 	AdjustmentType: "ChangeInCapacity",
 	AutoScalingGroupName: WebServerGroup,
 	Cooldown: "60",
-	ScalingAdjustment: 1,
+	ScalingAdjustment: -1,
 }
