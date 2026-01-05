@@ -258,6 +258,16 @@ func isPolicyDocumentField(propName string) bool {
 	return policyDocFields[propName]
 }
 
+// goStringLiteral converts a string to a Go string literal.
+// Uses backtick (raw string) syntax for multi-line strings to improve readability.
+func goStringLiteral(s string) string {
+	// Use backticks for multi-line strings if they don't contain backticks
+	if strings.Contains(s, "\n") && !strings.Contains(s, "`") {
+		return "`" + s + "`"
+	}
+	return fmt.Sprintf("%q", s)
+}
+
 // conditionOperators maps IAM condition operator strings to Go constant names.
 // These are exported from intrinsics/policy.go via dot import.
 var conditionOperators = map[string]string{
@@ -1010,7 +1020,7 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 		if enumConst := tryEnumConstant(ctx, v); enumConst != "" {
 			return enumConst
 		}
-		return fmt.Sprintf("%q", v)
+		return goStringLiteral(v)
 
 	case []any:
 		if len(v) == 0 {
@@ -1198,7 +1208,7 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 		if enumConst := tryEnumConstant(ctx, v); enumConst != "" {
 			return enumConst
 		}
-		return fmt.Sprintf("%q", v)
+		return goStringLiteral(v)
 
 	case []any:
 		if len(v) == 0 {
@@ -1521,7 +1531,7 @@ func valueToGoWithProperty(ctx *codegenContext, value any, indent int, propName 
 		if enumConst := tryEnumConstant(ctx, v); enumConst != "" {
 			return enumConst
 		}
-		return fmt.Sprintf("%q", v)
+		return goStringLiteral(v)
 
 	case []any:
 		if len(v) == 0 {
@@ -2451,7 +2461,7 @@ func jsonValueToGo(ctx *codegenContext, value any) string {
 		}
 		return fmt.Sprintf("%g", v)
 	case string:
-		return fmt.Sprintf("%q", v)
+		return goStringLiteral(v)
 	case []any:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
