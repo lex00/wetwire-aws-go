@@ -10,3 +10,6 @@ import (
 
 // EnvName - Name of an environment. 'dev', 'staging', 'prod' and any name.
 var EnvName = Param("EnvName")
+
+// LambdaHandlerPath - Path of a Lambda Handler.
+var LambdaHandlerPath = Param("LambdaHandlerPath")

@@ -30,9 +30,10 @@ func TestExamplesBuild(t *testing.T) {
 	// - cloudformation_codebuild_template: CodeBuild with complex build specs
 	// - eip_with_association: EC2 with EIP association
 	// - compliant_bucket: S3 bucket with encryption, versioning, policies
+	// - lambdasample: Lambda with parameters in Sub strings
 	//
-	// NOTE: lambdasample and neptune excluded - they have undefined parameter
-	// references in the source templates that cause build failures.
+	// NOTE: neptune excluded - has many undefined parameter references that
+	// would require extensive template fixes.
 	complexExamples := []string{
 		"cloudfront",
 		"dynamodb_table",
@@ -44,6 +45,7 @@ func TestExamplesBuild(t *testing.T) {
 		"cloudformation_codebuild_template",
 		"eip_with_association",
 		"compliant_bucket",
+		"lambdasample",
 	}
 
 	for _, example := range complexExamples {

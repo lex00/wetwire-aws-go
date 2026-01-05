@@ -514,9 +514,9 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 		categoryImports[category] = imports
 	}
 
-	// Pre-scan conditions for parameter references before generating params
-	// This ensures parameters used in conditions are included
-	prescanConditionsForParams(ctx)
+	// Pre-scan all expressions for parameter references before generating params
+	// This ensures parameters used in conditions, resources, and Sub strings are included
+	prescanAllForParams(ctx)
 
 	// Generate params.go if there are used parameters or conditions
 	paramsCode, paramsImports := generateParams(ctx)
@@ -684,16 +684,34 @@ func generateResourcesByIDs(ctx *codegenContext, resourceIDs []string) (string, 
 	return strings.Join(sections, "\n\n"), categoryImports
 }
 
-// prescanConditionsForParams scans all condition expressions for parameter references
-// and marks them as used. This must be called before generateParams to ensure
-// parameters used only in conditions are included.
-func prescanConditionsForParams(ctx *codegenContext) {
+// prescanAllForParams scans all expressions (conditions, resources, outputs) for
+// parameter references and marks them as used. This must be called before
+// generateParams to ensure all referenced parameters are included.
+func prescanAllForParams(ctx *codegenContext) {
+	// Scan conditions
 	for _, condition := range ctx.template.Conditions {
 		scanExprForParams(ctx, condition.Expression)
+	}
+
+	// Scan all resources
+	for _, resource := range ctx.template.Resources {
+		for _, prop := range resource.Properties {
+			scanExprForParams(ctx, prop.Value)
+		}
+	}
+
+	// Scan outputs
+	for _, output := range ctx.template.Outputs {
+		scanExprForParams(ctx, output.Value)
+		if output.Condition != "" {
+			// Condition name itself isn't a param, but scan anyway
+			scanExprForParams(ctx, output.Condition)
+		}
 	}
 }
 
 // scanExprForParams recursively scans an expression for parameter references.
+// Handles Ref intrinsics and parameter names embedded in Sub strings.
 func scanExprForParams(ctx *codegenContext, expr any) {
 	switch v := expr.(type) {
 	case *IRIntrinsic:
@@ -702,6 +720,9 @@ func scanExprForParams(ctx *codegenContext, expr any) {
 			if _, ok := ctx.template.Parameters[target]; ok {
 				ctx.usedParameters[target] = true
 			}
+		} else if v.Type == IntrinsicSub {
+			// Extract parameter names from Sub string
+			scanSubStringForParams(ctx, v.Args)
 		}
 		// Recurse into intrinsic args
 		scanExprForParams(ctx, v.Args)
@@ -712,6 +733,50 @@ func scanExprForParams(ctx *codegenContext, expr any) {
 	case map[string]any:
 		for _, val := range v {
 			scanExprForParams(ctx, val)
+		}
+	case string:
+		// Check if string contains ${ParamName} references (shouldn't happen outside Sub, but be safe)
+		scanSubStringForParams(ctx, v)
+	}
+}
+
+// scanSubStringForParams extracts parameter references from a Sub template string.
+// Sub strings can contain ${ParamName} or ${AWS::PseudoParam} references.
+func scanSubStringForParams(ctx *codegenContext, args any) {
+	var template string
+
+	switch v := args.(type) {
+	case string:
+		template = v
+	case []any:
+		if len(v) > 0 {
+			if s, ok := v[0].(string); ok {
+				template = s
+			}
+		}
+	default:
+		return
+	}
+
+	// Extract all ${...} references from the template string
+	// Pattern: ${VarName} where VarName doesn't start with AWS::
+	for i := 0; i < len(template); i++ {
+		if i+1 < len(template) && template[i] == '$' && template[i+1] == '{' {
+			// Find closing brace
+			end := strings.Index(template[i:], "}")
+			if end == -1 {
+				break
+			}
+			ref := template[i+2 : i+end]
+
+			// Skip pseudo-parameters and attribute references
+			if !strings.HasPrefix(ref, "AWS::") && !strings.Contains(ref, ".") {
+				// Check if this is a known parameter
+				if _, ok := ctx.template.Parameters[ref]; ok {
+					ctx.usedParameters[ref] = true
+				}
+			}
+			i = i + end
 		}
 	}
 }
