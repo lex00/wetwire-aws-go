@@ -20,10 +20,4 @@ var LambdaLogsCloudWatchKMSKey = Param("LambdaLogsCloudWatchKMSKey")
 // LambdaLogsLogGroupRetention - Specifies the number of days you want to retain Lambda log events in the Clou...
 var LambdaLogsLogGroupRetention = Param("LambdaLogsLogGroupRetention")
 
-// PeerName - Name of the VPC Peer
-var PeerName = Param("PeerName")
-
-// VPCPeeringConnectionId - ID of the VPC Peering Connection
-var VPCPeeringConnectionId = Param("VPCPeeringConnectionId")
-
 var LambdaLogsCloudWatchKMSKeyConditionCondition = Not{Equals{LambdaLogsCloudWatchKMSKey, ""}}

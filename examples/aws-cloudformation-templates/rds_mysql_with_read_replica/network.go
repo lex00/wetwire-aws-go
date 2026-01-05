@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var DBEC2SecurityGroupSecurityGroupIngressPort3306 = ec2.SecurityGroup_Ingress{
+var DBEC2SecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress{
 	FromPort: "3306",
 	IpProtocol: "tcp",
 	SourceSecurityGroupName: EC2SecurityGroup,
@@ -18,5 +18,5 @@ var DBEC2SecurityGroupSecurityGroupIngressPort3306 = ec2.SecurityGroup_Ingress{
 
 var DBEC2SecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Open database for access",
-	SecurityGroupIngress: List(DBEC2SecurityGroupSecurityGroupIngressPort3306),
+	SecurityGroupIngress: List(DBEC2SecurityGroupSecurityGroupIngressPortN3306),
 }

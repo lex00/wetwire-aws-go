@@ -5,6 +5,7 @@
 package datapipeline_stringvalue
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/datapipeline"
 )
 

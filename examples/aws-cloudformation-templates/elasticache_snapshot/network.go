@@ -48,7 +48,7 @@ var PublicSubnetBRouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	SubnetId: PublicSubnetB,
 }
 
-var RedisSecurityGroupSecurityGroupIngressPort6379 = ec2.SecurityGroup_Ingress{
+var RedisSecurityGroupSecurityGroupIngressPortN6379 = ec2.SecurityGroup_Ingress{
 	CidrIp: "192.168.1.0/32",
 	FromPort: "6379",
 	IpProtocol: "tcp",
@@ -57,7 +57,7 @@ var RedisSecurityGroupSecurityGroupIngressPort6379 = ec2.SecurityGroup_Ingress{
 
 var RedisSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "RedisSecurityGroup",
-	SecurityGroupIngress: List(RedisSecurityGroupSecurityGroupIngressPort6379),
+	SecurityGroupIngress: List(RedisSecurityGroupSecurityGroupIngressPortN6379),
 	VpcId: VPC,
 }
 

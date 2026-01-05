@@ -5,7 +5,6 @@
 package ec2_with_waitcondition_template
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 

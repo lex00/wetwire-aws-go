@@ -8,20 +8,11 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-// ADConnectorDescription - Description for the directory
-var ADConnectorDescription = Param("ADConnectorDescription")
-
-// ADConnectorSize - Size of the directory
-var ADConnectorSize = Param("ADConnectorSize")
-
 // DomainDNSName - Fully qualified name of the on-premises directory, such as corp.example.com
 var DomainDNSName = Param("DomainDNSName")
 
 // DomainDNSServers - DNS or domain controller servers for the on-premises directory.
 var DomainDNSServers = Param("DomainDNSServers")
-
-// DomainNetBiosName - Short name of your existing directory, such as CORP
-var DomainNetBiosName = Param("DomainNetBiosName")
 
 // LambdaFunctionName - Lambda Function Name for Custom Resource.
 var LambdaFunctionName = Param("LambdaFunctionName")
@@ -40,12 +31,6 @@ var LambdaS3BucketName = Param("LambdaS3BucketName")
 
 // LambdaZipFileName - Amazon S3 key of the deployment package.
 var LambdaZipFileName = Param("LambdaZipFileName")
-
-// PrivateSubnet1ID - ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)
-var PrivateSubnet1ID = Param("PrivateSubnet1ID")
-
-// PrivateSubnet2ID - ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)
-var PrivateSubnet2ID = Param("PrivateSubnet2ID")
 
 // SecretsManagerDomainCredentialsSecretsKMSKey - (Optional) KMS Key ARN to use for encrypting the SecretsManager domain creden...
 var SecretsManagerDomainCredentialsSecretsKMSKey = Param("SecretsManagerDomainCredentialsSecretsKMSKey")

@@ -11,10 +11,4 @@ import (
 // RedisNodeType - elasticache Redis Node Instance Type
 var RedisNodeType = Param("RedisNodeType")
 
-// SnapshotRetentionLimit - elasticache Snapshot Retention Limit
-var SnapshotRetentionLimit = Param("SnapshotRetentionLimit")
-
-// SnapshotWindow - Snapshot Window
-var SnapshotWindow = Param("SnapshotWindow")
-
 var EnableBackupsCondition = Equals{EnableSnapshotting, "True"}

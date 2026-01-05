@@ -9,35 +9,35 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var KWOSSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var KWOSSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: "22",
 	IpProtocol: "tcp",
 	ToPort: "22",
 }
 
-var KWOSSecurityGroupSecurityGroupIngressPort-1ICMP = ec2.SecurityGroup_Ingress{
+var KWOSSecurityGroupSecurityGroupIngressPortNeg1ICMP = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "-1",
 	IpProtocol: "icmp",
 	ToPort: "-1",
 }
 
-var KWOSSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
+var KWOSSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "443",
 	IpProtocol: "tcp",
 	ToPort: "443",
 }
 
-var KWOSSecurityGroupSecurityGroupIngressPort8888 = ec2.SecurityGroup_Ingress{
+var KWOSSecurityGroupSecurityGroupIngressPortN8888 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "8888",
 	IpProtocol: "tcp",
 	ToPort: "8888",
 }
 
-var KWOSSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var KWOSSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "80",
 	IpProtocol: "tcp",
@@ -46,6 +46,6 @@ var KWOSSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
 
 var KWOSSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable HTTP access via port 80/22/443 and ICMP access via port *",
-	SecurityGroupIngress: List(KWOSSecurityGroupSecurityGroupIngressPort80, KWOSSecurityGroupSecurityGroupIngressPort8888, KWOSSecurityGroupSecurityGroupIngressPort443, KWOSSecurityGroupSecurityGroupIngressPort-1ICMP, KWOSSecurityGroupSecurityGroupIngressPort22),
+	SecurityGroupIngress: List(KWOSSecurityGroupSecurityGroupIngressPortN80, KWOSSecurityGroupSecurityGroupIngressPortN8888, KWOSSecurityGroupSecurityGroupIngressPortN443, KWOSSecurityGroupSecurityGroupIngressPortNeg1ICMP, KWOSSecurityGroupSecurityGroupIngressPortN22),
 	VpcId: VpcId,
 }

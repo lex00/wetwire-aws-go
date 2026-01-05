@@ -9,23 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable2,
-	SubnetId: PrivateSubnet2,
-}
-
-var VPCTagName = Tag{
-	Key: "Name",
-	Value: EnvironmentName,
-}
-
-var VPC = ec2.VPC{
-	CidrBlock: VpcCIDR,
-	EnableDnsHostnames: true,
-	EnableDnsSupport: true,
-	Tags: []any{VPCTagName},
-}
-
 var PrivateSubnet1TagName = Tag{
 	Key: "Name",
 	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ1)"},
@@ -39,22 +22,22 @@ var PrivateSubnet1 = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var EndpointSGTagName = Tag{
+var PrivateSGTagName = Tag{
 	Key: "Name",
-	Value: "EndpointSG",
+	Value: "PrivateSG",
 }
 
-var EndpointSGSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
-	CidrIp: "0.0.0.0/0",
-	FromPort: 443,
+var PrivateSGSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
+	CidrIp: VpcCIDR,
+	FromPort: 22,
 	IpProtocol: "tcp",
-	ToPort: 443,
+	ToPort: 22,
 }
 
-var EndpointSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic into CloudFormation Endpoint",
-	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPort443),
-	Tags: []any{EndpointSGTagName},
+var PrivateSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic from Bastion",
+	SecurityGroupIngress: List(PrivateSGSecurityGroupIngressPortN22),
+	Tags: []any{PrivateSGTagName},
 	VpcId: VPC,
 }
 
@@ -65,6 +48,28 @@ var CfnEndpoint = ec2.VPCEndpoint{
 	SubnetIds: []any{PrivateSubnet1, PrivateSubnet2},
 	VpcEndpointType: "Interface",
 	VpcId: VPC,
+}
+
+var PrivateRouteTable2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+}
+
+var PrivateRouteTable2 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable2TagName},
+	VpcId: VPC,
+}
+
+var VPCTagName = Tag{
+	Key: "Name",
+	Value: EnvironmentName,
+}
+
+var VPC = ec2.VPC{
+	CidrBlock: VpcCIDR,
+	EnableDnsHostnames: true,
+	EnableDnsSupport: true,
+	Tags: []any{VPCTagName},
 }
 
 var PrivateSubnet2TagName = Tag{
@@ -95,31 +100,26 @@ var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	SubnetId: PrivateSubnet1,
 }
 
-var PrivateRouteTable2TagName = Tag{
+var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable2,
+	SubnetId: PrivateSubnet2,
+}
+
+var EndpointSGTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+	Value: "EndpointSG",
 }
 
-var PrivateRouteTable2 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable2TagName},
-	VpcId: VPC,
-}
-
-var PrivateSGTagName = Tag{
-	Key: "Name",
-	Value: "PrivateSG",
-}
-
-var PrivateSGSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
-	CidrIp: VpcCIDR,
-	FromPort: 22,
+var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
+	CidrIp: "0.0.0.0/0",
+	FromPort: 443,
 	IpProtocol: "tcp",
-	ToPort: 22,
+	ToPort: 443,
 }
 
-var PrivateSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic from Bastion",
-	SecurityGroupIngress: List(PrivateSGSecurityGroupIngressPort22),
-	Tags: []any{PrivateSGTagName},
+var EndpointSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic into CloudFormation Endpoint",
+	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPortN443),
+	Tags: []any{EndpointSGTagName},
 	VpcId: VPC,
 }

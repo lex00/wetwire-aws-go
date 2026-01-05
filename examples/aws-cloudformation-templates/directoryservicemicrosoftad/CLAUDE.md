@@ -45,10 +45,10 @@ var MyPolicy = s3.BucketPolicy{
 
 ## Intrinsic Functions
 
-Import from `github.com/lex00/wetwire/go/wetwire-aws/intrinsics`:
+Import from `github.com/lex00/wetwire-aws-go/intrinsics`:
 
 `go
-import . "github.com/lex00/wetwire/go/wetwire-aws/intrinsics"
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
 
 var MyRole = iam.Role{
     RoleName: Sub{String: "${AppName}-role-${Environment}"},

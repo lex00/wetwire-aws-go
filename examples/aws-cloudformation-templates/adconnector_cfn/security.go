@@ -59,18 +59,6 @@ var ADConnectorWindowsEC2DomainJoinRole = iam.Role{
 	Tags: []any{ADConnectorWindowsEC2DomainJoinRoleTagStackName},
 }
 
-var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
-	Path: "/",
-	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
-}
-
-var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
-	Path: "/",
-	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
-}
-
 var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument = PolicyDocument{
 	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0},
 	Version: "2012-10-17",
@@ -134,6 +122,12 @@ var ADConnectorLinuxEC2SeamlessDomainJoinSecret = secretsmanager.Secret{
 	KmsKeyId: If{"SecretsManagerDomainCredentialsSecretsKMSKeyCondition", SecretsManagerDomainCredentialsSecretsKMSKey, AWS_NO_VALUE},
 	Name: Sub{String: "aws/directory-services/${ADConnectorResource}/seamless-domain-join"},
 	SecretString: Sub{String: "{ \"awsSeamlessDomainUsername\" : \"${DomainJoinUser}\", \"awsSeamlessDomainPassword\" : \"${DomainJoinUserPassword}\" }"},
+}
+
+var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
+	Path: "/",
+	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
 }
 
 var ADConnectorLambdaRolePolicyADConnectorServiceAcPolicyDocument = PolicyDocument{
@@ -233,4 +227,10 @@ var ADConnectorLambdaRole = iam.Role{
 	Policies: List(ADConnectorLambdaRolePolicyCloudWatchLogGroup, ADConnectorLambdaRolePolicyADConnector, ADConnectorLambdaRolePolicyADConnectorServiceAc),
 	RoleName: Sub{String: "${LambdaFunctionName}-LambdaRole"},
 	Tags: []any{ADConnectorLambdaRoleTagStackName},
+}
+
+var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
+	Path: "/",
+	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
 }

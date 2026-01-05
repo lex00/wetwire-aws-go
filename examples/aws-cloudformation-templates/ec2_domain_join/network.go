@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var InstanceSecurityGroupSecurityGroupIngressPort3389 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN3389 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "3389",
 	IpProtocol: "tcp",
@@ -18,6 +18,6 @@ var InstanceSecurityGroupSecurityGroupIngressPort3389 = ec2.SecurityGroup_Ingres
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allow http to client host",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort3389),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN3389),
 	VpcId: VPC,
 }

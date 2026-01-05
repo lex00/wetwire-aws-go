@@ -10,14 +10,14 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancing"
 )
 
-var ELBSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
+var ELBSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "443",
 	IpProtocol: "tcp",
 	ToPort: "443",
 }
 
-var ELBSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var ELBSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "80",
 	IpProtocol: "tcp",
@@ -26,7 +26,7 @@ var ELBSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
 
 var ELBSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable public access HTTP and HTTPS",
-	SecurityGroupIngress: List(ELBSecurityGroupSecurityGroupIngressPort80, ELBSecurityGroupSecurityGroupIngressPort443),
+	SecurityGroupIngress: List(ELBSecurityGroupSecurityGroupIngressPortN80, ELBSecurityGroupSecurityGroupIngressPortN443),
 	VpcId: VPC,
 }
 
@@ -56,14 +56,14 @@ var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	Subnets: Subnets,
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	FromPort: "80",
 	IpProtocol: "tcp",
 	SourceSecurityGroupId: ELBSecurityGroup.GroupId,
 	ToPort: "80",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: "22",
 	IpProtocol: "tcp",
@@ -72,11 +72,11 @@ var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH public access and HTTP from the load balancer only",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort22, InstanceSecurityGroupSecurityGroupIngressPort80),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
 	VpcId: VPC,
 }
 
-var EFSSecurityGroupSecurityGroupIngressPort2049 = ec2.SecurityGroup_Ingress{
+var EFSSecurityGroupSecurityGroupIngressPortN2049 = ec2.SecurityGroup_Ingress{
 	FromPort: "2049",
 	IpProtocol: "tcp",
 	SourceSecurityGroupId: InstanceSecurityGroup.GroupId,
@@ -85,6 +85,6 @@ var EFSSecurityGroupSecurityGroupIngressPort2049 = ec2.SecurityGroup_Ingress{
 
 var EFSSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable NFS access from EC2",
-	SecurityGroupIngress: List(EFSSecurityGroupSecurityGroupIngressPort2049),
+	SecurityGroupIngress: List(EFSSecurityGroupSecurityGroupIngressPortN2049),
 	VpcId: VPC,
 }

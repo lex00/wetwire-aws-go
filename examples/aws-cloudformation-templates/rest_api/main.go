@@ -5,7 +5,6 @@
 package rest_api
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/apigateway"
 )
 

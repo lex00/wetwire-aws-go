@@ -18,68 +18,32 @@ var InternetGateway = ec2.InternetGateway{
 	Tags: []any{InternetGatewayTagName},
 }
 
-var PrivateSubnet2TagName = Tag{
+var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable1,
+	SubnetId: PrivateSubnet1,
+}
+
+var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PrivateRouteTable2,
+	SubnetId: PrivateSubnet2,
+}
+
+var DefaultPublicRoute = ec2.Route{
+	DestinationCidrBlock: "0.0.0.0/0",
+	GatewayId: InternetGateway,
+	RouteTableId: PublicRouteTable,
+}
+
+var VPCTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
+	Value: EnvironmentName,
 }
 
-var PrivateSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{}},
-	CidrBlock: PrivateSubnet2CIDR,
-	MapPublicIpOnLaunch: false,
-	Tags: []any{PrivateSubnet2TagName},
-	VpcId: VPC,
-}
-
-var EndpointSGTagName = Tag{
-	Key: "Name",
-	Value: "EndpointSG",
-}
-
-var EndpointSGSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
-	CidrIp: "0.0.0.0/0",
-	FromPort: 443,
-	IpProtocol: "tcp",
-	ToPort: 443,
-}
-
-var EndpointSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic into CloudFormation Endpoint",
-	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPort443),
-	Tags: []any{EndpointSGTagName},
-	VpcId: VPC,
-}
-
-var PublicSubnet2TagName = Tag{
-	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Public Subnet (AZ2)"},
-}
-
-var PublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{}},
-	CidrBlock: PublicSubnet2CIDR,
-	MapPublicIpOnLaunch: true,
-	Tags: []any{PublicSubnet2TagName},
-	VpcId: VPC,
-}
-
-var BastionSGTagName = Tag{
-	Key: "Name",
-	Value: "BastionSG",
-}
-
-var BastionSGSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
-	CidrIp: "0.0.0.0/0",
-	FromPort: 22,
-	IpProtocol: "tcp",
-	ToPort: 22,
-}
-
-var BastionSG = ec2.SecurityGroup{
-	GroupDescription: "Inbound Bastion Traffic",
-	SecurityGroupIngress: List(BastionSGSecurityGroupIngressPort22),
-	Tags: []any{BastionSGTagName},
-	VpcId: VPC,
+var VPC = ec2.VPC{
+	CidrBlock: VpcCIDR,
+	EnableDnsHostnames: true,
+	EnableDnsSupport: true,
+	Tags: []any{VPCTagName},
 }
 
 var PrivateRouteTable1TagName = Tag{
@@ -92,13 +56,22 @@ var PrivateRouteTable1 = ec2.RouteTable{
 	VpcId: VPC,
 }
 
-var PrivateRouteTable2TagName = Tag{
+var EndpointSGTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+	Value: "EndpointSG",
 }
 
-var PrivateRouteTable2 = ec2.RouteTable{
-	Tags: []any{PrivateRouteTable2TagName},
+var EndpointSGSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
+	CidrIp: "0.0.0.0/0",
+	FromPort: 443,
+	IpProtocol: "tcp",
+	ToPort: 443,
+}
+
+var EndpointSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic into CloudFormation Endpoint",
+	SecurityGroupIngress: List(EndpointSGSecurityGroupIngressPortN443),
+	Tags: []any{EndpointSGTagName},
 	VpcId: VPC,
 }
 
@@ -140,19 +113,28 @@ var PublicSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	SubnetId: PublicSubnet2,
 }
 
-var PublicRouteTableTagName = Tag{
+var PrivateSGTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${EnvironmentName} Public Routes"},
+	Value: "PrivateSG",
 }
 
-var PublicRouteTable = ec2.RouteTable{
-	Tags: []any{PublicRouteTableTagName},
+var PrivateSGSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
+	FromPort: 22,
+	IpProtocol: "tcp",
+	SourceSecurityGroupId: BastionSG,
+	ToPort: 22,
+}
+
+var PrivateSG = ec2.SecurityGroup{
+	GroupDescription: "Traffic from Bastion",
+	SecurityGroupIngress: List(PrivateSGSecurityGroupIngressPortN22),
+	Tags: []any{PrivateSGTagName},
 	VpcId: VPC,
 }
 
-var PublicSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnet1,
+var InternetGatewayAttachment = ec2.VPCGatewayAttachment{
+	InternetGatewayId: InternetGateway,
+	VpcId: VPC,
 }
 
 var PublicSubnet1TagName = Tag{
@@ -168,34 +150,9 @@ var PublicSubnet1 = ec2.Subnet{
 	VpcId: VPC,
 }
 
-var DefaultPublicRoute = ec2.Route{
-	DestinationCidrBlock: "0.0.0.0/0",
-	GatewayId: InternetGateway,
+var PublicSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	RouteTableId: PublicRouteTable,
-}
-
-var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable1,
-	SubnetId: PrivateSubnet1,
-}
-
-var PrivateSGTagName = Tag{
-	Key: "Name",
-	Value: "PrivateSG",
-}
-
-var PrivateSGSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
-	FromPort: 22,
-	IpProtocol: "tcp",
-	SourceSecurityGroupId: BastionSG,
-	ToPort: 22,
-}
-
-var PrivateSG = ec2.SecurityGroup{
-	GroupDescription: "Traffic from Bastion",
-	SecurityGroupIngress: List(PrivateSGSecurityGroupIngressPort22),
-	Tags: []any{PrivateSGTagName},
-	VpcId: VPC,
+	SubnetId: PublicSubnet1,
 }
 
 var CfnEndpoint = ec2.VPCEndpoint{
@@ -207,24 +164,67 @@ var CfnEndpoint = ec2.VPCEndpoint{
 	VpcId: VPC,
 }
 
-var InternetGatewayAttachment = ec2.VPCGatewayAttachment{
-	InternetGatewayId: InternetGateway,
+var PrivateSubnet2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Subnet (AZ2)"},
+}
+
+var PrivateSubnet2 = ec2.Subnet{
+	AvailabilityZone: Select{1, GetAZs{}},
+	CidrBlock: PrivateSubnet2CIDR,
+	MapPublicIpOnLaunch: false,
+	Tags: []any{PrivateSubnet2TagName},
 	VpcId: VPC,
 }
 
-var VPCTagName = Tag{
+var BastionSGTagName = Tag{
 	Key: "Name",
-	Value: EnvironmentName,
+	Value: "BastionSG",
 }
 
-var VPC = ec2.VPC{
-	CidrBlock: VpcCIDR,
-	EnableDnsHostnames: true,
-	EnableDnsSupport: true,
-	Tags: []any{VPCTagName},
+var BastionSGSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
+	CidrIp: "0.0.0.0/0",
+	FromPort: 22,
+	IpProtocol: "tcp",
+	ToPort: 22,
 }
 
-var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PrivateRouteTable2,
-	SubnetId: PrivateSubnet2,
+var BastionSG = ec2.SecurityGroup{
+	GroupDescription: "Inbound Bastion Traffic",
+	SecurityGroupIngress: List(BastionSGSecurityGroupIngressPortN22),
+	Tags: []any{BastionSGTagName},
+	VpcId: VPC,
+}
+
+var PublicRouteTableTagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Public Routes"},
+}
+
+var PublicRouteTable = ec2.RouteTable{
+	Tags: []any{PublicRouteTableTagName},
+	VpcId: VPC,
+}
+
+var PrivateRouteTable2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Private Routes (AZ2)"},
+}
+
+var PrivateRouteTable2 = ec2.RouteTable{
+	Tags: []any{PrivateRouteTable2TagName},
+	VpcId: VPC,
+}
+
+var PublicSubnet2TagName = Tag{
+	Key: "Name",
+	Value: Sub{String: "${EnvironmentName} Public Subnet (AZ2)"},
+}
+
+var PublicSubnet2 = ec2.Subnet{
+	AvailabilityZone: Select{1, GetAZs{}},
+	CidrBlock: PublicSubnet2CIDR,
+	MapPublicIpOnLaunch: true,
+	Tags: []any{PublicSubnet2TagName},
+	VpcId: VPC,
 }

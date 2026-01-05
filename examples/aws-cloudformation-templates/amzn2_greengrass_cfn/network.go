@@ -19,7 +19,7 @@ var VPC = ec2.VPC{
 	InstanceTenancy: "default",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SecurityAccessCIDR,
 	FromPort: 22,
 	IpProtocol: "tcp",
@@ -28,7 +28,7 @@ var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allow inbound SSH access",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort22),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22),
 	VpcId: VPC,
 }
 

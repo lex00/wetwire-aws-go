@@ -1,8 +1,8 @@
 module example
 
-go 1.22
+go 1.23.0
 
-require github.com/lex00/wetwire/go/wetwire-aws v0.1.0
+require github.com/lex00/wetwire-aws-go v1.0.0
 
-// For local development, uncomment and adjust the path:
-replace github.com/lex00/wetwire/go/wetwire-aws => ../../..
+// For local development:
+replace github.com/lex00/wetwire-aws-go => ../../..

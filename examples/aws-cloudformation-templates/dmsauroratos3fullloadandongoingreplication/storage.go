@@ -5,6 +5,7 @@
 package dmsauroratos3fullloadandongoingreplication
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 

@@ -11,7 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/elasticloadbalancingv2"
 )
 
-var LoadBalancerSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ingress{
+var LoadBalancerSecurityGroupSecurityGroupIngressPortN443 = ec2.SecurityGroup_Ingress{
 	CidrIp: "0.0.0.0/0",
 	FromPort: 443,
 	IpProtocol: "tcp",
@@ -20,7 +20,7 @@ var LoadBalancerSecurityGroupSecurityGroupIngressPort443 = ec2.SecurityGroup_Ing
 
 var LoadBalancerSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Allows inbound traffic on port 443",
-	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPort443),
+	SecurityGroupIngress: List(LoadBalancerSecurityGroupSecurityGroupIngressPortN443),
 	VpcId: VPC,
 }
 
@@ -31,14 +31,14 @@ var ElasticLoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	Type_: "application",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	FromPort: 80,
 	IpProtocol: "tcp",
 	SourceSecurityGroupId: LoadBalancerSecurityGroup,
 	ToPort: 80,
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress{
 	CidrIp: SSHLocation,
 	FromPort: 22,
 	IpProtocol: "tcp",
@@ -47,7 +47,7 @@ var InstanceSecurityGroupSecurityGroupIngressPort22 = ec2.SecurityGroup_Ingress{
 
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Enable SSH access and HTTP from the load balancer only",
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort22, InstanceSecurityGroupSecurityGroupIngressPort80),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN22, InstanceSecurityGroupSecurityGroupIngressPortN80),
 }
 
 var TargetGroup = elasticloadbalancingv2.TargetGroup{

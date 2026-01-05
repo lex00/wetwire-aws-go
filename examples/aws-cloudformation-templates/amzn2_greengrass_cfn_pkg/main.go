@@ -7,7 +7,6 @@ package amzn2_greengrass_cfn_pkg
 import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/greengrass"
-	"github.com/lex00/wetwire-aws-go/resources/unknown"
 )
 
 var GreengrassCoreDefinition = greengrass.CoreDefinition{
@@ -69,30 +68,11 @@ var FunctionDefinition = greengrass.FunctionDefinition{
 	Name: "FunctionDefinition",
 }
 
-// Unknown resource type: Custom::GroupDeploymentReset
-var GroupDeploymentReset = unknown.Resource{
-	Region: AWS_REGION,
-	ServiceToken: GroupDeploymentResetFunction.Arn,
-	ThingName: Join{"_", []any{
-	CoreName,
-	"Core",
-}},
-}
+// Skipped unknown resource type: GroupDeploymentReset (Custom::GroupDeploymentReset)
 
-// Unknown resource type: Custom::InstanceAZ
-var InstanceAZ = unknown.Resource{
-	Region: AWS_REGION,
-	ServiceToken: InstanceAZFunction.Arn,
-}
+// Skipped unknown resource type: InstanceAZ (Custom::InstanceAZ)
 
-// Unknown resource type: Custom::IoTThing
-var IoTThing = unknown.Resource{
-	ServiceToken: CreateThingFunction.Arn,
-	ThingName: Join{"_", []any{
-	CoreName,
-	"Core",
-}},
-}
+// Skipped unknown resource type: IoTThing (Custom::IoTThing)
 
 var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core{
 	CertificateArn: Join{":", []any{
@@ -132,18 +112,6 @@ var GreengrassCoreDefinitionVersion = greengrass.CoreDefinitionVersion{
 	Cores: List(GreengrassCoreDefinitionVersionCore1),
 }
 
-var GreengrassGroupInitialVersion = &greengrass.Group_GroupVersion{
-	CoreDefinitionVersionArn: GreengrassCoreDefinitionVersion,
-	FunctionDefinitionVersionArn: FunctionDefinition.LatestVersionArn,
-	SubscriptionDefinitionVersionArn: SubscriptionDefinition.LatestVersionArn,
-}
-
-var GreengrassGroup = greengrass.Group{
-	InitialVersion: GreengrassGroupInitialVersion,
-	Name: CoreName,
-	RoleArn: GreengrassResourceRole.Arn,
-}
-
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription3 = greengrass.SubscriptionDefinitionVersion_Subscription{
 	Id: "Subscription3",
 	Source: GGSampleFunctionVersion,
@@ -181,4 +149,16 @@ var SubscriptionDefinitionInitialVersion = &greengrass.SubscriptionDefinition_Su
 var SubscriptionDefinition = greengrass.SubscriptionDefinition{
 	InitialVersion: SubscriptionDefinitionInitialVersion,
 	Name: "SubscriptionDefinition",
+}
+
+var GreengrassGroupInitialVersion = &greengrass.Group_GroupVersion{
+	CoreDefinitionVersionArn: GreengrassCoreDefinitionVersion,
+	FunctionDefinitionVersionArn: FunctionDefinition.LatestVersionArn,
+	SubscriptionDefinitionVersionArn: SubscriptionDefinition.LatestVersionArn,
+}
+
+var GreengrassGroup = greengrass.Group{
+	InitialVersion: GreengrassGroupInitialVersion,
+	Name: CoreName,
+	RoleArn: GreengrassResourceRole.Arn,
 }

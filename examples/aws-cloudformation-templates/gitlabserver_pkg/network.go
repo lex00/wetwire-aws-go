@@ -89,7 +89,7 @@ var InstanceSecurityGroupTagName = Tag{
 	Value: "gitlab-server-isg",
 }
 
-var InstanceSecurityGroupSecurityGroupIngressPort80 = ec2.SecurityGroup_Ingress{
+var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	Description: "Allow HTTP from com.amazonaws.global.cloudfront.origin-facing",
 	FromPort: 80,
 	IpProtocol: "tcp",
@@ -106,7 +106,7 @@ var InstanceSecurityGroupSecurityGroupEgress1 = ec2.SecurityGroup_Egress{
 var InstanceSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "gitlab-server-isg",
 	SecurityGroupEgress: List(InstanceSecurityGroupSecurityGroupEgress1),
-	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPort80),
+	SecurityGroupIngress: List(InstanceSecurityGroupSecurityGroupIngressPortN80),
 	Tags: []any{InstanceSecurityGroupTagName},
 	VpcId: NetworkVPC,
 }

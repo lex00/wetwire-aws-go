@@ -58,14 +58,6 @@ var ECSALB = elasticloadbalancingv2.LoadBalancer{
 	Subnets: SubnetId,
 }
 
-var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
-	FromPort: "31000",
-	GroupId: EcsSecurityGroup,
-	IpProtocol: "tcp",
-	SourceSecurityGroupId: EcsSecurityGroup,
-	ToPort: "61000",
-}
-
 var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 	TargetGroupArn: ECSTG,
 	Type_: "forward",
@@ -93,4 +85,12 @@ var ECSALBListenerRule = elasticloadbalancingv2.ListenerRule{
 	Conditions: List(ECSALBListenerRuleCondition1),
 	ListenerArn: ALBListener,
 	Priority: 1,
+}
+
+var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
+	FromPort: "31000",
+	GroupId: EcsSecurityGroup,
+	IpProtocol: "tcp",
+	SourceSecurityGroupId: EcsSecurityGroup,
+	ToPort: "61000",
 }
