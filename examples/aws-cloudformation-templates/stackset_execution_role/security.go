@@ -10,36 +10,36 @@ import (
 )
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocument = PolicyDocument{
-	Statement: []any{AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement0, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement1, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement2, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement3, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement4},
+	Statement: Any(AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement0, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement1, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement2, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement3, AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement4),
 	Version: "2012-10-17",
 }
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement4 = PolicyStatement{
-	Action: []any{"ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"},
+	Action: Any("ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"),
 	Effect: "Allow",
-	Resource: []any{"arn:aws:ssm:*:*:parameter/cdk-bootstrap/*"},
+	Resource: Any("arn:aws:ssm:*:*:parameter/cdk-bootstrap/*"),
 }
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement3 = PolicyStatement{
-	Action: []any{"kms:Decrypt", "kms:DescribeKey"},
+	Action: Any("kms:Decrypt", "kms:DescribeKey"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"sns:CreateTopic", "sns:DeleteTopic", "sns:Subscribe", "sns:Unsubscribe", "sns:SetTopicAttributes", "sns:GetTopicAttributes", "sns:ListSubscriptionsByTopic"},
+	Action: Any("sns:CreateTopic", "sns:DeleteTopic", "sns:Subscribe", "sns:Unsubscribe", "sns:SetTopicAttributes", "sns:GetTopicAttributes", "sns:ListSubscriptionsByTopic"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"cloudwatch:PutDashboard", "cloudwatch:DeleteDashboards", "cloudwatch:PutMetricAlarm", "cloudwatch:DeleteAlarms", "cloudwatch:DescribeAlarms"},
+	Action: Any("cloudwatch:PutDashboard", "cloudwatch:DeleteDashboards", "cloudwatch:PutMetricAlarm", "cloudwatch:DeleteAlarms", "cloudwatch:DescribeAlarms"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"cloudformation:CreateStack", "cloudformation:UpdateStack", "cloudformation:DeleteStack", "cloudformation:DescribeStacks", "cloudformation:DescribeStackEvents", "cloudformation:DescribeStackResources", "cloudformation:GetTemplate", "cloudformation:ValidateTemplate"},
+	Action: Any("cloudformation:CreateStack", "cloudformation:UpdateStack", "cloudformation:DeleteStack", "cloudformation:DescribeStacks", "cloudformation:DescribeStackEvents", "cloudformation:DescribeStackResources", "cloudformation:GetTemplate", "cloudformation:ValidateTemplate"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -50,7 +50,7 @@ var AWSCloudFormationStackSetExecutionRolePolicyExecutionRolePolicy = iam.Role_P
 }
 
 var AWSCloudFormationStackSetExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{AWSCloudFormationStackSetExecutionRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(AWSCloudFormationStackSetExecutionRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

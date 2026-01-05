@@ -23,12 +23,12 @@ var DirectoryIDOutput = Output{
 
 // PrimaryDNSOutput - DNS IPs of the MS Directory
 var PrimaryDNSOutput = Output{
-	Value:       Select{0, rMSDirectory.DnsIpAddresses},
+	Value:       Select{Index: 0, List: rMSDirectory.DnsIpAddresses},
 	Description: "DNS IPs of the MS Directory",
 }
 
 // SecondaryDNSOutput - DNS IPs of the MSDirectory
 var SecondaryDNSOutput = Output{
-	Value:       Select{1, rMSDirectory.DnsIpAddresses},
+	Value:       Select{Index: 1, List: rMSDirectory.DnsIpAddresses},
 	Description: "DNS IPs of the MSDirectory",
 }

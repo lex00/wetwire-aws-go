@@ -10,12 +10,12 @@ import (
 )
 
 var ObjectStorageReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ObjectStorageReplicationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ObjectStorageReplicationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ObjectStorageReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -26,24 +26,24 @@ var ObjectStorageReplicationRole = iam.Role{
 }
 
 var ObjectStorageReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{ObjectStorageReplicationPolicyPolicyDocumentStatement0, ObjectStorageReplicationPolicyPolicyDocumentStatement1, ObjectStorageReplicationPolicyPolicyDocumentStatement2},
+	Statement: Any(ObjectStorageReplicationPolicyPolicyDocumentStatement0, ObjectStorageReplicationPolicyPolicyDocumentStatement1, ObjectStorageReplicationPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
 var ObjectStorageReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
+	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var ObjectStorageReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
+	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var ObjectStorageReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
+	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"},
 }

@@ -23,7 +23,7 @@ var StackNameOutput = Output{
 
 // URLOutput - The URL of the website
 var URLOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"http://",
 	ElasticLoadBalancer.DNSName,
 }},

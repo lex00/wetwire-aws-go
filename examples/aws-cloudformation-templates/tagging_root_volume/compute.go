@@ -23,7 +23,7 @@ var LinuxInstanceTagName = Tag{
 
 var LinuxInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sdm",
-	Ebs: LinuxInstanceBlockDeviceMappingDevsdmEbs,
+	Ebs: &LinuxInstanceBlockDeviceMappingDevsdmEbs,
 }
 
 var LinuxInstance = ec2.Instance{
@@ -52,7 +52,7 @@ var WindowsInstanceTagName = Tag{
 
 var WindowsInstanceBlockDeviceMappingDevsdm = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sdm",
-	Ebs: WindowsInstanceBlockDeviceMappingDevsdmEbs,
+	Ebs: &WindowsInstanceBlockDeviceMappingDevsdmEbs,
 }
 
 var WindowsInstance = ec2.Instance{

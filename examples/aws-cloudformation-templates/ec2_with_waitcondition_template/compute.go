@@ -59,10 +59,10 @@ var KWOSInstance = ec2.Instance{
 	InstanceType: InstanceType,
 	KeyName: KeyName,
 	Monitoring: false,
-	SecurityGroupIds: []any{KWOSSecurityGroup},
+	SecurityGroupIds: Any(KWOSSecurityGroup),
 	SubnetId: SubnetId,
 	Tags: []any{KWOSInstanceTagLaunchPlatform, KWOSInstanceTagLaunchUser, KWOSInstanceTagTestID, KWOSInstanceTagName, KWOSInstanceTagBudgetCode, KWOSInstanceTagTestTarget, KWOSInstanceTagAgentID, KWOSInstanceTagIsMaster, KWOSInstanceTagMasterID},
-	UserData: Base64{Join{"", []any{
+	UserData: Base64{Join{Delimiter: "", Values: []any{
 	"#!/bin/bash\n",
 	"apt-get -y install python-pip\n",
 	"pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",

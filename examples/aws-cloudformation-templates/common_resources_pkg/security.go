@@ -10,12 +10,12 @@ import (
 )
 
 var StorageReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{StorageReplicationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(StorageReplicationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var StorageReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -26,24 +26,24 @@ var StorageReplicationRole = iam.Role{
 }
 
 var StorageReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{StorageReplicationPolicyPolicyDocumentStatement0, StorageReplicationPolicyPolicyDocumentStatement1, StorageReplicationPolicyPolicyDocumentStatement2},
+	Statement: Any(StorageReplicationPolicyPolicyDocumentStatement0, StorageReplicationPolicyPolicyDocumentStatement1, StorageReplicationPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
 var StorageReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
+	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var StorageReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
+	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var StorageReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
+	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"},
 }

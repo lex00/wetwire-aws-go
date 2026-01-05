@@ -22,7 +22,7 @@ var EC2PlatformOutput = Output{
 
 // JDBCConnectionStringOutput - JDBC connection string for the master database
 var JDBCConnectionStringOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
 	MainDB.Endpoint.Address,
 	":",
@@ -35,7 +35,7 @@ var JDBCConnectionStringOutput = Output{
 
 // ReplicaJDBCConnectionStringOutput - JDBC connection string for the replica database
 var ReplicaJDBCConnectionStringOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
 	ReplicaDB.Endpoint.Address,
 	":",

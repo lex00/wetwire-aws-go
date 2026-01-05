@@ -11,7 +11,7 @@ import (
 // CertificateURLOutput - Go to this URL to check certificate issued or not (also find domain verification details)
 var CertificateURLOutput = Output{
 	Value:       SubWithMap{String: "https://${AWS::Region}.console.aws.amazon.com/acm/home?region=${AWS::Region}#/certificates/${CertificateId}", Variables: map[string]any{
-	"CertificateId": Select{1, Split{"/", ASCPrivateLinkCertificate}},
+	"CertificateId": Select{Index: 1, List: Split{"/", ASCPrivateLinkCertificate}},
 }},
 	Description: "Go to this URL to check certificate issued or not (also find domain verification details)",
 }

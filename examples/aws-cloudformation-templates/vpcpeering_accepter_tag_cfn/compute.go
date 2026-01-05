@@ -19,7 +19,7 @@ var TagVpcPeeringConnectionsLambdaFunctionCode = lambda.Function_Code{
 
 var TagVpcPeeringConnectionsLambdaFunction = lambda.Function{
 	Code: TagVpcPeeringConnectionsLambdaFunctionCode,
-	Environment: TagVpcPeeringConnectionsLambdaFunctionEnvironment,
+	Environment: &TagVpcPeeringConnectionsLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "index.handler",
 	MemorySize: 128,

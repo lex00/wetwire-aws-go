@@ -10,12 +10,12 @@ import (
 )
 
 var RestApiEndpointConfiguration = apigateway.RestApi_EndpointConfiguration{
-	Types: []any{ApiType},
+	Types: Any(ApiType),
 }
 
 var RestApi = apigateway.RestApi{
 	Description: "My Rest API",
-	EndpointConfiguration: RestApiEndpointConfiguration,
+	EndpointConfiguration: &RestApiEndpointConfiguration,
 	Name: "MyApi",
 }
 
@@ -55,7 +55,7 @@ var ApiMethodIntegration = apigateway.Method_Integration{
 	RequestTemplates: map[string]any{"application/json": "#set($inputRoot = $input.path('$'))\n    {\n      \"city\": \"$input.params('city')\",\n      \"time\": \"$input.params('time')\",\n      \"day\":  \"$input.params('day')\",\n      \"name\": \"$inputRoot.callerName\"\n    }\n"},
 	TimeoutInMillis: ApigatewayTimeout,
 	Type_: "AWS",
-	Uri: Join{"", []any{
+	Uri: Join{Delimiter: "", Values: []any{
 	"arn:",
 	AWS_PARTITION,
 	":apigateway:",
@@ -69,7 +69,7 @@ var ApiMethodIntegration = apigateway.Method_Integration{
 var ApiMethod = apigateway.Method{
 	AuthorizationType: "NONE",
 	HttpMethod: "ANY",
-	Integration: ApiMethodIntegration,
+	Integration: &ApiMethodIntegration,
 	MethodResponses: List(ApiMethodMethodResponse1),
 	RequestModels: map[string]any{
 	"application/json": RequestModel,

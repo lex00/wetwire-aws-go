@@ -38,8 +38,8 @@ var LoadBalancerLoadBalancerAttributeDeletionprotectionen = elasticloadbalancing
 var LoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	LoadBalancerAttributes: List(LoadBalancerLoadBalancerAttributeDeletionprotectionen, LoadBalancerLoadBalancerAttributeRoutinghttpdropinval),
 	Scheme: "internet-facing",
-	SecurityGroups: []any{LoadBalancerSecurityGroup.GroupId},
-	Subnets: []any{PublicSubnet1, PublicSubnet2},
+	SecurityGroups: Any(LoadBalancerSecurityGroup.GroupId),
+	Subnets: Any(PublicSubnet1, PublicSubnet2),
 	Type_: "application",
 }
 

@@ -32,7 +32,7 @@ var InstanceSecurityGroup = ec2.SecurityGroup{
 var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{
 	InstancePort: "80",
 	LoadBalancerPort: "80",
-	PolicyNames: []any{"myLBPolicy"},
+	PolicyNames: Any("myLBPolicy"),
 	Protocol: "HTTP",
 }
 
@@ -52,8 +52,8 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	AvailabilityZones: GetAZs{},
 	CrossZone: "true",
-	HealthCheck: ElasticLoadBalancerHealthCheck,
-	Instances: []any{EC2Instance1, EC2Instance2},
+	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	Instances: Any(EC2Instance1, EC2Instance2),
 	LBCookieStickinessPolicy: List(ElasticLoadBalancerLBCookieStickinessPolicyMyLBPolicy),
 	Listeners: List(ElasticLoadBalancerListener1),
 }

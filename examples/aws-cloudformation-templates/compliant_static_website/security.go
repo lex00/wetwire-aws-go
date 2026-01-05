@@ -10,12 +10,12 @@ import (
 )
 
 var CloudFrontLogsReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{CloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(CloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var CloudFrontLogsReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -26,24 +26,24 @@ var CloudFrontLogsReplicationRole = iam.Role{
 }
 
 var CloudFrontLogsReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{CloudFrontLogsReplicationPolicyPolicyDocumentStatement0, CloudFrontLogsReplicationPolicyPolicyDocumentStatement1, CloudFrontLogsReplicationPolicyPolicyDocumentStatement2},
+	Statement: Any(CloudFrontLogsReplicationPolicyPolicyDocumentStatement0, CloudFrontLogsReplicationPolicyPolicyDocumentStatement1, CloudFrontLogsReplicationPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
 var CloudFrontLogsReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
+	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var CloudFrontLogsReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
+	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var CloudFrontLogsReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
+	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"},
 }
@@ -55,12 +55,12 @@ var CloudFrontLogsReplicationPolicy = iam.RolePolicy{
 }
 
 var ContentReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ContentReplicationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ContentReplicationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ContentReplicationRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"s3.amazonaws.com"},
 }
@@ -71,24 +71,24 @@ var ContentReplicationRole = iam.Role{
 }
 
 var ContentReplicationPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{ContentReplicationPolicyPolicyDocumentStatement0, ContentReplicationPolicyPolicyDocumentStatement1, ContentReplicationPolicyPolicyDocumentStatement2},
+	Statement: Any(ContentReplicationPolicyPolicyDocumentStatement0, ContentReplicationPolicyPolicyDocumentStatement1, ContentReplicationPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
 var ContentReplicationPolicyPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"},
+	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicationTags"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var ContentReplicationPolicyPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"},
+	Action: Any("s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"},
 }
 
 var ContentReplicationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:GetReplicationConfiguration", "s3:ListBucket"},
+	Action: Any("s3:GetReplicationConfiguration", "s3:ListBucket"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"},
 }

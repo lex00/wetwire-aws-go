@@ -10,12 +10,12 @@ import (
 )
 
 var LambdaIAMRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{LambdaIAMRolePolicyRootPolicyDocumentStatement0},
+	Statement: Any(LambdaIAMRolePolicyRootPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var LambdaIAMRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"},
+	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"),
 	Effect: "Allow",
 	Resource: "arn:aws:logs:*:*:*",
 }
@@ -26,12 +26,12 @@ var LambdaIAMRolePolicyRoot = iam.Role_Policy{
 }
 
 var LambdaIAMRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{LambdaIAMRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(LambdaIAMRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var LambdaIAMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }

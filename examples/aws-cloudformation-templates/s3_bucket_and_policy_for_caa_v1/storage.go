@@ -14,7 +14,7 @@ var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryption
 }
 
 var BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var BucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -33,14 +33,14 @@ var BucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var Bucket = s3.Bucket{
-	BucketEncryption: BucketBucketEncryption,
+	BucketEncryption: &BucketBucketEncryption,
 	BucketName: BucketName,
-	PublicAccessBlockConfiguration: BucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: BucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &BucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &BucketVersioningConfiguration,
 }
 
 var BucketPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{BucketPolicyPolicyDocumentStatement0, BucketPolicyPolicyDocumentStatement1, BucketPolicyPolicyDocumentStatement2},
+	Statement: Any(BucketPolicyPolicyDocumentStatement0, BucketPolicyPolicyDocumentStatement1, BucketPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
@@ -48,7 +48,7 @@ var BucketPolicyPolicyDocumentStatement2 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}"}, Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}"}, Sub{String: "arn:${AWS::Partition}:s3:::${BucketName}/*"}),
 }
 
 var BucketPolicyPolicyDocumentStatement1 = PolicyStatement{

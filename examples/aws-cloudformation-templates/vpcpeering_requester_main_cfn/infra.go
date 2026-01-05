@@ -31,7 +31,7 @@ var VPCPeeringUpdatesStack = cloudformation.Stack{
 	"PeerName": PeerName,
 	"PeerVPCCIDR": PeerVPCCIDR,
 	"RouteTableIds": RouteTableIds,
-	"SecurityGroupIds": Join{",", SecurityGroupIds},
+	"SecurityGroupIds": Join{Delimiter: ",", Values: SecurityGroupIds},
 	"VPCPeeringConnectionId": VPCPeeringRequesterSetupStack.Outputs.VPCPeeringConnectionId,
 },
 	TemplateURL: SubWithMap{String: "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${S3KeyPrefix}templates/VPCPeering-Updates.cfn.yaml", Variables: map[string]any{

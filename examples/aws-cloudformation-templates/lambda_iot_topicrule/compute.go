@@ -16,7 +16,7 @@ var MyLambdaCode = lambda.Function_Code{
 
 var MyLambda = lambda.Function{
 	Code: MyLambdaCode,
-	FunctionName: Sub{String: "${AWS::StackName}"},
+	FunctionName: AWS_STACK_NAME,
 	Handler: "index.handler",
 	Role: MyLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimeNodejs20X,
@@ -24,12 +24,12 @@ var MyLambda = lambda.Function{
 
 var MyLambdaPermission = lambda.Permission{
 	Action: "lambda:InvokeFunction",
-	FunctionName: Sub{String: "${AWS::StackName}"},
+	FunctionName: AWS_STACK_NAME,
 	Principal: "iot.amazonaws.com",
-	SourceAccount: Sub{String: "${AWS::AccountId}"},
+	SourceAccount: AWS_ACCOUNT_ID,
 	SourceArn: IoTTopicRule.Arn,
 }
 
 var MyLambdaVersion = lambda.Version{
-	FunctionName: Sub{String: "${AWS::StackName}"},
+	FunctionName: AWS_STACK_NAME,
 }

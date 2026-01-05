@@ -14,14 +14,14 @@ var LaunchConfig = autoscaling.LaunchConfiguration{
 	ImageId: FindInMap{"AWSRegionArch2AMI", AWS_REGION, FindInMap{"AWSInstanceType2Arch", InstanceType, "Arch"}},
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: []any{InstanceSecurityGroup},
+	SecurityGroups: Any(InstanceSecurityGroup),
 	UserData: Base64{Sub{String: "#!/bin/bash -xe\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource LaunchConfig --configsets full_install --region ${AWS::Region}\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WebServerGroup --region ${AWS::Region}\n"}},
 }
 
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: GetAZs{},
 	LaunchConfigurationName: LaunchConfig,
-	LoadBalancerNames: []any{ElasticLoadBalancer},
+	LoadBalancerNames: Any(ElasticLoadBalancer),
 	MaxSize: 4,
 	MinSize: 2,
 }

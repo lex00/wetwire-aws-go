@@ -11,12 +11,12 @@ import (
 )
 
 var AutoscalingRolePolicyServiceNegautoscalinPolicyDocument = PolicyDocument{
-	Statement: []any{AutoscalingRolePolicyServiceNegautoscalinPolicyDocumentStatement0},
+	Statement: Any(AutoscalingRolePolicyServiceNegautoscalinPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var AutoscalingRolePolicyServiceNegautoscalinPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"application-autoscaling:*", "cloudwatch:DescribeAlarms", "cloudwatch:PutMetricAlarm", "ecs:DescribeServices", "ecs:UpdateService"},
+	Action: Any("application-autoscaling:*", "cloudwatch:DescribeAlarms", "cloudwatch:PutMetricAlarm", "ecs:DescribeServices", "ecs:UpdateService"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -27,12 +27,12 @@ var AutoscalingRolePolicyServiceNegautoscalin = iam.Role_Policy{
 }
 
 var AutoscalingRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{AutoscalingRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(AutoscalingRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var AutoscalingRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"application-autoscaling.amazonaws.com"},
 }
@@ -44,12 +44,12 @@ var AutoscalingRole = iam.Role{
 }
 
 var EC2RolePolicyEcsNegservicePolicyDocument = PolicyDocument{
-	Statement: []any{EC2RolePolicyEcsNegservicePolicyDocumentStatement0},
+	Statement: Any(EC2RolePolicyEcsNegservicePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var EC2RolePolicyEcsNegservicePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"ecs:CreateCluster", "ecs:DeregisterContainerInstance", "ecs:DiscoverPollEndpoint", "ecs:Poll", "ecs:RegisterContainerInstance", "ecs:StartTelemetrySession", "ecs:Submit*", "logs:CreateLogStream", "logs:PutLogEvents"},
+	Action: Any("ecs:CreateCluster", "ecs:DeregisterContainerInstance", "ecs:DiscoverPollEndpoint", "ecs:Poll", "ecs:RegisterContainerInstance", "ecs:StartTelemetrySession", "ecs:Submit*", "logs:CreateLogStream", "logs:PutLogEvents"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -60,12 +60,12 @@ var EC2RolePolicyEcsNegservice = iam.Role_Policy{
 }
 
 var EC2RoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{EC2RoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(EC2RoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var EC2RoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -78,16 +78,16 @@ var EC2Role = iam.Role{
 
 var EC2InstanceProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: []any{EC2Role},
+	Roles: Any(EC2Role),
 }
 
 var ECSEventRolePolicyEcsNegservicePolicyDocument = PolicyDocument{
-	Statement: []any{ECSEventRolePolicyEcsNegservicePolicyDocumentStatement0},
+	Statement: Any(ECSEventRolePolicyEcsNegservicePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ECSEventRolePolicyEcsNegservicePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"ecs:RunTask"},
+	Action: Any("ecs:RunTask"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -98,12 +98,12 @@ var ECSEventRolePolicyEcsNegservice = iam.Role_Policy{
 }
 
 var ECSEventRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ECSEventRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ECSEventRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ECSEventRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"events.amazonaws.com"},
 }
@@ -115,12 +115,12 @@ var ECSEventRole = iam.Role{
 }
 
 var ECSServiceRolePolicyEcsNegservicePolicyDocument = PolicyDocument{
-	Statement: []any{ECSServiceRolePolicyEcsNegservicePolicyDocumentStatement0},
+	Statement: Any(ECSServiceRolePolicyEcsNegservicePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ECSServiceRolePolicyEcsNegservicePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"elasticloadbalancing:DeregisterInstancesFromLoadBalancer", "elasticloadbalancing:DeregisterTargets", "elasticloadbalancing:Describe*", "elasticloadbalancing:RegisterInstancesWithLoadBalancer", "elasticloadbalancing:RegisterTargets", "ec2:Describe*", "ec2:AuthorizeSecurityGroupIngress"},
+	Action: Any("elasticloadbalancing:DeregisterInstancesFromLoadBalancer", "elasticloadbalancing:DeregisterTargets", "elasticloadbalancing:Describe*", "elasticloadbalancing:RegisterInstancesWithLoadBalancer", "elasticloadbalancing:RegisterTargets", "ec2:Describe*", "ec2:AuthorizeSecurityGroupIngress"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -131,12 +131,12 @@ var ECSServiceRolePolicyEcsNegservice = iam.Role_Policy{
 }
 
 var ECSServiceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ECSServiceRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ECSServiceRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ECSServiceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ecs.amazonaws.com"},
 }

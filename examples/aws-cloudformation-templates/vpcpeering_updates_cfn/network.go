@@ -12,77 +12,77 @@ import (
 var PeerIngressRule1 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer, ${PeerName}"},
-	GroupId: Select{0, SecurityGroupIds},
+	GroupId: Select{Index: 0, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerIngressRule2 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer CIDR, ${PeerName}"},
-	GroupId: Select{1, SecurityGroupIds},
+	GroupId: Select{Index: 1, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerIngressRule3 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer, ${PeerName}"},
-	GroupId: Select{2, SecurityGroupIds},
+	GroupId: Select{Index: 2, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerIngressRule4 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer, ${PeerName}"},
-	GroupId: Select{3, SecurityGroupIds},
+	GroupId: Select{Index: 3, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerIngressRule5 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer, ${PeerName}"},
-	GroupId: Select{4, SecurityGroupIds},
+	GroupId: Select{Index: 4, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerIngressRule6 = ec2.SecurityGroupIngress{
 	CidrIp: PeerVPCCIDR,
 	Description: Sub{String: "LAB - Allow All Inbound Communications from VPC Peer, ${PeerName}"},
-	GroupId: Select{5, SecurityGroupIds},
+	GroupId: Select{Index: 5, List: SecurityGroupIds},
 	IpProtocol: "-1",
 }
 
 var PeerRoute1 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{0, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 0, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }
 
 var PeerRoute2 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{1, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 1, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }
 
 var PeerRoute3 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{2, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 2, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }
 
 var PeerRoute4 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{3, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 3, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }
 
 var PeerRoute5 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{4, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 4, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }
 
 var PeerRoute6 = ec2.Route{
 	DestinationCidrBlock: PeerVPCCIDR,
-	RouteTableId: Select{5, Split{",", RouteTableIds}},
+	RouteTableId: Select{Index: 5, List: Split{",", RouteTableIds}},
 	VpcPeeringConnectionId: VPCPeeringConnectionId,
 }

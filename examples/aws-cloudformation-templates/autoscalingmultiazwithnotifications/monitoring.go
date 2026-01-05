@@ -9,31 +9,13 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
-var CPUAlarmLowDimensionAutoScalingGroupName = cloudwatch.Alarm_Dimension{
-	Name: "AutoScalingGroupName",
-	Value: WebServerGroup,
-}
-
-var CPUAlarmLow = cloudwatch.Alarm{
-	AlarmActions: []any{WebServerScaleDownPolicy},
-	AlarmDescription: "Scale-down if CPU < 70% for 10 minutes",
-	ComparisonOperator: "LessThanThreshold",
-	Dimensions: List(CPUAlarmLowDimensionAutoScalingGroupName),
-	EvaluationPeriods: 2,
-	MetricName: "CPUUtilization",
-	Namespace: "AWS/EC2",
-	Period: 300,
-	Statistic: "Average",
-	Threshold: 70,
-}
-
 var CPUAlarmHighDimensionAutoScalingGroupName = cloudwatch.Alarm_Dimension{
 	Name: "AutoScalingGroupName",
 	Value: WebServerGroup,
 }
 
 var CPUAlarmHigh = cloudwatch.Alarm{
-	AlarmActions: []any{WebServerScaleUpPolicy},
+	AlarmActions: Any(WebServerScaleUpPolicy),
 	AlarmDescription: "Scale-up if CPU > 90% for 10 minutes",
 	ComparisonOperator: "GreaterThanThreshold",
 	Dimensions: List(CPUAlarmHighDimensionAutoScalingGroupName),
@@ -43,4 +25,22 @@ var CPUAlarmHigh = cloudwatch.Alarm{
 	Period: 300,
 	Statistic: "Average",
 	Threshold: 90,
+}
+
+var CPUAlarmLowDimensionAutoScalingGroupName = cloudwatch.Alarm_Dimension{
+	Name: "AutoScalingGroupName",
+	Value: WebServerGroup,
+}
+
+var CPUAlarmLow = cloudwatch.Alarm{
+	AlarmActions: Any(WebServerScaleDownPolicy),
+	AlarmDescription: "Scale-down if CPU < 70% for 10 minutes",
+	ComparisonOperator: "LessThanThreshold",
+	Dimensions: List(CPUAlarmLowDimensionAutoScalingGroupName),
+	EvaluationPeriods: 2,
+	MetricName: "CPUUtilization",
+	Namespace: "AWS/EC2",
+	Period: 300,
+	Statistic: "Average",
+	Threshold: 70,
 }

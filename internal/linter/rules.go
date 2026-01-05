@@ -20,6 +20,7 @@
 //	WAW015: Avoid explicit Ref{} - use direct variable references or Param()
 //	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
 //	WAW017: Avoid pointer assignments (&Type{}) - use value types
+//	WAW018: Avoid []any slices - use Any() helper function
 package linter
 
 import (
@@ -1770,6 +1771,61 @@ func (r AvoidPointerAssignment) Check(file *ast.File, fset *token.FileSet) []Iss
 	return issues
 }
 
+// AvoidAnySlice detects []any slice literals that should use Any() helper.
+//
+// Example:
+//
+//	// Bad - []any slice
+//	Tags: []any{Tag1, Tag2, Tag3},
+//
+//	// Good - Any() helper
+//	Tags: Any(Tag1, Tag2, Tag3),
+type AvoidAnySlice struct{}
+
+func (r AvoidAnySlice) ID() string { return "WAW018" }
+func (r AvoidAnySlice) Description() string {
+	return "Avoid []any slices - use Any() helper function"
+}
+
+func (r AvoidAnySlice) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		comp, ok := n.(*ast.CompositeLit)
+		if !ok {
+			return true
+		}
+
+		// Check if this is []any type
+		arrType, ok := comp.Type.(*ast.ArrayType)
+		if !ok {
+			return true
+		}
+
+		// Check if element type is "any"
+		elemIdent, ok := arrType.Elt.(*ast.Ident)
+		if !ok || elemIdent.Name != "any" {
+			return true
+		}
+
+		// Found []any{...}
+		pos := fset.Position(comp.Pos())
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    "Use Any() helper instead of []any{...}",
+			Suggestion: "Any(...)",
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "warning",
+		})
+
+		return true
+	})
+
+	return issues
+}
+
 // AllRules returns all available lint rules.
 func AllRules() []Rule {
 	return []Rule{
@@ -1790,5 +1846,6 @@ func AllRules() []Rule {
 		AvoidExplicitRef{},
 		AvoidExplicitGetAtt{},
 		AvoidPointerAssignment{},
+		AvoidAnySlice{},
 	}
 }

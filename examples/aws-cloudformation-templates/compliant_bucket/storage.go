@@ -10,7 +10,7 @@ import (
 )
 
 var ObjectStorageBucketPolicyPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{ObjectStorageBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageBucketPolicyPolicyPolicyDocumentStatement1},
+	Statement: Any(ObjectStorageBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageBucketPolicyPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -19,14 +19,14 @@ var ObjectStorageBucketPolicyPolicyPolicyDocumentStatement1 = PolicyStatement{
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageBucketPolicyPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageBucketPolicyPolicy = s3.BucketPolicy{
@@ -44,11 +44,11 @@ var ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1Serv
 }
 
 var ObjectStorageLogBucketObjectLockConfigurationRule = s3.Bucket_ObjectLockRule{
-	DefaultRetention: ObjectStorageLogBucketObjectLockConfigurationRuleDefaultRetention,
+	DefaultRetention: &ObjectStorageLogBucketObjectLockConfigurationRuleDefaultRetention,
 }
 
 var ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageLogBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -64,7 +64,7 @@ var ObjectStorageLogBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAcces
 
 var ObjectStorageLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfiguration{
 	ObjectLockEnabled: "Enabled",
-	Rule: ObjectStorageLogBucketObjectLockConfigurationRule,
+	Rule: &ObjectStorageLogBucketObjectLockConfigurationRule,
 }
 
 var ObjectStorageLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
@@ -72,16 +72,16 @@ var ObjectStorageLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageLogBucket = s3.Bucket{
-	BucketEncryption: ObjectStorageLogBucketBucketEncryption,
+	BucketEncryption: &ObjectStorageLogBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-logs-${AWS::Region}-${AWS::AccountId}"},
-	ObjectLockConfiguration: ObjectStorageLogBucketObjectLockConfiguration,
+	ObjectLockConfiguration: &ObjectStorageLogBucketObjectLockConfiguration,
 	ObjectLockEnabled: true,
-	PublicAccessBlockConfiguration: ObjectStorageLogBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: ObjectStorageLogBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &ObjectStorageLogBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &ObjectStorageLogBucketVersioningConfiguration,
 }
 
 var ObjectStorageLogBucketPolicyPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement1},
+	Statement: Any(ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -90,14 +90,14 @@ var ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement1 = PolicyStatement
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageLogBucketPolicyPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-logs-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageLogBucketPolicyPolicy = s3.BucketPolicy{
@@ -110,7 +110,7 @@ var ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1
 }
 
 var ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageReplicaBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -129,15 +129,15 @@ var ObjectStorageReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageReplicaBucket = s3.Bucket{
-	BucketEncryption: ObjectStorageReplicaBucketBucketEncryption,
+	BucketEncryption: &ObjectStorageReplicaBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"},
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: ObjectStorageReplicaBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: ObjectStorageReplicaBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &ObjectStorageReplicaBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &ObjectStorageReplicaBucketVersioningConfiguration,
 }
 
 var ObjectStorageReplicaBucketPolicyPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement1},
+	Statement: Any(ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement0, ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -146,14 +146,14 @@ var ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement1 = PolicyState
 	Condition: Json{ArnLike: Json{"aws:SourceArn": Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"}}, StringEquals: Json{"aws:SourceAccount": AWS_ACCOUNT_ID}},
 	Effect: "Allow",
 	Principal: ServicePrincipal{"logging.s3.amazonaws.com"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageReplicaBucketPolicyPolicyPolicyDocumentStatement0 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${AppName}-replicas-${AWS::Region}-${AWS::AccountId}/*"}),
 }
 
 var ObjectStorageReplicaBucketPolicyPolicy = s3.BucketPolicy{
@@ -175,7 +175,7 @@ var ObjectStorageBucketReplicationConfigurationRuleEnabled = s3.Bucket_Replicati
 }
 
 var ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -203,11 +203,11 @@ var ObjectStorageBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageBucket = s3.Bucket{
-	BucketEncryption: ObjectStorageBucketBucketEncryption,
+	BucketEncryption: &ObjectStorageBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-${AWS::Region}-${AWS::AccountId}"},
-	LoggingConfiguration: ObjectStorageBucketLoggingConfiguration,
+	LoggingConfiguration: &ObjectStorageBucketLoggingConfiguration,
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: ObjectStorageBucketPublicAccessBlockConfiguration,
-	ReplicationConfiguration: ObjectStorageBucketReplicationConfiguration,
-	VersioningConfiguration: ObjectStorageBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &ObjectStorageBucketPublicAccessBlockConfiguration,
+	ReplicationConfiguration: &ObjectStorageBucketReplicationConfiguration,
+	VersioningConfiguration: &ObjectStorageBucketVersioningConfiguration,
 }

@@ -10,9 +10,9 @@ import (
 )
 
 var OriginAccessControlOriginAccessControlConfig = cloudfront.OriginAccessControl_OriginAccessControlConfig{
-	Name: Join{"", []any{
+	Name: Join{Delimiter: "", Values: []any{
 	"rain-build-website-",
-	Select{2, Split{"/", AWS_STACK_ID}},
+	Select{Index: 2, List: Split{"/", AWS_STACK_ID}},
 }},
 	OriginAccessControlOriginType: "s3",
 	SigningBehavior: "always",
@@ -35,7 +35,7 @@ var DistributionDistributionConfigOriginRainNegbuildNegorigi = cloudfront.Distri
 	DomainName: ContentBucket.RegionalDomainName,
 	Id: "rain-build-origin-1",
 	OriginAccessControlId: OriginAccessControl.Id,
-	S3OriginConfig: DistributionDistributionConfigOriginRainNegbuildNegorigiS3OriginConfig,
+	S3OriginConfig: &DistributionDistributionConfigOriginRainNegbuildNegorigiS3OriginConfig,
 }
 
 var DistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
@@ -55,9 +55,9 @@ var DistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
 	Enabled: true,
 	HttpVersion: "http2",
 	IPV6Enabled: true,
-	Logging: DistributionDistributionConfigLogging,
+	Logging: &DistributionDistributionConfigLogging,
 	Origins: List(DistributionDistributionConfigOriginRainNegbuildNegorigi),
-	ViewerCertificate: DistributionDistributionConfigViewerCertificate,
+	ViewerCertificate: &DistributionDistributionConfigViewerCertificate,
 	WebACLId: WebACL,
 }
 

@@ -13,6 +13,6 @@ var EC2Instance = ec2.Instance{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
-	SubnetId: Select{0, Subnets},
+	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
+	SubnetId: Select{Index: 0, List: Subnets},
 }

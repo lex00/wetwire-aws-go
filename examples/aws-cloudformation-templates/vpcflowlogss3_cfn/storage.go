@@ -16,7 +16,7 @@ var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSid
 
 var VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
 	BucketKeyEnabled: If{"VPCFlowLogsBucketKMSKeyCondition", VPCFlowLogsBucketKeyEnabled, AWS_NO_VALUE},
-	ServerSideEncryptionByDefault: VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &VPCFlowLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var VPCFlowLogsBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -35,17 +35,17 @@ var VPCFlowLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var VPCFlowLogsBucket = s3.Bucket{
-	BucketEncryption: VPCFlowLogsBucketBucketEncryption,
+	BucketEncryption: &VPCFlowLogsBucketBucketEncryption,
 	BucketName: Sub{String: "aws-vpcflowlogs-${AWS::AccountId}-${AWS::Region}"},
 	LoggingConfiguration: If{"S3AccessLogsCondition", map[string]any{
 	"DestinationBucketName": S3AccessLogsBucketName,
 }, AWS_NO_VALUE},
-	PublicAccessBlockConfiguration: VPCFlowLogsBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: VPCFlowLogsBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: &VPCFlowLogsBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &VPCFlowLogsBucketVersioningConfiguration,
 }
 
 var VPCFlowLogsBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{VPCFlowLogsBucketPolicyPolicyDocumentStatement0, VPCFlowLogsBucketPolicyPolicyDocumentStatement1, VPCFlowLogsBucketPolicyPolicyDocumentStatement2},
+	Statement: Any(VPCFlowLogsBucketPolicyPolicyDocumentStatement0, VPCFlowLogsBucketPolicyPolicyDocumentStatement1, VPCFlowLogsBucketPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
@@ -53,7 +53,7 @@ var VPCFlowLogsBucketPolicyPolicyDocumentStatement2 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: "*",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}"}, Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}"}, Sub{String: "arn:${AWS::Partition}:s3:::${VPCFlowLogsBucket}/*"}),
 	Sid: "DenyNonSSLRequests",
 }
 

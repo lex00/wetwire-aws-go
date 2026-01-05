@@ -59,10 +59,10 @@ var ASCPrivateLinkListener = elasticloadbalancingv2.Listener{
 
 var ASCPrivateLinkVPCES = ec2.VPCEndpointService{
 	AcceptanceRequired: false,
-	NetworkLoadBalancerArns: []any{ASCPrivateLinkNLB},
+	NetworkLoadBalancerArns: Any(ASCPrivateLinkNLB),
 }
 
 var ASCPrivateLinkVPCESPermission = ec2.VPCEndpointServicePermissions{
-	AllowedPrincipals: []any{"appflow.amazonaws.com"},
+	AllowedPrincipals: Any("appflow.amazonaws.com"),
 	ServiceId: ASCPrivateLinkVPCES,
 }

@@ -12,49 +12,44 @@ import (
 var ServiceCatalogProductTagOptionsEnv = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "Env",
-	Value: Sub{String: "${ProductEnv}"},
+	Value: ProductEnv,
 }
 
 var ServiceCatalogProductTagOptionsOwner = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "Owner",
-	Value: Sub{String: "${ProductOwner}"},
+	Value: ProductOwner,
 }
 
 var ServiceCatalogProductTagOptionsUser = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "User",
-	Value: Sub{String: "${ProductUser}"},
-}
-
-var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
-	AccountId: AccountIdOfChildAWSAccount,
-	PortfolioId: ServiceCatalogPortfolio,
+	Value: ProductUser,
 }
 
 var ServiceCatalogPortfolioTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var ServiceCatalogPortfolioTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var ServiceCatalogPortfolioTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var ServiceCatalogPortfolioTagDept = Tag{
 	Key: "Dept",
-	Value: Sub{String: "${Dept}"},
+	Value: Dept,
 }
 
 var ServiceCatalogPortfolioTagName = Tag{
 	Key: "Name",
-	Value: Sub{String: "${PortfolioDisplayName}"},
+	Value: PortfolioDisplayName,
 }
 
 var ServiceCatalogPortfolio = servicecatalog.Portfolio{
@@ -67,5 +62,10 @@ var ServiceCatalogPortfolio = servicecatalog.Portfolio{
 var ServiceCatalogProductTagOptionsDept = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "Dept",
-	Value: Sub{String: "${ProductDept}"},
+	Value: ProductDept,
+}
+
+var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
+	AccountId: AccountIdOfChildAWSAccount,
+	PortfolioId: ServiceCatalogPortfolio,
 }

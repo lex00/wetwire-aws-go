@@ -961,11 +961,12 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			}
 		}
 		// Fallback: inline array
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
 		for _, item := range v {
 			items = append(items, valueToBlockStyleProperty(ctx, item, "", parentVarName))
 		}
-		return fmt.Sprintf("[]any{%s}", strings.Join(items, ", "))
+		return fmt.Sprintf("Any(%s)", strings.Join(items, ", "))
 
 	case map[string]any:
 		// Check if this is an intrinsic function map
@@ -1011,6 +1012,10 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
+			// Add & if field expects a pointer
+			if needsPointer {
+				return "&" + blockVarName
+			}
 			return blockVarName
 		}
 
@@ -1068,7 +1073,7 @@ func generatePropertyBlock(ctx *codegenContext, block propertyBlock) string {
 			case "Statement":
 				// Statement is a list of var references (strings)
 				if varNames, ok := v.([]string); ok {
-					fieldVal = fmt.Sprintf("[]any{%s}", strings.Join(varNames, ", "))
+					fieldVal = fmt.Sprintf("Any(%s)", strings.Join(varNames, ", "))
 				} else {
 					fieldVal = valueToGoForBlock(ctx, v, k, block.varName)
 				}
@@ -1144,11 +1149,12 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			}
 		}
 		// Fallback: inline array
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
 		for _, item := range v {
 			items = append(items, valueToGoForBlock(ctx, item, "", parentVarName))
 		}
-		return fmt.Sprintf("[]any{%s}", strings.Join(items, ", "))
+		return fmt.Sprintf("Any(%s)", strings.Join(items, ", "))
 
 	case map[string]any:
 		// Check if this is an intrinsic function map
@@ -1194,6 +1200,10 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
+			// Add & if field expects a pointer
+			if needsPointer {
+				return "&" + nestedVarName
+			}
 			return nestedVarName
 		}
 
@@ -1734,10 +1744,42 @@ func mapToIntrinsic(m map[string]any) *IRIntrinsic {
 	return nil
 }
 
+// simplifySubString analyzes a Sub template string and returns the simplest representation:
+// - If it's just "${VarName}" with no other text, returns the variable directly
+// - If it's just "${AWS::Region}" etc., returns the pseudo-parameter constant
+// - Otherwise returns Sub{...} with positional syntax
+func simplifySubString(ctx *codegenContext, s string) string {
+	// Pattern for single variable reference: ${VarName}
+	// Match strings that are ONLY a single ${...} with no other text
+	if len(s) > 3 && s[0] == '$' && s[1] == '{' && s[len(s)-1] == '}' {
+		inner := s[2 : len(s)-1]
+		// Check no nested ${} or additional ${}
+		if !strings.Contains(inner, "${") && !strings.Contains(inner, "}") {
+			// It's a single reference like ${VarName} or ${AWS::Region}
+			if strings.HasPrefix(inner, "AWS::") {
+				// Pseudo-parameter: return constant
+				return pseudoParameterToGo(ctx, inner)
+			}
+			// Regular variable reference
+			// Check if it's a known resource or parameter
+			if _, ok := ctx.template.Resources[inner]; ok {
+				return SanitizeGoName(inner)
+			}
+			if _, ok := ctx.template.Parameters[inner]; ok {
+				return SanitizeGoName(inner)
+			}
+			// Unknown reference - still emit as variable (cross-file)
+			return SanitizeGoName(inner)
+		}
+	}
+	// Not a simple reference - use Sub{} with keyed syntax (to satisfy go vet)
+	return fmt.Sprintf("Sub{String: %q}", s)
+}
+
 // intrinsicToGo converts an IRIntrinsic to Go source code.
 // Uses function call syntax for cleaner generated code:
 //
-//	Sub("template") instead of intrinsics.Sub{String: "template"}
+//	Sub{...} with positional syntax for template strings
 //	Select(0, GetAZs()) instead of intrinsics.Select{Index: 0, List: intrinsics.GetAZs{}}
 func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 	// Note: We only add intrinsics import when we actually emit an intrinsic type.
@@ -1786,7 +1828,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		switch args := intrinsic.Args.(type) {
 		case string:
-			return fmt.Sprintf("Sub{String: %q}", args)
+			return simplifySubString(ctx, args)
 		case []any:
 			if len(args) >= 2 {
 				template := fmt.Sprintf("%v", args[0])
@@ -1794,7 +1836,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				return fmt.Sprintf("SubWithMap{String: %q, Variables: %s}", template, vars)
 			} else if len(args) == 1 {
 				template := fmt.Sprintf("%v", args[0])
-				return fmt.Sprintf("Sub{String: %q}", template)
+				return simplifySubString(ctx, template)
 			}
 		}
 		return `Sub{String: ""}`
@@ -1804,26 +1846,26 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			delimiter := valueToGo(ctx, args[0], 0)
 			values := valueToGo(ctx, args[1], 0)
-			return fmt.Sprintf("Join{%s, %s}", delimiter, values)
+			return fmt.Sprintf("Join{Delimiter: %s, Values: %s}", delimiter, values)
 		}
-		return `Join{"", nil}`
+		return `Join{Delimiter: "", Values: nil}`
 
 	case IntrinsicSelect:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			index := valueToGo(ctx, args[0], 0)
 			list := valueToGo(ctx, args[1], 0)
-			return fmt.Sprintf("Select{%s, %s}", index, list)
+			return fmt.Sprintf("Select{Index: %s, List: %s}", index, list)
 		}
-		return "Select{0, nil}"
+		return "Select{Index: 0, List: nil}"
 
 	case IntrinsicGetAZs:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-		region := fmt.Sprintf("%v", intrinsic.Args)
-		if region == "" || region == "<nil>" {
+		if intrinsic.Args == nil || intrinsic.Args == "" {
 			return "GetAZs{}"
 		}
-		return fmt.Sprintf("GetAZs{%q}", region)
+		region := valueToGo(ctx, intrinsic.Args, 0)
+		return fmt.Sprintf("GetAZs{Region: %s}", region)
 
 	case IntrinsicIf:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
@@ -2318,11 +2360,12 @@ func jsonValueToGo(ctx *codegenContext, value any) string {
 	case string:
 		return fmt.Sprintf("%q", v)
 	case []any:
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		var items []string
 		for _, item := range v {
 			items = append(items, jsonValueToGo(ctx, item))
 		}
-		return fmt.Sprintf("[]any{%s}", strings.Join(items, ", "))
+		return fmt.Sprintf("Any(%s)", strings.Join(items, ", "))
 	case map[string]any:
 		return jsonMapToGo(ctx, v)
 	default:

@@ -10,12 +10,12 @@ import (
 )
 
 var TargetAccountLoggingStackInstancesGroup1DeploymentTargets = cloudformation.StackSet_DeploymentTargets{
-	OrganizationalUnitIds: []any{OUID},
+	OrganizationalUnitIds: Any(OUID),
 }
 
 var TargetAccountLoggingStackInstancesGroup1 = cloudformation.StackSet_StackInstances{
 	DeploymentTargets: TargetAccountLoggingStackInstancesGroup1DeploymentTargets,
-	Regions: []any{"us-east-1", "us-west-2"},
+	Regions: Any("us-east-1", "us-west-2"),
 }
 
 var TargetAccountLoggingParameter1 = cloudformation.StackSet_Parameter{
@@ -35,10 +35,10 @@ var TargetAccountLoggingAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var TargetAccountLogging = cloudformation.StackSet{
-	AutoDeployment: TargetAccountLoggingAutoDeployment,
-	Capabilities: []any{"CAPABILITY_IAM"},
+	AutoDeployment: &TargetAccountLoggingAutoDeployment,
+	Capabilities: Any("CAPABILITY_IAM"),
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging. It configures logging resources in target accounts.",
-	OperationPreferences: TargetAccountLoggingOperationPreferences,
+	OperationPreferences: &TargetAccountLoggingOperationPreferences,
 	Parameters: List(TargetAccountLoggingParameter1),
 	PermissionModel: "SERVICE_MANAGED",
 	StackInstancesGroup: List(TargetAccountLoggingStackInstancesGroup1),

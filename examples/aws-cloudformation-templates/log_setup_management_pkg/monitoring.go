@@ -22,13 +22,13 @@ var CentralEventLogPolicy = logs.ResourcePolicy{
 }
 
 var CentralEventLogQuery = logs.QueryDefinition{
-	LogGroupNames: []any{CentralEventLogName},
+	LogGroupNames: Any(CentralEventLogName),
 	Name: "CentralCloudFormationEventLogs",
 	QueryString: "fields time, account, region, `detail.resource-type`, `detail.logical-resource-id`, `detail.status-details.status` | sort @timestamp desc",
 }
 
 var CentralEventLogQueryReason = logs.QueryDefinition{
-	LogGroupNames: []any{CentralEventLogName},
+	LogGroupNames: Any(CentralEventLogName),
 	Name: "CentralCloudFormationFailures",
 	QueryString: "fields time, account, region, `detail.resource-type`, `detail.logical-resource-id`, `detail.status-details.status` as status, `detail.status-details.status-reason` as reason | sort @timestamp desc | filter status like \"FAILED\" | filter reason not like \"canceled\" | filter resource not like \"AWS::CloudFormation::Stack\" ",
 }

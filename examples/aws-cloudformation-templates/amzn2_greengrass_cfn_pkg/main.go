@@ -10,7 +10,7 @@ import (
 )
 
 var GreengrassCoreDefinition = greengrass.CoreDefinition{
-	Name: Join{"_", []any{
+	Name: Join{Delimiter: "_", Values: []any{
 	CoreName,
 	"Core",
 }},
@@ -23,18 +23,18 @@ var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExe
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution = greengrass.FunctionDefinitionVersion_Execution{
 	IsolationMode: "GreengrassContainer",
-	RunAs: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs,
+	RunAs: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs,
 }
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment = greengrass.FunctionDefinitionVersion_Environment{
 	AccessSysfs: "false",
-	Execution: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
+	Execution: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
 	Variables: map[string]any{"CORE_NAME": CoreName},
 }
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfiguration = greengrass.FunctionDefinitionVersion_FunctionConfiguration{
 	EncodingType: "binary",
-	Environment: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment,
+	Environment: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment,
 	Executable: "index.py",
 	MemorySize: "65536",
 	Pinned: "true",
@@ -48,7 +48,7 @@ var FunctionDefinitionInitialVersionDefaultConfigExecution = greengrass.Function
 var FunctionDefinitionInitialVersionFunction1 = greengrass.FunctionDefinitionVersion_Function{
 	FunctionArn: GGSampleFunctionVersion,
 	FunctionConfiguration: FunctionDefinitionInitialVersionFunction1FunctionConfiguration,
-	Id: Join{"_", []any{
+	Id: Join{Delimiter: "_", Values: []any{
 	CoreName,
 	"sample",
 }},
@@ -59,12 +59,12 @@ var FunctionDefinitionInitialVersionDefaultConfig = greengrass.FunctionDefinitio
 }
 
 var FunctionDefinitionInitialVersion = greengrass.FunctionDefinition_FunctionDefinitionVersion{
-	DefaultConfig: FunctionDefinitionInitialVersionDefaultConfig,
+	DefaultConfig: &FunctionDefinitionInitialVersionDefaultConfig,
 	Functions: List(FunctionDefinitionInitialVersionFunction1),
 }
 
 var FunctionDefinition = greengrass.FunctionDefinition{
-	InitialVersion: FunctionDefinitionInitialVersion,
+	InitialVersion: &FunctionDefinitionInitialVersion,
 	Name: "FunctionDefinition",
 }
 
@@ -75,31 +75,31 @@ var FunctionDefinition = greengrass.FunctionDefinition{
 // Skipped unknown resource type: IoTThing (Custom::IoTThing)
 
 var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core{
-	CertificateArn: Join{":", []any{
+	CertificateArn: Join{Delimiter: ":", Values: []any{
 	"arn:",
 	AWS_PARTITION,
 	":iot",
 	AWS_REGION,
 	AWS_ACCOUNT_ID,
-	Join{"/", []any{
+	Join{Delimiter: "/", Values: []any{
 	"cert",
 	IoTThing.certificateId,
 }},
 }},
-	Id: Join{"_", []any{
+	Id: Join{Delimiter: "_", Values: []any{
 	CoreName,
 	"Core",
 }},
 	SyncShadow: "false",
-	ThingArn: Join{":", []any{
+	ThingArn: Join{Delimiter: ":", Values: []any{
 	"arn:",
 	AWS_PARTITION,
 	":iot",
 	AWS_REGION,
 	AWS_ACCOUNT_ID,
-	Join{"/", []any{
+	Join{Delimiter: "/", Values: []any{
 	"thing",
-	Join{"_", []any{
+	Join{Delimiter: "_", Values: []any{
 	CoreName,
 	"Core",
 }},
@@ -115,7 +115,7 @@ var GreengrassCoreDefinitionVersion = greengrass.CoreDefinitionVersion{
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription3 = greengrass.SubscriptionDefinitionVersion_Subscription{
 	Id: "Subscription3",
 	Source: GGSampleFunctionVersion,
-	Subject: Join{"/", []any{
+	Subject: Join{Delimiter: "/", Values: []any{
 	CoreName,
 	"telem",
 }},
@@ -125,7 +125,7 @@ var SubscriptionDefinitionInitialVersionSubscriptionSubscription3 = greengrass.S
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription2 = greengrass.SubscriptionDefinitionVersion_Subscription{
 	Id: "Subscription2",
 	Source: GGSampleFunctionVersion,
-	Subject: Join{"/", []any{
+	Subject: Join{Delimiter: "/", Values: []any{
 	CoreName,
 	"out",
 }},
@@ -135,7 +135,7 @@ var SubscriptionDefinitionInitialVersionSubscriptionSubscription2 = greengrass.S
 var SubscriptionDefinitionInitialVersionSubscriptionSubscription1 = greengrass.SubscriptionDefinitionVersion_Subscription{
 	Id: "Subscription1",
 	Source: "cloud",
-	Subject: Join{"/", []any{
+	Subject: Join{Delimiter: "/", Values: []any{
 	CoreName,
 	"in",
 }},
@@ -147,7 +147,7 @@ var SubscriptionDefinitionInitialVersion = greengrass.SubscriptionDefinition_Sub
 }
 
 var SubscriptionDefinition = greengrass.SubscriptionDefinition{
-	InitialVersion: SubscriptionDefinitionInitialVersion,
+	InitialVersion: &SubscriptionDefinitionInitialVersion,
 	Name: "SubscriptionDefinition",
 }
 
@@ -158,7 +158,7 @@ var GreengrassGroupInitialVersion = greengrass.Group_GroupVersion{
 }
 
 var GreengrassGroup = greengrass.Group{
-	InitialVersion: GreengrassGroupInitialVersion,
+	InitialVersion: &GreengrassGroupInitialVersion,
 	Name: CoreName,
 	RoleArn: GreengrassResourceRole.Arn,
 }

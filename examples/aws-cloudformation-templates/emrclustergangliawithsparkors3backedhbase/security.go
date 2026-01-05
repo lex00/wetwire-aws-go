@@ -10,40 +10,40 @@ import (
 )
 
 var EMRClusterServiceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{EMRClusterServiceRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(EMRClusterServiceRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var EMRClusterServiceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"elasticmapreduce.amazonaws.com"},
 }
 
 var EMRClusterServiceRole = iam.Role{
 	AssumeRolePolicyDocument: EMRClusterServiceRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole"),
 	Path: "/",
 }
 
 var EMRClusterinstanceProfileRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{EMRClusterinstanceProfileRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(EMRClusterinstanceProfileRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var EMRClusterinstanceProfileRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
 
 var EMRClusterinstanceProfileRole = iam.Role{
 	AssumeRolePolicyDocument: EMRClusterinstanceProfileRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"),
 	Path: "/",
 }
 
 var EMRClusterinstanceProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: []any{EMRClusterinstanceProfileRole},
+	Roles: Any(EMRClusterinstanceProfileRole),
 }

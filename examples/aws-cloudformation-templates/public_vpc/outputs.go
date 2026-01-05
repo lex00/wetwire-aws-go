@@ -12,7 +12,7 @@ import (
 var ClusterNameOutput = Output{
 	Value:       ECSCluster,
 	Description: "The name of the ECS cluster",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"ClusterName",
 }},
@@ -22,7 +22,7 @@ var ClusterNameOutput = Output{
 var ECSRoleOutput = Output{
 	Value:       ECSRole.Arn,
 	Description: "The ARN of the ECS role",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"ECSRole",
 }},
@@ -32,7 +32,7 @@ var ECSRoleOutput = Output{
 var EcsHostSecurityGroupOutput = Output{
 	Value:       EcsHostSecurityGroup,
 	Description: "A security group used to allow containers to receive traffic",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"EcsHostSecurityGroup",
 }},
@@ -40,12 +40,12 @@ var EcsHostSecurityGroupOutput = Output{
 
 // ExternalUrlOutput - The url of the external load balancer
 var ExternalUrlOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"http://",
 	PublicLoadBalancer.DNSName,
 }},
 	Description: "The url of the external load balancer",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"ExternalUrl",
 }},
@@ -55,7 +55,7 @@ var ExternalUrlOutput = Output{
 var PublicListenerOutput = Output{
 	Value:       PublicLoadBalancerListener,
 	Description: "The ARN of the public load balancer's Listener",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"PublicListener",
 }},
@@ -65,7 +65,7 @@ var PublicListenerOutput = Output{
 var PublicSubnetOneOutput = Output{
 	Value:       PublicSubnetOne,
 	Description: "Public subnet one",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"PublicSubnetOne",
 }},
@@ -75,7 +75,7 @@ var PublicSubnetOneOutput = Output{
 var PublicSubnetTwoOutput = Output{
 	Value:       PublicSubnetTwo,
 	Description: "Public subnet two",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"PublicSubnetTwo",
 }},
@@ -85,7 +85,7 @@ var PublicSubnetTwoOutput = Output{
 var VPCIdOutput = Output{
 	Value:       VPC,
 	Description: "The ID of the VPC that this stack is deployed in",
-	ExportName:  Join{":", []any{
+	ExportName:  Join{Delimiter: ":", Values: []any{
 	AWS_STACK_NAME,
 	"VPCId",
 }},

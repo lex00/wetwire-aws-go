@@ -19,7 +19,7 @@ var S3BucketNotificationNotificationConfigurationLambdaConfiguration1 = s3.Bucke
 }
 
 var S3BucketNotificationBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: S3BucketNotificationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &S3BucketNotificationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var S3BucketNotificationPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -38,8 +38,8 @@ var S3BucketNotificationBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var S3BucketNotification = s3.Bucket{
-	BucketEncryption: S3BucketNotificationBucketEncryption,
-	BucketName: Sub{String: "${NotificationBucket}"},
-	NotificationConfiguration: S3BucketNotificationNotificationConfiguration,
-	PublicAccessBlockConfiguration: S3BucketNotificationPublicAccessBlockConfiguration,
+	BucketEncryption: &S3BucketNotificationBucketEncryption,
+	BucketName: NotificationBucket,
+	NotificationConfiguration: &S3BucketNotificationNotificationConfiguration,
+	PublicAccessBlockConfiguration: &S3BucketNotificationPublicAccessBlockConfiguration,
 }

@@ -12,7 +12,7 @@ import (
 
 var FirehoseLogGroup = logs.LogGroup{
 	KmsKeyId: If{"CloudWatchLogsKMSKeyCondition", CloudWatchLogsKMSKey, AWS_NO_VALUE},
-	LogGroupName: Join{"", []any{
+	LogGroupName: Join{Delimiter: "", Values: []any{
 	"/aws/kinesisfirehose/",
 	LogGroupName,
 }},
@@ -46,13 +46,13 @@ var DeliveryStreamExtendedS3DestinationConfigurationCloudWatchLoggingOptions = k
 }
 
 var DeliveryStreamExtendedS3DestinationConfiguration = kinesisfirehose.DeliveryStream_ExtendedS3DestinationConfiguration{
-	BucketARN: Join{"", []any{
+	BucketARN: Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	DestinationBucketName,
 }},
-	CloudWatchLoggingOptions: DeliveryStreamExtendedS3DestinationConfigurationCloudWatchLoggingOptions,
+	CloudWatchLoggingOptions: &DeliveryStreamExtendedS3DestinationConfigurationCloudWatchLoggingOptions,
 	ErrorOutputPrefix: "errors/",
-	ProcessingConfiguration: DeliveryStreamExtendedS3DestinationConfigurationProcessingConfiguration,
+	ProcessingConfiguration: &DeliveryStreamExtendedS3DestinationConfigurationProcessingConfiguration,
 	RoleARN: DeliveryRole.Arn,
 }
 
@@ -61,8 +61,8 @@ var DeliveryStreamDeliveryStreamEncryptionConfigurationInput = kinesisfirehose.D
 }
 
 var DeliveryStream = kinesisfirehose.DeliveryStream{
-	DeliveryStreamEncryptionConfigurationInput: DeliveryStreamDeliveryStreamEncryptionConfigurationInput,
+	DeliveryStreamEncryptionConfigurationInput: &DeliveryStreamDeliveryStreamEncryptionConfigurationInput,
 	DeliveryStreamName: DeliveryStreamName,
 	DeliveryStreamType: "DirectPut",
-	ExtendedS3DestinationConfiguration: DeliveryStreamExtendedS3DestinationConfiguration,
+	ExtendedS3DestinationConfiguration: &DeliveryStreamExtendedS3DestinationConfiguration,
 }

@@ -10,7 +10,7 @@ import (
 )
 
 var RootRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{RootRolePolicyRootPolicyDocumentStatement0},
+	Statement: Any(RootRolePolicyRootPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
@@ -26,12 +26,12 @@ var RootRolePolicyRoot = iam.Role_Policy{
 }
 
 var RootRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{RootRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(RootRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var RootRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -44,10 +44,10 @@ var RootRole = iam.Role{
 
 var BastionProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: []any{RootRole},
+	Roles: Any(RootRole),
 }
 
 var PrivateProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: []any{RootRole},
+	Roles: Any(RootRole),
 }

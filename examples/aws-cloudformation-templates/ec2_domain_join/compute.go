@@ -11,17 +11,17 @@ import (
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses = ec2.Instance_AssociationParameter{
 	Key: "dnsIpAddresses",
-	Value: []any{ADDnsIpAddresses1, ADDnsIpAddresses2},
+	Value: Any(ADDnsIpAddresses1, ADDnsIpAddresses2),
 }
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName = ec2.Instance_AssociationParameter{
 	Key: "directoryName",
-	Value: []any{ADDirectoryName},
+	Value: Any(ADDirectoryName),
 }
 
 var myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId = ec2.Instance_AssociationParameter{
 	Key: "directoryId",
-	Value: []any{ADDirectoryId},
+	Value: Any(ADDirectoryId),
 }
 
 var myEC2InstanceSSMTagName = Tag{
@@ -39,7 +39,7 @@ var myEC2InstanceSSM = ec2.Instance{
 	ImageId: AMI,
 	InstanceType: InstanceType,
 	KeyName: KeyPair,
-	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
+	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
 	SsmAssociations: List(myEC2InstanceSSMSsmAssociation1),
 	SubnetId: PublicSubnet,
 	Tags: []any{myEC2InstanceSSMTagName},

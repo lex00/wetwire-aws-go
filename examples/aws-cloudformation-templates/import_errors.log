@@ -1,11 +1,11 @@
-=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.fyPnusOC64/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.json ===
-Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/CLAUDE.md
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.cEMGy0ViMK/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.json ===
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/main.go
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/infra.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/README.md
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/CLAUDE.md
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/go.mod
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/cmd/main.go
-Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
-Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/README.md
 
 Running go mod tidy...
 go: finding module for package github.com/lex00/wetwire-aws-go/resources/serverless
@@ -25,14 +25,14 @@ Flags:
 
 go mod tidy failed: exit status 1
 
-=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.fyPnusOC64/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml ===
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.cEMGy0ViMK/aws-cloudformation-templates/CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml ===
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/main.go
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/infra.go
-Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/README.md
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/CLAUDE.md
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/go.mod
 Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/cmd/main.go
+Generated: /Users/alex/Documents/checkouts/wetwire-aws-go/examples/aws-cloudformation-templates/datetimenow/.gitignore
 
 Running go mod tidy...
 go: finding module for package github.com/lex00/wetwire-aws-go/resources/serverless

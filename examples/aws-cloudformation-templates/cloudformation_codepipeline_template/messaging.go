@@ -10,7 +10,7 @@ import (
 )
 
 var EventRuleTargetCodepipelineNegPipel = events.Rule_Target{
-	Arn: Join{"", []any{
+	Arn: Join{Delimiter: "", Values: []any{
 	"arn:aws:codepipeline:",
 	AWS_REGION,
 	":",
@@ -25,13 +25,13 @@ var EventRuleTargetCodepipelineNegPipel = events.Rule_Target{
 var EventRule = events.Rule{
 	EventPattern: map[string]any{
 	"detail": map[string]any{
-	"event": []any{"referenceCreated", "referenceUpdated"},
-	"referenceName": []any{"main"},
-	"referenceType": []any{"branch"},
+	"event": Any("referenceCreated", "referenceUpdated"),
+	"referenceName": Any("main"),
+	"referenceType": Any("branch"),
 },
-	"detail-type": []any{"CodeCommit Repository State Change"},
-	"resources": []any{ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitArn"}}},
-	"source": []any{"aws.codecommit"},
+	"detail-type": Any("CodeCommit Repository State Change"),
+	"resources": Any(ImportValue{Sub{String: "${CodeBuildStack}-CodeCommitArn"}}),
+	"source": Any("aws.codecommit"),
 },
 	Targets: List(EventRuleTargetCodepipelineNegPipel),
 }

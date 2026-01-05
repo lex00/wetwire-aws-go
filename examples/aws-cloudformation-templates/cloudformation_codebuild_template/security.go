@@ -10,42 +10,42 @@ import (
 )
 
 var CodeBuildRolePolicyCanCreateReportsPolicyDocument = PolicyDocument{
-	Statement: []any{CodeBuildRolePolicyCanCreateReportsPolicyDocumentStatement0},
+	Statement: Any(CodeBuildRolePolicyCanCreateReportsPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var CodeBuildRolePolicyCanCreateReportsPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"codebuild:*"},
+	Action: Any("codebuild:*"),
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/${AWS::StackName}*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/${AWS::StackName}*"}),
 }
 
 var CodeBuildRolePolicyCanAccessS3PolicyDocument = PolicyDocument{
-	Statement: []any{CodeBuildRolePolicyCanAccessS3PolicyDocumentStatement0},
+	Statement: Any(CodeBuildRolePolicyCanAccessS3PolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var CodeBuildRolePolicyCanAccessS3PolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:GetObject"},
+	Action: Any("s3:GetObject"),
 	Effect: "Allow",
-	Resource: []any{PipelineS3Bucket.Arn},
+	Resource: Any(PipelineS3Bucket.Arn),
 }
 
 var CodeBuildRolePolicyCanLogPolicyDocument = PolicyDocument{
-	Statement: []any{CodeBuildRolePolicyCanLogPolicyDocumentStatement0, CodeBuildRolePolicyCanLogPolicyDocumentStatement1},
+	Statement: Any(CodeBuildRolePolicyCanLogPolicyDocumentStatement0, CodeBuildRolePolicyCanLogPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
 var CodeBuildRolePolicyCanLogPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:GetObject", "s3:PutObject"},
+	Action: Any("s3:GetObject", "s3:PutObject"),
 	Effect: "Allow",
-	Resource: []any{PipelineS3Bucket.Arn, Sub{String: "${PipelineS3Bucket.Arn}/*"}},
+	Resource: Any(PipelineS3Bucket.Arn, Sub{String: "${PipelineS3Bucket.Arn}/*"}),
 }
 
 var CodeBuildRolePolicyCanLogPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"logs:CreateLogStream", "logs:CreateLogGroup", "logs:PutLogEvents"},
+	Action: Any("logs:CreateLogStream", "logs:CreateLogGroup", "logs:PutLogEvents"),
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${AWS::StackName}*:log-stream:*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${AWS::StackName}*:log-stream:*"}),
 }
 
 var CodeBuildRolePolicyCanCreateReports = iam.Role_Policy{
@@ -64,7 +64,7 @@ var CodeBuildRolePolicyCanLog = iam.Role_Policy{
 }
 
 var CodeBuildRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{CodeBuildRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(CodeBuildRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

@@ -16,7 +16,7 @@ var RestApi = apigateway.RestApi{
 var RestApiAuthorizer = apigateway.Authorizer{
 	IdentitySource: "method.request.header.authorization",
 	Name: "CognitoApiAuthorizer",
-	ProviderARNs: []any{CognitoUserPool.Arn},
+	ProviderARNs: Any(CognitoUserPool.Arn),
 	RestApiId: RestApi,
 	Type_: "COGNITO_USER_POOLS",
 }
@@ -31,30 +31,9 @@ var RestApiStage = apigateway.Stage{
 	StageName: "prod",
 }
 
-var TestResourceResource = apigateway.Resource{
-	ParentId: Sub{String: "${RestApi.RootResourceId}"},
-	PathPart: "test",
-	RestApiId: RestApi,
-}
-
 var JwtResourceResource = apigateway.Resource{
-	ParentId: Sub{String: "${RestApi.RootResourceId}"},
+	ParentId: RestApiRootResourceId,
 	PathPart: "jwt",
-	RestApiId: RestApi,
-}
-
-var TestResourceGetIntegration = apigateway.Method_Integration{
-	IntegrationHttpMethod: "POST",
-	Type_: "AWS_PROXY",
-	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestResourceHandler.Arn}/invocations"},
-}
-
-var TestResourceGet = apigateway.Method{
-	AuthorizationType: "COGNITO_USER_POOLS",
-	AuthorizerId: RestApiAuthorizer,
-	HttpMethod: "GET",
-	Integration: TestResourceGetIntegration,
-	ResourceId: TestResourceResource,
 	RestApiId: RestApi,
 }
 
@@ -68,21 +47,22 @@ var JwtResourceGet = apigateway.Method{
 	AuthorizationType: "NONE",
 	AuthorizerId: AWS_NO_VALUE,
 	HttpMethod: "GET",
-	Integration: JwtResourceGetIntegration,
+	Integration: &JwtResourceGetIntegration,
 	ResourceId: JwtResourceResource,
 	RestApiId: RestApi,
 }
 
-var TestResourceOptionsIntegration = apigateway.Method_Integration{
+var TestResourceGetIntegration = apigateway.Method_Integration{
 	IntegrationHttpMethod: "POST",
 	Type_: "AWS_PROXY",
 	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestResourceHandler.Arn}/invocations"},
 }
 
-var TestResourceOptions = apigateway.Method{
-	AuthorizationType: "NONE",
-	HttpMethod: "OPTIONS",
-	Integration: TestResourceOptionsIntegration,
+var TestResourceGet = apigateway.Method{
+	AuthorizationType: "COGNITO_USER_POOLS",
+	AuthorizerId: RestApiAuthorizer,
+	HttpMethod: "GET",
+	Integration: &TestResourceGetIntegration,
 	ResourceId: TestResourceResource,
 	RestApiId: RestApi,
 }
@@ -96,7 +76,27 @@ var JwtResourceOptionsIntegration = apigateway.Method_Integration{
 var JwtResourceOptions = apigateway.Method{
 	AuthorizationType: "NONE",
 	HttpMethod: "OPTIONS",
-	Integration: JwtResourceOptionsIntegration,
+	Integration: &JwtResourceOptionsIntegration,
 	ResourceId: JwtResourceResource,
+	RestApiId: RestApi,
+}
+
+var TestResourceOptionsIntegration = apigateway.Method_Integration{
+	IntegrationHttpMethod: "POST",
+	Type_: "AWS_PROXY",
+	Uri: Sub{String: "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestResourceHandler.Arn}/invocations"},
+}
+
+var TestResourceOptions = apigateway.Method{
+	AuthorizationType: "NONE",
+	HttpMethod: "OPTIONS",
+	Integration: &TestResourceOptionsIntegration,
+	ResourceId: TestResourceResource,
+	RestApiId: RestApi,
+}
+
+var TestResourceResource = apigateway.Resource{
+	ParentId: RestApiRootResourceId,
+	PathPart: "test",
 	RestApiId: RestApi,
 }

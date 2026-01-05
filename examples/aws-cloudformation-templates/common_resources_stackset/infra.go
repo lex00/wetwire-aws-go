@@ -10,12 +10,12 @@ import (
 )
 
 var StackSetStackInstancesGroup1DeploymentTargets = cloudformation.StackSet_DeploymentTargets{
-	OrganizationalUnitIds: []any{OUID},
+	OrganizationalUnitIds: Any(OUID),
 }
 
 var StackSetStackInstancesGroup1 = cloudformation.StackSet_StackInstances{
 	DeploymentTargets: StackSetStackInstancesGroup1DeploymentTargets,
-	Regions: []any{"us-east-1", "us-west-2"},
+	Regions: Any("us-east-1", "us-west-2"),
 }
 
 var StackSetParameter1 = cloudformation.StackSet_Parameter{
@@ -35,10 +35,10 @@ var StackSetAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var StackSet = cloudformation.StackSet{
-	AutoDeployment: StackSetAutoDeployment,
-	Capabilities: []any{"CAPABILITY_IAM"},
+	AutoDeployment: &StackSetAutoDeployment,
+	Capabilities: Any("CAPABILITY_IAM"),
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging",
-	OperationPreferences: StackSetOperationPreferences,
+	OperationPreferences: &StackSetOperationPreferences,
 	Parameters: List(StackSetParameter1),
 	PermissionModel: "SERVICE_MANAGED",
 	StackInstancesGroup: List(StackSetStackInstancesGroup1),

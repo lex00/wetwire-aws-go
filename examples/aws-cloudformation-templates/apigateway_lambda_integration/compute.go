@@ -28,7 +28,7 @@ var LambdaApiGatewayInvoke = lambda.Permission{
 	Action: "lambda:InvokeFunction",
 	FunctionName: LambdaFunction.Arn,
 	Principal: "apigateway.amazonaws.com",
-	SourceArn: Join{"", []any{
+	SourceArn: Join{Delimiter: "", Values: []any{
 	"arn:aws:execute-api:",
 	AWS_REGION,
 	":",

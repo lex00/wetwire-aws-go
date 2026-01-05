@@ -46,7 +46,7 @@ var PrivateRouteTable2 = ec2.RouteTable{
 }
 
 var PrivateSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{0, FindInMap{"RegionMap", AWS_REGION, "AZs"}},
+	AvailabilityZone: Select{Index: 0, List: FindInMap{"RegionMap", AWS_REGION, "AZs"}},
 	CidrBlock: PrivateSubnet1CIDR,
 	MapPublicIpOnLaunch: false,
 	VpcId: VPC,
@@ -58,7 +58,7 @@ var PrivateSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 }
 
 var PrivateSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, FindInMap{"RegionMap", AWS_REGION, "AZs"}},
+	AvailabilityZone: Select{Index: 1, List: FindInMap{"RegionMap", AWS_REGION, "AZs"}},
 	CidrBlock: PrivateSubnet2CIDR,
 	MapPublicIpOnLaunch: false,
 	VpcId: VPC,
@@ -80,7 +80,7 @@ var DefaultPublicRoute = ec2.Route{
 }
 
 var PublicSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{0, FindInMap{"RegionMap", AWS_REGION, "AZs"}},
+	AvailabilityZone: Select{Index: 0, List: FindInMap{"RegionMap", AWS_REGION, "AZs"}},
 	CidrBlock: PublicSubnet1CIDR,
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,
@@ -103,7 +103,7 @@ var PublicSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 }
 
 var PublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, FindInMap{"RegionMap", AWS_REGION, "AZs"}},
+	AvailabilityZone: Select{Index: 1, List: FindInMap{"RegionMap", AWS_REGION, "AZs"}},
 	CidrBlock: PublicSubnet2CIDR,
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,

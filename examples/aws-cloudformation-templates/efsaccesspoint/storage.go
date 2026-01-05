@@ -32,18 +32,18 @@ var EFSAccessPoint = efs.AccessPoint{
 
 var EFSMountTarget1 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
-	SecurityGroups: []any{SecurityGroup1},
+	SecurityGroups: Any(SecurityGroup1),
 	SubnetId: Subnet1,
 }
 
 var EFSMountTarget2 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
-	SecurityGroups: []any{SecurityGroup2},
+	SecurityGroups: Any(SecurityGroup2),
 	SubnetId: Subnet2,
 }
 
 var EFSMountTarget3 = efs.MountTarget{
 	FileSystemId: EFSFileSystem,
-	SecurityGroups: []any{SecurityGroup3},
+	SecurityGroups: Any(SecurityGroup3),
 	SubnetId: Subnet3,
 }

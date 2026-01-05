@@ -39,7 +39,7 @@ var ElasticLoadBalancerListener1 = elasticloadbalancing.LoadBalancer_Listeners{
 var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthCheck{
 	HealthyThreshold: "3",
 	Interval: "30",
-	Target: Join{"", []any{
+	Target: Join{Delimiter: "", Values: []any{
 	"HTTP:",
 	"80",
 	"/",
@@ -50,9 +50,9 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	CrossZone: "true",
-	HealthCheck: ElasticLoadBalancerHealthCheck,
+	HealthCheck: &ElasticLoadBalancerHealthCheck,
 	Listeners: List(ElasticLoadBalancerListener1),
-	SecurityGroups: []any{ELBSecurityGroup},
+	SecurityGroups: Any(ELBSecurityGroup),
 	Subnets: Subnets,
 }
 

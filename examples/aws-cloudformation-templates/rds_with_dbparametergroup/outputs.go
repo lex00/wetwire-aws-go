@@ -10,7 +10,7 @@ import (
 
 // JDBCConnectionStringOutput - JDBC connection string for the database
 var JDBCConnectionStringOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
 	MyDB.Endpoint.Address,
 	":",

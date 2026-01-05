@@ -21,7 +21,7 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 	Protocol: enums.Elbv2ProtocolEnumHttp,
 	TargetType: enums.Elbv2TargetTypeEnumIp,
 	UnhealthyThresholdCount: 2,
-	VpcId: ImportValue{Join{":", []any{
+	VpcId: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"VPCId",
 }}},
@@ -29,7 +29,7 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 
 var LoadBalancerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
 	Field: "path-pattern",
-	Values: []any{Path},
+	Values: Any(Path),
 }
 
 var LoadBalancerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
@@ -40,7 +40,7 @@ var LoadBalancerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
 var LoadBalancerRule = elasticloadbalancingv2.ListenerRule{
 	Actions: List(LoadBalancerRuleActionForward),
 	Conditions: List(LoadBalancerRuleCondition1),
-	ListenerArn: ImportValue{Join{":", []any{
+	ListenerArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateListener",
 }}},

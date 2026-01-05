@@ -6,12 +6,13 @@ package adconnector_cfn
 
 import (
 	"github.com/lex00/cloudformation-schema-go/enums"
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/lambda"
 )
 
 var ADConnectorLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
-	SecurityGroupIds: []any{ADConnectorDomainMembersSG},
-	SubnetIds: []any{"PrivateSubnet1ID", "PrivateSubnet2ID"},
+	SecurityGroupIds: Any(ADConnectorDomainMembersSG),
+	SubnetIds: Any("PrivateSubnet1ID", "PrivateSubnet2ID"),
 }
 
 var ADConnectorLambdaFunctionEnvironment = lambda.Function_Environment{
@@ -25,12 +26,12 @@ var ADConnectorLambdaFunctionCode = lambda.Function_Code{
 
 var ADConnectorLambdaFunction = lambda.Function{
 	Code: ADConnectorLambdaFunctionCode,
-	Environment: ADConnectorLambdaFunctionEnvironment,
+	Environment: &ADConnectorLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "adconnector_custom_resource.lambda_handler",
 	MemorySize: 128,
 	Role: ADConnectorLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython38,
 	Timeout: 120,
-	VpcConfig: ADConnectorLambdaFunctionVpcConfig,
+	VpcConfig: &ADConnectorLambdaFunctionVpcConfig,
 }

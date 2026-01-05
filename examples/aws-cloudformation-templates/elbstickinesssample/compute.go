@@ -13,7 +13,7 @@ var EC2Instance1 = ec2.Instance{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
+	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash -xe          \nyum update -y aws-cfn-bootstrap \n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} \\\n         --resource EC2Instance1 \\\n         --region ${AWS::Region}\n\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} \\\n         --resource EC2Instance1 \\\n         --region ${AWS::Region} \n"}},
 }
@@ -22,7 +22,7 @@ var EC2Instance2 = ec2.Instance{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
+	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash -xe          \nyum update -y aws-cfn-bootstrap \n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} \\\n         --resource EC2Instance1 \\\n         --region ${AWS::Region}\n\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} \\\n         --resource EC2Instance2 \\\n         --region ${AWS::Region} \n"}},
 }

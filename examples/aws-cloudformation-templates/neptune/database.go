@@ -11,32 +11,32 @@ import (
 
 var NeptuneDBClusterParameterGroupTagStorage = Tag{
 	Key: "Storage",
-	Value: Sub{String: "${Storage}"},
+	Value: Storage,
 }
 
 var NeptuneDBClusterParameterGroupTagVersion = Tag{
 	Key: "Version",
-	Value: Sub{String: "${Version}"},
+	Value: Version,
 }
 
 var NeptuneDBClusterParameterGroupTagTier = Tag{
 	Key: "Tier",
-	Value: Sub{String: "${Tier}"},
+	Value: Tier,
 }
 
 var NeptuneDBClusterParameterGroupTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var NeptuneDBClusterParameterGroupTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var NeptuneDBClusterParameterGroupTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var NeptuneDBClusterParameterGroupTagCompliance = Tag{
@@ -46,7 +46,7 @@ var NeptuneDBClusterParameterGroupTagCompliance = Tag{
 
 var NeptuneDBClusterParameterGroupTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var NeptuneDBClusterParameterGroupTagName = Tag{
@@ -66,32 +66,32 @@ var NeptuneDBClusterParameterGroup = neptune.DBClusterParameterGroup{
 
 var NeptuneDBParameterGroupTagStorage = Tag{
 	Key: "Storage",
-	Value: Sub{String: "${Storage}"},
+	Value: Storage,
 }
 
 var NeptuneDBParameterGroupTagVersion = Tag{
 	Key: "Version",
-	Value: Sub{String: "${Version}"},
+	Value: Version,
 }
 
 var NeptuneDBParameterGroupTagTier = Tag{
 	Key: "Tier",
-	Value: Sub{String: "${Tier}"},
+	Value: Tier,
 }
 
 var NeptuneDBParameterGroupTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var NeptuneDBParameterGroupTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var NeptuneDBParameterGroupTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var NeptuneDBParameterGroupTagCompliance = Tag{
@@ -101,7 +101,7 @@ var NeptuneDBParameterGroupTagCompliance = Tag{
 
 var NeptuneDBParameterGroupTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var NeptuneDBParameterGroupTagName = Tag{
@@ -121,32 +121,32 @@ var NeptuneDBParameterGroup = neptune.DBParameterGroup{
 
 var NeptuneDBSubnetGroupTagStorage = Tag{
 	Key: "Storage",
-	Value: Sub{String: "${Storage}"},
+	Value: Storage,
 }
 
 var NeptuneDBSubnetGroupTagVersion = Tag{
 	Key: "Version",
-	Value: Sub{String: "${Version}"},
+	Value: Version,
 }
 
 var NeptuneDBSubnetGroupTagTier = Tag{
 	Key: "Tier",
-	Value: Sub{String: "${Tier}"},
+	Value: Tier,
 }
 
 var NeptuneDBSubnetGroupTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var NeptuneDBSubnetGroupTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var NeptuneDBSubnetGroupTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var NeptuneDBSubnetGroupTagCompliance = Tag{
@@ -156,7 +156,7 @@ var NeptuneDBSubnetGroupTagCompliance = Tag{
 
 var NeptuneDBSubnetGroupTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var NeptuneDBSubnetGroupTagName = Tag{
@@ -167,38 +167,38 @@ var NeptuneDBSubnetGroupTagName = Tag{
 var NeptuneDBSubnetGroup = neptune.DBSubnetGroup{
 	DBSubnetGroupDescription: Sub{String: "CloudFormation managed Neptune DB Subnet Group - ${Env}-${AppName}-subnet-group"},
 	DBSubnetGroupName: NeptuneDBSubnetGroupName,
-	SubnetIds: []any{ImportValue{Sub{String: "${VPCStack}-PrivateSubnet1"}}, ImportValue{Sub{String: "${VPCStack}-PrivateSubnet2"}}},
+	SubnetIds: Any(ImportValue{Sub{String: "${VPCStack}-PrivateSubnet1"}}, ImportValue{Sub{String: "${VPCStack}-PrivateSubnet2"}}),
 	Tags: []any{NeptuneDBSubnetGroupTagName, NeptuneDBSubnetGroupTagApp, NeptuneDBSubnetGroupTagCompliance, NeptuneDBSubnetGroupTagEnv, NeptuneDBSubnetGroupTagUser, NeptuneDBSubnetGroupTagOwner, NeptuneDBSubnetGroupTagTier, NeptuneDBSubnetGroupTagVersion, NeptuneDBSubnetGroupTagStorage},
 }
 
 var NeptuneDBClusterTagStorage = Tag{
 	Key: "Storage",
-	Value: Sub{String: "${Storage}"},
+	Value: Storage,
 }
 
 var NeptuneDBClusterTagVersion = Tag{
 	Key: "Version",
-	Value: Sub{String: "${Version}"},
+	Value: Version,
 }
 
 var NeptuneDBClusterTagTier = Tag{
 	Key: "Tier",
-	Value: Sub{String: "${Tier}"},
+	Value: Tier,
 }
 
 var NeptuneDBClusterTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var NeptuneDBClusterTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var NeptuneDBClusterTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var NeptuneDBClusterTagCompliance = Tag{
@@ -208,7 +208,7 @@ var NeptuneDBClusterTagCompliance = Tag{
 
 var NeptuneDBClusterTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var NeptuneDBClusterTagName = Tag{
@@ -227,37 +227,37 @@ var NeptuneDBCluster = neptune.DBCluster{
 	PreferredMaintenanceWindow: NeptuneDBClusterPreferredMaintenanceWindow,
 	StorageEncrypted: StorageEncrypted,
 	Tags: []any{NeptuneDBClusterTagName, NeptuneDBClusterTagApp, NeptuneDBClusterTagCompliance, NeptuneDBClusterTagEnv, NeptuneDBClusterTagUser, NeptuneDBClusterTagOwner, NeptuneDBClusterTagTier, NeptuneDBClusterTagVersion, NeptuneDBClusterTagStorage},
-	VpcSecurityGroupIds: []any{NeptuneDBSG},
+	VpcSecurityGroupIds: Any(NeptuneDBSG),
 }
 
 var NeptuneDBInstanceTagStorage = Tag{
 	Key: "Storage",
-	Value: Sub{String: "${Storage}"},
+	Value: Storage,
 }
 
 var NeptuneDBInstanceTagVersion = Tag{
 	Key: "Version",
-	Value: Sub{String: "${Version}"},
+	Value: Version,
 }
 
 var NeptuneDBInstanceTagTier = Tag{
 	Key: "Tier",
-	Value: Sub{String: "${Tier}"},
+	Value: Tier,
 }
 
 var NeptuneDBInstanceTagOwner = Tag{
 	Key: "Owner",
-	Value: Sub{String: "${Owner}"},
+	Value: Owner,
 }
 
 var NeptuneDBInstanceTagUser = Tag{
 	Key: "User",
-	Value: Sub{String: "${User}"},
+	Value: User,
 }
 
 var NeptuneDBInstanceTagEnv = Tag{
 	Key: "Env",
-	Value: Sub{String: "${Env}"},
+	Value: Env,
 }
 
 var NeptuneDBInstanceTagCompliance = Tag{
@@ -267,7 +267,7 @@ var NeptuneDBInstanceTagCompliance = Tag{
 
 var NeptuneDBInstanceTagApp = Tag{
 	Key: "App",
-	Value: Sub{String: "${AppName}"},
+	Value: AppName,
 }
 
 var NeptuneDBInstanceTagName = Tag{

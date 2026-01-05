@@ -10,12 +10,12 @@ import (
 )
 
 var LambdaExecutionRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{LambdaExecutionRolePolicyRootPolicyDocumentStatement0},
+	Statement: Any(LambdaExecutionRolePolicyRootPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"logs:*", "config:PutEvaluations", "ec2:DescribeVolumeAttribute"},
+	Action: Any("logs:*", "config:PutEvaluations", "ec2:DescribeVolumeAttribute"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,12 +26,12 @@ var LambdaExecutionRolePolicyRoot = iam.Role_Policy{
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{LambdaExecutionRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(LambdaExecutionRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"lambda.amazonaws.com"},
 }
@@ -42,7 +42,7 @@ var LambdaExecutionRole = iam.Role{
 }
 
 var ConfigRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{ConfigRolePolicyRootPolicyDocumentStatement0, ConfigRolePolicyRootPolicyDocumentStatement1, ConfigRolePolicyRootPolicyDocumentStatement2},
+	Statement: Any(ConfigRolePolicyRootPolicyDocumentStatement0, ConfigRolePolicyRootPolicyDocumentStatement1, ConfigRolePolicyRootPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
@@ -56,7 +56,7 @@ var ConfigRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
 	Action: "s3:PutObject",
 	Condition: Json{StringEquals: Json{"s3:x-amz-acl": "bucket-owner-full-control"}},
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	ConfigBucket,
 	"/AWSLogs/",
@@ -68,7 +68,7 @@ var ConfigRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
 var ConfigRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
 	Action: "s3:GetBucketAcl",
 	Effect: "Allow",
-	Resource: Join{"", []any{
+	Resource: Join{Delimiter: "", Values: []any{
 	"arn:aws:s3:::",
 	ConfigBucket,
 }},
@@ -80,18 +80,18 @@ var ConfigRolePolicyRoot = iam.Role_Policy{
 }
 
 var ConfigRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ConfigRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ConfigRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var ConfigRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"config.amazonaws.com"},
 }
 
 var ConfigRole = iam.Role{
 	AssumeRolePolicyDocument: ConfigRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"),
 	Policies: List(ConfigRolePolicyRoot),
 }

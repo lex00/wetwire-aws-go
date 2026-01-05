@@ -11,25 +11,25 @@ import (
 )
 
 var myEC2SSMRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{myEC2SSMRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(myEC2SSMRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var myEC2SSMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
 
 var myEC2SSMRole = iam.Role{
 	AssumeRolePolicyDocument: myEC2SSMRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"),
 	RoleName: "DemoEC2SSMRole",
 }
 
 var myInstanceProfile = iam.InstanceProfile{
 	InstanceProfileName: "myEC2SSMRole",
-	Roles: []any{"DemoEC2SSMRole"},
+	Roles: Any("DemoEC2SSMRole"),
 }
 
 var myssmdocument = ssm.Document{

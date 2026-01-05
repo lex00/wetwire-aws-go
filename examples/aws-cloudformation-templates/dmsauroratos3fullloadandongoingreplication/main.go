@@ -5,6 +5,7 @@
 package dmsauroratos3fullloadandongoingreplication
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/dms"
 )
 
@@ -19,7 +20,7 @@ var AuroraSourceEndpoint = dms.Endpoint{
 
 var DMSReplicationSubnetGroup = dms.ReplicationSubnetGroup{
 	ReplicationSubnetGroupDescription: "Subnets available for DMS",
-	SubnetIds: []any{DBSubnet1, DBSubnet2},
+	SubnetIds: Any(DBSubnet1, DBSubnet2),
 }
 
 var DMSReplicationInstance = dms.ReplicationInstance{
@@ -28,16 +29,7 @@ var DMSReplicationInstance = dms.ReplicationInstance{
 	ReplicationInstanceClass: "dms.t3.medium",
 	ReplicationInstanceIdentifier: "aurora-s3-repinstance-sampledb",
 	ReplicationSubnetGroupIdentifier: DMSReplicationSubnetGroup,
-	VpcSecurityGroupIds: []any{DMSSecurityGroup},
-}
-
-var DMSReplicationTask = dms.ReplicationTask{
-	MigrationType: "full-load-and-cdc",
-	ReplicationInstanceArn: DMSReplicationInstance,
-	ReplicationTaskSettings: "{ \"Logging\" : { \"EnableLogging\" : true, \"LogComponents\": [ { \"Id\" : \"SOURCE_UNLOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"SOURCE_CAPTURE\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_LOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_APPLY\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" } ] } }",
-	SourceEndpointArn: AuroraSourceEndpoint,
-	TableMappings: "{ \"rules\": [ { \"rule-type\" : \"selection\", \"rule-id\" : \"1\", \"rule-name\" : \"1\", \"object-locator\" : { \"schema-name\" : \"dms_sample\", \"table-name\" : \"%\" }, \"rule-action\" : \"include\" } ] }",
-	TargetEndpointArn: S3TargetEndpoint,
+	VpcSecurityGroupIds: Any(DMSSecurityGroup),
 }
 
 var S3TargetEndpointS3Settings = dms.Endpoint_S3Settings{
@@ -49,5 +41,14 @@ var S3TargetEndpoint = dms.Endpoint{
 	EndpointType: "target",
 	EngineName: "S3",
 	ExtraConnectionAttributes: "addColumnName=true",
-	S3Settings: S3TargetEndpointS3Settings,
+	S3Settings: &S3TargetEndpointS3Settings,
+}
+
+var DMSReplicationTask = dms.ReplicationTask{
+	MigrationType: "full-load-and-cdc",
+	ReplicationInstanceArn: DMSReplicationInstance,
+	ReplicationTaskSettings: "{ \"Logging\" : { \"EnableLogging\" : true, \"LogComponents\": [ { \"Id\" : \"SOURCE_UNLOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"SOURCE_CAPTURE\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_LOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_APPLY\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" } ] } }",
+	SourceEndpointArn: AuroraSourceEndpoint,
+	TableMappings: "{ \"rules\": [ { \"rule-type\" : \"selection\", \"rule-id\" : \"1\", \"rule-name\" : \"1\", \"object-locator\" : { \"schema-name\" : \"dms_sample\", \"table-name\" : \"%\" }, \"rule-action\" : \"include\" } ] }",
+	TargetEndpointArn: S3TargetEndpoint,
 }

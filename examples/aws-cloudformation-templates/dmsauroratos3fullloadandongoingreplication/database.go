@@ -11,7 +11,7 @@ import (
 
 var AuroraDBSubnetGroup = rds.DBSubnetGroup{
 	DBSubnetGroupDescription: "Subnets available for the Aurora SampleDB DB Instance",
-	SubnetIds: []any{DBSubnet1, DBSubnet2},
+	SubnetIds: Any(DBSubnet1, DBSubnet2),
 }
 
 var AuroraCluster = rds.DBCluster{
@@ -21,7 +21,7 @@ var AuroraCluster = rds.DBCluster{
 	Engine: "aurora-postgresql",
 	SnapshotIdentifier: SnapshotIdentifier,
 	StorageEncrypted: true,
-	VpcSecurityGroupIds: []any{AuroraSecurityGroup},
+	VpcSecurityGroupIds: Any(AuroraSecurityGroup),
 }
 
 var AuroraDBTagApplication = Tag{

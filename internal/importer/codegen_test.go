@@ -95,7 +95,7 @@ Resources:
 	// Check intrinsics import (dot import)
 	assert.Contains(t, code, `. "github.com/lex00/wetwire-aws-go/intrinsics"`)
 
-	// Check Sub usage (no intrinsics. prefix with dot import)
+	// Check Sub usage with keyed syntax (no intrinsics. prefix with dot import)
 	assert.Contains(t, code, `Sub{String: "${AWS::StackName}-bucket-${AWS::Region}"}`)
 }
 

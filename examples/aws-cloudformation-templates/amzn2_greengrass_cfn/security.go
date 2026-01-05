@@ -10,18 +10,18 @@ import (
 )
 
 var GreengrassResourceRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{GreengrassResourceRolePolicyRootPolicyDocumentStatement0, GreengrassResourceRolePolicyRootPolicyDocumentStatement1},
+	Statement: Any(GreengrassResourceRolePolicyRootPolicyDocumentStatement0, GreengrassResourceRolePolicyRootPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
 var GreengrassResourceRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"iot:*"},
+	Action: Any("iot:*"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var GreengrassResourceRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"},
+	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:*:*:*"},
 }
@@ -32,7 +32,7 @@ var GreengrassResourceRolePolicyRoot = iam.Role_Policy{
 }
 
 var GreengrassResourceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{GreengrassResourceRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(GreengrassResourceRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
@@ -48,36 +48,36 @@ var GreengrassResourceRole = iam.Role{
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocument = PolicyDocument{
-	Statement: []any{LambdaExecutionRolePolicyRootPolicyDocumentStatement0, LambdaExecutionRolePolicyRootPolicyDocumentStatement1, LambdaExecutionRolePolicyRootPolicyDocumentStatement2, LambdaExecutionRolePolicyRootPolicyDocumentStatement3, LambdaExecutionRolePolicyRootPolicyDocumentStatement4},
+	Statement: Any(LambdaExecutionRolePolicyRootPolicyDocumentStatement0, LambdaExecutionRolePolicyRootPolicyDocumentStatement1, LambdaExecutionRolePolicyRootPolicyDocumentStatement2, LambdaExecutionRolePolicyRootPolicyDocumentStatement3, LambdaExecutionRolePolicyRootPolicyDocumentStatement4),
 	Version: "2012-10-17",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement4 = PolicyStatement{
-	Action: []any{"iam:CreateRole", "iam:AttachRolePolicy", "iam:GetRole", "iam:DeleteRole", "iam:PassRole"},
+	Action: Any("iam:CreateRole", "iam:AttachRolePolicy", "iam:GetRole", "iam:DeleteRole", "iam:PassRole"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/greengrass_cfn_${AWS::StackName}_ServiceRole"},
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement3 = PolicyStatement{
-	Action: []any{"ec2:DescribeReservedInstancesOfferings"},
+	Action: Any("ec2:DescribeReservedInstancesOfferings"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement2 = PolicyStatement{
-	Action: []any{"greengrass:*"},
+	Action: Any("greengrass:*"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"iot:*"},
+	Action: Any("iot:*"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var LambdaExecutionRolePolicyRootPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"},
+	Action: Any("logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:*:*:*"},
 }
@@ -88,7 +88,7 @@ var LambdaExecutionRolePolicyRoot = iam.Role_Policy{
 }
 
 var LambdaExecutionRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{LambdaExecutionRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(LambdaExecutionRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

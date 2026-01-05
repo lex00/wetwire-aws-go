@@ -14,7 +14,7 @@ var EC2Instance = ec2.Instance{
 	ImageId: InstanceAMI,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: []any{InstanceSecurityGroup.GroupId},
+	SecurityGroupIds: Any(InstanceSecurityGroup.GroupId),
 	SubnetId: SubnetId,
 	UserData: Base64{Sub{String: "#!/bin/bash\nwget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb -O /tmp/amazon-cloudwatch-agent.deb\nsudo dpkg -i /tmp/amazon-cloudwatch-agent.deb\nwget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz -O /tmp/aws-cfn-bootstrap-py3-latest.tar.gz\nsudo apt-get update -y\nsudo apt-get install -y python3-pip python3-venv\n\n# Create and activate a virtual environment\npython3 -m venv /opt/aws/virtualenv\nsource /opt/aws/virtualenv/bin/activate\n\n# Install the bootstrap package\npip install /tmp/aws-cfn-bootstrap-py3-latest.tar.gz\n\n# Create necessary symlinks\nsudo mkdir -p /opt/aws/bin\nsudo ln -s /opt/aws/virtualenv/bin/cfn-* /opt/aws/bin/\n\n# Run cfn-init\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region} --configsets default\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}\n"}},
 }

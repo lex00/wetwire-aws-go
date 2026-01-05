@@ -16,12 +16,12 @@ var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = ec2.EC2Fleet_
 
 var LaunchTemplateLaunchTemplateDataTagSpecification1 = ec2.CapacityReservationFleet_TagSpecification{
 	ResourceTypeProp: "instance",
-	Tags: []any{map[string]any{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}},
+	Tags: Any(map[string]any{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}),
 }
 
 var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1 = ec2.EC2Fleet_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
+	Ebs: &LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
 }
 
 var LaunchTemplateLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
@@ -47,7 +47,7 @@ var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
 }
 
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
-	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
+	NotificationTypes: Any("autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"),
 	TopicARN: NotificationTopic,
 }
 
@@ -59,11 +59,11 @@ var WebServerGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSp
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: AZs,
 	HealthCheckType: "ELB",
-	LaunchTemplate: WebServerGroupLaunchTemplate,
+	LaunchTemplate: &WebServerGroupLaunchTemplate,
 	MaxSize: "3",
 	MinSize: "1",
 	NotificationConfigurations: List(WebServerGroupNotificationConfiguration1),
-	TargetGroupARNs: []any{TargetGroup},
+	TargetGroupARNs: Any(TargetGroup),
 	VPCZoneIdentifier: Subnets,
 }
 

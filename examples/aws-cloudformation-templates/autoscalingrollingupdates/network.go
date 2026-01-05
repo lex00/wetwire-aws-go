@@ -27,7 +27,7 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	AvailabilityZones: GetAZs{},
 	CrossZone: "true",
-	HealthCheck: ElasticLoadBalancerHealthCheck,
+	HealthCheck: &ElasticLoadBalancerHealthCheck,
 	Listeners: List(ElasticLoadBalancerListener1),
 }
 

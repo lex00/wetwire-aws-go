@@ -5,6 +5,7 @@
 package rest_api
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/apigateway"
 )
 
@@ -15,7 +16,7 @@ var Api = apigateway.RestApi{
 var ApiAuthorizer = apigateway.Authorizer{
 	IdentitySource: "method.request.header.authorization",
 	Name: "CognitoApiAuthorizer",
-	ProviderARNs: []any{UserPoolArn},
+	ProviderARNs: Any(UserPoolArn),
 	RestApiId: Api,
 	Type_: "COGNITO_USER_POOLS",
 }

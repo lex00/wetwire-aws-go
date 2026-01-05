@@ -29,21 +29,21 @@ var UserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfig{
 }
 
 var UserPool = cognito.UserPool{
-	AdminCreateUserConfig: UserPoolAdminCreateUserConfig,
-	AutoVerifiedAttributes: []any{"email"},
+	AdminCreateUserConfig: &UserPoolAdminCreateUserConfig,
+	AutoVerifiedAttributes: Any("email"),
 	MfaConfiguration: "OFF",
 	Schema: List(UserPoolSchemaEmail, UserPoolSchemaGivenname, UserPoolSchemaFamilyname),
 	UserPoolName: AppName,
 }
 
 var Client = cognito.UserPoolClient{
-	AllowedOAuthFlows: []any{"code"},
+	AllowedOAuthFlows: Any("code"),
 	AllowedOAuthFlowsUserPoolClient: true,
-	AllowedOAuthScopes: []any{"phone", "email", "openid"},
-	CallbackURLs: []any{CallbackURL},
+	AllowedOAuthScopes: Any("phone", "email", "openid"),
+	CallbackURLs: Any(CallbackURL),
 	ClientName: AppName,
 	GenerateSecret: false,
-	SupportedIdentityProviders: []any{"COGNITO"},
+	SupportedIdentityProviders: Any("COGNITO"),
 	UserPoolId: UserPool,
 }
 

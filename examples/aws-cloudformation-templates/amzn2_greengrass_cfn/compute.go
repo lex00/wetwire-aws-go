@@ -31,7 +31,7 @@ var GGSampleFunctionCode = lambda.Function_Code{
 var GGSampleFunction = lambda.Function{
 	Code: GGSampleFunctionCode,
 	Description: "Long running lambda that provides telemetry and pub/sub echo",
-	FunctionName: Join{"_", []any{
+	FunctionName: Join{Delimiter: "_", Values: []any{
 	CoreName,
 	"sample",
 }},
@@ -56,7 +56,7 @@ var GroupDeploymentResetFunctionCode = lambda.Function_Code{
 var GroupDeploymentResetFunction = lambda.Function{
 	Code: GroupDeploymentResetFunctionCode,
 	Description: "Resets any deployments during stack delete and manages Greengrass service role needs",
-	Environment: GroupDeploymentResetFunctionEnvironment,
+	Environment: &GroupDeploymentResetFunctionEnvironment,
 	Handler: "index.handler",
 	Role: LambdaExecutionRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,
@@ -78,7 +78,7 @@ var InstanceAZFunction = lambda.Function{
 
 var GreengrassInstanceTagName = Tag{
 	Key: "Name",
-	Value: Join{"-", []any{
+	Value: Join{Delimiter: "-", Values: []any{
 	"Greengrass Core Blog ",
 	CoreName,
 }},

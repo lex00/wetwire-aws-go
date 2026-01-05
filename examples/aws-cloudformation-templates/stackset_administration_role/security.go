@@ -10,7 +10,7 @@ import (
 )
 
 var AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClouPolicyDocument = PolicyDocument{
-	Statement: []any{AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClouPolicyDocumentStatement0},
+	Statement: Any(AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClouPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
@@ -26,7 +26,7 @@ var AWSCloudFormationStackSetAdministrationRolePolicyAssumeRoleNegAWSClou = iam.
 }
 
 var AWSCloudFormationStackSetAdministrationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{AWSCloudFormationStackSetAdministrationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(AWSCloudFormationStackSetAdministrationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

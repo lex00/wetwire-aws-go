@@ -26,7 +26,7 @@ var LoadBalancerSecurityGroup = ec2.SecurityGroup{
 
 var ElasticLoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	Scheme: "internet-facing",
-	SecurityGroups: []any{LoadBalancerSecurityGroup},
+	SecurityGroups: Any(LoadBalancerSecurityGroup),
 	Subnets: Subnets,
 	Type_: "application",
 }

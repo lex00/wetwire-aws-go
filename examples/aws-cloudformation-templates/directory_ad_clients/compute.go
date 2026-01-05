@@ -11,12 +11,12 @@ import (
 
 var DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryName = ec2.Instance_AssociationParameter{
 	Key: "directoryName",
-	Value: []any{DirectoryName},
+	Value: Any(DirectoryName),
 }
 
 var DomainMember1WithInlineSsmAssociationSsmAssociation1AssociationParameterDirectoryId = ec2.Instance_AssociationParameter{
 	Key: "directoryId",
-	Value: []any{DirectoryID},
+	Value: Any(DirectoryID),
 }
 
 var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
@@ -39,7 +39,7 @@ var DomainMember1WithInlineSsmAssociationSsmAssociation1 = ec2.Instance_SsmAssoc
 
 var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember1WithInlineSsmAssociation = ec2.Instance{
@@ -48,7 +48,7 @@ var DomainMember1WithInlineSsmAssociation = ec2.Instance{
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
 	KeyName: KeyPairName,
-	SecurityGroupIds: []any{DomainMembersSGID},
+	SecurityGroupIds: Any(DomainMembersSGID),
 	SsmAssociations: List(DomainMember1WithInlineSsmAssociationSsmAssociation1),
 	SubnetId: PrivateSubnet1ID,
 	Tags: []any{DomainMember1WithInlineSsmAssociationTagName},
@@ -70,7 +70,7 @@ var DomainMember2WithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember2WithSsmAssociationInstance = ec2.Instance{
@@ -79,7 +79,7 @@ var DomainMember2WithSsmAssociationInstance = ec2.Instance{
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
 	KeyName: KeyPairName,
-	SecurityGroupIds: []any{DomainMembersSGID},
+	SecurityGroupIds: Any(DomainMembersSGID),
 	SubnetId: PrivateSubnet2ID,
 	Tags: []any{DomainMember2WithSsmAssociationInstanceTagName},
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember2NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
@@ -105,7 +105,7 @@ var DomainMember3WithSsmAssociationTagTagName = Tag{
 
 var DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember3WithSsmAssociationTag = ec2.Instance{
@@ -114,7 +114,7 @@ var DomainMember3WithSsmAssociationTag = ec2.Instance{
 	ImageId: WINFULLBASE,
 	InstanceType: DomainMembersInstanceType,
 	KeyName: KeyPairName,
-	SecurityGroupIds: []any{DomainMembersSGID},
+	SecurityGroupIds: Any(DomainMembersSGID),
 	SubnetId: PrivateSubnet1ID,
 	Tags: []any{DomainMember3WithSsmAssociationTagTagName, DomainMember3WithSsmAssociationTagTagDomainJoin},
 	UserData: Base64{Sub{String: "<powershell>\n$instanceId = \"null\"\nwhile ($instanceId -NotLike \"i-*\") {\nStart-Sleep -s 3\n$instanceId = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/instance-id\n}\nRename-Computer -NewName ${DomainMember3NetBIOSName} -Force\n# Set-TimeZone -Name \"US Eastern Standard Time\"\n\nInstall-WindowsFeature -IncludeAllSubFeature RSAT\nRestart-Computer -Force\n</powershell>\n"}},
@@ -135,7 +135,7 @@ var DomainMember4LinuxWithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: &DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember4LinuxWithSsmAssociationInstance = ec2.Instance{
@@ -144,7 +144,7 @@ var DomainMember4LinuxWithSsmAssociationInstance = ec2.Instance{
 	ImageId: AMAZONLINUX2,
 	InstanceType: DomainMembersInstanceType,
 	KeyName: KeyPairName,
-	SecurityGroupIds: []any{DomainMembersSGID},
+	SecurityGroupIds: Any(DomainMembersSGID),
 	SubnetId: PrivateSubnet2ID,
 	Tags: []any{DomainMember4LinuxWithSsmAssociationInstanceTagName},
 	UserData: Base64{Sub{String: "# Set HostName\nLowerEc2Name=$(echo ${DomainMember4NetBIOSName} | tr '[:upper:]' '[:lower:]')\nhostnamectl set-hostname $LowerEc2Name\n# Set TimeZone\n# sed -i 's|^ZONE=.*|ZONE=\"America/New_York\"|' /etc/sysconfig/clock\n# ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime\n# Patch System Up\nyum update -y\n# Reboot\nreboot\n"}},

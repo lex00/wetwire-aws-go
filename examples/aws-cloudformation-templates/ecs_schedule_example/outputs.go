@@ -10,7 +10,7 @@ import (
 
 // ECSALBOutput - Your ALB DNS URL
 var ECSALBOutput = Output{
-	Value:       Join{"", []any{
+	Value:       Join{Delimiter: "", Values: []any{
 	ECSALB.DNSName,
 }},
 	Description: "Your ALB DNS URL",

@@ -10,24 +10,24 @@ import (
 )
 
 var TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocument = PolicyDocument{
-	Statement: []any{TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0},
+	Statement: Any(TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyTagVpcPeeringConnectPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"ec2:CreateTags", "ec2:DeleteTags"},
+	Action: Any("ec2:CreateTags", "ec2:DeleteTags"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:vpc-peering-connection/*"},
 	Sid: "Tagging",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocument = PolicyDocument{
-	Statement: []any{TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1},
+	Statement: Any(TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement0, TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
 var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroupPolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"logs:CreateLogStream", "logs:PutLogEvents"},
+	Action: Any("logs:CreateLogStream", "logs:PutLogEvents"),
 	Effect: "Allow",
 	Resource: Sub{String: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:${TagVpcPeeringConnectionsLambdaLogsLogGroup}:log-stream:*"},
 	Sid: "CreateLogStreamAndEvents",
@@ -56,7 +56,7 @@ var TagVpcPeeringConnectionsLambdaRolePolicyCloudWatchLogGroup = iam.Role_Policy
 }
 
 var TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(TagVpcPeeringConnectionsLambdaRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

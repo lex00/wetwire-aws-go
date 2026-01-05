@@ -10,7 +10,7 @@ import (
 )
 
 var IAMAssumeInstanceRolePolicy1PolicyDocument = PolicyDocument{
-	Statement: []any{IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2},
+	Statement: Any(IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1, IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
@@ -21,20 +21,20 @@ var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement2 = PolicyStatement{
 }
 
 var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:Get*", "s3:List*"},
+	Action: Any("s3:Get*", "s3:List*"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var IAMAssumeInstanceRolePolicy1PolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"ec2:DescribeTags"},
+	Action: Any("ec2:DescribeTags"),
 	Effect: "Allow",
 	Resource: "*",
 }
 
 var IAMAssumeInstanceRolePolicy1 = iam.Role_Policy{
 	PolicyDocument: IAMAssumeInstanceRolePolicy1PolicyDocument,
-	PolicyName: Join{"-", []any{
+	PolicyName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"EC2",
 	"Policy",
@@ -42,12 +42,12 @@ var IAMAssumeInstanceRolePolicy1 = iam.Role_Policy{
 }
 
 var IAMAssumeInstanceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var IAMAssumeInstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -56,7 +56,7 @@ var IAMAssumeInstanceRole = iam.Role{
 	AssumeRolePolicyDocument: IAMAssumeInstanceRoleAssumeRolePolicyDocument,
 	Path: "/",
 	Policies: List(IAMAssumeInstanceRolePolicy1),
-	RoleName: Join{"-", []any{
+	RoleName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"EC2",
 	"Role",
@@ -64,10 +64,10 @@ var IAMAssumeInstanceRole = iam.Role{
 }
 
 var InstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: Join{"-", []any{
+	InstanceProfileName: Join{Delimiter: "-", Values: []any{
 	"IAM",
 	"InstanceProfile",
 }},
 	Path: "/",
-	Roles: []any{IAMAssumeInstanceRole},
+	Roles: Any(IAMAssumeInstanceRole),
 }

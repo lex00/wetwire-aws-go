@@ -18,7 +18,7 @@ var ContainerInstances = autoscaling.LaunchConfiguration{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroups: []any{EcsSecurityGroup},
+	SecurityGroups: Any(EcsSecurityGroup),
 	UserData: Base64{Sub{String: "#!/bin/bash -xe\necho ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config\nyum install -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} \\\n    --resource ECSAutoScalingGroup \\\n    --region ${AWS::Region}\n"}},
 }
 
@@ -72,12 +72,12 @@ var TaskDefinitionVolumeMyNegvol = ecs.TaskDefinition_Volume{
 }
 
 var TaskDefinitionContainerDefinitionBusybox = ecs.TaskDefinition_ContainerDefinition{
-	Command: []any{"/bin/sh -c \"while true; do echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p>' > top; /bin/date > date ; echo '</div></body></html>' > bottom; cat top date bottom > /usr/local/apache2/htdocs/index.html ; sleep 1; done\""},
+	Command: Any("/bin/sh -c \"while true; do echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p>' > top; /bin/date > date ; echo '</div></body></html>' > bottom; cat top date bottom > /usr/local/apache2/htdocs/index.html ; sleep 1; done\""),
 	Cpu: 10,
-	EntryPoint: []any{"sh", "-c"},
+	EntryPoint: Any("sh", "-c"),
 	Essential: false,
 	Image: "busybox",
-	LogConfiguration: TaskDefinitionContainerDefinitionBusyboxLogConfiguration,
+	LogConfiguration: &TaskDefinitionContainerDefinitionBusyboxLogConfiguration,
 	Memory: 200,
 	Name: "busybox",
 	VolumesFrom: List(TaskDefinitionContainerDefinitionBusyboxVolumesFrom1),
@@ -87,7 +87,7 @@ var TaskDefinitionContainerDefinitionSimpleNegapp = ecs.TaskDefinition_Container
 	Cpu: "10",
 	Essential: "true",
 	Image: "httpd:2.4",
-	LogConfiguration: TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration,
+	LogConfiguration: &TaskDefinitionContainerDefinitionSimpleNegappLogConfiguration,
 	Memory: "300",
 	MountPoints: List(TaskDefinitionContainerDefinitionSimpleNegappMountPoint1),
 	Name: "simple-app",
@@ -96,7 +96,7 @@ var TaskDefinitionContainerDefinitionSimpleNegapp = ecs.TaskDefinition_Container
 
 var TaskDefinition = ecs.TaskDefinition{
 	ContainerDefinitions: List(TaskDefinitionContainerDefinitionSimpleNegapp, TaskDefinitionContainerDefinitionBusybox),
-	Family: Join{"", []any{
+	Family: Join{Delimiter: "", Values: []any{
 	AWS_STACK_NAME,
 	"-ecs-demo-app",
 }},

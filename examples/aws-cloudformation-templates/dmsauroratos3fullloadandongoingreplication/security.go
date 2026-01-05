@@ -10,43 +10,43 @@ import (
 )
 
 var DMSCloudwatchRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{DMSCloudwatchRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(DMSCloudwatchRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var DMSCloudwatchRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"dms.amazonaws.com"},
 }
 
 var DMSCloudwatchRole = iam.Role{
 	AssumeRolePolicyDocument: DMSCloudwatchRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole"),
 	Path: "/",
 	RoleName: "dms-cloudwatch-logs-role",
 }
 
 var DMSVpcRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{DMSVpcRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(DMSVpcRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var DMSVpcRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"dms.amazonaws.com"},
 }
 
 var DMSVpcRole = iam.Role{
 	AssumeRolePolicyDocument: DMSVpcRoleAssumeRolePolicyDocument,
-	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"},
+	ManagedPolicyArns: Any("arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"),
 	Path: "/",
 	RoleName: "dms-vpc-role",
 }
 
 var S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement0, S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement1},
+	Statement: Any(S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement0, S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -57,9 +57,9 @@ var S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement1 = PolicySt
 }
 
 var S3TargetDMSRolePolicyS3AccessForDMSPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:PutObject", "s3:DeleteObject"},
+	Action: Any("s3:PutObject", "s3:DeleteObject"),
 	Effect: "Allow",
-	Resource: []any{S3Bucket.Arn, Sub{String: "${S3Bucket.Arn}/*"}},
+	Resource: Any(S3Bucket.Arn, Sub{String: "${S3Bucket.Arn}/*"}),
 }
 
 var S3TargetDMSRolePolicyS3AccessForDMSPolicy = iam.Role_Policy{
@@ -68,12 +68,12 @@ var S3TargetDMSRolePolicyS3AccessForDMSPolicy = iam.Role_Policy{
 }
 
 var S3TargetDMSRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{S3TargetDMSRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(S3TargetDMSRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var S3TargetDMSRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"dms.amazonaws.com"},
 }

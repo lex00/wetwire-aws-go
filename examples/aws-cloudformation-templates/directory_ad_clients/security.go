@@ -11,7 +11,7 @@ import (
 
 var JoinDomainAssociationInstancesTargetInstanceIds = ssm.Association_Target{
 	Key: "InstanceIds",
-	Values: []any{DomainMember2WithSsmAssociationInstance, DomainMember4LinuxWithSsmAssociationInstance},
+	Values: Any(DomainMember2WithSsmAssociationInstance, DomainMember4LinuxWithSsmAssociationInstance),
 }
 
 var JoinDomainAssociationInstancesOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
@@ -24,10 +24,10 @@ var JoinDomainAssociationInstancesOutputLocation = ssm.Association_InstanceAssoc
 var JoinDomainAssociationInstances = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaInstances-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
-	OutputLocation: JoinDomainAssociationInstancesOutputLocation,
+	OutputLocation: &JoinDomainAssociationInstancesOutputLocation,
 	Parameters: map[string]any{
-	"directoryId": []any{DirectoryID},
-	"directoryName": []any{DirectoryName},
+	"directoryId": Any(DirectoryID),
+	"directoryName": Any(DirectoryName),
 	"dnsIpAddresses": If{"DomainDNSServersCondition", []any{
 	If{"DomainDNSServer1Condition", DomainDNSServer1, AWS_NO_VALUE},
 	If{"DomainDNSServer2Condition", DomainDNSServer2, AWS_NO_VALUE},
@@ -40,7 +40,7 @@ var JoinDomainAssociationInstances = ssm.Association{
 
 var JoinDomainAssociationTagsTargetTagDomainJoin = ssm.Association_Target{
 	Key: "tag:DomainJoin",
-	Values: []any{DirectoryName},
+	Values: Any(DirectoryName),
 }
 
 var JoinDomainAssociationTagsOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
@@ -53,10 +53,10 @@ var JoinDomainAssociationTagsOutputLocation = ssm.Association_InstanceAssociatio
 var JoinDomainAssociationTags = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaTags-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
-	OutputLocation: JoinDomainAssociationTagsOutputLocation,
+	OutputLocation: &JoinDomainAssociationTagsOutputLocation,
 	Parameters: map[string]any{
-	"directoryId": []any{DirectoryID},
-	"directoryName": []any{DirectoryName},
+	"directoryId": Any(DirectoryID),
+	"directoryName": Any(DirectoryName),
 	"dnsIpAddresses": If{"DomainDNSServersCondition", []any{
 	If{"DomainDNSServer1Condition", DomainDNSServer1, AWS_NO_VALUE},
 	If{"DomainDNSServer2Condition", DomainDNSServer2, AWS_NO_VALUE},

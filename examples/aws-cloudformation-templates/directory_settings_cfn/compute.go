@@ -25,12 +25,12 @@ var DirectorySettingsLambdaFunctionCode = lambda.Function_Code{
 
 var DirectorySettingsLambdaFunction = lambda.Function{
 	Code: DirectorySettingsLambdaFunctionCode,
-	Environment: DirectorySettingsLambdaFunctionEnvironment,
+	Environment: &DirectorySettingsLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "directory_settings_custom_resource.lambda_handler",
 	MemorySize: 128,
 	Role: DirectorySettingsLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,
 	Timeout: 120,
-	VpcConfig: DirectorySettingsLambdaFunctionVpcConfig,
+	VpcConfig: &DirectorySettingsLambdaFunctionVpcConfig,
 }

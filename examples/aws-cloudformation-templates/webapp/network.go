@@ -10,9 +10,9 @@ import (
 )
 
 var SiteOriginAccessControlOriginAccessControlConfig = cloudfront.OriginAccessControl_OriginAccessControlConfig{
-	Name: Join{"", []any{
+	Name: Join{Delimiter: "", Values: []any{
 	AppName,
-	Select{2, Split{"/", AWS_STACK_ID}},
+	Select{Index: 2, List: Split{"/", AWS_STACK_ID}},
 }},
 	OriginAccessControlOriginType: "s3",
 	SigningBehavior: "always",
@@ -35,7 +35,7 @@ var SiteDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
 	DomainName: SiteContentBucket.RegionalDomainName,
 	Id: Sub{String: "${AppName}-origin-1"},
 	OriginAccessControlId: SiteOriginAccessControl.Id,
-	S3OriginConfig: SiteDistributionDistributionConfigOrigin1S3OriginConfig,
+	S3OriginConfig: &SiteDistributionDistributionConfigOrigin1S3OriginConfig,
 }
 
 var SiteDistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
@@ -55,9 +55,9 @@ var SiteDistributionDistributionConfig = cloudfront.Distribution_DistributionCon
 	Enabled: true,
 	HttpVersion: "http2",
 	IPV6Enabled: true,
-	Logging: SiteDistributionDistributionConfigLogging,
+	Logging: &SiteDistributionDistributionConfigLogging,
 	Origins: List(SiteDistributionDistributionConfigOrigin1),
-	ViewerCertificate: SiteDistributionDistributionConfigViewerCertificate,
+	ViewerCertificate: &SiteDistributionDistributionConfigViewerCertificate,
 	WebACLId: SiteWebACL.Arn,
 }
 

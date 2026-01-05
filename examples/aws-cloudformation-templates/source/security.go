@@ -11,7 +11,7 @@ import (
 )
 
 var KmsKeyKeyPolicy = PolicyDocument{
-	Statement: []any{KmsKeyKeyPolicyStatement0},
+	Statement: Any(KmsKeyKeyPolicyStatement0),
 	Version: "2012-10-17",
 }
 
@@ -34,7 +34,7 @@ var KmsKeyAlias = kms.Alias{
 }
 
 var ReplicationRolePolicy1PolicyDocument = PolicyDocument{
-	Statement: []any{ReplicationRolePolicy1PolicyDocumentStatement0, ReplicationRolePolicy1PolicyDocumentStatement1, ReplicationRolePolicy1PolicyDocumentStatement2, ReplicationRolePolicy1PolicyDocumentStatement3},
+	Statement: Any(ReplicationRolePolicy1PolicyDocumentStatement0, ReplicationRolePolicy1PolicyDocumentStatement1, ReplicationRolePolicy1PolicyDocumentStatement2, ReplicationRolePolicy1PolicyDocumentStatement3),
 	Version: "2012-10-17",
 }
 
@@ -54,16 +54,16 @@ var ReplicationRolePolicy1PolicyDocumentStatement2 = PolicyStatement{
 }
 
 var ReplicationRolePolicy1PolicyDocumentStatement1 = PolicyStatement{
-	Action: []any{"s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"},
+	Action: Any("s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"),
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AccountIdDestination}-bucket/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AccountIdDestination}-bucket"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AccountIdDestination}-bucket/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AccountIdDestination}-bucket"}),
 	Sid: "AllowActionsOnDestinationBucket",
 }
 
 var ReplicationRolePolicy1PolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:ListBucket", "s3:GetReplicationConfiguration", "s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl"},
+	Action: Any("s3:ListBucket", "s3:GetReplicationConfiguration", "s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl"),
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AWS::AccountId}-bucket/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AWS::AccountId}-bucket"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AWS::AccountId}-bucket/*"}, Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AWS::AccountId}-bucket"}),
 	Sid: "AllowActionsOnSourceBucket",
 }
 
@@ -73,7 +73,7 @@ var ReplicationRolePolicy1 = iam.Role_Policy{
 }
 
 var ReplicationRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{ReplicationRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(ReplicationRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

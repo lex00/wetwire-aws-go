@@ -19,7 +19,7 @@ var LoggingBucketOwnershipControlsRule1 = s3.Bucket_OwnershipControlsRule{
 }
 
 var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var LoggingBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -43,15 +43,15 @@ var LoggingBucketBucketEncryption = s3.Bucket_BucketEncryption{
 
 var LoggingBucket = s3.Bucket{
 	AccessControl: "LogDeliveryWrite",
-	BucketEncryption: LoggingBucketBucketEncryption,
+	BucketEncryption: &LoggingBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"},
-	OwnershipControls: LoggingBucketOwnershipControls,
-	PublicAccessBlockConfiguration: LoggingBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: LoggingBucketVersioningConfiguration,
+	OwnershipControls: &LoggingBucketOwnershipControls,
+	PublicAccessBlockConfiguration: &LoggingBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &LoggingBucketVersioningConfiguration,
 }
 
 var LoggingBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1},
+	Statement: Any(LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -59,14 +59,14 @@ var LoggingBucketPolicyPolicyDocumentStatement1 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}),
 }
 
 var LoggingBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
 	Action: "s3:PutObject",
 	Effect: "Allow",
 	Principal: AWSPrincipal{Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"}},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}),
 	Sid: "LoggingBucketPermissions",
 }
 

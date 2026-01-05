@@ -109,7 +109,7 @@ var PipelineArtifactStore = codepipeline.Pipeline_ArtifactStore{
 }
 
 var Pipeline = codepipeline.Pipeline{
-	ArtifactStore: PipelineArtifactStore,
+	ArtifactStore: &PipelineArtifactStore,
 	Name: Sub{String: "${AWS::StackName}-Code-Pipeline"},
 	RestartExecutionOnUpdate: false,
 	RoleArn: PipelineRole.Arn,

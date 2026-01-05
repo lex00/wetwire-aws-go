@@ -21,7 +21,7 @@ var CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig = events.EventB
 
 var CloudFormationEventRuleTargetCentralEventBus = events.Rule_Target{
 	Arn: CentralEventBusArn,
-	DeadLetterConfig: CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig,
+	DeadLetterConfig: &CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig,
 	Id: "CentralEventBus",
 	RoleArn: EventBridgeRole.Arn,
 }
@@ -29,7 +29,7 @@ var CloudFormationEventRuleTargetCentralEventBus = events.Rule_Target{
 var CloudFormationEventRule = events.Rule{
 	EventBusName: Sub{String: "arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default"},
 	EventPattern: map[string]any{
-	"source": []any{"aws.cloudformation"},
+	"source": Any("aws.cloudformation"),
 },
 	Name: "CloudFormationEventRule",
 	State: enums.EventsRuleStateEnabled,
@@ -37,7 +37,7 @@ var CloudFormationEventRule = events.Rule{
 }
 
 var DeadLetterQueuePolicyPolicyDocument = PolicyDocument{
-	Statement: []any{DeadLetterQueuePolicyPolicyDocumentStatement0},
+	Statement: Any(DeadLetterQueuePolicyPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
@@ -52,5 +52,5 @@ var DeadLetterQueuePolicyPolicyDocumentStatement0 = PolicyStatement{
 
 var DeadLetterQueuePolicy = sqs.QueuePolicy{
 	PolicyDocument: DeadLetterQueuePolicyPolicyDocument,
-	Queues: []any{DeadLetterQueue},
+	Queues: Any(DeadLetterQueue),
 }

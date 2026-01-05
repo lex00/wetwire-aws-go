@@ -42,11 +42,11 @@ var ServiceDeploymentConfiguration = ecs.Service_DeploymentConfiguration{
 }
 
 var Service = ecs.Service{
-	Cluster: ImportValue{Join{":", []any{
+	Cluster: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"ClusterName",
 }}},
-	DeploymentConfiguration: ServiceDeploymentConfiguration,
+	DeploymentConfiguration: &ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LoadBalancers: List(ServiceLoadBalancer1),
 	ServiceName: ServiceName,

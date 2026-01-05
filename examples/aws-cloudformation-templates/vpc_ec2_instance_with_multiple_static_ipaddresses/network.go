@@ -44,7 +44,7 @@ var Eth0PrivateIpAddress1 = ec2.NetworkInterface_PrivateIpAddressSpecification{
 
 var Eth0 = ec2.NetworkInterface{
 	Description: "eth0",
-	GroupSet: []any{SSHSecurityGroup},
+	GroupSet: Any(SSHSecurityGroup),
 	PrivateIpAddresses: List(Eth0PrivateIpAddress1, Eth0PrivateIpAddress2),
 	SourceDestCheck: "true",
 	SubnetId: SubnetId,

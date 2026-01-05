@@ -10,12 +10,12 @@ import (
 )
 
 var InstanceRolePolicyTaginstancepolicyPolicyDocument = PolicyDocument{
-	Statement: []any{InstanceRolePolicyTaginstancepolicyPolicyDocumentStatement0},
+	Statement: Any(InstanceRolePolicyTaginstancepolicyPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var InstanceRolePolicyTaginstancepolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"ec2:Describe*", "ec2:CreateTags"},
+	Action: Any("ec2:Describe*", "ec2:CreateTags"),
 	Effect: "Allow",
 	Resource: "*",
 }
@@ -26,12 +26,12 @@ var InstanceRolePolicyTaginstancepolicy = iam.Role_Policy{
 }
 
 var InstanceRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{InstanceRoleAssumeRolePolicyDocumentStatement0},
+	Statement: Any(InstanceRoleAssumeRolePolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 
 var InstanceRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
+	Action: Any("sts:AssumeRole"),
 	Effect: "Allow",
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
@@ -44,5 +44,5 @@ var InstanceRole = iam.Role{
 
 var InstanceProfile = iam.InstanceProfile{
 	Path: "/",
-	Roles: []any{InstanceRole},
+	Roles: Any(InstanceRole),
 }

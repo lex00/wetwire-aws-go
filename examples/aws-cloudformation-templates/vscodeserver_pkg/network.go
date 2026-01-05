@@ -16,7 +16,7 @@ var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOrig
 
 var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginHeadersConfig = cloudfront.CachePolicy_HeadersConfig{
 	HeaderBehavior: "whitelist",
-	Headers: []any{"Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"},
+	Headers: Any("Accept-Charset", "Authorization", "Origin", "Accept", "Referer", "Host", "Accept-Language", "Accept-Encoding", "Accept-Datetime"),
 }
 
 var CloudFrontCachePolicyCachePolicyConfigParametersInCacheKeyAndForwardedToOriginCookiesConfig = cloudfront.CachePolicy_CookiesConfig{
@@ -127,7 +127,7 @@ var NetworkPrivateSubnet1SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet1Subnet = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.128.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet1SubnetTagName},
@@ -155,7 +155,7 @@ var NetworkPrivateSubnet2SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet2Subnet = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.192.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet2SubnetTagName},
@@ -173,7 +173,7 @@ var NetworkPublicSubnet1TagName = Tag{
 }
 
 var NetworkPublicSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{0, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.0.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet1TagName},
@@ -224,7 +224,7 @@ var NetworkPublicSubnet2TagName = Tag{
 }
 
 var NetworkPublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{1, GetAZs{"map[Ref:AWS::Region]"}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
 	CidrBlock: "10.0.64.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet2TagName},
@@ -280,13 +280,13 @@ var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfro
 }
 
 var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: &CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: Server.PublicDnsName,
 	Id: Sub{String: "CloudFront-${AWS::StackName}"},
 }
 
 var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution_DefaultCacheBehavior{
-	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
+	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
 	CachePolicyId: CloudFrontCachePolicy,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
 	TargetOriginId: Sub{String: "CloudFront-${AWS::StackName}"},
@@ -294,7 +294,7 @@ var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Di
 }
 
 var CloudFrontDistributionDistributionConfigCacheBehavior1 = cloudfront.Distribution_CacheBehavior{
-	AllowedMethods: []any{"GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"},
+	AllowedMethods: Any("GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"),
 	CachePolicyId: "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
 	Compress: false,
 	OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",

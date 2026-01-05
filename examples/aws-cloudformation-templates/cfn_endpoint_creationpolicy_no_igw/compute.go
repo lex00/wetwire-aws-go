@@ -17,7 +17,7 @@ var PrivateInstanceTagName = Tag{
 var PrivateInstance = ec2.Instance{
 	ImageId: LinuxAMI,
 	InstanceType: "t3.micro",
-	SecurityGroupIds: []any{PrivateSG},
+	SecurityGroupIds: Any(PrivateSG),
 	SubnetId: PrivateSubnet1,
 	Tags: []any{PrivateInstanceTagName},
 	UserData: Base64{Sub{String: "#!/bin/bash -x\ndate > /tmp/datefile\ncat /tmp/datefile\n# Signal the status from instance\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource PrivateInstance --region ${AWS::Region}\n"}},

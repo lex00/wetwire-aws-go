@@ -14,7 +14,7 @@ var PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSide
 }
 
 var PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &PipelineS3BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var PipelineS3BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
@@ -29,7 +29,7 @@ var PipelineS3BucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var PipelineS3Bucket = s3.Bucket{
-	BucketEncryption: PipelineS3BucketBucketEncryption,
+	BucketEncryption: &PipelineS3BucketBucketEncryption,
 	BucketName: Sub{String: "${AWS::StackName}-bucket"},
-	PublicAccessBlockConfiguration: PipelineS3BucketPublicAccessBlockConfiguration,
+	PublicAccessBlockConfiguration: &PipelineS3BucketPublicAccessBlockConfiguration,
 }

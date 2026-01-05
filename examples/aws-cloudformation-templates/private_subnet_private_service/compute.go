@@ -26,33 +26,33 @@ var TaskDefinitionContainerDefinition1 = ecs.TaskDefinition_ContainerDefinition{
 var TaskDefinition = ecs.TaskDefinition{
 	ContainerDefinitions: List(TaskDefinitionContainerDefinition1),
 	Cpu: ContainerCpu,
-	ExecutionRoleArn: ImportValue{Join{":", []any{
+	ExecutionRoleArn: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"ECSTaskExecutionRole",
 }}},
 	Family: ServiceName,
 	Memory: ContainerMemory,
 	NetworkMode: enums.EcsNetworkModeAwsvpc,
-	RequiresCompatibilities: []any{"FARGATE"},
+	RequiresCompatibilities: Any("FARGATE"),
 	TaskRoleArn: If{"HasCustomRole", Role, AWS_NO_VALUE},
 }
 
 var ServiceNetworkConfigurationAwsvpcConfiguration = ecs.Service_AwsVpcConfiguration{
-	SecurityGroups: []any{ImportValue{Join{":", []any{
+	SecurityGroups: Any(ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"FargateContainerSecurityGroup",
-}}}},
-	Subnets: []any{ImportValue{Join{":", []any{
+}}}),
+	Subnets: Any(ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetOne",
-}}}, ImportValue{Join{":", []any{
+}}}, ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"PrivateSubnetTwo",
-}}}},
+}}}),
 }
 
 var ServiceNetworkConfiguration = ecs.Service_NetworkConfiguration{
-	AwsvpcConfiguration: ServiceNetworkConfigurationAwsvpcConfiguration,
+	AwsvpcConfiguration: &ServiceNetworkConfigurationAwsvpcConfiguration,
 }
 
 var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
@@ -67,15 +67,15 @@ var ServiceDeploymentConfiguration = ecs.Service_DeploymentConfiguration{
 }
 
 var Service = ecs.Service{
-	Cluster: ImportValue{Join{":", []any{
+	Cluster: ImportValue{Join{Delimiter: ":", Values: []any{
 	StackName,
 	"ClusterName",
 }}},
-	DeploymentConfiguration: ServiceDeploymentConfiguration,
+	DeploymentConfiguration: &ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LaunchType: enums.EcsLaunchTypeFargate,
 	LoadBalancers: List(ServiceLoadBalancer1),
-	NetworkConfiguration: ServiceNetworkConfiguration,
+	NetworkConfiguration: &ServiceNetworkConfiguration,
 	ServiceName: ServiceName,
 	TaskDefinition: TaskDefinition,
 }

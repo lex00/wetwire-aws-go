@@ -53,7 +53,7 @@ var DHCPOptionsTagName = Tag{
 
 var DHCPOptions = ec2.DHCPOptions{
 	DomainName: DomainDNSName,
-	DomainNameServers: []any{DomainDNSServers},
+	DomainNameServers: Any(DomainDNSServers),
 	Tags: []any{DHCPOptionsTagName},
 }
 

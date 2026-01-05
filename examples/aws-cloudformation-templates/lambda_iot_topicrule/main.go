@@ -10,26 +10,26 @@ import (
 )
 
 var IoTPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{IoTPolicyPolicyDocumentStatement0, IoTPolicyPolicyDocumentStatement1, IoTPolicyPolicyDocumentStatement2},
+	Statement: Any(IoTPolicyPolicyDocumentStatement0, IoTPolicyPolicyDocumentStatement1, IoTPolicyPolicyDocumentStatement2),
 	Version: "2012-10-17",
 }
 
 var IoTPolicyPolicyDocumentStatement2 = PolicyStatement{
 	Action: "iot:Subscribe",
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/*"}),
 }
 
 var IoTPolicyPolicyDocumentStatement1 = PolicyStatement{
 	Action: "iot:*",
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/${AWS::StackName}"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_1"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_2"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/sdk/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/${AWS::StackName}"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_1"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/topic_2"}, Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/sdk/*"}),
 }
 
 var IoTPolicyPolicyDocumentStatement0 = PolicyStatement{
 	Action: "iot:Connect",
 	Effect: "Allow",
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:client/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:client/*"}),
 }
 
 var IoTPolicy = iot.Policy{
@@ -42,7 +42,7 @@ var IoTPolicyPrincipalAttachment = iot.PolicyPrincipalAttachment{
 }
 
 var IoTThing = iot.Thing{
-	ThingName: Sub{String: "${AWS::StackName}"},
+	ThingName: AWS_STACK_NAME,
 }
 
 var IoTThingPrincipalAttachment = iot.ThingPrincipalAttachment{
@@ -55,7 +55,7 @@ var IoTTopicRuleTopicRulePayloadAction1Lambda = iot.TopicRule_LambdaAction{
 }
 
 var IoTTopicRuleTopicRulePayloadAction1 = iot.TopicRule_Action{
-	Lambda: IoTTopicRuleTopicRulePayloadAction1Lambda,
+	Lambda: &IoTTopicRuleTopicRulePayloadAction1Lambda,
 }
 
 var IoTTopicRuleTopicRulePayload = iot.TopicRule_TopicRulePayload{
@@ -66,12 +66,12 @@ var IoTTopicRuleTopicRulePayload = iot.TopicRule_TopicRulePayload{
 }
 
 var IoTTopicRule = iot.TopicRule{
-	RuleName: Sub{String: "${AWS::StackName}"},
+	RuleName: AWS_STACK_NAME,
 	TopicRulePayload: IoTTopicRuleTopicRulePayload,
 }
 
 var OpenIoTStarPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{OpenIoTStarPolicyPolicyDocumentStatement0},
+	Statement: Any(OpenIoTStarPolicyPolicyDocumentStatement0),
 	Version: "2012-10-17",
 }
 

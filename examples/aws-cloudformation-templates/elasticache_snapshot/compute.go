@@ -27,5 +27,5 @@ var LambdaExecutePermission = lambda.Permission{
 	Action: "lambda:InvokeFunction",
 	FunctionName: EnableShapshot.Arn,
 	Principal: "elasticache.amazonaws.com",
-	SourceAccount: Sub{String: "${AWS::AccountId}"},
+	SourceAccount: AWS_ACCOUNT_ID,
 }

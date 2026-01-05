@@ -53,9 +53,22 @@ var EcsSecurityGroupALBports = ec2.SecurityGroupIngress{
 	ToPort: "61000",
 }
 
+var ECSALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: "30",
+}
+
+var ECSALB = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: List(ECSALBLoadBalancerAttributeIdletimeouttimeoutse),
+	Name: "ECSALB",
+	Scheme: "internet-facing",
+	SecurityGroups: Any(EcsSecurityGroup),
+	Subnets: SubnetId,
+}
+
 var ECSALBListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
 	Field: "path-pattern",
-	Values: []any{"/"},
+	Values: Any("/"),
 }
 
 var ECSALBListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
@@ -68,19 +81,6 @@ var ECSALBListenerRule = elasticloadbalancingv2.ListenerRule{
 	Conditions: List(ECSALBListenerRuleCondition1),
 	ListenerArn: ALBListener,
 	Priority: 1,
-}
-
-var ECSALBLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: "30",
-}
-
-var ECSALB = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: List(ECSALBLoadBalancerAttributeIdletimeouttimeoutse),
-	Name: "ECSALB",
-	Scheme: "internet-facing",
-	SecurityGroups: []any{EcsSecurityGroup},
-	Subnets: SubnetId,
 }
 
 var ALBListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{

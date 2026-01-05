@@ -16,7 +16,7 @@ var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerS
 
 var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
 	BucketKeyEnabled: true,
-	ServerSideEncryptionByDefault: S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: &S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var S3BucketDestinationVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -35,14 +35,14 @@ var S3BucketDestinationBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var S3BucketDestination = s3.Bucket{
-	BucketEncryption: S3BucketDestinationBucketEncryption,
+	BucketEncryption: &S3BucketDestinationBucketEncryption,
 	BucketName: Sub{String: "${AWS::StackName}-${AWS::AccountId}-bucket"},
-	PublicAccessBlockConfiguration: S3BucketDestinationPublicAccessBlockConfiguration,
-	VersioningConfiguration: S3BucketDestinationVersioningConfiguration,
+	PublicAccessBlockConfiguration: &S3BucketDestinationPublicAccessBlockConfiguration,
+	VersioningConfiguration: &S3BucketDestinationVersioningConfiguration,
 }
 
 var S3BucketDestinationPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{S3BucketDestinationPolicyPolicyDocumentStatement0, S3BucketDestinationPolicyPolicyDocumentStatement1},
+	Statement: Any(S3BucketDestinationPolicyPolicyDocumentStatement0, S3BucketDestinationPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -56,7 +56,7 @@ var S3BucketDestinationPolicyPolicyDocumentStatement1 = DenyStatement{
 }
 
 var S3BucketDestinationPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:ReplicateDelete", "s3:ReplicateObject", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"},
+	Action: Any("s3:ReplicateDelete", "s3:ReplicateObject", "s3:ReplicateTags", "s3:GetObjectVersionTagging", "s3:ObjectOwnerOverrideToBucketOwner"),
 	Effect: "Allow",
 	Principal: AWSPrincipal{AccountIdSource},
 	Resource: SubWithMap{String: "${varBucketArn}/*", Variables: map[string]any{

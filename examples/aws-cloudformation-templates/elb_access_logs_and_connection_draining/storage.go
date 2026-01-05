@@ -14,7 +14,7 @@ var LogsBucket = s3.Bucket{
 }
 
 var LogsBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{LogsBucketPolicyPolicyDocumentStatement0, LogsBucketPolicyPolicyDocumentStatement1},
+	Statement: Any(LogsBucketPolicyPolicyDocumentStatement0, LogsBucketPolicyPolicyDocumentStatement1),
 	Version: "2012-10-17",
 }
 
@@ -22,14 +22,14 @@ var LogsBucketPolicyPolicyDocumentStatement1 = DenyStatement{
 	Action: "s3:*",
 	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
 	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}"}, Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}/*"}),
 }
 
 var LogsBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"s3:PutObject"},
+	Action: Any("s3:PutObject"),
 	Effect: "Allow",
 	Principal: AWSPrincipal{FindInMap{"Region2ELBAccountId", AWS_REGION, "AccountId"}},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}/*"}},
+	Resource: Any(Sub{String: "arn:${AWS::Partition}:s3:::${LogsBucket}/Logs/AWSLogs/${AWS::AccountId}/*"}),
 	Sid: "ELBAccessLogs20130930",
 }
 

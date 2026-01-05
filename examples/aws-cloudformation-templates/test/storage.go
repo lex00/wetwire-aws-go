@@ -19,7 +19,7 @@ var BucketLifecycleConfiguration = s3.Bucket_LifecycleConfiguration{
 }
 
 var Bucket = s3.Bucket{
-	LifecycleConfiguration: BucketLifecycleConfiguration,
+	LifecycleConfiguration: &BucketLifecycleConfiguration,
 }
 
 var NonExplodingBucket = s3.Bucket{
