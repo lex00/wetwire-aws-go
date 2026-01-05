@@ -89,7 +89,7 @@ var ProcessorRole = iam.Role{
 // Flat environment - extracted from inline
 var ProcessorEnv = lambda.Environment{
     Variables: Json{
-        "BUCKET_NAME": Ref{"DataBucket"},
+        "BUCKET_NAME": DataBucket,
     },
 }
 
@@ -98,7 +98,7 @@ var ProcessorFunction = lambda.Function{
     FunctionName: "processor",
     Runtime:      lambda.RuntimePython312,
     Handler:      "index.handler",
-    Role:         GetAtt{"ProcessorRole", "Arn"},
+    Role:         ProcessorRole.Arn,  // GetAtt via field access
     Environment:  ProcessorEnv,
 }
 ```
@@ -161,7 +161,7 @@ import (
 var ProcessorEnv = lambda.Environment{
     Variables: Json{
         // Cross-file reference - DataBucket is discovered from storage.go
-        "BUCKET_NAME": Ref{"DataBucket"},
+        "BUCKET_NAME": DataBucket,
     },
 }
 
@@ -249,7 +249,7 @@ func main() {
 
     // Add outputs - use typed intrinsics, not raw maps
     t.AddOutput("BucketArn", template.Output{
-        Value:       GetAtt{"DataBucket", "Arn"},
+        Value:       DataBucket.Arn,  // GetAtt via field access
         Description: "Data bucket ARN",
     })
 

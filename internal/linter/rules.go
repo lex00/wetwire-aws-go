@@ -17,6 +17,8 @@
 //	WAW010: Flatten inline typed struct literals to named var declarations
 //	WAW011: Validate enum property values against allowed values
 //	WAW012: Use typed enum constants instead of raw strings
+//	WAW015: Avoid explicit Ref{} - use direct variable references or Param()
+//	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
 package linter
 
 import (
@@ -1552,6 +1554,140 @@ func (r UnusedIntrinsicsImport) Check(file *ast.File, fset *token.FileSet) []Iss
 	return issues
 }
 
+// AvoidExplicitRef detects explicit Ref{} struct literals.
+// Prefer direct variable references for resources or Param() for parameters.
+//
+// Example:
+//
+//	// Bad - explicit Ref{}
+//	Bucket: Ref{"MyBucket"},
+//	VpcId: Ref{"VpcIdParam"},
+//
+//	// Good - direct reference for resources
+//	Bucket: MyBucket,
+//
+//	// Good - Param() helper for parameters
+//	VpcId: VpcIdParam,  // where VpcIdParam = Param("VpcIdParam")
+type AvoidExplicitRef struct{}
+
+func (r AvoidExplicitRef) ID() string { return "WAW015" }
+func (r AvoidExplicitRef) Description() string {
+	return "Avoid explicit Ref{} - use direct variable references or Param()"
+}
+
+func (r AvoidExplicitRef) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		comp, ok := n.(*ast.CompositeLit)
+		if !ok {
+			return true
+		}
+
+		// Check if this is a Ref{...} struct literal
+		ident, ok := comp.Type.(*ast.Ident)
+		if !ok || ident.Name != "Ref" {
+			return true
+		}
+
+		// Get the reference name if available
+		refName := ""
+		if len(comp.Elts) > 0 {
+			if lit, ok := comp.Elts[0].(*ast.BasicLit); ok {
+				refName = strings.Trim(lit.Value, `"`)
+			}
+		}
+
+		pos := fset.Position(comp.Pos())
+		msg := "Avoid Ref{} - use direct variable reference or Param() helper"
+		suggestion := "Use direct variable reference for resources, Param() for parameters"
+		if refName != "" {
+			suggestion = fmt.Sprintf("For resources: use %s directly. For parameters: var %s = Param(\"%s\")", refName, refName, refName)
+		}
+
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    msg,
+			Suggestion: suggestion,
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "warning",
+		})
+
+		return true
+	})
+
+	return issues
+}
+
+// AvoidExplicitGetAtt detects explicit GetAtt{} struct literals.
+// Prefer resource.Attr field access for GetAtt functionality.
+//
+// Example:
+//
+//	// Bad - explicit GetAtt{}
+//	Role: GetAtt{"MyRole", "Arn"},
+//
+//	// Good - field access
+//	Role: MyRole.Arn,
+type AvoidExplicitGetAtt struct{}
+
+func (r AvoidExplicitGetAtt) ID() string { return "WAW016" }
+func (r AvoidExplicitGetAtt) Description() string {
+	return "Avoid explicit GetAtt{} - use resource.Attr field access"
+}
+
+func (r AvoidExplicitGetAtt) Check(file *ast.File, fset *token.FileSet) []Issue {
+	var issues []Issue
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		comp, ok := n.(*ast.CompositeLit)
+		if !ok {
+			return true
+		}
+
+		// Check if this is a GetAtt{...} struct literal
+		ident, ok := comp.Type.(*ast.Ident)
+		if !ok || ident.Name != "GetAtt" {
+			return true
+		}
+
+		// Get the resource and attribute names if available
+		resourceName := ""
+		attrName := ""
+		if len(comp.Elts) >= 2 {
+			if lit, ok := comp.Elts[0].(*ast.BasicLit); ok {
+				resourceName = strings.Trim(lit.Value, `"`)
+			}
+			if lit, ok := comp.Elts[1].(*ast.BasicLit); ok {
+				attrName = strings.Trim(lit.Value, `"`)
+			}
+		}
+
+		pos := fset.Position(comp.Pos())
+		msg := "Avoid GetAtt{} - use resource.Attr field access"
+		suggestion := "Use Resource.Attr field access instead"
+		if resourceName != "" && attrName != "" {
+			suggestion = fmt.Sprintf("Use %s.%s instead", resourceName, attrName)
+		}
+
+		issues = append(issues, Issue{
+			RuleID:     r.ID(),
+			Message:    msg,
+			Suggestion: suggestion,
+			File:       pos.Filename,
+			Line:       pos.Line,
+			Column:     pos.Column,
+			Severity:   "warning",
+		})
+
+		return true
+	})
+
+	return issues
+}
+
 // AllRules returns all available lint rules.
 func AllRules() []Rule {
 	return []Rule{
@@ -1569,5 +1705,7 @@ func AllRules() []Rule {
 		PreferEnumConstant{},
 		UndefinedReference{},
 		UnusedIntrinsicsImport{},
+		AvoidExplicitRef{},
+		AvoidExplicitGetAtt{},
 	}
 }

@@ -36,7 +36,7 @@ var ProcessorRole = iam.Role{
 // Environment extracted to flat variable
 var ProcessorEnv = lambda.Environment{
     Variables: Json{
-        "BUCKET": Ref{"DataBucket"},
+        "BUCKET": DataBucket,  // Direct resource reference
     },
 }
 
@@ -66,7 +66,7 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 | `build` | ✅ Complete | Generate CloudFormation template |
 | `validate` | ✅ Complete | Validate resources and references |
 | `list` | ✅ Complete | List discovered resources |
-| `lint` | ✅ Complete | Check for issues (14 rules, --fix support) |
+| `lint` | ✅ Complete | Check for issues (16 rules, --fix support) |
 | `init` | ✅ Complete | Initialize new project |
 | `import` | ✅ Complete | Import CF template to Go code |
 
@@ -81,7 +81,7 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 - **Template Builder**: Build CF template with topological ordering
 - **Cycle Detection**: Detect circular dependencies
 - **JSON/YAML Output**: Serialize to CF template format
-- **Linter**: 14 rules (WAW001-WAW014) with auto-fix support
+- **Linter**: 16 rules (WAW001-WAW016) with auto-fix support
 - **Code Generator**: Generate Go types from CloudFormation spec
 
 ### What's Missing

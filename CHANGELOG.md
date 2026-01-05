@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration test for importer: validates 12 complex AWS templates compile successfully
 - WAW013 linter rule: detects undefined references in generated code
 - WAW014 linter rule: detects unused intrinsics imports
+- WAW015 linter rule: detects explicit Ref{} (prefer direct variable refs or Param())
+- WAW016 linter rule: detects explicit GetAtt{} (prefer Resource.Attr field access)
 
 ### Fixed
 

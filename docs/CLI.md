@@ -208,25 +208,26 @@ aws cloudformation deploy \
 
 ## Intrinsic Functions
 
-All CloudFormation intrinsic functions are supported:
+All CloudFormation intrinsic functions are supported. **Prefer direct references over explicit intrinsics:**
 
-| Function | Go API |
-|----------|--------|
-| Ref | `Ref{"MyResource"}` |
-| GetAtt | `GetAtt{"MyResource", "Arn"}` |
-| Sub | `Sub{String: "${AWS::StackName}-bucket"}` |
-| SubWithMap | `SubWithMap{String: "...", Variables: Json{...}}` |
-| Join | `Join{Delimiter: ",", Values: []any{"a", "b"}}` |
-| If | `If{Condition: "IsProd", IfTrue: val1, IfFalse: val2}` |
-| Equals | `Equals{Left: value1, Right: value2}` |
-| And/Or/Not | `And{Conditions: []any{...}}`, `Or{...}`, `Not{...}` |
-| FindInMap | `FindInMap{MapName: "...", TopKey: "...", SecondKey: "..."}` |
-| Select | `Select{Index: 0, List: GetAZs{}}` |
-| Split | `Split{Delimiter: ",", String: "a,b,c"}` |
-| Base64 | `Base64{Value: "Hello"}` |
-| Cidr | `Cidr{IpBlock: "10.0.0.0/16", Count: 256, CidrBits: 8}` |
-| GetAZs | `GetAZs{Region: "us-east-1"}` or `GetAZs{}` |
-| ImportValue | `ImportValue{Name: "ExportedValue"}` |
+| Function | Preferred Style | Alternative |
+|----------|-----------------|-------------|
+| Ref (resource) | `MyBucket` | Direct variable reference |
+| Ref (parameter) | `Param("VpcId")` | Helper function |
+| GetAtt | `MyBucket.Arn` | Field access on resource |
+| Sub | `Sub{String: "${AWS::StackName}-bucket"}` | - |
+| SubWithMap | `SubWithMap{String: "...", Variables: Json{...}}` | - |
+| Join | `Join{Delimiter: ",", Values: []any{"a", "b"}}` | - |
+| If | `If{Condition: "IsProd", IfTrue: val1, IfFalse: val2}` | - |
+| Equals | `Equals{Value1: x, Value2: y}` | - |
+| And/Or/Not | `And{Conditions: []any{...}}` | - |
+| FindInMap | `FindInMap{MapName: "...", TopKey: "...", SecondKey: "..."}` | - |
+| Select | `Select{Index: 0, List: GetAZs{}}` | - |
+| Split | `Split{Delimiter: ",", Source: "a,b,c"}` | - |
+| Base64 | `Base64{Value: "Hello"}` | - |
+| Cidr | `Cidr{IPBlock: "10.0.0.0/16", Count: 256, CidrBits: 8}` | - |
+| GetAZs | `GetAZs{}` or `GetAZs{Region: "us-east-1"}` | - |
+| ImportValue | `ImportValue{ExportName: "Value"}` | - |
 
 **Note:** Use dot import for cleaner syntax: `import . "github.com/lex00/wetwire-aws-go/intrinsics"`
 
