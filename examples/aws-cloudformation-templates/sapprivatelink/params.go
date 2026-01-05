@@ -20,6 +20,9 @@ var HostedZone = Param("HostedZone")
 // IP - SAP Gateway's private IP address within VPC
 var IP = Param("IP")
 
+// InVpc - Choose Yes if SAP resides in above VPC; choose No otherwise (in cases of abov...
+var InVpc = Param("InVpc")
+
 // Port - SAP Gateway's HTTP or HTTPS (match with protocol you choose above) port number
 var Port = Param("Port")
 

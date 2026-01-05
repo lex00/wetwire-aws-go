@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// CreateDirectoryConsoleDelegatedAccessRoles - Create sample IAM ROLES that can be used to delegate users/groups access to c...
+var CreateDirectoryConsoleDelegatedAccessRoles = Param("CreateDirectoryConsoleDelegatedAccessRoles")
+
 // DirectoryID - Directory ID that will have settings updated
 var DirectoryID = Param("DirectoryID")
 

@@ -14,6 +14,9 @@ var AdditionalCoreNodeSecurityGroups = Param("AdditionalCoreNodeSecurityGroups")
 // AdditionalPrimaryNodeSecurityGroups - Comma-delimited list of additional security groups for primary nodes
 var AdditionalPrimaryNodeSecurityGroups = Param("AdditionalPrimaryNodeSecurityGroups")
 
+// Applications - Please select which application will be installed on the cluster. This would ...
+var Applications = Param("Applications")
+
 // CoreInstanceType - Instance type to be used for core instances.
 var CoreInstanceType = Param("CoreInstanceType")
 

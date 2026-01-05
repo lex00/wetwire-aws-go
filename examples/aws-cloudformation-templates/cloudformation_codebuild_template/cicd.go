@@ -15,37 +15,6 @@ var CodeCommitRepo = codecommit.Repository{
 	RepositoryName: Sub{String: "${AWS::StackName}-repo"},
 }
 
-var AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
-	Name: "SAMPLEENVVAR",
-	Type_: "PLAINTEXT",
-	Value: "test",
-}
-
-var AppBuildSource = codebuild.Project_Source{
-	BuildSpec: "codebuild-app-build.yml",
-	Type_: "CODEPIPELINE",
-}
-
-var AppBuildEnvironment = codebuild.Project_Environment{
-	ComputeType: "BUILD_GENERAL1_SMALL",
-	EnvironmentVariables: List(AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR),
-	Image: DockerImage,
-	Type_: "LINUX_CONTAINER",
-}
-
-var AppBuildArtifacts = codebuild.Project_Artifacts{
-	EncryptionDisabled: true,
-	Type_: "CODEPIPELINE",
-}
-
-var AppBuild = codebuild.Project{
-	Artifacts: AppBuildArtifacts,
-	Environment: AppBuildEnvironment,
-	Name: Sub{String: "${AWS::StackName}-app-build"},
-	ServiceRole: CodeBuildRole,
-	Source: AppBuildSource,
-}
-
 var AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
 	Name: "SAMPLEENVVAR",
 	Type_: "PLAINTEXT",
@@ -75,4 +44,35 @@ var AppDeploy = codebuild.Project{
 	Name: Sub{String: "${AWS::StackName}-app-deploy"},
 	ServiceRole: CodeBuildRole,
 	Source: AppDeploySource,
+}
+
+var AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
+	Name: "SAMPLEENVVAR",
+	Type_: "PLAINTEXT",
+	Value: "test",
+}
+
+var AppBuildSource = codebuild.Project_Source{
+	BuildSpec: "codebuild-app-build.yml",
+	Type_: "CODEPIPELINE",
+}
+
+var AppBuildEnvironment = codebuild.Project_Environment{
+	ComputeType: "BUILD_GENERAL1_SMALL",
+	EnvironmentVariables: List(AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR),
+	Image: DockerImage,
+	Type_: "LINUX_CONTAINER",
+}
+
+var AppBuildArtifacts = codebuild.Project_Artifacts{
+	EncryptionDisabled: true,
+	Type_: "CODEPIPELINE",
+}
+
+var AppBuild = codebuild.Project{
+	Artifacts: AppBuildArtifacts,
+	Environment: AppBuildEnvironment,
+	Name: Sub{String: "${AWS::StackName}-app-build"},
+	ServiceRole: CodeBuildRole,
+	Source: AppBuildSource,
 }

@@ -514,6 +514,10 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 		categoryImports[category] = imports
 	}
 
+	// Pre-scan conditions for parameter references before generating params
+	// This ensures parameters used in conditions are included
+	prescanConditionsForParams(ctx)
+
 	// Generate params.go if there are used parameters or conditions
 	paramsCode, paramsImports := generateParams(ctx)
 	conditionsCode := generateConditions(ctx)
@@ -678,6 +682,38 @@ func generateResourcesByIDs(ctx *codegenContext, resourceIDs []string) (string, 
 	ctx.imports = savedImports
 
 	return strings.Join(sections, "\n\n"), categoryImports
+}
+
+// prescanConditionsForParams scans all condition expressions for parameter references
+// and marks them as used. This must be called before generateParams to ensure
+// parameters used only in conditions are included.
+func prescanConditionsForParams(ctx *codegenContext) {
+	for _, condition := range ctx.template.Conditions {
+		scanExprForParams(ctx, condition.Expression)
+	}
+}
+
+// scanExprForParams recursively scans an expression for parameter references.
+func scanExprForParams(ctx *codegenContext, expr any) {
+	switch v := expr.(type) {
+	case *IRIntrinsic:
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if _, ok := ctx.template.Parameters[target]; ok {
+				ctx.usedParameters[target] = true
+			}
+		}
+		// Recurse into intrinsic args
+		scanExprForParams(ctx, v.Args)
+	case []any:
+		for _, elem := range v {
+			scanExprForParams(ctx, elem)
+		}
+	case map[string]any:
+		for _, val := range v {
+			scanExprForParams(ctx, val)
+		}
+	}
 }
 
 // generateConditions generates condition declarations.

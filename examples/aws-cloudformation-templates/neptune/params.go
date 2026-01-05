@@ -65,6 +65,9 @@ var SparqlRequestsPerSecThreshold = Param("SparqlRequestsPerSecThreshold")
 // StorageEncrypted - Data-at-rest encryption
 var StorageEncrypted = Param("StorageEncrypted")
 
+// UploadAuditLogs - Enable upload of audit logs?
+var UploadAuditLogs = Param("UploadAuditLogs")
+
 var CreateSnsSubscriptionCondition = Not{Equals{SNSEmailSubscription, ""}}
 
 var CreateSnsTopicCondition = Equals{NeptuneSNSTopicArn, ""}

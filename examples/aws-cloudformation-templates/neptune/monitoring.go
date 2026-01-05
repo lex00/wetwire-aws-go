@@ -9,6 +9,25 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
+var NeptunePrimarySparqlRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
+	Name: "DBClusterIdentifier",
+	Value: NeptuneDBCluster,
+}
+
+var NeptunePrimarySparqlRequestsPerSecAlarm = cloudwatch.Alarm{
+	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
+	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB Sparql Requests Per Second"},
+	ComparisonOperator: "GreaterThanOrEqualToThreshold",
+	Dimensions: List(NeptunePrimarySparqlRequestsPerSecAlarmDimensionDBClusterIdentifier),
+	EvaluationPeriods: 2,
+	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
+	MetricName: "SparqlRequestsPerSec",
+	Namespace: "AWS/Neptune",
+	Period: 300,
+	Statistic: "Average",
+	Threshold: SparqlRequestsPerSecThreshold,
+}
+
 var NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
 	Name: "DBClusterIdentifier",
 	Value: NeptuneDBCluster,
@@ -66,23 +85,4 @@ var NeptunePrimaryGremlinRequestsPerSecAlarm = cloudwatch.Alarm{
 	Period: 300,
 	Statistic: "Average",
 	Threshold: GremlinRequestsPerSecThreshold,
-}
-
-var NeptunePrimarySparqlRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
-	Name: "DBClusterIdentifier",
-	Value: NeptuneDBCluster,
-}
-
-var NeptunePrimarySparqlRequestsPerSecAlarm = cloudwatch.Alarm{
-	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB Sparql Requests Per Second"},
-	ComparisonOperator: "GreaterThanOrEqualToThreshold",
-	Dimensions: List(NeptunePrimarySparqlRequestsPerSecAlarmDimensionDBClusterIdentifier),
-	EvaluationPeriods: 2,
-	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	MetricName: "SparqlRequestsPerSec",
-	Namespace: "AWS/Neptune",
-	Period: 300,
-	Statistic: "Average",
-	Threshold: SparqlRequestsPerSecThreshold,
 }

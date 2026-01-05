@@ -8,6 +8,12 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// NumberOfRouteTables - Number of Route Table IDs to update. This must match your items in the comma-...
+var NumberOfRouteTables = Param("NumberOfRouteTables")
+
+// NumberOfSecurityGroups - Number of Security Group IDs. This must match your selections in the list of ...
+var NumberOfSecurityGroups = Param("NumberOfSecurityGroups")
+
 // PeerVPCCIDR - CIDR of the VPC Peer
 var PeerVPCCIDR = Param("PeerVPCCIDR")
 

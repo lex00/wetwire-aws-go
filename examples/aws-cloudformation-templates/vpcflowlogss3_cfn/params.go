@@ -17,6 +17,9 @@ var VPCFlowLogsBucketKMSKey = Param("VPCFlowLogsBucketKMSKey")
 // VPCFlowLogsBucketKeyEnabled - Set to true to have Amazon S3 use an S3 Bucket Key with server-side encryptio...
 var VPCFlowLogsBucketKeyEnabled = Param("VPCFlowLogsBucketKeyEnabled")
 
+// VPCFlowLogsBucketName - (Optional) S3 bucket name where VPC Flow Log data can be published. S3 bucket...
+var VPCFlowLogsBucketName = Param("VPCFlowLogsBucketName")
+
 // VPCFlowLogsLogFormat - The fields to include in the flow log record, in the order in which they shou...
 var VPCFlowLogsLogFormat = Param("VPCFlowLogsLogFormat")
 

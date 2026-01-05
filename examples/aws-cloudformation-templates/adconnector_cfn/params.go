@@ -8,6 +8,18 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// CreateADConnectorDomainMembersSG - Create Domain Members Security Group. Note, using allow any type rules, restr...
+var CreateADConnectorDomainMembersSG = Param("CreateADConnectorDomainMembersSG")
+
+// CreateDHCPOptionSet - Create DHCP Option Set
+var CreateDHCPOptionSet = Param("CreateDHCPOptionSet")
+
+// CreateLinuxEC2DomainJoinResources - Create AWS resources (IAM role, instance profile, & secret) to support seamle...
+var CreateLinuxEC2DomainJoinResources = Param("CreateLinuxEC2DomainJoinResources")
+
+// CreateWindowsEC2DomainJoinResources - Create AWS resources (IAM role & instnace profile)to support seamless domain ...
+var CreateWindowsEC2DomainJoinResources = Param("CreateWindowsEC2DomainJoinResources")
+
 // DomainDNSName - Fully qualified name of the on-premises directory, such as corp.example.com
 var DomainDNSName = Param("DomainDNSName")
 
@@ -31,6 +43,9 @@ var LambdaS3BucketName = Param("LambdaS3BucketName")
 
 // LambdaZipFileName - Amazon S3 key of the deployment package.
 var LambdaZipFileName = Param("LambdaZipFileName")
+
+// SSMLogsBucketName - (Optional) SSM Logs bucket name for where Systems Manager logs should store l...
+var SSMLogsBucketName = Param("SSMLogsBucketName")
 
 // SecretsManagerDomainCredentialsSecretsKMSKey - (Optional) KMS Key ARN to use for encrypting the SecretsManager domain creden...
 var SecretsManagerDomainCredentialsSecretsKMSKey = Param("SecretsManagerDomainCredentialsSecretsKMSKey")

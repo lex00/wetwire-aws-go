@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// CronOrRate - Choose to use a cron expression or a rate expression you want to use.
+var CronOrRate = Param("CronOrRate")
+
 // CronSchedule - This defines the Schedule at which to run the. Cron Expressions - http://docs...
 var CronSchedule = Param("CronSchedule")
 
