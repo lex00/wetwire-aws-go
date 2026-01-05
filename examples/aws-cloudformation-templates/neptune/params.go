@@ -8,6 +8,9 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
+// AppName - Please specify the Application Name. Used for tagging and resource names. Man...
+var AppName = Param("AppName")
+
 // BackupRetentionPeriod - Backup retention period (in days). Must be between 1 - 35
 var BackupRetentionPeriod = Param("BackupRetentionPeriod")
 
@@ -16,6 +19,9 @@ var DBClusterIdentifier = Param("DBClusterIdentifier")
 
 // DBInstanceClass - Neptune DB instance class that will be used for primary and all replicas
 var DBInstanceClass = Param("DBInstanceClass")
+
+// Env - Please specify the target Environment. Used for tagging and resource names. M...
+var Env = Param("Env")
 
 // GremlinRequestsPerSecThreshold - Gremlin Requests Per Sec alarm threshold. Alert when Gremlin Requests Per Sec...
 var GremlinRequestsPerSecThreshold = Param("GremlinRequestsPerSecThreshold")
@@ -53,6 +59,9 @@ var NeptuneQueryTimeout = Param("NeptuneQueryTimeout")
 // NeptuneSNSTopicArn - Custom SNS topic alarm. Optional. If not provided, an new SNS topic will be c...
 var NeptuneSNSTopicArn = Param("NeptuneSNSTopicArn")
 
+// Owner - Please specify the Owner. Used for tagging
+var Owner = Param("Owner")
+
 // Port - Port used to connect to the Neptune cluster. Must be a valid port number between
 var Port = Param("Port")
 
@@ -62,11 +71,26 @@ var SNSEmailSubscription = Param("SNSEmailSubscription")
 // SparqlRequestsPerSecThreshold - Sparql Requests Per Sec alarm threshold. Alert when Sparql Requests Per Sec g...
 var SparqlRequestsPerSecThreshold = Param("SparqlRequestsPerSecThreshold")
 
+// Storage - Please specify the Storage Type. Used for tagging
+var Storage = Param("Storage")
+
 // StorageEncrypted - Data-at-rest encryption
 var StorageEncrypted = Param("StorageEncrypted")
 
+// Tier - Please specify the Tier. Used for tagging
+var Tier = Param("Tier")
+
 // UploadAuditLogs - Enable upload of audit logs?
 var UploadAuditLogs = Param("UploadAuditLogs")
+
+// User - Please specify the User. Used for tagging
+var User = Param("User")
+
+// VPCStack - Please specify the VPC Stack Name.
+var VPCStack = Param("VPCStack")
+
+// Version - Please specify the Application Version. Used for tagging
+var Version = Param("Version")
 
 var CreateSnsSubscriptionCondition = Not{Equals{SNSEmailSubscription, ""}}
 

@@ -31,9 +31,7 @@ func TestExamplesBuild(t *testing.T) {
 	// - eip_with_association: EC2 with EIP association
 	// - compliant_bucket: S3 bucket with encryption, versioning, policies
 	// - lambdasample: Lambda with parameters in Sub strings
-	//
-	// NOTE: neptune excluded - has many undefined parameter references that
-	// would require extensive template fixes.
+	// - neptune: Neptune DB with many tag parameters
 	complexExamples := []string{
 		"cloudfront",
 		"dynamodb_table",
@@ -46,6 +44,7 @@ func TestExamplesBuild(t *testing.T) {
 		"eip_with_association",
 		"compliant_bucket",
 		"lambdasample",
+		"neptune",
 	}
 
 	for _, example := range complexExamples {

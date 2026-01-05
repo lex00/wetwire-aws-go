@@ -132,12 +132,6 @@ EXCLUDE_TEMPLATES=(
     # Macro test events (not CloudFormation templates)
     "CloudFormation/MacrosExamples/Count/event.json"
     "CloudFormation/MacrosExamples/Count/event_bad.json"
-    # Templates with Mapping references not yet supported by importer (GitHub #14)
-    "Lambda/LambdaSample.yaml"
-    "Lambda/LambdaSample.json"
-    # Templates with missing parameter imports (GitHub #14)
-    "Neptune/neptune.yaml"
-    "Neptune/neptune.json"
 )
 
 cd "$PROJECT_ROOT"
