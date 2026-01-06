@@ -158,6 +158,7 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 - [Quick Start](docs/QUICK_START.md)
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
+- [FAQ](docs/FAQ.md)
 
 ## Dependencies
 

@@ -42,9 +42,9 @@ func runInit(projectPath string) error {
 	// Write go.mod
 	goMod := fmt.Sprintf(`module %s
 
-go 1.22
+go 1.23
 
-require github.com/lex00/wetwire-aws-go v0.1.0
+require github.com/lex00/wetwire-aws-go v1.2.3
 `, moduleName)
 
 	if err := os.WriteFile(filepath.Join(projectPath, "go.mod"), []byte(goMod), 0644); err != nil {
@@ -73,14 +73,14 @@ func main() {
 
 import (
 	// Common AWS services - add/remove as needed
-	"github.com/lex00/wetwire-aws-go/s3"
-	"github.com/lex00/wetwire-aws-go/iam"
-	"github.com/lex00/wetwire-aws-go/ec2"
-	"github.com/lex00/wetwire-aws-go/lambda"
-	"github.com/lex00/wetwire-aws-go/dynamodb"
-	"github.com/lex00/wetwire-aws-go/sqs"
-	"github.com/lex00/wetwire-aws-go/sns"
-	"github.com/lex00/wetwire-aws-go/apigateway"
+	"github.com/lex00/wetwire-aws-go/resources/s3"
+	"github.com/lex00/wetwire-aws-go/resources/iam"
+	"github.com/lex00/wetwire-aws-go/resources/ec2"
+	"github.com/lex00/wetwire-aws-go/resources/lambda"
+	"github.com/lex00/wetwire-aws-go/resources/dynamodb"
+	"github.com/lex00/wetwire-aws-go/resources/sqs"
+	"github.com/lex00/wetwire-aws-go/resources/sns"
+	"github.com/lex00/wetwire-aws-go/resources/apigateway"
 )
 
 // Define your infrastructure resources below
