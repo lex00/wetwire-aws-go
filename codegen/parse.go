@@ -60,7 +60,7 @@ func parseSpec(cfnSpec *spec.Spec, filterService string) []*Service {
 	for cfType, resDef := range cfnSpec.ResourceTypes {
 		// Parse AWS::S3::Bucket -> service=s3, name=Bucket
 		parts := strings.Split(cfType, "::")
-		if len(parts) != 3 || parts[0] != "AWS" {
+		if len(parts) != 3 || (parts[0] != "AWS" && parts[0] != "Alexa") {
 			continue
 		}
 
@@ -77,7 +77,7 @@ func parseSpec(cfnSpec *spec.Spec, filterService string) []*Service {
 		if !ok {
 			svc = &Service{
 				Name:          serviceName,
-				CFPrefix:      "AWS::" + parts[1],
+				CFPrefix:      parts[0] + "::" + parts[1],
 				Resources:     make(map[string]ParsedResource),
 				PropertyTypes: make(map[string]ParsedPropertyType),
 			}
@@ -113,7 +113,7 @@ func parseSpec(cfnSpec *spec.Spec, filterService string) []*Service {
 	for cfType, propTypeDef := range cfnSpec.PropertyTypes {
 		// Parse AWS::S3::Bucket.VersioningConfiguration
 		parts := strings.Split(cfType, "::")
-		if len(parts) != 3 || parts[0] != "AWS" {
+		if len(parts) != 3 || (parts[0] != "AWS" && parts[0] != "Alexa") {
 			continue
 		}
 

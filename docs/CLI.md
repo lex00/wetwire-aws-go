@@ -32,8 +32,6 @@ wetwire-aws build ./infra > template.json
 # Generate YAML format
 wetwire-aws build ./infra --format yaml > template.yaml
 
-# With description
-wetwire-aws build ./infra --description "My Application Stack"
 ```
 
 ### Options
@@ -42,7 +40,7 @@ wetwire-aws build ./infra --description "My Application Stack"
 |--------|-------------|
 | `PATH` | Directory containing Go source files |
 | `--format, -f {json,yaml}` | Output format (default: json) |
-| `--description, -d TEXT` | Template description |
+| `--output, -o FILE` | Output file (default: stdout) |
 
 ### How It Works
 
@@ -129,6 +127,27 @@ Linting passed: 5 resources OK
 ./infra/compute.go:23: unknown resource type: AWS::Invalid::Type
 ```
 
+### Lint Rules
+
+| Rule | Description |
+|------|-------------|
+| WAW001 | Use pseudo-parameter constants (`AWS_REGION` not `"AWS::Region"`) |
+| WAW002 | Use intrinsic types instead of `map[string]any` |
+| WAW003 | Detect duplicate resource variable names |
+| WAW004 | Flag files with too many resources (>20) |
+| WAW005 | Extract inline property types to named variables |
+| WAW006 | Use typed policy document structs |
+| WAW007 | Use typed slices instead of `[]any` |
+| WAW008 | Use named var declarations |
+| WAW009 | Use typed structs instead of `map[string]any` |
+| WAW010 | Flatten inline typed struct literals |
+| WAW011 | Validate enum property values |
+| WAW012 | Use typed enum constants |
+| WAW015 | Avoid explicit `Ref{}` — use direct references |
+| WAW016 | Avoid explicit `GetAtt{}` — use `.Attr` field access |
+| WAW017 | Avoid pointer assignments |
+| WAW018 | Use `Json{}` instead of `map[string]any{}` |
+
 ---
 
 ## init
@@ -177,7 +196,7 @@ func main() {
 package infra
 
 import (
-    "github.com/lex00/wetwire-aws-go/s3"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
     // ... other common imports
 )
 

@@ -156,7 +156,7 @@ func ExtractValues(pkgPath string, resources map[string]wetwire.DiscoveredResour
 
 	goModContent := fmt.Sprintf(`module runner
 
-go 1.22.0
+go 1.23.0
 
 require %s v0.0.0
 

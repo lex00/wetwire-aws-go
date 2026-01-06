@@ -193,6 +193,7 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 - [SAM Guide](docs/SAM.md) - Serverless Application Model
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
+- [FAQ](docs/FAQ.md)
 
 ## Dependencies
 
