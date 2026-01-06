@@ -13,7 +13,7 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 **v1.3.0 - SAM Support Complete**
 
 - All CLI commands implemented (build, validate, list, lint, init, import, design, test)
-- **184 AWS services** with typed enum constants
+- **263 services** (262 AWS + Alexa::ASK) with typed enum constants
 - **9 SAM resource types** (Function, Api, HttpApi, SimpleTable, LayerVersion, StateMachine, Application, Connector, GraphQLApi)
 - 254/254 AWS sample templates import successfully (100% success rate)
 
