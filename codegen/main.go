@@ -64,6 +64,14 @@ func main() {
 	// Step 2: Parse and organize by service
 	fmt.Println("\nParsing specification...")
 	services := parseSpec(cfnSpec, service)
+
+	// Step 2.5: Add SAM (Serverless) resources
+	// SAM resources are not part of the CloudFormation spec, so we add them from our static definition.
+	if service == "" || service == "serverless" {
+		services = append(services, SAMSpec)
+		fmt.Println("Including SAM (serverless) resources")
+	}
+
 	fmt.Printf("Services to generate: %d\n", len(services))
 
 	// Step 3: Generate Go code
