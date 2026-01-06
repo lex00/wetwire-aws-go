@@ -50,7 +50,8 @@ wetwire-aws build ./infra --description "My Application Stack"
 2. Discovers `var X = Type{...}` resource declarations
 3. Extracts resource dependencies from intrinsic references
 4. Orders resources topologically by dependencies
-5. Generates CloudFormation JSON or YAML
+5. Detects SAM resources and adds Transform header if needed
+6. Generates CloudFormation JSON or YAML
 
 ### Output Modes
 
@@ -75,6 +76,18 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: my-data
+```
+
+**SAM Template (when SAM resources detected):**
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  HelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: bootstrap
+      Runtime: provided.al2
 ```
 
 ---
@@ -457,3 +470,4 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ## See Also
 
 - [Quick Start](QUICK_START.md) - Create your first project
+- [SAM Guide](SAM.md) - Serverless Application Model resources

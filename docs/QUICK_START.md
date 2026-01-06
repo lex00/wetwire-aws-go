@@ -232,7 +232,55 @@ aws cloudformation deploy \
 
 ---
 
+## Serverless (SAM) Resources
+
+For serverless applications, use the `serverless` package:
+
+```go
+package infra
+
+import (
+    "github.com/lex00/wetwire-aws-go/resources/serverless"
+    "github.com/lex00/wetwire-aws-go/resources/dynamodb"
+)
+
+// SAM Function - simplified Lambda
+var HelloFunction = serverless.Function{
+    Handler:    "bootstrap",
+    Runtime:    "provided.al2",
+    CodeUri:    "./hello/",
+    MemorySize: 128,
+    Timeout:    30,
+}
+
+// Environment variables as flat variable
+var ProcessorEnv = serverless.Function_Environment{
+    Variables: map[string]any{
+        "TABLE_NAME": DataTable.TableName,
+    },
+}
+
+var ProcessorFunction = serverless.Function{
+    Handler:     "bootstrap",
+    Runtime:     "provided.al2",
+    CodeUri:     "./processor/",
+    Environment: &ProcessorEnv,
+}
+
+// Standard DynamoDB table (can mix SAM and CloudFormation)
+var DataTable = dynamodb.Table{
+    TableName: "my-data-table",
+}
+```
+
+SAM templates automatically include the `Transform: AWS::Serverless-2016-10-31` header.
+
+See the full [SAM Guide](SAM.md) for all 9 SAM resource types.
+
+---
+
 ## Next Steps
 
 - See the full [CLI Reference](CLI.md)
+- Read the [SAM Guide](SAM.md) for serverless applications
 - Explore the generated resource types

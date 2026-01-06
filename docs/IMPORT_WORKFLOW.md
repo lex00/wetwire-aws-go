@@ -45,14 +45,13 @@ ElastiCache/Elasticache-snapshot.yaml
 
 #### SAM templates
 
-Templates that use AWS SAM (Serverless Application Model):
+**Note**: As of v1.3.0, wetwire-aws fully supports SAM (Serverless Application Model) resources. SAM templates can now be imported directly.
 
-```
-CloudFormation/CustomResources/getfromjson/src/template.yml
-CloudFormation/MacrosExamples/Count/template.*
-```
+The following templates were previously excluded but are now supported:
+- `CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml`
+- Templates using `AWS::Serverless::Function`, `AWS::Serverless::Api`, etc.
 
-**Rationale**: SAM templates use `Transform: AWS::Serverless` and define serverless-specific resources (AWS::Serverless::Function, etc.). These require SAM CLI preprocessing to expand into standard CloudFormation.
+See the [SAM Guide](SAM.md) for details on SAM resource support.
 
 #### Kubernetes manifests
 
