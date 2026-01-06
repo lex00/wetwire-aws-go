@@ -45,6 +45,9 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 		Resources:                make(map[string]wetwire.ResourceDef),
 	}
 
+	// Track if any SAM resources are present
+	hasSAMResources := false
+
 	for _, name := range order {
 		res := b.resources[name]
 		value := b.values[name]
@@ -52,6 +55,11 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 		resourceType := cfResourceType(res.Type)
 		if resourceType == "" {
 			return nil, fmt.Errorf("unknown resource type: %s", res.Type)
+		}
+
+		// Check if this is a SAM resource
+		if isSAMResourceType(res.Type) {
+			hasSAMResources = true
 		}
 
 		// Serialize the resource value to properties
@@ -64,6 +72,11 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 			Type:       resourceType,
 			Properties: props,
 		}
+	}
+
+	// Set SAM Transform header if any SAM resources are present
+	if hasSAMResources {
+		template.Transform = "AWS::Serverless-2016-10-31"
 	}
 
 	return template, nil
@@ -265,9 +278,24 @@ func cfResourceType(goType string) string {
 		"logs.LogGroup":         "AWS::Logs::LogGroup",
 		"kms.Key":               "AWS::KMS::Key",
 		"secretsmanager.Secret": "AWS::SecretsManager::Secret",
+		// SAM (Serverless Application Model) resources
+		"serverless.Function":     "AWS::Serverless::Function",
+		"serverless.Api":          "AWS::Serverless::Api",
+		"serverless.HttpApi":      "AWS::Serverless::HttpApi",
+		"serverless.SimpleTable":  "AWS::Serverless::SimpleTable",
+		"serverless.LayerVersion": "AWS::Serverless::LayerVersion",
+		"serverless.StateMachine": "AWS::Serverless::StateMachine",
+		"serverless.Application":  "AWS::Serverless::Application",
+		"serverless.Connector":    "AWS::Serverless::Connector",
+		"serverless.GraphQLApi":   "AWS::Serverless::GraphQLApi",
 		// Add more as needed - code generator will maintain this
 	}
 	return typeMap[goType]
+}
+
+// isSAMResourceType returns true if the Go type is a SAM resource.
+func isSAMResourceType(goType string) bool {
+	return len(goType) > 11 && goType[:11] == "serverless."
 }
 
 // ToJSON serializes the template to JSON.
