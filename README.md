@@ -10,10 +10,11 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 ## Status
 
-**v1.0.0 - All Core Features Complete**
+**v1.3.0 - SAM Support Complete**
 
 - All CLI commands implemented (build, validate, list, lint, init, import, design, test)
 - **184 AWS services** with typed enum constants
+- **9 SAM resource types** (Function, Api, HttpApi, SimpleTable, LayerVersion, StateMachine, Application, Connector, GraphQLApi)
 - 254/254 AWS sample templates import successfully (100% success rate)
 
 See [CHANGELOG.md](CHANGELOG.md) for release details.
@@ -189,6 +190,7 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 ## Documentation
 
 - [Quick Start](docs/QUICK_START.md)
+- [SAM Guide](docs/SAM.md) - Serverless Application Model
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
 
