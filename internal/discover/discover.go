@@ -43,6 +43,7 @@ var knownResourcePackages = map[string]string{
 	"secretsmanager": "AWS::SecretsManager",
 	"ssm":            "AWS::SSM",
 	"elasticache":    "AWS::ElastiCache",
+	"serverless":     "AWS::Serverless",
 	// Add more as needed - code generator will maintain this
 }
 

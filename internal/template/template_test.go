@@ -182,3 +182,147 @@ func indexOf(slice []string, item string) int {
 	}
 	return -1
 }
+
+func TestBuilder_Build_SAMFunction(t *testing.T) {
+	resources := map[string]wetwire.DiscoveredResource{
+		"HelloWorldFunction": {
+			Name:    "HelloWorldFunction",
+			Type:    "serverless.Function",
+			Package: "infra",
+			File:    "functions.go",
+			Line:    5,
+		},
+	}
+
+	builder := NewBuilder(resources)
+	builder.SetValue("HelloWorldFunction", map[string]any{
+		"Handler":     "bootstrap",
+		"Runtime":     "provided.al2",
+		"CodeUri":     "./hello-world/",
+		"MemorySize":  128,
+		"Timeout":     5,
+	})
+
+	template, err := builder.Build()
+	require.NoError(t, err)
+
+	// SAM templates must have Transform header
+	assert.Equal(t, "AWS::Serverless-2016-10-31", template.Transform)
+	assert.Equal(t, "2010-09-09", template.AWSTemplateFormatVersion)
+
+	// Verify resource type
+	fn := template.Resources["HelloWorldFunction"]
+	assert.Equal(t, "AWS::Serverless::Function", fn.Type)
+	assert.Equal(t, "bootstrap", fn.Properties["Handler"])
+}
+
+func TestBuilder_Build_SAMApi(t *testing.T) {
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyApi": {
+			Name:    "MyApi",
+			Type:    "serverless.Api",
+			Package: "infra",
+			File:    "api.go",
+			Line:    5,
+		},
+	}
+
+	builder := NewBuilder(resources)
+	builder.SetValue("MyApi", map[string]any{
+		"StageName": "prod",
+	})
+
+	template, err := builder.Build()
+	require.NoError(t, err)
+
+	assert.Equal(t, "AWS::Serverless-2016-10-31", template.Transform)
+	assert.Equal(t, "AWS::Serverless::Api", template.Resources["MyApi"].Type)
+}
+
+func TestBuilder_Build_MixedSAMAndCFN(t *testing.T) {
+	// Template with both SAM and CloudFormation resources
+	resources := map[string]wetwire.DiscoveredResource{
+		"DataBucket": {
+			Name:    "DataBucket",
+			Type:    "s3.Bucket",
+			Package: "infra",
+			File:    "storage.go",
+			Line:    5,
+		},
+		"ProcessorFunction": {
+			Name:         "ProcessorFunction",
+			Type:         "serverless.Function",
+			Package:      "infra",
+			File:         "functions.go",
+			Line:         10,
+			Dependencies: []string{"DataBucket"},
+		},
+	}
+
+	builder := NewBuilder(resources)
+	builder.SetValue("DataBucket", map[string]any{
+		"BucketName": "data-bucket",
+	})
+	builder.SetValue("ProcessorFunction", map[string]any{
+		"Handler": "bootstrap",
+		"Runtime": "provided.al2",
+	})
+
+	template, err := builder.Build()
+	require.NoError(t, err)
+
+	// Transform should be set because SAM resources are present
+	assert.Equal(t, "AWS::Serverless-2016-10-31", template.Transform)
+
+	// Both resources should be present with correct types
+	assert.Equal(t, "AWS::S3::Bucket", template.Resources["DataBucket"].Type)
+	assert.Equal(t, "AWS::Serverless::Function", template.Resources["ProcessorFunction"].Type)
+}
+
+func TestBuilder_Build_NoSAM_NoTransform(t *testing.T) {
+	// Template with only CloudFormation resources should NOT have Transform
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyBucket": {
+			Name:    "MyBucket",
+			Type:    "s3.Bucket",
+			Package: "infra",
+			File:    "storage.go",
+			Line:    5,
+		},
+	}
+
+	builder := NewBuilder(resources)
+	builder.SetValue("MyBucket", map[string]any{
+		"BucketName": "my-bucket",
+	})
+
+	template, err := builder.Build()
+	require.NoError(t, err)
+
+	// No Transform for non-SAM templates
+	assert.Empty(t, template.Transform)
+}
+
+func TestCfResourceType_SAM(t *testing.T) {
+	tests := []struct {
+		goType   string
+		cfnType  string
+	}{
+		{"serverless.Function", "AWS::Serverless::Function"},
+		{"serverless.Api", "AWS::Serverless::Api"},
+		{"serverless.HttpApi", "AWS::Serverless::HttpApi"},
+		{"serverless.SimpleTable", "AWS::Serverless::SimpleTable"},
+		{"serverless.LayerVersion", "AWS::Serverless::LayerVersion"},
+		{"serverless.StateMachine", "AWS::Serverless::StateMachine"},
+		{"serverless.Application", "AWS::Serverless::Application"},
+		{"serverless.Connector", "AWS::Serverless::Connector"},
+		{"serverless.GraphQLApi", "AWS::Serverless::GraphQLApi"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.goType, func(t *testing.T) {
+			result := cfResourceType(tt.goType)
+			assert.Equal(t, tt.cfnType, result)
+		})
+	}
+}

@@ -78,6 +78,7 @@ type DiscoveredResource struct {
 // Template represents a CloudFormation template.
 type Template struct {
 	AWSTemplateFormatVersion string                 `json:"AWSTemplateFormatVersion" yaml:"AWSTemplateFormatVersion"`
+	Transform                string                 `json:"Transform,omitempty" yaml:"Transform,omitempty"`
 	Description              string                 `json:"Description,omitempty" yaml:"Description,omitempty"`
 	Parameters               map[string]Parameter   `json:"Parameters,omitempty" yaml:"Parameters,omitempty"`
 	Resources                map[string]ResourceDef `json:"Resources" yaml:"Resources"`
