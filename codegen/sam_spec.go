@@ -185,6 +185,11 @@ var samFunction = ParsedResource{
 			GoType: "any",
 			Documentation: "Function URL configuration.",
 		},
+		"InlineCode": {
+			Name:   "InlineCode",
+			GoType: "any",
+			Documentation: "Inline code for the function (alternative to CodeUri).",
+		},
 	},
 	Attributes: map[string]ParsedAttribute{
 		"Arn": {Name: "Arn", GoType: "any"},
