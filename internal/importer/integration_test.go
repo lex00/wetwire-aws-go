@@ -32,6 +32,7 @@ func TestExamplesBuild(t *testing.T) {
 	// - compliant_bucket: S3 bucket with encryption, versioning, policies
 	// - lambdasample: Lambda with parameters in Sub strings
 	// - neptune: Neptune DB with many tag parameters
+	// - datetimenow: SAM template with serverless.Function
 	complexExamples := []string{
 		"cloudfront",
 		"dynamodb_table",
@@ -45,6 +46,7 @@ func TestExamplesBuild(t *testing.T) {
 		"compliant_bucket",
 		"lambdasample",
 		"neptune",
+		"datetimenow",
 	}
 
 	for _, example := range complexExamples {

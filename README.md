@@ -59,6 +59,38 @@ Generate template:
 wetwire-aws build ./infra > template.json
 ```
 
+### SAM (Serverless) Resources
+
+```go
+package infra
+
+import (
+    "github.com/lex00/wetwire-aws-go/resources/serverless"
+    "github.com/lex00/wetwire-aws-go/resources/dynamodb"
+)
+
+// SAM Function with environment variables
+var HelloFunction = serverless.Function{
+    Handler:    "bootstrap",
+    Runtime:    "provided.al2",
+    CodeUri:    "./hello/",
+    MemorySize: 128,
+    Timeout:    30,
+    Environment: &serverless.Function_Environment{
+        Variables: map[string]any{
+            "TABLE_NAME": DataTable.TableName,
+        },
+    },
+}
+
+// DynamoDB table
+var DataTable = dynamodb.Table{
+    TableName: "my-data-table",
+}
+```
+
+SAM templates automatically include the `Transform: AWS::Serverless-2016-10-31` header.
+
 ## Installation
 
 ```bash
@@ -91,6 +123,7 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 - **JSON/YAML Output**: Serialize to CF template format
 - **Linter**: 16 rules (WAW001-WAW016) with auto-fix support
 - **Code Generator**: Generate Go types from CloudFormation spec
+- **SAM Support**: AWS Serverless Application Model (9 resource types)
 
 ### What's Missing
 

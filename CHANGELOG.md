@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-01-05
+
+### Added
+
+- **AWS Serverless Application Model (SAM) support**: All 9 SAM resource types now fully supported
+  - `serverless.Function` - Lambda functions with SAM-specific features
+  - `serverless.Api` - API Gateway REST APIs
+  - `serverless.HttpApi` - API Gateway HTTP APIs
+  - `serverless.SimpleTable` - DynamoDB tables
+  - `serverless.LayerVersion` - Lambda layers
+  - `serverless.StateMachine` - Step Functions state machines
+  - `serverless.Application` - Nested applications
+  - `serverless.Connector` - Resource permissions
+  - `serverless.GraphQLApi` - AppSync GraphQL APIs
+- SAM property types: Function_Environment, Function_VpcConfig, Api_CorsConfiguration, etc.
+- Auto-detection of SAM resources sets `Transform: AWS::Serverless-2016-10-31` header
+- SAM templates can now be imported with `wetwire-aws import`
+- Comprehensive tests for SAM resource serialization and template building
+- `scripts/import_sam_samples.sh` for testing against official AWS SAM repositories
+
 ## [1.2.3] - 2026-01-05
 
 ### Changed

@@ -1,6 +1,0 @@
-# AWS SAM Templates
-
-Generated examples from official AWS SAM template repositories.
-
-See `scripts/import_sam_samples.sh` for the import script.
-

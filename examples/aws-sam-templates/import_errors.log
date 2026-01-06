@@ -1,0 +1,3225 @@
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/hello-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/event-bridge-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/hello-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/event-bridge-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/event-bridge-schema-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/hello-img-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/hello-img-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/step-func-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/event-bridge-schema-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java21/step-func-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/event-bridge-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/event-bridge-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/event-bridge-schema-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-img-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-img-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/step-func-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/event-bridge-schema-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-pt-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/hello-pt-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java17/step-func-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/event-bridge-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/event-bridge-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/event-bridge-schema-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-img-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-img-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/step-func-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/event-bridge-schema-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-pt-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/hello-pt-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java11/step-func-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.11/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/response-streaming/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/go/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/rust/hello/{{ cookiecutter.project_slug }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/graalvm/11/maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/graalvm/11/gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/graalvm/17/maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2/graalvm/17/gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/s3/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello-ts-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello-durable-ts/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello-gql/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/full-stack/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/response-streaming/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello-ts/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs22.x/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.9/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.10/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/hello-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/event-bridge-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/hello-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/event-bridge-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/event-bridge-schema-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/hello-img-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/hello-img-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/step-func-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/event-bridge-schema-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java25/step-func-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2023/go/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2023/go/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/al2023/rust/hello/{{ cookiecutter.project_slug }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/hello-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/event-bridge-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/hello-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/event-bridge-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/event-bridge-schema-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/hello-img-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/hello-img-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/step-func-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/event-bridge-schema-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/hello-pt-maven/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/java8.al2/step-func-gradle/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/s3/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello-ts-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello-durable-ts/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello-gql/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/full-stack/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/response-streaming/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello-ts/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs24.x/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.12/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/hello-ps/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet6/hello-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/hello-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet8/hello-native-aot/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/ruby/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/ruby/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/ruby/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/ruby/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/hello-durable/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.14/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/hello-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/dotnet10/hello-native-aot/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/apigw-scikit/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/event-bridge-schema/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/apigw-pytorch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/apigw-tensorflow/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/hello-pt/{{ cookiecutter.project_name }}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/apigw-xgboost/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/event-bridge/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/hello-durable/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/python3.13/efs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/s3/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/sns/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/cw-event/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/step-func/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/hello-ts-pt/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/web/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/hello-gql/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/sqs/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/full-stack/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/scratch/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character '#' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/response-streaming/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/hello-img/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/hello-ts/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+
+=== /var/folders/jz/jz_28g4x5r7_8qgbd7k3p2740000gn/T/tmp.UxqRD1vzc9/aws-sam-cli-app-templates/nodejs20.x/hello/{{cookiecutter.project_name}}/template.yaml ===
+Error: failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+Usage:
+  wetwire-aws import <template> [flags]
+
+Flags:
+  -h, --help             help for import
+      --module string    Go module path (default: same as package name)
+      --no-scaffold      Skip scaffold files (go.mod, README.md, CLAUDE.md, .gitignore)
+  -o, --output string    Output directory (default: current directory)
+  -p, --package string   Package name (default: derived from template filename)
+      --single-file      Generate a single file instead of a package
+
+failed to parse template: failed to parse template as YAML or JSON: invalid character 'A' looking for beginning of value
+

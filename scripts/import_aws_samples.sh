@@ -98,10 +98,6 @@ EXCLUDE_TEMPLATES=(
     "CloudFormation/CustomResources/getfromjson/src/events/event-empty-search-input.json"
     "CloudFormation/CustomResources/getfromjson/src/events/event-invalid-json-data-input.json"
     "CloudFormation/CustomResources/getfromjson/src/events/event-invalid-search-input.json"
-    # SAM templates (use Transform: AWS::Serverless)
-    "CloudFormation/CustomResources/getfromjson/src/template.yml"
-    "CloudFormation/MacrosExamples/Count/template.json"
-    "CloudFormation/MacrosExamples/Count/template.yaml"
     # EKS templates (too complex, many forward reference issues)
     "EKS/template.json"
     "EKS/template.yaml"
@@ -132,9 +128,6 @@ EXCLUDE_TEMPLATES=(
     # Macro test events (not CloudFormation templates)
     "CloudFormation/MacrosExamples/Count/event.json"
     "CloudFormation/MacrosExamples/Count/event_bad.json"
-    # SAM templates (use AWS::Serverless resources not in CloudFormation)
-    "CloudFormation/MacrosExamples/DatetimeNow/datetimenow.yaml"
-    "CloudFormation/MacrosExamples/DatetimeNow/datetimenow.json"
 )
 
 cd "$PROJECT_ROOT"
