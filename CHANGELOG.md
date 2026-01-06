@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-01-05
+
+### Added
+
+- **Alexa::ASK support**: Codegen now accepts `Alexa` prefix in addition to `AWS`
+  - `ask.Skill` - Alexa Skills Kit skill resource
+  - Property types: AuthenticationConfiguration, Overrides, SkillPackage
+- Service count increased from 262 to **263** (262 AWS + 1 Alexa)
+- Achieves full parity with wetwire-aws-python
+
 ## [1.3.0] - 2026-01-05
 
 ### Added
