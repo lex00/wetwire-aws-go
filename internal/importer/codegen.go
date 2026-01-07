@@ -2253,8 +2253,31 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 
 	case IntrinsicTransform:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+		// Transform expects Name and Parameters fields
+		// The args can be either a map or a list containing a map
+		var transformMap map[string]any
+		if args, ok := intrinsic.Args.(map[string]any); ok {
+			transformMap = args
+		} else if args, ok := intrinsic.Args.([]any); ok && len(args) > 0 {
+			// Handle list format: [{Name: ..., Parameters: ...}]
+			if firstArg, ok := args[0].(map[string]any); ok {
+				transformMap = firstArg
+			}
+		}
+		if transformMap != nil {
+			name := ""
+			if n, ok := transformMap["Name"].(string); ok {
+				name = n
+			}
+			params := "nil"
+			if p, ok := transformMap["Parameters"]; ok {
+				params = valueToGo(ctx, p, 0)
+			}
+			return fmt.Sprintf("Transform{Name: %q, Parameters: %s}", name, params)
+		}
+		// Fallback for unexpected format
 		value := valueToGo(ctx, intrinsic.Args, 0)
-		return fmt.Sprintf("Transform{%s}", value)
+		return fmt.Sprintf("Transform{Name: \"\", Parameters: %s}", value)
 	}
 
 	return fmt.Sprintf("/* unknown intrinsic: %s */nil", intrinsic.Type)

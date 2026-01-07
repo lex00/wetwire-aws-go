@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: Variable names colliding with intrinsics types (e.g., `Transform`, `Output`) now get `Resource` suffix
 - Codegen: Nested GetAtt attributes (e.g., `!GetAtt MyDB.Endpoint.Address`) now generate `GetAtt{MyDB, "Endpoint.Address"}` instead of invalid field access
 - Codegen: Unknown resource types (e.g., `Custom::*`) now generate `any` placeholder variables instead of comments, allowing outputs to reference them without undefined variable errors
+- Codegen: `Fn::Transform` now generates `Transform{Name: "...", Parameters: {...}}` with proper struct fields instead of raw value passthrough
 
 ### Changed
 

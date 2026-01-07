@@ -114,75 +114,6 @@ var Tcp8080Out = ec2.SecurityGroupEgress{
 	ToPort: 8080,
 }
 
-var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies = cloudfront.Distribution_Cookies{
-	Forward: ForwardCookies,
-}
-
-var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distribution_CustomOriginConfig{
-	HTTPPort: 80,
-	HTTPSPort: 443,
-	OriginKeepaliveTimeout: OriginKeepaliveTimeout,
-	OriginProtocolPolicy: OriginProtocolPolicy,
-	OriginReadTimeout: OriginReadTimeout,
-	OriginSSLProtocols: []any{"TLSv1", "TLSv1.1", "TLSv1.2", "SSLv3"},
-}
-
-var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1 = cloudfront.Distribution_LambdaFunctionAssociation{
-	EventType: LambdaEventType,
-	LambdaFunctionARN: LambdaEdgeVersion,
-}
-
-var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues = cloudfront.Distribution_ForwardedValues{
-	Cookies: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies,
-	QueryString: QueryString,
-}
-
-var CloudFrontDistributionDistributionConfigViewerCertificate = cloudfront.Distribution_ViewerCertificate{
-	AcmCertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
-	MinimumProtocolVersion: MinimumProtocolVersion,
-	SslSupportMethod: SslSupportMethod,
-}
-
-var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
-	DomainName: OriginALB.DNSName,
-	Id: OriginALB,
-}
-
-var CloudFrontDistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
-	Bucket: Sub{String: "${LoggingBucket}.s3.amazonaws.com"},
-}
-
-var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution_DefaultCacheBehavior{
-	AllowedMethods: []any{"GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"},
-	Compress: Compress,
-	DefaultTTL: DefaultTTL,
-	ForwardedValues: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues,
-	LambdaFunctionAssociations: []any{CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1},
-	MaxTTL: MaxTTL,
-	MinTTL: MinTTL,
-	SmoothStreaming: "false",
-	TargetOriginId: OriginALB,
-	ViewerProtocolPolicy: ViewerProtocolPolicy,
-}
-
-var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
-	Aliases: []any{AlternateDomainNames},
-	Comment: "Cloudfront Distribution pointing ALB Origin",
-	DefaultCacheBehavior: CloudFrontDistributionDistributionConfigDefaultCacheBehavior,
-	Enabled: true,
-	HttpVersion: "http2",
-	IPV6Enabled: IPV6Enabled,
-	Logging: CloudFrontDistributionDistributionConfigLogging,
-	Origins: []any{CloudFrontDistributionDistributionConfigOrigin1},
-	PriceClass: PriceClass,
-	ViewerCertificate: CloudFrontDistributionDistributionConfigViewerCertificate,
-}
-
-var CloudFrontDistribution = cloudfront.Distribution{
-	DistributionConfig: CloudFrontDistributionDistributionConfig,
-}
-
 var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 	TargetGroupArn: OriginALBTG,
 	Type_: "forward",
@@ -251,4 +182,73 @@ var OriginALB = elasticloadbalancingv2.LoadBalancer{
 	Subnets: []any{PublicSubnetId1, PublicSubnetId2},
 	Tags: []any{OriginALBTagName, OriginALBTagEnvironment},
 	Type_: ALBType,
+}
+
+var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies = cloudfront.Distribution_Cookies{
+	Forward: ForwardCookies,
+}
+
+var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distribution_CustomOriginConfig{
+	HTTPPort: 80,
+	HTTPSPort: 443,
+	OriginKeepaliveTimeout: OriginKeepaliveTimeout,
+	OriginProtocolPolicy: OriginProtocolPolicy,
+	OriginReadTimeout: OriginReadTimeout,
+	OriginSSLProtocols: []any{"TLSv1", "TLSv1.1", "TLSv1.2", "SSLv3"},
+}
+
+var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1 = cloudfront.Distribution_LambdaFunctionAssociation{
+	EventType: LambdaEventType,
+	LambdaFunctionARN: LambdaEdgeVersion,
+}
+
+var CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues = cloudfront.Distribution_ForwardedValues{
+	Cookies: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValuesCookies,
+	QueryString: QueryString,
+}
+
+var CloudFrontDistributionDistributionConfigViewerCertificate = cloudfront.Distribution_ViewerCertificate{
+	AcmCertificateArn: Sub{String: "arn:${AWS::Partition}:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"},
+	MinimumProtocolVersion: MinimumProtocolVersion,
+	SslSupportMethod: SslSupportMethod,
+}
+
+var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
+	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
+	DomainName: OriginALB.DNSName,
+	Id: OriginALB,
+}
+
+var CloudFrontDistributionDistributionConfigLogging = cloudfront.Distribution_Logging{
+	Bucket: Sub{String: "${LoggingBucket}.s3.amazonaws.com"},
+}
+
+var CloudFrontDistributionDistributionConfigDefaultCacheBehavior = cloudfront.Distribution_DefaultCacheBehavior{
+	AllowedMethods: []any{"GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"},
+	Compress: Compress,
+	DefaultTTL: DefaultTTL,
+	ForwardedValues: CloudFrontDistributionDistributionConfigDefaultCacheBehaviorForwardedValues,
+	LambdaFunctionAssociations: []any{CloudFrontDistributionDistributionConfigDefaultCacheBehaviorLambdaFunctionAssociation1},
+	MaxTTL: MaxTTL,
+	MinTTL: MinTTL,
+	SmoothStreaming: "false",
+	TargetOriginId: OriginALB,
+	ViewerProtocolPolicy: ViewerProtocolPolicy,
+}
+
+var CloudFrontDistributionDistributionConfig = cloudfront.Distribution_DistributionConfig{
+	Aliases: []any{AlternateDomainNames},
+	Comment: "Cloudfront Distribution pointing ALB Origin",
+	DefaultCacheBehavior: CloudFrontDistributionDistributionConfigDefaultCacheBehavior,
+	Enabled: true,
+	HttpVersion: "http2",
+	IPV6Enabled: IPV6Enabled,
+	Logging: CloudFrontDistributionDistributionConfigLogging,
+	Origins: []any{CloudFrontDistributionDistributionConfigOrigin1},
+	PriceClass: PriceClass,
+	ViewerCertificate: CloudFrontDistributionDistributionConfigViewerCertificate,
+}
+
+var CloudFrontDistribution = cloudfront.Distribution{
+	DistributionConfig: CloudFrontDistributionDistributionConfig,
 }

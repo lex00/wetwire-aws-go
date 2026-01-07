@@ -26,9 +26,9 @@ var MainDB = rds.DBInstance{
 	PubliclyAccessible: false,
 	StorageEncrypted: true,
 	Tags: []any{MainDBTagName},
-	VPCSecurityGroups: If{"IsEC2VPC", []any{
+	VPCSecurityGroups: []any{If{"IsEC2VPC", []any{
 	DBEC2SecurityGroup.GroupId,
-}, AWS_NO_VALUE},
+}, AWS_NO_VALUE}},
 }
 
 var ReplicaDBTagName = Tag{

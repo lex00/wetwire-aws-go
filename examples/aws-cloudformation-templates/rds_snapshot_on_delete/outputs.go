@@ -12,9 +12,9 @@ import (
 var JDBCConnectionStringOutput = Output{
 	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
-	GetAtt{MyDB, "Endpoint.Address"},
+	GetAtt{"MyDB", "Endpoint.Address"},
 	":",
-	GetAtt{MyDB, "Endpoint.Port"},
+	GetAtt{"MyDB", "Endpoint.Port"},
 	"/MyDatabase",
 }},
 	Description: "JDBC connection string for the database",

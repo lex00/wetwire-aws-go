@@ -89,7 +89,7 @@ var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core
 	AWS_ACCOUNT_ID,
 	Join{Delimiter: "/", Values: []any{
 	"cert",
-	GetAtt{IoTThing, "certificateId"},
+	GetAtt{"IoTThing", "certificateId"},
 }},
 }},
 	Id: Join{Delimiter: "_", Values: []any{

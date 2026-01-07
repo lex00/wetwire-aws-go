@@ -11,56 +11,36 @@ import (
 
 var S3BucketTagDays = Tag{
 	Key: "Days",
-	Value: Transform{[]any{
-	Json{
-		"Name": "Date",
-		"Parameters": Json{
-			"Date": Date,
-			"Date2": Date2,
-			"Operation": "Days",
-		},
-	},
+	Value: Transform{Name: "Date", Parameters: Json{
+	"Date": Date,
+	"Date2": Date2,
+	"Operation": "Days",
 }},
 }
 
 var S3BucketTagSubtract = Tag{
 	Key: "Subtract",
-	Value: Transform{[]any{
-	Json{
-		"Name": "Date",
-		"Parameters": Json{
-			"Date": Date,
-			"Days": Days,
-			"Operation": "Subtract",
-		},
-	},
+	Value: Transform{Name: "Date", Parameters: Json{
+	"Date": Date,
+	"Days": Days,
+	"Operation": "Subtract",
 }},
 }
 
 var S3BucketTagAdd = Tag{
 	Key: "Add",
-	Value: Transform{[]any{
-	Json{
-		"Name": "Date",
-		"Parameters": Json{
-			"Date": Date,
-			"Days": Days,
-			"Operation": "Add",
-		},
-	},
+	Value: Transform{Name: "Date", Parameters: Json{
+	"Date": Date,
+	"Days": Days,
+	"Operation": "Add",
 }},
 }
 
 var S3BucketTagCurrent = Tag{
 	Key: "Current",
-	Value: Transform{[]any{
-	Json{
-		"Name": "Date",
-		"Parameters": Json{
-			"Date": Date,
-			"Operation": "Current",
-		},
-	},
+	Value: Transform{Name: "Date", Parameters: Json{
+	"Date": Date,
+	"Operation": "Current",
 }},
 }
 

@@ -53,7 +53,7 @@ var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	HealthCheck: ElasticLoadBalancerHealthCheck,
 	Listeners: []any{ElasticLoadBalancerListener1},
 	SecurityGroups: []any{ELBSecurityGroup},
-	Subnets: Subnets,
+	Subnets: []any{Subnets},
 }
 
 var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{

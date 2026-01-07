@@ -50,11 +50,11 @@ var Eth0 = ec2.NetworkInterface{
 	Tags: []any{Eth0TagName, Eth0TagInterface},
 }
 
+var EIP1 = ec2.EIP{
+	Domain: "vpc",
+}
+
 var EIPAssoc1 = ec2.EIPAssociation{
 	AllocationId: EIP1.AllocationId,
 	NetworkInterfaceId: Eth0,
-}
-
-var EIP1 = ec2.EIP{
-	Domain: "vpc",
 }
