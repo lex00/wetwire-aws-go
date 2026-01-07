@@ -136,14 +136,25 @@ func convertOutput(output *template.Output) *IROutput {
 // CloudFormation uses PascalCase (Type), Go keywords are lowercase (type).
 // If the lowercase version is a keyword, append underscore (Type_).
 func transformGoFieldName(name string) string {
+	return transformGoFieldNameForType(name, "")
+}
+
+// transformGoFieldNameForType handles Go keyword conflicts, considering the target type.
+// For nested property types (containing "_"), ResourceType field is NOT transformed
+// because only top-level resources have the conflicting ResourceType() method.
+func transformGoFieldNameForType(name string, typeName string) string {
 	// Check if the lowercase version is a Go keyword
 	lower := strings.ToLower(name)
 	if isGoKeyword(lower) {
 		return name + "_"
 	}
-	// Also handle ResourceType which conflicts with a method
+	// Handle ResourceType which conflicts with a method on top-level resources.
+	// Nested property types (contain "_") don't have this method, so don't transform.
 	if name == "ResourceType" {
-		return "ResourceTypeProp"
+		// If typeName contains "_", it's a nested property type - don't transform
+		if !strings.Contains(typeName, "_") {
+			return "ResourceTypeProp"
+		}
 	}
 	return name
 }

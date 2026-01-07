@@ -9,21 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
-var BastionInstanceTagName = Tag{
-	Key: "Name",
-	Value: "Bastion",
-}
-
-var BastionInstance = ec2.Instance{
-	IamInstanceProfile: BastionProfile,
-	ImageId: LinuxAMI,
-	InstanceType: "t2.micro",
-	KeyName: KeyName,
-	SecurityGroupIds: []any{BastionSG},
-	SubnetId: PublicSubnet1,
-	Tags: []any{BastionInstanceTagName},
-}
-
 var PrivateInstanceTagName = Tag{
 	Key: "Name",
 	Value: "Private",
@@ -38,4 +23,19 @@ var PrivateInstance = ec2.Instance{
 	SubnetId: PrivateSubnet1,
 	Tags: []any{PrivateInstanceTagName},
 	UserData: Base64{Sub{String: "#!/bin/bash -x\ndate > /tmp/datefile\ncat /tmp/datefile\n# Signal the status from instance\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource PrivateInstance --region ${AWS::Region}\n"}},
+}
+
+var BastionInstanceTagName = Tag{
+	Key: "Name",
+	Value: "Bastion",
+}
+
+var BastionInstance = ec2.Instance{
+	IamInstanceProfile: BastionProfile,
+	ImageId: LinuxAMI,
+	InstanceType: "t2.micro",
+	KeyName: KeyName,
+	SecurityGroupIds: []any{BastionSG},
+	SubnetId: PublicSubnet1,
+	Tags: []any{BastionInstanceTagName},
 }

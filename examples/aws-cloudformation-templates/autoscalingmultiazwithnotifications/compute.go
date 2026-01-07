@@ -15,7 +15,7 @@ var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs = ec2.EC2Fleet_
 }
 
 var LaunchTemplateLaunchTemplateDataTagSpecification1 = ec2.CapacityReservationFleet_TagSpecification{
-	ResourceTypeProp: "instance",
+	ResourceType: "instance",
 	Tags: []any{Json{"Key": "Name", "Value": Sub{String: "${AWS::StackName}-Instance"}}},
 }
 
@@ -39,20 +39,6 @@ var LaunchTemplate = ec2.LaunchTemplate{
 	LaunchTemplateName: Sub{String: "${AWS::StackName}-LaunchTemplate"},
 }
 
-var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: WebServerGroup,
-	Cooldown: "60",
-	ScalingAdjustment: -1,
-}
-
-var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: WebServerGroup,
-	Cooldown: "60",
-	ScalingAdjustment: 1,
-}
-
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
 	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
 	TopicARN: NotificationTopic,
@@ -72,4 +58,18 @@ var WebServerGroup = autoscaling.AutoScalingGroup{
 	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},
 	TargetGroupARNs: []any{TargetGroup},
 	VPCZoneIdentifier: Subnets,
+}
+
+var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: WebServerGroup,
+	Cooldown: "60",
+	ScalingAdjustment: -1,
+}
+
+var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: WebServerGroup,
+	Cooldown: "60",
+	ScalingAdjustment: 1,
 }
