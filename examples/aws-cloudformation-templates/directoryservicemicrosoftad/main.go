@@ -9,16 +9,16 @@ import (
 )
 
 var rMSDirectoryVpcSettings = directoryservice.MicrosoftAD_VpcSettings{
-	SubnetIds: []any{pPrivateSubnet1, pPrivateSubnet2},
-	VpcId: pVPCID,
+	SubnetIds: []any{PPrivateSubnet1, PPrivateSubnet2},
+	VpcId: PVPCID,
 }
 
 var RMSDirectory = directoryservice.MicrosoftAD{
-	CreateAlias: pCreateAlias,
-	Edition: pEdition,
-	EnableSso: pEnableSingleSignOn,
-	Name: pDomainName,
+	CreateAlias: PCreateAlias,
+	Edition: PEdition,
+	EnableSso: PEnableSingleSignOn,
+	Name: PDomainName,
 	Password: "{{resolve:secretsmanager:microsoft-ad-pw:SecretString:password}}",
-	ShortName: pMicrosoftADShortName,
+	ShortName: PMicrosoftADShortName,
 	VpcSettings: rMSDirectoryVpcSettings,
 }

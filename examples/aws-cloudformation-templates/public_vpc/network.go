@@ -62,35 +62,11 @@ var PublicRoute = ec2.Route{
 	RouteTableId: PublicRouteTable,
 }
 
-var EcsHostSecurityGroup = ec2.SecurityGroup{
-	GroupDescription: "Access to the ECS hosts that run containers",
-	VpcId: VPC,
-}
-
-var PublicSubnetTwo = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
-	MapPublicIpOnLaunch: true,
-	VpcId: VPC,
-}
-
-var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
-	Description: "Ingress from other hosts in the same security group",
+var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
+	Description: "Ingress from the public ALB",
 	GroupId: EcsHostSecurityGroup,
 	IpProtocol: -1,
-	SourceSecurityGroupId: EcsHostSecurityGroup,
-}
-
-var PublicLoadBalancerListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
-	TargetGroupArn: DummyTargetGroupPublic,
-	Type_: "forward",
-}
-
-var PublicLoadBalancerListener = elasticloadbalancingv2.Listener{
-	DefaultActions: []any{PublicLoadBalancerListenerDefaultActionForward},
-	LoadBalancerArn: PublicLoadBalancer,
-	Port: 80,
-	Protocol: enums.Elbv2ProtocolEnumHttp,
+	SourceSecurityGroupId: PublicLoadBalancerSG,
 }
 
 var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
@@ -98,11 +74,11 @@ var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	SubnetId: PublicSubnetOne,
 }
 
-var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
-	Description: "Ingress from the public ALB",
+var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
+	Description: "Ingress from other hosts in the same security group",
 	GroupId: EcsHostSecurityGroup,
 	IpProtocol: -1,
-	SourceSecurityGroupId: PublicLoadBalancerSG,
+	SourceSecurityGroupId: EcsHostSecurityGroup,
 }
 
 var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
@@ -117,9 +93,33 @@ var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
 }
 
+var EcsHostSecurityGroup = ec2.SecurityGroup{
+	GroupDescription: "Access to the ECS hosts that run containers",
+	VpcId: VPC,
+}
+
 var PublicSubnetOne = ec2.Subnet{
 	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: FindInMap{"SubnetConfig", "PublicOne", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
+}
+
+var PublicLoadBalancerListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
+	TargetGroupArn: DummyTargetGroupPublic,
+	Type_: "forward",
+}
+
+var PublicLoadBalancerListener = elasticloadbalancingv2.Listener{
+	DefaultActions: []any{PublicLoadBalancerListenerDefaultActionForward},
+	LoadBalancerArn: PublicLoadBalancer,
+	Port: 80,
+	Protocol: enums.Elbv2ProtocolEnumHttp,
+}
+
+var PublicSubnetTwo = ec2.Subnet{
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,
 }

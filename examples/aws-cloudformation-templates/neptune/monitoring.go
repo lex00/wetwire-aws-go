@@ -9,24 +9,24 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
-var NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
+var NeptunePrimaryCpuAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
 	Name: "DBClusterIdentifier",
 	Value: NeptuneDBCluster,
 }
 
-var NeptunePrimaryMemoryAlarm = cloudwatch.Alarm{
+var NeptunePrimaryCpuAlarm = cloudwatch.Alarm{
 	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB memory under ${LowMemoryAlarmThreshold} bytes"},
-	ComparisonOperator: "LessThanOrEqualToThreshold",
-	Dimensions: []any{NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier},
+	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB CPU over ${HighCpuAlarmThreshold}%"},
+	ComparisonOperator: "GreaterThanOrEqualToThreshold",
+	Dimensions: []any{NeptunePrimaryCpuAlarmDimensionDBClusterIdentifier},
 	EvaluationPeriods: 2,
 	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	MetricName: "FreeableMemory",
+	MetricName: "CPUUtilization",
 	Namespace: "AWS/Neptune",
 	Period: 300,
 	Statistic: "Average",
-	Threshold: LowMemoryAlarmThreshold,
-	Unit: "Bytes",
+	Threshold: HighCpuAlarmThreshold,
+	Unit: "Percent",
 }
 
 var NeptunePrimaryGremlinRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
@@ -67,22 +67,22 @@ var NeptunePrimarySparqlRequestsPerSecAlarm = cloudwatch.Alarm{
 	Threshold: SparqlRequestsPerSecThreshold,
 }
 
-var NeptunePrimaryCpuAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
+var NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
 	Name: "DBClusterIdentifier",
 	Value: NeptuneDBCluster,
 }
 
-var NeptunePrimaryCpuAlarm = cloudwatch.Alarm{
+var NeptunePrimaryMemoryAlarm = cloudwatch.Alarm{
 	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB CPU over ${HighCpuAlarmThreshold}%"},
-	ComparisonOperator: "GreaterThanOrEqualToThreshold",
-	Dimensions: []any{NeptunePrimaryCpuAlarmDimensionDBClusterIdentifier},
+	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB memory under ${LowMemoryAlarmThreshold} bytes"},
+	ComparisonOperator: "LessThanOrEqualToThreshold",
+	Dimensions: []any{NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier},
 	EvaluationPeriods: 2,
 	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	MetricName: "CPUUtilization",
+	MetricName: "FreeableMemory",
 	Namespace: "AWS/Neptune",
 	Period: 300,
 	Statistic: "Average",
-	Threshold: HighCpuAlarmThreshold,
-	Unit: "Percent",
+	Threshold: LowMemoryAlarmThreshold,
+	Unit: "Bytes",
 }

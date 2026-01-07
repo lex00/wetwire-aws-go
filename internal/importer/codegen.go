@@ -2551,8 +2551,9 @@ func SanitizeGoName(name string) string {
 				// Capitalize first letter for export
 				result.WriteRune(unicode.ToUpper(r))
 			} else if unicode.IsDigit(r) {
-				// Names starting with digits need underscore prefix but preserve the digit
-				result.WriteRune('_')
+				// Names starting with digits need a letter prefix to be valid Go identifiers
+				// Use "N" (for Number) instead of "_" to keep the variable exported
+				result.WriteRune('N')
 				result.WriteRune(r)
 			} else {
 				result.WriteRune('_')

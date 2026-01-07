@@ -59,7 +59,7 @@ var VPCPeeringConnectionId = Parameter{
 	ConstraintDescription: "Must have a prefix of \"pcx-\". Followed by 17 characters (numbers, letters \"a-f\")",
 }
 
-var _RouteTableConditionCondition = Or{[]any{
+var N2RouteTableConditionCondition = Or{[]any{
 	Equals{NumberOfRouteTables, 2},
 	Condition{"3RouteTableCondition"},
 	Condition{"4RouteTableCondition"},
@@ -67,7 +67,7 @@ var _RouteTableConditionCondition = Or{[]any{
 	Condition{"6RouteTableCondition"},
 }}
 
-var _SecurityGroupConditionCondition = Or{[]any{
+var N2SecurityGroupConditionCondition = Or{[]any{
 	Equals{NumberOfSecurityGroups, 2},
 	Condition{"3SecurityGroupCondition"},
 	Condition{"4SecurityGroupCondition"},
@@ -75,42 +75,42 @@ var _SecurityGroupConditionCondition = Or{[]any{
 	Condition{"6SecurityGroupCondition"},
 }}
 
-var _RouteTableConditionCondition = Or{[]any{
+var N3RouteTableConditionCondition = Or{[]any{
 	Equals{NumberOfRouteTables, 3},
 	Condition{"4RouteTableCondition"},
 	Condition{"5RouteTableCondition"},
 	Condition{"6RouteTableCondition"},
 }}
 
-var _SecurityGroupConditionCondition = Or{[]any{
+var N3SecurityGroupConditionCondition = Or{[]any{
 	Equals{NumberOfSecurityGroups, 3},
 	Condition{"4SecurityGroupCondition"},
 	Condition{"5SecurityGroupCondition"},
 	Condition{"6SecurityGroupCondition"},
 }}
 
-var _RouteTableConditionCondition = Or{[]any{
+var N4RouteTableConditionCondition = Or{[]any{
 	Equals{NumberOfRouteTables, 4},
 	Condition{"5RouteTableCondition"},
 	Condition{"6RouteTableCondition"},
 }}
 
-var _SecurityGroupConditionCondition = Or{[]any{
+var N4SecurityGroupConditionCondition = Or{[]any{
 	Equals{NumberOfSecurityGroups, 4},
 	Condition{"5SecurityGroupCondition"},
 	Condition{"6SecurityGroupCondition"},
 }}
 
-var _RouteTableConditionCondition = Or{[]any{
+var N5RouteTableConditionCondition = Or{[]any{
 	Equals{NumberOfRouteTables, 5},
 	Condition{"6RouteTableCondition"},
 }}
 
-var _SecurityGroupConditionCondition = Or{[]any{
+var N5SecurityGroupConditionCondition = Or{[]any{
 	Equals{NumberOfSecurityGroups, 5},
 	Condition{"6SecurityGroupCondition"},
 }}
 
-var _RouteTableConditionCondition = Equals{NumberOfRouteTables, 6}
+var N6RouteTableConditionCondition = Equals{NumberOfRouteTables, 6}
 
-var _SecurityGroupConditionCondition = Equals{NumberOfSecurityGroups, 6}
+var N6SecurityGroupConditionCondition = Equals{NumberOfSecurityGroups, 6}

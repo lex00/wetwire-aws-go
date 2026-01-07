@@ -8,60 +8,60 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-// pCreateAlias - A unique alias to assign to the Microsoft Active Directory in AWS. AWS Direct...
-var pCreateAlias = Parameter{
+// PCreateAlias - A unique alias to assign to the Microsoft Active Directory in AWS. AWS Direct...
+var PCreateAlias = Parameter{
 	Type: "String",
 	Description: "A unique alias to assign to the Microsoft Active Directory in AWS. AWS Directory Service uses the alias to construct the access URL for the directory, such as http://alias.awsapps.com. By default, AWS CloudFormation does not create an alias.\n",
 	Default: "false",
 	AllowedValues: []any{"true", "false"},
 }
 
-// pDomainName - The fully qualified name for the Microsoft Active Directory in AWS, such as c...
-var pDomainName = Parameter{
+// PDomainName - The fully qualified name for the Microsoft Active Directory in AWS, such as c...
+var PDomainName = Parameter{
 	Type: "String",
 	Description: "The fully qualified name for the Microsoft Active Directory in AWS, such as corp.example.com. The name doesn't need to be publicly resolvable; it will resolve inside your VPC only.\n",
 	Default: "corp.example.com",
 }
 
-// pEdition - The AWS Microsoft AD edition. Valid values include Standard and Enterprise. T...
-var pEdition = Parameter{
+// PEdition - The AWS Microsoft AD edition. Valid values include Standard and Enterprise. T...
+var PEdition = Parameter{
 	Type: "String",
 	Description: "The AWS Microsoft AD edition. Valid values include Standard and Enterprise. The default is Enterprise.\n",
 	Default: "Enterprise",
 	AllowedValues: []any{"Standard", "Enterprise"},
 }
 
-// pEnableSingleSignOn - Whether to enable single sign-on for a Microsoft Active Directory in AWS. Sin...
-var pEnableSingleSignOn = Parameter{
+// PEnableSingleSignOn - Whether to enable single sign-on for a Microsoft Active Directory in AWS. Sin...
+var PEnableSingleSignOn = Parameter{
 	Type: "String",
 	Description: "Whether to enable single sign-on for a Microsoft Active Directory in AWS. Single sign-on allows users in your directory to access certain AWS services from a computer joined to the directory without having to enter their credentials separately. If you don't specify a value, AWS CloudFormation disables single sign-on by default. If enabling SSO, then \"Create Alias\" need to be set to true.\n",
 	Default: "false",
 	AllowedValues: []any{"true", "false"},
 }
 
-// pMicrosoftADShortName - The NetBIOS name for your domain, such as CORP. If you don't specify a value,...
-var pMicrosoftADShortName = Parameter{
+// PMicrosoftADShortName - The NetBIOS name for your domain, such as CORP. If you don't specify a value,...
+var PMicrosoftADShortName = Parameter{
 	Type: "String",
 	Description: "The NetBIOS name for your domain, such as CORP. If you don't specify a value, AWS Directory Service uses the first part of your directory DNS server name. For example, if your directory DNS server name is corp.example.com, AWS Directory Service specifies CORP for the NetBIOS name.\n",
 	Default: "corp",
 }
 
-// pPrivateSubnet1 - A subnet within the selected VPC. Each subnet must be in different Availabili...
-var pPrivateSubnet1 = Parameter{
+// PPrivateSubnet1 - A subnet within the selected VPC. Each subnet must be in different Availabili...
+var PPrivateSubnet1 = Parameter{
 	Type: "AWS::EC2::Subnet::Id",
 	Description: "A subnet within the selected VPC. Each subnet must be in different Availability Zones (AZs). AWS Directory Service creates a directory server and a DNS server in each subnet.\n",
 }
 
-// pPrivateSubnet2 - A second subnet in same VPC that is in different AZ. Each subnet must be in d...
-var pPrivateSubnet2 = Parameter{
+// PPrivateSubnet2 - A second subnet in same VPC that is in different AZ. Each subnet must be in d...
+var PPrivateSubnet2 = Parameter{
 	Type: "AWS::EC2::Subnet::Id",
 	Description: "A second subnet in same VPC that is in different AZ. Each subnet must be in different Availability Zones (AZs). AWS Directory Service creates a directory server and a DNS server in each subnet.\n",
 }
 
-// pVPCID - The VPC ID in which to create the Microsoft Active Directory server.
-var pVPCID = Parameter{
+// PVPCID - The VPC ID in which to create the Microsoft Active Directory server.
+var PVPCID = Parameter{
 	Type: "AWS::EC2::VPC::Id",
 	Description: "The VPC ID in which to create the Microsoft Active Directory server.\n",
 }
 
-var CAliasCondition = Equals{pCreateAlias, "true"}
+var CAliasCondition = Equals{PCreateAlias, "true"}

@@ -32,8 +32,8 @@ var SecurityAccessCIDR = Parameter{
 	Default: "0.0.0.0/0",
 }
 
-// myKeyPair - Amazon EC2 Key Pair for accessing Greengrass Core instance
-var myKeyPair = Parameter{
+// MyKeyPair - Amazon EC2 Key Pair for accessing Greengrass Core instance
+var MyKeyPair = Parameter{
 	Type: "AWS::EC2::KeyPair::KeyName",
 	Description: "Amazon EC2 Key Pair for accessing Greengrass Core instance",
 }

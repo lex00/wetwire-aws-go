@@ -148,6 +148,16 @@ var SiteContentReplicationPolicy = iam.RolePolicy{
 	RoleName: SiteContentReplicationRole,
 }
 
+var SiteWebACLRuleAWSNegAWSManagedRuleStatementManagedRuleGroupStatementExcludedRuleNoUserAgentHEADER = wafv2.WebACL_ExcludedRule{
+	Name: "NoUserAgent_HEADER",
+}
+
+var SiteWebACLRuleAWSNegAWSManagedRuleStatementManagedRuleGroupStatement = wafv2.WebACL_ManagedRuleGroupStatement{
+	ExcludedRules: []any{SiteWebACLRuleAWSNegAWSManagedRuleStatementManagedRuleGroupStatementExcludedRuleNoUserAgentHEADER},
+	Name: "AWSManagedRulesCommonRuleSet",
+	VendorName: "AWS",
+}
+
 var SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig = wafv2.RuleGroup_VisibilityConfig{
 	CloudWatchMetricsEnabled: true,
 	MetricName: "MetricForAMRCRS",
@@ -155,11 +165,7 @@ var SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig = wafv2.RuleGroup_Visibil
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.WebACL_Statement{
-	ManagedRuleGroupStatement: wafv2.WebACL_ManagedRuleGroupStatement{
-		ExcludedRules: []any{wafv2.WebACL_ExcludedRule{Name: "NoUserAgent_HEADER"}},
-		Name:          "AWSManagedRulesCommonRuleSet",
-		VendorName:    "AWS",
-	},
+	ManagedRuleGroupStatement: SiteWebACLRuleAWSNegAWSManagedRuleStatementManagedRuleGroupStatement,
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = wafv2.WebACL_OverrideAction{

@@ -15,7 +15,7 @@ var JoinDomainAssociationInstancesTargetInstanceIds = ssm.Association_Target{
 }
 
 var JoinDomainAssociationInstancesOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
-	S3Location: If{"SSMLogsBucketCondition", ssm.Association_InstanceAssociationOutputLocation{
+	S3Location: If{"SSMLogsBucketCondition", ssm.Association_S3OutputLocation{
 	OutputS3BucketName: SSMLogsBucketName,
 	OutputS3KeyPrefix: Sub{String: "ssm-association-logs/AWSLogs/${AWS::AccountId}/*"},
 }, AWS_NO_VALUE},
@@ -44,7 +44,7 @@ var JoinDomainAssociationTagsTargetTagDomainJoin = ssm.Association_Target{
 }
 
 var JoinDomainAssociationTagsOutputLocation = ssm.Association_InstanceAssociationOutputLocation{
-	S3Location: If{"SSMLogsBucketCondition", ssm.Association_InstanceAssociationOutputLocation{
+	S3Location: If{"SSMLogsBucketCondition", ssm.Association_S3OutputLocation{
 	OutputS3BucketName: SSMLogsBucketName,
 	OutputS3KeyPrefix: Sub{String: "ssm-association-logs/AWSLogs/${AWS::AccountId}/*"},
 }, AWS_NO_VALUE},

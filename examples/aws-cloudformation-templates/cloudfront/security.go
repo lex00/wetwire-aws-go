@@ -46,11 +46,6 @@ var LambdaEdgeIAMRole = iam.Role{
 	RoleName: Sub{String: "${AppName}-iam-lambda-edge-role-${Environment}"},
 }
 
-var LoggingBucketKMSKeyAlias = kms.Alias{
-	AliasName: Sub{String: "alias/${AppName}/${Environment}/s3-logging-kms"},
-	TargetKeyId: LoggingBucketKMSKey,
-}
-
 var AdministratorAccessIAMRoleAssumeRolePolicyDocument = PolicyDocument{
 	Statement: []any{AdministratorAccessIAMRoleAssumeRolePolicyDocumentStatement0},
 	Version: "2012-10-17",
@@ -95,4 +90,9 @@ var LoggingBucketKMSKey = kms.Key{
 	EnableKeyRotation: true,
 	Enabled: true,
 	KeyPolicy: LoggingBucketKMSKeyKeyPolicy,
+}
+
+var LoggingBucketKMSKeyAlias = kms.Alias{
+	AliasName: Sub{String: "alias/${AppName}/${Environment}/s3-logging-kms"},
+	TargetKeyId: LoggingBucketKMSKey,
 }

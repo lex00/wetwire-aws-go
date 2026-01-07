@@ -30,20 +30,6 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	VPCZoneIdentifier: []any{SubnetId},
 }
 
-var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
-	ContainerName: "simple-app",
-	ContainerPort: "80",
-	TargetGroupArn: ECSTG,
-}
-
-var Service = ecs.Service{
-	Cluster: ECSCluster,
-	DesiredCount: "1",
-	LoadBalancers: []any{ServiceLoadBalancer1},
-	Role: ECSServiceRole,
-	TaskDefinition: TaskDefinition,
-}
-
 var TaskDefinitionContainerDefinitionBusyboxVolumesFrom1 = ecs.TaskDefinition_VolumeFrom{
 	SourceContainer: "simple-app",
 }
@@ -101,4 +87,18 @@ var TaskDefinition = ecs.TaskDefinition{
 	"-ecs-demo-app",
 }},
 	Volumes: []any{TaskDefinitionVolumeMyNegvol},
+}
+
+var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
+	ContainerName: "simple-app",
+	ContainerPort: "80",
+	TargetGroupArn: ECSTG,
+}
+
+var Service = ecs.Service{
+	Cluster: ECSCluster,
+	DesiredCount: "1",
+	LoadBalancers: []any{ServiceLoadBalancer1},
+	Role: ECSServiceRole,
+	TaskDefinition: TaskDefinition,
 }

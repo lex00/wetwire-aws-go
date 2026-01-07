@@ -321,8 +321,8 @@ func TestSanitizeGoName(t *testing.T) {
 		expected string
 	}{
 		{"ValidName", "ValidName"},
-		{"123Invalid", "_123Invalid"},             // Digits preserved with _ prefix
-		{"2RouteTableCondition", "_2RouteTableCondition"}, // Issue #76: digit prefix preserved
+		{"123Invalid", "N123Invalid"},             // Digits preserved with N prefix (exported)
+		{"2RouteTableCondition", "N2RouteTableCondition"}, // Issue #76: digit prefix preserved (N for exported)
 		{"with-dash", "Withdash"},                 // Capitalized for export
 		{"with.dot", "Withdot"},                   // Capitalized for export
 		{"type", "Type"},                          // Capitalized, no longer a keyword

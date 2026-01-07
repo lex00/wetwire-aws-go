@@ -25,17 +25,17 @@ var ScaleDownPolicy = autoscaling.ScalingPolicy{
 	ScalingAdjustment: "-1",
 }
 
-var ScaleUpPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: AutoScalingGroup,
-	Cooldown: "60",
-	ScalingAdjustment: "1",
-}
-
 var AutoScalingGroup = autoscaling.AutoScalingGroup{
 	LaunchConfigurationName: LaunchConfig,
 	LoadBalancerNames: []any{ElasticLoadBalancer},
 	MaxSize: "3",
 	MinSize: "1",
 	VPCZoneIdentifier: []any{Subnets},
+}
+
+var ScaleUpPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: AutoScalingGroup,
+	Cooldown: "60",
+	ScalingAdjustment: "1",
 }

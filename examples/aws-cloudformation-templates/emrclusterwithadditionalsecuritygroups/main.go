@@ -24,8 +24,8 @@ var EMRClusterInstancesCoreInstanceGroup = emr.Cluster_InstanceGroupConfig{
 }
 
 var EMRClusterInstances = emr.Cluster_JobFlowInstancesConfig{
-	AdditionalMasterSecurityGroups: AdditionalPrimaryNodeSecurityGroups,
-	AdditionalSlaveSecurityGroups: AdditionalCoreNodeSecurityGroups,
+	AdditionalMasterSecurityGroups: []any{AdditionalPrimaryNodeSecurityGroups},
+	AdditionalSlaveSecurityGroups: []any{AdditionalCoreNodeSecurityGroups},
 	CoreInstanceGroup: EMRClusterInstancesCoreInstanceGroup,
 	Ec2KeyName: KeyName,
 	Ec2SubnetId: SubnetID,

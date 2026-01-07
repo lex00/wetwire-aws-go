@@ -390,7 +390,7 @@ var GreengrassInstanceTagName = Tag{
 var GreengrassInstance = ec2.Instance{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
-	KeyName: myKeyPair,
+	KeyName: MyKeyPair,
 	SecurityGroupIds: []any{Split{",", InstanceSecurityGroup.GroupId}},
 	SubnetId: SubnetAPublic,
 	Tags: []any{GreengrassInstanceTagName},
