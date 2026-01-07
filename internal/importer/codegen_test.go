@@ -1135,3 +1135,29 @@ Resources:
 	assert.Contains(t, storageCode, "var MyBucket =", "Lowercase resource name should be capitalized")
 	assert.NotContains(t, storageCode, "var myBucket =", "Should not have lowercase variable name")
 }
+
+// TestGenerateCode_TagImportsIntrinsics tests that files with Tag{} import intrinsics.
+// Issue #59: Undefined Tag type when intrinsics import missing.
+func TestGenerateCode_TagImportsIntrinsics(t *testing.T) {
+	content := []byte(`
+Resources:
+  FlowLog:
+    Type: AWS::EC2::FlowLog
+    Properties:
+      ResourceTypeProp: VPC
+      LogDestinationType: cloud-watch-logs
+      Tags:
+        - Key: Name
+          Value: My Flow Log
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "tagtest")
+	networkCode := files["network.go"]
+
+	// File should import intrinsics for Tag type
+	assert.Contains(t, networkCode, `"github.com/lex00/wetwire-aws-go/intrinsics"`, "Should import intrinsics for Tag type")
+	assert.Contains(t, networkCode, "Tag{", "Should have Tag literal")
+}
