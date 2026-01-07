@@ -625,3 +625,62 @@ Parameters:
 			"File %s should not import resource packages for params-only template", filename)
 	}
 }
+
+// TestGenerateCode_GetAZsInListField tests that GetAZs is wrapped in []any{} for list-type fields.
+// Issue #38: GetAZs{} is incompatible with []any fields like AvailabilityZones.
+func TestGenerateCode_GetAZsInListField(t *testing.T) {
+	content := []byte(`
+Resources:
+  WebServerGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: 1
+      MaxSize: 3
+      AvailabilityZones: !GetAZs ""
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "listtest")
+	code := files["compute.go"]
+
+	// Should wrap GetAZs in []any{} for list-type fields
+	assert.Contains(t, code, "[]any{GetAZs{}}", "GetAZs should be wrapped in []any{} for AvailabilityZones field")
+	// Should NOT have bare GetAZs{} assignment to list field
+	assert.NotContains(t, code, "AvailabilityZones: GetAZs{}", "GetAZs should not be assigned directly to []any field")
+}
+
+// TestGenerateCode_ParameterInListField tests that Parameters are wrapped for list-type fields.
+// Issue #38: Parameter{} is incompatible with []any fields.
+func TestGenerateCode_ParameterInListField(t *testing.T) {
+	content := []byte(`
+Parameters:
+  Subnets:
+    Type: CommaDelimitedList
+    Description: List of subnet IDs
+
+Resources:
+  MyLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: test
+      Runtime: python3.9
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      VpcConfig:
+        SubnetIds: !Ref Subnets
+        SecurityGroupIds: []
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "paramlisttest")
+	code := files["compute.go"]
+
+	// Should wrap Parameter ref in []any{} for list-type fields
+	// Or use the parameter directly if it's a CommaDelimitedList (which serializes to a list)
+	hasValidSubnets := strings.Contains(code, "[]any{Subnets}") || strings.Contains(code, "SubnetIds: Subnets")
+	assert.True(t, hasValidSubnets, "Parameter should be usable in list-type fields")
+}
