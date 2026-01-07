@@ -32,7 +32,7 @@ var PrivateSubnet1RouteTable = ec2.RouteTable{
 }
 
 var PrivateSubnet1Subnet = ec2.Subnet{
-	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: "10.0.128.0/18",
 	MapPublicIpOnLaunch: false,
 	VpcId: VPC,
@@ -48,7 +48,7 @@ var PrivateSubnet2RouteTable = ec2.RouteTable{
 }
 
 var PrivateSubnet2Subnet = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
 	CidrBlock: "10.0.192.0/18",
 	MapPublicIpOnLaunch: false,
 	VpcId: VPC,
@@ -60,7 +60,7 @@ var PrivateSubnet2RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 }
 
 var PublicSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: "10.0.0.0/18",
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,
@@ -93,7 +93,7 @@ var PublicSubnet1RouteTableAssociation = ec2.SubnetRouteTableAssociation{
 }
 
 var PublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
 	CidrBlock: "10.0.64.0/18",
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,

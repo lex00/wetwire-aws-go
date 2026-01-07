@@ -127,7 +127,7 @@ var NetworkPrivateSubnet1SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet1Subnet = ec2.Subnet{
-	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: "10.0.128.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet1SubnetTagName},
@@ -155,7 +155,7 @@ var NetworkPrivateSubnet2SubnetTagName = Tag{
 }
 
 var NetworkPrivateSubnet2Subnet = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
 	CidrBlock: "10.0.192.0/18",
 	MapPublicIpOnLaunch: false,
 	Tags: []any{NetworkPrivateSubnet2SubnetTagName},
@@ -173,7 +173,7 @@ var NetworkPublicSubnet1TagName = Tag{
 }
 
 var NetworkPublicSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 0, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: "10.0.0.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet1TagName},
@@ -224,7 +224,7 @@ var NetworkPublicSubnet2TagName = Tag{
 }
 
 var NetworkPublicSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{Region: AWS_REGION}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
 	CidrBlock: "10.0.64.0/18",
 	MapPublicIpOnLaunch: true,
 	Tags: []any{NetworkPublicSubnet2TagName},

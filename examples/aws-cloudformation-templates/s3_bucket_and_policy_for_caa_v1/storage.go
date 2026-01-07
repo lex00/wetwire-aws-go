@@ -9,6 +9,36 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
+var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
+	SSEAlgorithm: "AES256",
+}
+
+var BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
+	ServerSideEncryptionByDefault: &BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+}
+
+var BucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
+	Status: "Enabled",
+}
+
+var BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
+	BlockPublicAcls: true,
+	BlockPublicPolicy: true,
+	IgnorePublicAcls: true,
+	RestrictPublicBuckets: true,
+}
+
+var BucketBucketEncryption = s3.Bucket_BucketEncryption{
+	ServerSideEncryptionConfiguration: []any{BucketBucketEncryptionServerSideEncryptionConfiguration1},
+}
+
+var Bucket = s3.Bucket{
+	BucketEncryption: &BucketBucketEncryption,
+	BucketName: BucketName,
+	PublicAccessBlockConfiguration: &BucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: &BucketVersioningConfiguration,
+}
+
 var BucketPolicyPolicyDocument = PolicyDocument{
 	Statement: []any{BucketPolicyPolicyDocumentStatement0, BucketPolicyPolicyDocumentStatement1, BucketPolicyPolicyDocumentStatement2},
 	Version: "2012-10-17",
@@ -40,34 +70,4 @@ var BucketPolicyPolicyDocumentStatement0 = PolicyStatement{
 var BucketPolicy = s3.BucketPolicy{
 	Bucket: Bucket,
 	PolicyDocument: BucketPolicyPolicyDocument,
-}
-
-var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
-	SSEAlgorithm: "AES256",
-}
-
-var BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
-}
-
-var BucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
-	Status: "Enabled",
-}
-
-var BucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlockConfiguration{
-	BlockPublicAcls: true,
-	BlockPublicPolicy: true,
-	IgnorePublicAcls: true,
-	RestrictPublicBuckets: true,
-}
-
-var BucketBucketEncryption = s3.Bucket_BucketEncryption{
-	ServerSideEncryptionConfiguration: []any{BucketBucketEncryptionServerSideEncryptionConfiguration1},
-}
-
-var Bucket = s3.Bucket{
-	BucketEncryption: &BucketBucketEncryption,
-	BucketName: BucketName,
-	PublicAccessBlockConfiguration: &BucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &BucketVersioningConfiguration,
 }

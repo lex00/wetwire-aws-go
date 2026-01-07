@@ -9,31 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var LoggingBucketPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1},
-	Version: "2012-10-17",
-}
-
-var LoggingBucketPolicyPolicyDocumentStatement1 = DenyStatement{
-	Action: "s3:*",
-	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
-	Principal: AWSPrincipal{"*"},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
-}
-
-var LoggingBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
-	Action: "s3:PutObject",
-	Effect: "Allow",
-	Principal: AWSPrincipal{Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"}},
-	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
-	Sid: "LoggingBucketPermissions",
-}
-
-var LoggingBucketPolicy = s3.BucketPolicy{
-	Bucket: LoggingBucket,
-	PolicyDocument: LoggingBucketPolicyPolicyDocument,
-}
-
 var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault = s3.Bucket_ServerSideEncryptionByDefault{
 	KMSMasterKeyID: LoggingBucketKMSKey.Arn,
 	SSEAlgorithm: "aws:kms",
@@ -73,4 +48,29 @@ var LoggingBucket = s3.Bucket{
 	OwnershipControls: &LoggingBucketOwnershipControls,
 	PublicAccessBlockConfiguration: &LoggingBucketPublicAccessBlockConfiguration,
 	VersioningConfiguration: &LoggingBucketVersioningConfiguration,
+}
+
+var LoggingBucketPolicyPolicyDocument = PolicyDocument{
+	Statement: []any{LoggingBucketPolicyPolicyDocumentStatement0, LoggingBucketPolicyPolicyDocumentStatement1},
+	Version: "2012-10-17",
+}
+
+var LoggingBucketPolicyPolicyDocumentStatement1 = DenyStatement{
+	Action: "s3:*",
+	Condition: Json{Bool: Json{"aws:SecureTransport": false}},
+	Principal: AWSPrincipal{"*"},
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
+}
+
+var LoggingBucketPolicyPolicyDocumentStatement0 = PolicyStatement{
+	Action: "s3:PutObject",
+	Effect: "Allow",
+	Principal: AWSPrincipal{Sub{String: "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"}},
+	Resource: []any{Sub{String: "arn:${AWS::Partition}:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"}},
+	Sid: "LoggingBucketPermissions",
+}
+
+var LoggingBucketPolicy = s3.BucketPolicy{
+	Bucket: LoggingBucket,
+	PolicyDocument: LoggingBucketPolicyPolicyDocument,
 }
