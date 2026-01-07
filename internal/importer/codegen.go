@@ -174,9 +174,11 @@ var listTypeProperties = map[string]bool{
 	"SecurityGroupIds":                    true,
 	"SecurityGroups":                      true,
 	"VpcSecurityGroupIds":                 true,
+	"VPCSecurityGroups":                   true,
 	"LoadBalancerNames":                   true,
 	"TargetGroupArns":                     true,
 	"NotificationConfigurations":          true,
+	"NotificationArns":                    true,
 	"Regions":                             true,
 	"AdditionalPrimaryNodeSecurityGroups": true,
 	"AdditionalCoreNodeSecurityGroups":    true,
@@ -221,11 +223,15 @@ func isListTypeProperty(propName string) bool {
 	return listTypeProperties[propName]
 }
 
-// intrinsicReturnsListType checks if an intrinsic function returns a list.
-// These intrinsics need to be wrapped in []any{} when assigned to list-type fields.
-func intrinsicReturnsListType(intrinsic *IRIntrinsic) bool {
+// intrinsicNeedsArrayWrapping checks if an intrinsic needs to be wrapped in []any{}
+// when assigned to a list-type field. In Go, intrinsic types (structs) can't be
+// directly assigned to []any fields, so we wrap them.
+func intrinsicNeedsArrayWrapping(intrinsic *IRIntrinsic) bool {
 	switch intrinsic.Type {
-	case IntrinsicGetAZs:
+	case IntrinsicGetAZs, IntrinsicSplit, IntrinsicIf, IntrinsicRef:
+		// GetAZs, Split return lists
+		// If may return lists (when branches are lists)
+		// Ref to a Parameter that's a list type needs wrapping
 		return true
 	default:
 		return false
@@ -1148,9 +1154,9 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 	switch v := value.(type) {
 	case *IRIntrinsic:
 		goCode := intrinsicToGo(ctx, v)
-		// If this property expects a list type and the intrinsic returns a list,
+		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
-		if isListTypeProperty(propName) && intrinsicReturnsListType(v) {
+		if isListTypeProperty(propName) && intrinsicNeedsArrayWrapping(v) {
 			return fmt.Sprintf("[]any{%s}", goCode)
 		}
 		return goCode
@@ -1339,9 +1345,9 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 	switch v := value.(type) {
 	case *IRIntrinsic:
 		goCode := intrinsicToGo(ctx, v)
-		// If this property expects a list type and the intrinsic returns a list,
+		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
-		if isListTypeProperty(propName) && intrinsicReturnsListType(v) {
+		if isListTypeProperty(propName) && intrinsicNeedsArrayWrapping(v) {
 			return fmt.Sprintf("[]any{%s}", goCode)
 		}
 		return goCode
