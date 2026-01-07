@@ -127,9 +127,10 @@ Resources:
 	// Parameters go to params.go
 	paramsCode := files["params.go"]
 
-	// Used parameters ARE generated as typed vars using Param()
+	// Used parameters ARE generated as full Parameter{} structs
 	assert.Contains(t, paramsCode, "// Environment - Environment name")
-	assert.Contains(t, paramsCode, `var Environment = Param("Environment")`)
+	assert.Contains(t, paramsCode, "var Environment = Parameter{")
+	assert.Contains(t, paramsCode, `Type: "String",`)
 
 	// Unused parameters are NOT generated
 	assert.NotContains(t, paramsCode, "UnusedParam")

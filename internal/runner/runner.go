@@ -24,6 +24,7 @@ import (
 	"os"
 	"reflect"
 
+	"github.com/lex00/wetwire-aws-go/intrinsics"
 	pkg "{{.ImportPath}}"
 )
 
@@ -49,6 +50,26 @@ func main() {
 			continue
 		}
 
+		var props map[string]any
+
+		// Handle Parameter type specially - use ToDefinition() instead of MarshalJSON
+		// because MarshalJSON returns a Ref, but we need the full definition
+		if param, ok := value.(intrinsics.Parameter); ok {
+			props = param.ToDefinition()
+			result[name] = props
+			continue
+		}
+
+		// For Mapping type, convert directly
+		if mapping, ok := value.(intrinsics.Mapping); ok {
+			props = make(map[string]any)
+			for k, v := range mapping {
+				props[k] = v
+			}
+			result[name] = props
+			continue
+		}
+
 		// Serialize to JSON and back to get a map
 		data, err := json.Marshal(value)
 		if err != nil {
@@ -56,7 +77,6 @@ func main() {
 			continue
 		}
 
-		var props map[string]any
 		if err := json.Unmarshal(data, &props); err != nil {
 			fmt.Fprintf(os.Stderr, "Error unmarshaling %s: %v\n", name, err)
 			continue
@@ -307,4 +327,203 @@ func resolveReplacePath(replaceLine, goModDir string) string {
 		}
 	}
 	return replaceLine
+}
+
+// ExtractedValues contains all extracted values organized by type.
+type ExtractedValues struct {
+	Resources  map[string]map[string]any
+	Parameters map[string]map[string]any
+	Outputs    map[string]map[string]any
+	Mappings   map[string]any
+	Conditions map[string]any
+}
+
+// ExtractAll extracts values for all discovered components.
+func ExtractAll(pkgPath string,
+	resources map[string]wetwire.DiscoveredResource,
+	parameters map[string]wetwire.DiscoveredParameter,
+	outputs map[string]wetwire.DiscoveredOutput,
+	mappings map[string]wetwire.DiscoveredMapping,
+	conditions map[string]wetwire.DiscoveredCondition,
+) (*ExtractedValues, error) {
+	// Collect all variable names
+	varNames := make([]string, 0)
+	for name := range resources {
+		varNames = append(varNames, name)
+	}
+	for name := range parameters {
+		varNames = append(varNames, name)
+	}
+	for name := range outputs {
+		varNames = append(varNames, name)
+	}
+	for name := range mappings {
+		varNames = append(varNames, name)
+	}
+	for name := range conditions {
+		varNames = append(varNames, name)
+	}
+
+	if len(varNames) == 0 {
+		return &ExtractedValues{
+			Resources:  make(map[string]map[string]any),
+			Parameters: make(map[string]map[string]any),
+			Outputs:    make(map[string]map[string]any),
+			Mappings:   make(map[string]any),
+			Conditions: make(map[string]any),
+		}, nil
+	}
+
+	// Extract all values using the generic extractor
+	allValues, err := extractVarValues(pkgPath, varNames)
+	if err != nil {
+		return nil, err
+	}
+
+	// Organize by type
+	result := &ExtractedValues{
+		Resources:  make(map[string]map[string]any),
+		Parameters: make(map[string]map[string]any),
+		Outputs:    make(map[string]map[string]any),
+		Mappings:   make(map[string]any),
+		Conditions: make(map[string]any),
+	}
+
+	for name := range resources {
+		if val, ok := allValues[name]; ok {
+			result.Resources[name] = val
+		}
+	}
+	for name := range parameters {
+		if val, ok := allValues[name]; ok {
+			result.Parameters[name] = val
+		}
+	}
+	for name := range outputs {
+		if val, ok := allValues[name]; ok {
+			result.Outputs[name] = val
+		}
+	}
+	for name := range mappings {
+		if val, ok := allValues[name]; ok {
+			result.Mappings[name] = val
+		}
+	}
+	for name := range conditions {
+		if val, ok := allValues[name]; ok {
+			result.Conditions[name] = val
+		}
+	}
+
+	return result, nil
+}
+
+// extractVarValues extracts values for a list of variable names.
+func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]any, error) {
+	if len(varNames) == 0 {
+		return nil, nil
+	}
+
+	// Get absolute package path
+	absPath, err := filepath.Abs(pkgPath)
+	if err != nil {
+		return nil, fmt.Errorf("getting absolute path: %w", err)
+	}
+
+	// Read go.mod to find the module path and replace directives
+	modInfo, err := findGoModInfo(absPath)
+	if err != nil {
+		return nil, fmt.Errorf("finding module info: %w", err)
+	}
+
+	// Calculate import path
+	importPath := modInfo.ModulePath
+
+	// Get the first var name (needed to force the import)
+	firstVar := varNames[0]
+
+	// Create temp directory for runner
+	tmpDir, err := os.MkdirTemp("", "wetwire-runner-*")
+	if err != nil {
+		return nil, fmt.Errorf("creating temp dir: %w", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	// Generate runner main.go
+	runnerPath := filepath.Join(tmpDir, "main.go")
+	f, err := os.Create(runnerPath)
+	if err != nil {
+		return nil, fmt.Errorf("creating runner file: %w", err)
+	}
+
+	data := struct {
+		ImportPath string
+		FirstVar   string
+		VarNames   []string
+	}{
+		ImportPath: importPath,
+		FirstVar:   firstVar,
+		VarNames:   varNames,
+	}
+
+	if err := runnerTemplate.Execute(f, data); err != nil {
+		_ = f.Close()
+		return nil, fmt.Errorf("executing template: %w", err)
+	}
+	_ = f.Close()
+
+	// Create go.mod for the runner
+	goModPath := filepath.Join(tmpDir, "go.mod")
+
+	// Build replace directives - start with the user's package
+	var replaceDirectives strings.Builder
+	replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, absPath))
+
+	// Add any replace directives from the target package's go.mod
+	for _, repl := range modInfo.Replaces {
+		resolved := resolveReplacePath(repl, modInfo.GoModDir)
+		replaceDirectives.WriteString(resolved + "\n")
+	}
+
+	goModContent := fmt.Sprintf(`module runner
+
+go 1.23.0
+
+require %s v0.0.0
+
+%s`, modInfo.ModulePath, replaceDirectives.String())
+	if err := os.WriteFile(goModPath, []byte(goModContent), 0644); err != nil {
+		return nil, fmt.Errorf("writing go.mod: %w", err)
+	}
+
+	// Find Go executable
+	goBin := findGoBinary()
+
+	// Run go mod tidy
+	tidyCmd := exec.Command(goBin, "mod", "tidy")
+	tidyCmd.Dir = tmpDir
+	if output, err := tidyCmd.CombinedOutput(); err != nil {
+		return nil, fmt.Errorf("go mod tidy failed: %w\n%s", err, output)
+	}
+
+	// Run the program with var names as arguments
+	args := append([]string{"run", "main.go"}, varNames...)
+	runCmd := exec.Command(goBin, args...)
+	runCmd.Dir = tmpDir
+
+	var stdout, stderr bytes.Buffer
+	runCmd.Stdout = &stdout
+	runCmd.Stderr = &stderr
+
+	if err := runCmd.Run(); err != nil {
+		return nil, fmt.Errorf("running extractor: %w\n%s", err, stderr.String())
+	}
+
+	// Parse the output
+	var result map[string]map[string]any
+	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
+		return nil, fmt.Errorf("parsing output: %w\noutput: %s", err, stdout.String())
+	}
+
+	return result, nil
 }

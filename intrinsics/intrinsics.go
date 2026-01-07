@@ -15,6 +15,8 @@
 package intrinsics
 
 import (
+	"encoding/json"
+
 	"github.com/lex00/cloudformation-schema-go/intrinsics"
 )
 
@@ -88,3 +90,128 @@ type (
 // Param creates a Ref for a CloudFormation parameter.
 // Re-exported from shared package.
 var Param = intrinsics.Param
+
+// Parameter defines a CloudFormation template parameter with full metadata.
+// When used as a value in resource properties, it serializes to {"Ref": "ParameterName"}.
+//
+// Example:
+//
+//	var Environment = Parameter{
+//	    Type:          "String",
+//	    Description:   "Environment name",
+//	    Default:       "dev",
+//	    AllowedValues: []any{"dev", "staging", "prod"},
+//	}
+//
+//	var MyBucket = s3.Bucket{
+//	    BucketName: Environment,  // Serializes to {"Ref": "Environment"}
+//	}
+type Parameter struct {
+	// Type is the CloudFormation parameter type (String, Number, List<Number>, etc.)
+	Type string
+	// Description is optional documentation for the parameter
+	Description string
+	// Default is the default value if none is provided
+	Default any
+	// AllowedValues restricts the parameter to specific values
+	AllowedValues []any
+	// AllowedPattern is a regex pattern for String type validation
+	AllowedPattern string
+	// ConstraintDescription explains validation failures
+	ConstraintDescription string
+	// MinLength is minimum string length (for String type)
+	MinLength *int
+	// MaxLength is maximum string length (for String type)
+	MaxLength *int
+	// MinValue is minimum numeric value (for Number type)
+	MinValue *float64
+	// MaxValue is maximum numeric value (for Number type)
+	MaxValue *float64
+	// NoEcho masks the parameter value in console/logs
+	NoEcho bool
+
+	// name is set during discovery to enable proper Ref serialization
+	name string
+}
+
+// SetName sets the parameter name for Ref serialization.
+// This is called by the template builder after discovery.
+func (p *Parameter) SetName(name string) {
+	p.name = name
+}
+
+// Name returns the parameter name.
+func (p Parameter) Name() string {
+	return p.name
+}
+
+// MarshalJSON serializes Parameter as a CloudFormation Ref when used as a value.
+func (p Parameter) MarshalJSON() ([]byte, error) {
+	if p.name == "" {
+		// Fallback: serialize as empty ref (should not happen in normal use)
+		return json.Marshal(map[string]string{"Ref": ""})
+	}
+	return json.Marshal(map[string]string{"Ref": p.name})
+}
+
+// ToDefinition returns the parameter as a map suitable for the Parameters section.
+func (p Parameter) ToDefinition() map[string]any {
+	def := map[string]any{
+		"Type": p.Type,
+	}
+	if p.Description != "" {
+		def["Description"] = p.Description
+	}
+	if p.Default != nil {
+		def["Default"] = p.Default
+	}
+	if len(p.AllowedValues) > 0 {
+		def["AllowedValues"] = p.AllowedValues
+	}
+	if p.AllowedPattern != "" {
+		def["AllowedPattern"] = p.AllowedPattern
+	}
+	if p.ConstraintDescription != "" {
+		def["ConstraintDescription"] = p.ConstraintDescription
+	}
+	if p.MinLength != nil {
+		def["MinLength"] = *p.MinLength
+	}
+	if p.MaxLength != nil {
+		def["MaxLength"] = *p.MaxLength
+	}
+	if p.MinValue != nil {
+		def["MinValue"] = *p.MinValue
+	}
+	if p.MaxValue != nil {
+		def["MaxValue"] = *p.MaxValue
+	}
+	if p.NoEcho {
+		def["NoEcho"] = true
+	}
+	return def
+}
+
+// Mapping represents a CloudFormation Mappings table.
+// It maps a top-level key to a second-level key to values.
+//
+// Example:
+//
+//	var RegionAMI = Mapping{
+//	    "us-east-1": {"AMI": "ami-12345"},
+//	    "us-west-2": {"AMI": "ami-67890"},
+//	}
+type Mapping map[string]map[string]any
+
+// Helper functions for creating pointers to primitive types.
+// These are used in generated code for optional parameter fields.
+
+// IntPtr returns a pointer to the given int value.
+func IntPtr(i int) *int {
+	return &i
+}
+
+// Float64Ptr returns a pointer to the given float64 value.
+func Float64Ptr(f float64) *float64 {
+	return &f
+}

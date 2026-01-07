@@ -725,12 +725,13 @@ func prescanAllForParams(ctx *codegenContext) {
 func scanExprForParams(ctx *codegenContext, expr any) {
 	switch v := expr.(type) {
 	case *IRIntrinsic:
-		if v.Type == IntrinsicRef {
+		switch v.Type {
+		case IntrinsicRef:
 			target := fmt.Sprintf("%v", v.Args)
 			if _, ok := ctx.template.Parameters[target]; ok {
 				ctx.usedParameters[target] = true
 			}
-		} else if v.Type == IntrinsicSub {
+		case IntrinsicSub:
 			// Extract parameter names from Sub string
 			scanSubStringForParams(ctx, v.Args)
 		}
@@ -865,9 +866,54 @@ func generateParameter(ctx *codegenContext, param *IRParameter) string {
 		lines = append(lines, fmt.Sprintf("// %s - %s", varName, desc))
 	}
 
-	// Use Param() helper for clarity that this is a parameter reference
+	// Generate full Parameter{} struct with all metadata
 	ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-	lines = append(lines, fmt.Sprintf("var %s = Param(%q)", varName, param.LogicalID))
+	lines = append(lines, fmt.Sprintf("var %s = Parameter{", varName))
+
+	// Type is required
+	paramType := param.Type
+	if paramType == "" {
+		paramType = "String"
+	}
+	lines = append(lines, fmt.Sprintf("\tType: %q,", paramType))
+
+	if param.Description != "" {
+		lines = append(lines, fmt.Sprintf("\tDescription: %q,", param.Description))
+	}
+	if param.Default != nil {
+		defaultVal := valueToGo(ctx, param.Default, 1)
+		lines = append(lines, fmt.Sprintf("\tDefault: %s,", defaultVal))
+	}
+	if len(param.AllowedValues) > 0 {
+		var vals []string
+		for _, v := range param.AllowedValues {
+			vals = append(vals, valueToGo(ctx, v, 0))
+		}
+		lines = append(lines, fmt.Sprintf("\tAllowedValues: []any{%s},", strings.Join(vals, ", ")))
+	}
+	if param.AllowedPattern != "" {
+		lines = append(lines, fmt.Sprintf("\tAllowedPattern: %q,", param.AllowedPattern))
+	}
+	if param.ConstraintDescription != "" {
+		lines = append(lines, fmt.Sprintf("\tConstraintDescription: %q,", param.ConstraintDescription))
+	}
+	if param.MinLength != nil {
+		lines = append(lines, fmt.Sprintf("\tMinLength: IntPtr(%d),", *param.MinLength))
+	}
+	if param.MaxLength != nil {
+		lines = append(lines, fmt.Sprintf("\tMaxLength: IntPtr(%d),", *param.MaxLength))
+	}
+	if param.MinValue != nil {
+		lines = append(lines, fmt.Sprintf("\tMinValue: Float64Ptr(%g),", *param.MinValue))
+	}
+	if param.MaxValue != nil {
+		lines = append(lines, fmt.Sprintf("\tMaxValue: Float64Ptr(%g),", *param.MaxValue))
+	}
+	if param.NoEcho {
+		lines = append(lines, "\tNoEcho: true,")
+	}
+
+	lines = append(lines, "}")
 
 	return strings.Join(lines, "\n")
 }

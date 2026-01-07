@@ -59,6 +59,14 @@ type Options struct {
 type Result struct {
 	// Resources maps logical name to discovered resource
 	Resources map[string]wetwire.DiscoveredResource
+	// Parameters maps logical name to discovered parameter
+	Parameters map[string]wetwire.DiscoveredParameter
+	// Outputs maps logical name to discovered output
+	Outputs map[string]wetwire.DiscoveredOutput
+	// Mappings maps logical name to discovered mapping
+	Mappings map[string]wetwire.DiscoveredMapping
+	// Conditions maps logical name to discovered condition
+	Conditions map[string]wetwire.DiscoveredCondition
 	// AllVars tracks all package-level var declarations (including non-resources)
 	// Used to avoid false positives when checking dependencies
 	AllVars map[string]bool
@@ -69,8 +77,12 @@ type Result struct {
 // Discover scans Go packages for CloudFormation resource declarations.
 func Discover(opts Options) (*Result, error) {
 	result := &Result{
-		Resources: make(map[string]wetwire.DiscoveredResource),
-		AllVars:   make(map[string]bool),
+		Resources:  make(map[string]wetwire.DiscoveredResource),
+		Parameters: make(map[string]wetwire.DiscoveredParameter),
+		Outputs:    make(map[string]wetwire.DiscoveredOutput),
+		Mappings:   make(map[string]wetwire.DiscoveredMapping),
+		Conditions: make(map[string]wetwire.DiscoveredCondition),
+		AllVars:    make(map[string]bool),
 	}
 
 	for _, pkg := range opts.Packages {
@@ -200,6 +212,43 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 				continue
 			}
 
+			pos := fset.Position(valueSpec.Pos())
+
+			// Check for intrinsic types (Parameter, Output, Mapping, Condition types)
+			if isIntrinsicPackage(pkgName, imports) || pkgName == "" {
+				switch typeName {
+				case "Parameter":
+					result.Parameters[name] = wetwire.DiscoveredParameter{
+						Name: name,
+						File: filename,
+						Line: pos.Line,
+					}
+					continue
+				case "Output":
+					result.Outputs[name] = wetwire.DiscoveredOutput{
+						Name: name,
+						File: filename,
+						Line: pos.Line,
+					}
+					continue
+				case "Mapping":
+					result.Mappings[name] = wetwire.DiscoveredMapping{
+						Name: name,
+						File: filename,
+						Line: pos.Line,
+					}
+					continue
+				case "Equals", "And", "Or", "Not":
+					result.Conditions[name] = wetwire.DiscoveredCondition{
+						Name: name,
+						Type: typeName,
+						File: filename,
+						Line: pos.Line,
+					}
+					continue
+				}
+			}
+
 			// Check if this is a known resource package
 			if _, known := knownResourcePackages[pkgName]; !known {
 				continue
@@ -214,7 +263,6 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 			// Extract dependencies from field values
 			deps := extractDependencies(compLit, imports)
 
-			pos := fset.Position(valueSpec.Pos())
 			result.Resources[name] = wetwire.DiscoveredResource{
 				Name:         name,
 				Type:         fmt.Sprintf("%s.%s", pkgName, typeName),
@@ -225,6 +273,27 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 			}
 		}
 	}
+}
+
+// isIntrinsicPackage checks if the package is the intrinsics package.
+func isIntrinsicPackage(pkgName string, imports map[string]string) bool {
+	if pkgName == "" {
+		// Dot-imported, check if intrinsics is dot-imported
+		for alias, path := range imports {
+			if alias == "." && strings.HasSuffix(path, "/intrinsics") {
+				return true
+			}
+		}
+		return false
+	}
+	if pkgName == "intrinsics" {
+		return true
+	}
+	// Check if the package alias points to the intrinsics package
+	if path, ok := imports[pkgName]; ok {
+		return strings.HasSuffix(path, "/intrinsics")
+	}
+	return false
 }
 
 // extractTypeName extracts the type name and package from a type expression.
@@ -344,6 +413,7 @@ func isCommonIdent(name string) bool {
 		"And": true, "Or": true, "Not": true, "Condition": true,
 		"FindInMap": true, "Base64": true, "Cidr": true, "GetAZs": true,
 		"ImportValue": true, "Transform": true, "Json": true,
+		"Parameter": true, "Output": true, "Mapping": true,
 
 		// Pseudo-parameter constants (from intrinsics package)
 		"AWS_ACCOUNT_ID": true, "AWS_NOTIFICATION_ARNS": true,
