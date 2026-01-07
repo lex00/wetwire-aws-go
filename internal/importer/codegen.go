@@ -2189,7 +2189,11 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		case []any:
 			if len(args) >= 2 {
 				template := fmt.Sprintf("%v", args[0])
+				// Clear type context for Variables - it should always be Json{}, not a struct type
+				savedTypeName := ctx.currentTypeName
+				ctx.currentTypeName = ""
 				vars := valueToGo(ctx, args[1], 0)
+				ctx.currentTypeName = savedTypeName
 				return fmt.Sprintf("SubWithMap{String: %q, Variables: %s}", template, vars)
 			} else if len(args) == 1 {
 				template := fmt.Sprintf("%v", args[0])
