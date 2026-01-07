@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Full template component support**: Complete round-trip support for all CloudFormation template sections
+  - `Parameter{}` type with full metadata (Type, Default, AllowedValues, MinLength, MaxLength, etc.) that serializes to `{"Ref": "name"}` when used as property values
+  - `Mapping` type as `map[string]map[string]any` for CloudFormation Mappings
+  - Discovery of Parameters, Outputs, Mappings, and Conditions in Go packages
+  - Template builder outputs complete CloudFormation templates with all sections
+  - Import codegen generates full `Parameter{}` structs instead of `Param()` calls
+- Helper functions `IntPtr()` and `Float64Ptr()` for parameter constraint fields
+
 ## [1.3.1] - 2026-01-05
 
 ### Added
