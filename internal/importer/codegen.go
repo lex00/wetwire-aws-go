@@ -2054,9 +2054,18 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 	case IntrinsicSelect:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
-			index := valueToGo(ctx, args[0], 0)
+			// Convert index to int (may come as string "0" or float64 0)
+			var indexInt int
+			switch idx := args[0].(type) {
+			case float64:
+				indexInt = int(idx)
+			case int:
+				indexInt = idx
+			case string:
+				fmt.Sscanf(idx, "%d", &indexInt)
+			}
 			list := valueToGo(ctx, args[1], 0)
-			return fmt.Sprintf("Select{Index: %s, List: %s}", index, list)
+			return fmt.Sprintf("Select{Index: %d, List: %s}", indexInt, list)
 		}
 		return "Select{Index: 0, List: nil}"
 
