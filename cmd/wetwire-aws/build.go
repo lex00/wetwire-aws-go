@@ -70,6 +70,16 @@ func runBuild(packages []string, format, outputFile string) error {
 		result.Conditions,
 	)
 
+	// Set VarAttrRefs for recursive AttrRef resolution
+	varAttrRefs := make(map[string]template.VarAttrRefInfo)
+	for name, info := range result.VarAttrRefs {
+		varAttrRefs[name] = template.VarAttrRefInfo{
+			AttrRefs: info.AttrRefs,
+			VarRefs:  info.VarRefs,
+		}
+	}
+	builder.SetVarAttrRefs(varAttrRefs)
+
 	// Extract all values by running a generated Go program
 	values, err := runner.ExtractAll(
 		packages[0],

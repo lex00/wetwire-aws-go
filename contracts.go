@@ -73,6 +73,18 @@ type DiscoveredResource struct {
 	Line int
 	// Dependencies are logical names of referenced resources
 	Dependencies []string
+	// AttrRefUsages tracks Resource.Attr patterns used in this resource's properties
+	AttrRefUsages []AttrRefUsage
+}
+
+// AttrRefUsage tracks a Resource.Attr field access pattern for GetAtt resolution.
+type AttrRefUsage struct {
+	// ResourceName is the referenced resource (e.g., "LambdaRole")
+	ResourceName string
+	// Attribute is the attribute name (e.g., "Arn")
+	Attribute string
+	// FieldPath is where this usage appears in the resource (e.g., "Role")
+	FieldPath string
 }
 
 // DiscoveredParameter represents a parameter found by AST parsing.
@@ -93,6 +105,8 @@ type DiscoveredOutput struct {
 	File string
 	// Line is the line number of the declaration
 	Line int
+	// AttrRefUsages tracks Resource.Attr patterns used in this output's properties
+	AttrRefUsages []AttrRefUsage
 }
 
 // DiscoveredMapping represents a mapping found by AST parsing.

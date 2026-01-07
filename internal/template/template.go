@@ -13,25 +13,33 @@ import (
 	wetwire "github.com/lex00/wetwire-aws-go"
 )
 
+// VarAttrRefInfo mirrors discover.VarAttrRefInfo for AttrRef resolution
+type VarAttrRefInfo struct {
+	AttrRefs []wetwire.AttrRefUsage
+	VarRefs  map[string]string
+}
+
 // Builder constructs CloudFormation templates from discovered resources.
 type Builder struct {
-	resources  map[string]wetwire.DiscoveredResource
-	parameters map[string]wetwire.DiscoveredParameter
-	outputs    map[string]wetwire.DiscoveredOutput
-	mappings   map[string]wetwire.DiscoveredMapping
-	conditions map[string]wetwire.DiscoveredCondition
-	values     map[string]any // Actual struct values for serialization
+	resources   map[string]wetwire.DiscoveredResource
+	parameters  map[string]wetwire.DiscoveredParameter
+	outputs     map[string]wetwire.DiscoveredOutput
+	mappings    map[string]wetwire.DiscoveredMapping
+	conditions  map[string]wetwire.DiscoveredCondition
+	values      map[string]any                // Actual struct values for serialization
+	varAttrRefs map[string]VarAttrRefInfo     // For recursive AttrRef resolution
 }
 
 // NewBuilder creates a template builder from discovered resources.
 func NewBuilder(resources map[string]wetwire.DiscoveredResource) *Builder {
 	return &Builder{
-		resources:  resources,
-		parameters: make(map[string]wetwire.DiscoveredParameter),
-		outputs:    make(map[string]wetwire.DiscoveredOutput),
-		mappings:   make(map[string]wetwire.DiscoveredMapping),
-		conditions: make(map[string]wetwire.DiscoveredCondition),
-		values:     make(map[string]any),
+		resources:   resources,
+		parameters:  make(map[string]wetwire.DiscoveredParameter),
+		outputs:     make(map[string]wetwire.DiscoveredOutput),
+		mappings:    make(map[string]wetwire.DiscoveredMapping),
+		conditions:  make(map[string]wetwire.DiscoveredCondition),
+		values:      make(map[string]any),
+		varAttrRefs: make(map[string]VarAttrRefInfo),
 	}
 }
 
@@ -44,13 +52,111 @@ func NewBuilderFull(
 	conditions map[string]wetwire.DiscoveredCondition,
 ) *Builder {
 	return &Builder{
-		resources:  resources,
-		parameters: parameters,
-		outputs:    outputs,
-		mappings:   mappings,
-		conditions: conditions,
-		values:     make(map[string]any),
+		resources:   resources,
+		parameters:  parameters,
+		outputs:     outputs,
+		mappings:    mappings,
+		conditions:  conditions,
+		values:      make(map[string]any),
+		varAttrRefs: make(map[string]VarAttrRefInfo),
 	}
+}
+
+// SetVarAttrRefs sets the variable AttrRef info for recursive resolution.
+func (b *Builder) SetVarAttrRefs(varAttrRefs map[string]VarAttrRefInfo) {
+	b.varAttrRefs = varAttrRefs
+}
+
+// resolveAttrRefs recursively collects all AttrRefUsages for a variable.
+func (b *Builder) resolveAttrRefs(varName string) []wetwire.AttrRefUsage {
+	visited := make(map[string]bool)
+	return b.resolveAttrRefsRecursive(varName, "", visited)
+}
+
+func (b *Builder) resolveAttrRefsRecursive(varName, pathPrefix string, visited map[string]bool) []wetwire.AttrRefUsage {
+	if visited[varName] {
+		return nil
+	}
+	visited[varName] = true
+
+	info, ok := b.varAttrRefs[varName]
+	if !ok {
+		return nil
+	}
+
+	var result []wetwire.AttrRefUsage
+
+	// Add direct AttrRefs with path prefix
+	for _, ref := range info.AttrRefs {
+		fullPath := ref.FieldPath
+		if pathPrefix != "" {
+			fullPath = pathPrefix + "." + ref.FieldPath
+		}
+		result = append(result, wetwire.AttrRefUsage{
+			ResourceName: ref.ResourceName,
+			Attribute:    ref.Attribute,
+			FieldPath:    fullPath,
+		})
+	}
+
+	// Recursively resolve variable references (via VarRefs)
+	for fieldPath, refVarName := range info.VarRefs {
+		fullPath := fieldPath
+		if pathPrefix != "" {
+			fullPath = pathPrefix + "." + fieldPath
+		}
+		nested := b.resolveAttrRefsRecursive(refVarName, fullPath, visited)
+		result = append(result, nested...)
+	}
+
+	// Also resolve AttrRefs from dependencies (for array elements that overwrite VarRefs)
+	// Get the resource's dependencies if it's a tracked resource
+	if res, ok := b.resources[varName]; ok {
+		for _, depName := range res.Dependencies {
+			// Recursively resolve all deps
+			nested := b.resolveAttrRefsRecursive(depName, "", visited)
+			result = append(result, nested...)
+		}
+	}
+
+	return result
+}
+
+// resolveAllAttrRefs collects all AttrRefUsages reachable from a variable
+// by following all dependencies transitively.
+func (b *Builder) resolveAllAttrRefs(varName string) []wetwire.AttrRefUsage {
+	visited := make(map[string]bool)
+	return b.resolveAllAttrRefsRecursive(varName, visited)
+}
+
+func (b *Builder) resolveAllAttrRefsRecursive(varName string, visited map[string]bool) []wetwire.AttrRefUsage {
+	if visited[varName] {
+		return nil
+	}
+	visited[varName] = true
+
+	var result []wetwire.AttrRefUsage
+
+	// Get AttrRefs from this variable
+	if info, ok := b.varAttrRefs[varName]; ok {
+		result = append(result, info.AttrRefs...)
+
+		// Follow VarRefs
+		for _, refVarName := range info.VarRefs {
+			nested := b.resolveAllAttrRefsRecursive(refVarName, visited)
+			result = append(result, nested...)
+		}
+	}
+
+	// Follow dependencies if it's a resource
+	if res, ok := b.resources[varName]; ok {
+		for _, depName := range res.Dependencies {
+			nested := b.resolveAllAttrRefsRecursive(depName, visited)
+			result = append(result, nested...)
+		}
+	}
+
+	return result
 }
 
 // SetValue associates a resource value with its logical name.
@@ -135,9 +241,9 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 	// Build Outputs section
 	if len(b.outputs) > 0 {
 		template.Outputs = make(map[string]wetwire.Output)
-		for name := range b.outputs {
+		for name, discovered := range b.outputs {
 			if val, ok := b.values[name]; ok {
-				output := b.serializeOutput(name, val)
+				output := b.serializeOutput(name, val, discovered)
 				template.Outputs[name] = output
 			}
 		}
@@ -203,10 +309,16 @@ func (b *Builder) serializeParameter(name string, value any) wetwire.Parameter {
 }
 
 // serializeOutput converts an Output value to the template format.
-func (b *Builder) serializeOutput(name string, value any) wetwire.Output {
+func (b *Builder) serializeOutput(name string, value any, discovered wetwire.DiscoveredOutput) wetwire.Output {
 	valMap, ok := value.(map[string]any)
 	if !ok {
 		return wetwire.Output{}
+	}
+
+	// Build a lookup map from field path to AttrRefUsage
+	attrRefsByPath := make(map[string]wetwire.AttrRefUsage)
+	for _, usage := range discovered.AttrRefUsages {
+		attrRefsByPath[usage.FieldPath] = usage
 	}
 
 	output := wetwire.Output{}
@@ -215,7 +327,8 @@ func (b *Builder) serializeOutput(name string, value any) wetwire.Output {
 		output.Description = desc
 	}
 	if val, ok := valMap["Value"]; ok {
-		output.Value = val
+		// Apply AttrRef fix to the Value field
+		output.Value = b.transformValueWithPath(val, "Value", attrRefsByPath)
 	}
 	if exp, ok := valMap["Export"].(map[string]any); ok {
 		if expName, ok := exp["Name"].(string); ok {
@@ -254,24 +367,83 @@ func (b *Builder) serializeResource(name string, value any, res wetwire.Discover
 }
 
 // transformRefs converts resource references to CloudFormation intrinsics.
+// It also fixes empty GetAtt references using AttrRefUsages from discovery.
 func (b *Builder) transformRefs(name string, props map[string]any, res wetwire.DiscoveredResource) map[string]any {
-	result := make(map[string]any)
+	// Build a lookup map from field path to AttrRefUsage
+	// Use recursive resolution to get AttrRefs from all transitively reachable variables
+	attrRefsByPath := make(map[string]wetwire.AttrRefUsage)
+	resolvedAttrRefs := b.resolveAllAttrRefs(name)
+	for _, usage := range resolvedAttrRefs {
+		attrRefsByPath[usage.FieldPath] = usage
+	}
 
+	result := make(map[string]any)
 	for key, value := range props {
-		result[key] = b.transformValue(value)
+		result[key] = b.transformValueWithPath(value, key, attrRefsByPath)
 	}
 
 	return result
 }
 
-func (b *Builder) transformValue(value any) any {
+// stripArrayIndices removes array indices from a path for fuzzy matching.
+// e.g., "Policies[0].PolicyDocument.Statement[1].Resource[0]" -> "Policies.PolicyDocument.Statement.Resource"
+func stripArrayIndices(path string) string {
+	result := make([]byte, 0, len(path))
+	i := 0
+	for i < len(path) {
+		if path[i] == '[' {
+			// Skip until closing bracket
+			for i < len(path) && path[i] != ']' {
+				i++
+			}
+			if i < len(path) {
+				i++ // skip ']'
+			}
+		} else {
+			result = append(result, path[i])
+			i++
+		}
+	}
+	return string(result)
+}
+
+func (b *Builder) transformValueWithPath(value any, path string, attrRefsByPath map[string]wetwire.AttrRefUsage) any {
 	switch v := value.(type) {
 	case map[string]any:
-		// Check if this is already an intrinsic function
-		if _, ok := v["Ref"]; ok {
+		// Check if this is a GetAtt with empty resource name
+		if getAtt, ok := v["Fn::GetAtt"]; ok {
+			if arr, isArr := getAtt.([]any); isArr && len(arr) >= 2 {
+				resourceName, _ := arr[0].(string)
+				if resourceName == "" {
+					// Look up the AttrRefUsage for this path
+					// First try exact match
+					if usage, found := attrRefsByPath[path]; found {
+						return map[string]any{
+							"Fn::GetAtt": []string{usage.ResourceName, usage.Attribute},
+						}
+					}
+					// Then try matching with stripped array indices
+					strippedPath := stripArrayIndices(path)
+					if usage, found := attrRefsByPath[strippedPath]; found {
+						return map[string]any{
+							"Fn::GetAtt": []string{usage.ResourceName, usage.Attribute},
+						}
+					}
+					// Try suffix matching - find any AttrRefUsage whose path is a suffix of strippedPath
+					for refPath, usage := range attrRefsByPath {
+						if strings.HasSuffix(strippedPath, "."+refPath) || strippedPath == refPath {
+							return map[string]any{
+								"Fn::GetAtt": []string{usage.ResourceName, usage.Attribute},
+							}
+						}
+					}
+				}
+			}
 			return v
 		}
-		if _, ok := v["Fn::GetAtt"]; ok {
+
+		// Check if this is already an intrinsic function
+		if _, ok := v["Ref"]; ok {
 			return v
 		}
 		if _, ok := v["Fn::Sub"]; ok {
@@ -281,7 +453,8 @@ func (b *Builder) transformValue(value any) any {
 		// Recursively transform map values
 		result := make(map[string]any)
 		for key, val := range v {
-			result[key] = b.transformValue(val)
+			newPath := path + "." + key
+			result[key] = b.transformValueWithPath(val, newPath, attrRefsByPath)
 		}
 		return result
 
@@ -289,7 +462,8 @@ func (b *Builder) transformValue(value any) any {
 		// Recursively transform slice elements
 		result := make([]any, len(v))
 		for i, elem := range v {
-			result[i] = b.transformValue(elem)
+			// For arrays, check if any AttrRefUsage matches the base path
+			result[i] = b.transformValueWithPath(elem, path, attrRefsByPath)
 		}
 		return result
 

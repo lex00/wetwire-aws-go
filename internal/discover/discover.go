@@ -70,19 +70,30 @@ type Result struct {
 	// AllVars tracks all package-level var declarations (including non-resources)
 	// Used to avoid false positives when checking dependencies
 	AllVars map[string]bool
+	// VarAttrRefs tracks AttrRefUsages for all variables (including property types)
+	// Key is variable name, value includes AttrRefs and referenced var names with field paths
+	VarAttrRefs map[string]VarAttrRefInfo
 	// Errors encountered during parsing
 	Errors []error
+}
+
+// VarAttrRefInfo tracks AttrRef usages and variable references for a single variable
+type VarAttrRefInfo struct {
+	AttrRefs []wetwire.AttrRefUsage
+	// VarRefs maps field path to referenced variable name
+	VarRefs map[string]string
 }
 
 // Discover scans Go packages for CloudFormation resource declarations.
 func Discover(opts Options) (*Result, error) {
 	result := &Result{
-		Resources:  make(map[string]wetwire.DiscoveredResource),
-		Parameters: make(map[string]wetwire.DiscoveredParameter),
-		Outputs:    make(map[string]wetwire.DiscoveredOutput),
-		Mappings:   make(map[string]wetwire.DiscoveredMapping),
-		Conditions: make(map[string]wetwire.DiscoveredCondition),
-		AllVars:    make(map[string]bool),
+		Resources:   make(map[string]wetwire.DiscoveredResource),
+		Parameters:  make(map[string]wetwire.DiscoveredParameter),
+		Outputs:     make(map[string]wetwire.DiscoveredOutput),
+		Mappings:    make(map[string]wetwire.DiscoveredMapping),
+		Conditions:  make(map[string]wetwire.DiscoveredCondition),
+		AllVars:     make(map[string]bool),
+		VarAttrRefs: make(map[string]VarAttrRefInfo),
 	}
 
 	for _, pkg := range opts.Packages {
@@ -225,10 +236,13 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 					}
 					continue
 				case "Output":
+					// Extract AttrRef usages from output fields
+					_, attrRefs := extractDependencies(compLit, imports)
 					result.Outputs[name] = wetwire.DiscoveredOutput{
-						Name: name,
-						File: filename,
-						Line: pos.Line,
+						Name:          name,
+						File:          filename,
+						Line:          pos.Line,
+						AttrRefUsages: attrRefs,
 					}
 					continue
 				case "Mapping":
@@ -249,6 +263,16 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 				}
 			}
 
+			// Extract dependencies, AttrRef usages, and var refs from field values
+			// Do this for ALL composite literals, not just resource packages
+			deps, attrRefs, varRefs := extractDependenciesWithVarRefs(compLit, imports)
+
+			// Track AttrRefs for all variables (including property types and intrinsics)
+			result.VarAttrRefs[name] = VarAttrRefInfo{
+				AttrRefs: attrRefs,
+				VarRefs:  varRefs,
+			}
+
 			// Check if this is a known resource package
 			if _, known := knownResourcePackages[pkgName]; !known {
 				continue
@@ -260,16 +284,14 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 				continue
 			}
 
-			// Extract dependencies from field values
-			deps := extractDependencies(compLit, imports)
-
 			result.Resources[name] = wetwire.DiscoveredResource{
-				Name:         name,
-				Type:         fmt.Sprintf("%s.%s", pkgName, typeName),
-				Package:      file.Name.Name,
-				File:         filename,
-				Line:         pos.Line,
-				Dependencies: deps,
+				Name:          name,
+				Type:          fmt.Sprintf("%s.%s", pkgName, typeName),
+				Package:       file.Name.Name,
+				File:          filename,
+				Line:          pos.Line,
+				Dependencies:  deps,
+				AttrRefUsages: attrRefs,
 			}
 		}
 	}
@@ -316,8 +338,19 @@ func extractTypeName(expr ast.Expr) (typeName, pkgName string) {
 // It looks for patterns like:
 //   - OtherResource (identifier reference)
 //   - OtherResource.Arn (selector for AttrRef)
-func extractDependencies(lit *ast.CompositeLit, imports map[string]string) []string {
+//
+// Returns both dependencies and AttrRef usages for GetAtt resolution.
+func extractDependencies(lit *ast.CompositeLit, imports map[string]string) ([]string, []wetwire.AttrRefUsage) {
+	deps, attrRefs, _ := extractDependenciesWithVarRefs(lit, imports)
+	return deps, attrRefs
+}
+
+// extractDependenciesWithVarRefs is like extractDependencies but also returns variable references
+// with their field paths, for recursive AttrRef resolution.
+func extractDependenciesWithVarRefs(lit *ast.CompositeLit, imports map[string]string) ([]string, []wetwire.AttrRefUsage, map[string]string) {
 	var deps []string
+	var attrRefs []wetwire.AttrRefUsage
+	varRefs := make(map[string]string) // field path -> var name
 	seen := make(map[string]bool)
 
 	for _, elt := range lit.Elts {
@@ -326,17 +359,28 @@ func extractDependencies(lit *ast.CompositeLit, imports map[string]string) []str
 			continue
 		}
 
+		// Get the field name for the path
+		fieldName := ""
+		if ident, ok := kv.Key.(*ast.Ident); ok {
+			fieldName = ident.Name
+		}
+
 		// Recursively find dependencies in the value
-		findDeps(kv.Value, &deps, seen, imports)
+		findDepsWithVarRefs(kv.Value, &deps, &attrRefs, varRefs, seen, imports, fieldName)
 	}
 
-	return deps
+	return deps, attrRefs, varRefs
 }
 
-func findDeps(expr ast.Expr, deps *[]string, seen map[string]bool, imports map[string]string) {
+func findDeps(expr ast.Expr, deps *[]string, attrRefs *[]wetwire.AttrRefUsage, seen map[string]bool, imports map[string]string, fieldPath string) {
+	// Delegate to findDepsWithVarRefs with a nil varRefs map
+	findDepsWithVarRefs(expr, deps, attrRefs, nil, seen, imports, fieldPath)
+}
+
+func findDepsWithVarRefs(expr ast.Expr, deps *[]string, attrRefs *[]wetwire.AttrRefUsage, varRefs map[string]string, seen map[string]bool, imports map[string]string, fieldPath string) {
 	switch v := expr.(type) {
 	case *ast.Ident:
-		// Could be a reference to another resource
+		// Could be a reference to another resource or variable
 		// Skip if it's a known package or common identifier
 		name := v.Name
 		if _, isImport := imports[name]; isImport {
@@ -345,11 +389,15 @@ func findDeps(expr ast.Expr, deps *[]string, seen map[string]bool, imports map[s
 		if isCommonIdent(name) {
 			return
 		}
-		// Heuristic: starts with uppercase = likely a resource reference
+		// Heuristic: starts with uppercase = likely a resource/var reference
 		if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 			if !seen[name] {
 				*deps = append(*deps, name)
 				seen[name] = true
+			}
+			// Track this variable reference with its field path
+			if varRefs != nil && fieldPath != "" {
+				varRefs[fieldPath] = name
 			}
 		}
 
@@ -361,12 +409,18 @@ func findDeps(expr ast.Expr, deps *[]string, seen map[string]bool, imports map[s
 			if _, isImport := imports[name]; isImport {
 				return
 			}
-			// This is likely Resource.Attribute
+			// This is likely Resource.Attribute (e.g., LambdaRole.Arn)
 			if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 				if !seen[name] {
 					*deps = append(*deps, name)
 					seen[name] = true
 				}
+				// Record the AttrRef usage for GetAtt resolution
+				*attrRefs = append(*attrRefs, wetwire.AttrRefUsage{
+					ResourceName: name,
+					Attribute:    v.Sel.Name,
+					FieldPath:    fieldPath,
+				})
 			}
 		}
 
@@ -374,29 +428,84 @@ func findDeps(expr ast.Expr, deps *[]string, seen map[string]bool, imports map[s
 		// Nested struct, check its elements
 		for _, elt := range v.Elts {
 			if kv, ok := elt.(*ast.KeyValueExpr); ok {
-				findDeps(kv.Value, deps, seen, imports)
+				// Build nested field path
+				nestedPath := fieldPath
+				if ident, ok := kv.Key.(*ast.Ident); ok {
+					if fieldPath != "" {
+						nestedPath = fieldPath + "." + ident.Name
+					} else {
+						nestedPath = ident.Name
+					}
+				}
+				findDepsWithVarRefs(kv.Value, deps, attrRefs, varRefs, seen, imports, nestedPath)
 			} else {
-				findDeps(elt, deps, seen, imports)
+				findDepsWithVarRefs(elt, deps, attrRefs, varRefs, seen, imports, fieldPath)
 			}
 		}
 
 	case *ast.UnaryExpr:
 		// Handle &Type{...}
-		findDeps(v.X, deps, seen, imports)
+		findDepsWithVarRefs(v.X, deps, attrRefs, varRefs, seen, imports, fieldPath)
 
 	case *ast.CallExpr:
 		// Handle function calls - check arguments
 		for _, arg := range v.Args {
-			findDeps(arg, deps, seen, imports)
+			findDepsWithVarRefs(arg, deps, attrRefs, varRefs, seen, imports, fieldPath)
 		}
 
 	case *ast.SliceExpr:
-		findDeps(v.X, deps, seen, imports)
+		findDepsWithVarRefs(v.X, deps, attrRefs, varRefs, seen, imports, fieldPath)
 
 	case *ast.IndexExpr:
-		findDeps(v.X, deps, seen, imports)
-		findDeps(v.Index, deps, seen, imports)
+		findDepsWithVarRefs(v.X, deps, attrRefs, varRefs, seen, imports, fieldPath)
+		findDepsWithVarRefs(v.Index, deps, attrRefs, varRefs, seen, imports, fieldPath)
 	}
+}
+
+// ResolveAttrRefs recursively collects all AttrRefUsages for a variable by following
+// its variable references and prefixing paths appropriately.
+func (r *Result) ResolveAttrRefs(varName string) []wetwire.AttrRefUsage {
+	visited := make(map[string]bool)
+	return r.resolveAttrRefsRecursive(varName, "", visited)
+}
+
+func (r *Result) resolveAttrRefsRecursive(varName, pathPrefix string, visited map[string]bool) []wetwire.AttrRefUsage {
+	if visited[varName] {
+		return nil
+	}
+	visited[varName] = true
+
+	info, ok := r.VarAttrRefs[varName]
+	if !ok {
+		return nil
+	}
+
+	var result []wetwire.AttrRefUsage
+
+	// Add direct AttrRefs with path prefix
+	for _, ref := range info.AttrRefs {
+		fullPath := ref.FieldPath
+		if pathPrefix != "" {
+			fullPath = pathPrefix + "." + ref.FieldPath
+		}
+		result = append(result, wetwire.AttrRefUsage{
+			ResourceName: ref.ResourceName,
+			Attribute:    ref.Attribute,
+			FieldPath:    fullPath,
+		})
+	}
+
+	// Recursively resolve variable references
+	for fieldPath, refVarName := range info.VarRefs {
+		fullPath := fieldPath
+		if pathPrefix != "" {
+			fullPath = pathPrefix + "." + fieldPath
+		}
+		nested := r.resolveAttrRefsRecursive(refVarName, fullPath, visited)
+		result = append(result, nested...)
+	}
+
+	return result
 }
 
 // isCommonIdent returns true for identifiers that are likely not resource names.
