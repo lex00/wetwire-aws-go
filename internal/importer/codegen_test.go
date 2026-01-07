@@ -1401,3 +1401,36 @@ Resources:
 	assert.Contains(t, securityCode, "ssm.Association_S3OutputLocation{", "Should use correct nested type inside If")
 	assert.NotContains(t, securityCode, "ssm.Association_InstanceAssociationOutputLocation{OutputS3BucketName", "Should NOT use parent type for S3Location value")
 }
+
+// TestGenerateCode_SubWithMapVariables tests that SubWithMap.Variables is always
+// generated as Json{}, not as a struct type.
+// Issue #75: SubWithMap.Variables should be map, not struct type
+func TestGenerateCode_SubWithMapVariables(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: MyFunction
+      Runtime: python3.9
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        ZipFile:
+          Fn::Sub:
+            - |
+              import boto3
+              REGION = "${Region}"
+            - Region: !Ref AWS::Region
+`)
+
+	ir, err := ParseTemplateContent(content, "subtest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "subtest")
+	computeCode := files["compute.go"]
+
+	// SubWithMap.Variables should use Json{}, not struct type
+	assert.Contains(t, computeCode, `Variables: Json{`, "SubWithMap.Variables should be Json")
+	assert.NotContains(t, computeCode, `Variables: lambda.Function_Code{`, "Should NOT use struct type for Variables")
+}
