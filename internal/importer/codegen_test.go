@@ -322,11 +322,12 @@ func TestSanitizeGoName(t *testing.T) {
 	}{
 		{"ValidName", "ValidName"},
 		{"123Invalid", "_23Invalid"},
-		{"with-dash", "withdash"},
-		{"with.dot", "withdot"},
-		{"type", "type_"},       // Go keyword
-		{"package", "package_"}, // Go keyword
+		{"with-dash", "Withdash"},    // Capitalized for export
+		{"with.dot", "Withdot"},      // Capitalized for export
+		{"type", "Type"},             // Capitalized, no longer a keyword
+		{"package", "Package"},       // Capitalized, no longer a keyword
 		{"", "_"},
+		{"myBucket", "MyBucket"},     // Lowercase capitalized
 	}
 
 	for _, tt := range tests {
@@ -1111,4 +1112,26 @@ Resources:
 	// Should have two different variable names for the ingress rules
 	assert.Contains(t, networkCode, "PortN3306 =", "First ingress rule should have PortN3306")
 	assert.Contains(t, networkCode, "PortN3306_2 =", "Second ingress rule should have PortN3306_2")
+}
+
+// TestGenerateCode_LowercaseResourceName tests that lowercase resource names are capitalized.
+// Issue #58: Lowercase variable prefix causes undefined errors.
+func TestGenerateCode_LowercaseResourceName(t *testing.T) {
+	content := []byte(`
+Resources:
+  myBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "lowercase")
+	storageCode := files["storage.go"]
+
+	// Variable name should be capitalized for export
+	assert.Contains(t, storageCode, "var MyBucket =", "Lowercase resource name should be capitalized")
+	assert.NotContains(t, storageCode, "var myBucket =", "Should not have lowercase variable name")
 }

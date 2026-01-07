@@ -13,7 +13,7 @@ var rMSDirectoryVpcSettings = directoryservice.MicrosoftAD_VpcSettings{
 	VpcId: pVPCID,
 }
 
-var rMSDirectory = directoryservice.MicrosoftAD{
+var RMSDirectory = directoryservice.MicrosoftAD{
 	CreateAlias: pCreateAlias,
 	Edition: pEdition,
 	EnableSso: pEnableSingleSignOn,

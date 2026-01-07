@@ -211,7 +211,12 @@ var reservedVarNames = map[string]bool{
 }
 
 // sanitizeVarName returns a safe Go variable name that doesn't collide with intrinsics types.
+// Also ensures the variable is exported (starts with uppercase) for cross-package access.
 func sanitizeVarName(name string) string {
+	// Capitalize first letter to ensure the variable is exported
+	if len(name) > 0 && name[0] >= 'a' && name[0] <= 'z' {
+		name = strings.ToUpper(name[:1]) + name[1:]
+	}
 	if reservedVarNames[name] {
 		return name + "Resource"
 	}
@@ -2457,13 +2462,15 @@ func ToPascalCase(s string) string {
 }
 
 // SanitizeGoName ensures a name is a valid Go identifier.
+// Also capitalizes the first letter to ensure the variable is exported.
 func SanitizeGoName(name string) string {
 	// Remove invalid characters
 	var result strings.Builder
 	for i, r := range name {
 		if i == 0 {
 			if unicode.IsLetter(r) || r == '_' {
-				result.WriteRune(r)
+				// Capitalize first letter for export
+				result.WriteRune(unicode.ToUpper(r))
 			} else {
 				result.WriteRune('_')
 			}

@@ -64,4 +64,4 @@ var pVPCID = Parameter{
 	Description: "The VPC ID in which to create the Microsoft Active Directory server.\n",
 }
 
-var cAliasCondition = Equals{pCreateAlias, "true"}
+var CAliasCondition = Equals{pCreateAlias, "true"}
