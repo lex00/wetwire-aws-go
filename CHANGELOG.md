@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-01-06
+
 ### Added
 
 - **Full template component support**: Complete round-trip support for all CloudFormation template sections
@@ -16,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Template builder outputs complete CloudFormation templates with all sections
   - Import codegen generates full `Parameter{}` structs instead of `Param()` calls
 - Helper functions `IntPtr()` and `Float64Ptr()` for parameter constraint fields
+- Dynamic CloudFormation type resolution for all 263 services (replaces hardcoded map)
+- Round-trip build validation in import script
 
 ## [1.3.1] - 2026-01-05
 
