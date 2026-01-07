@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Builder: Empty `Fn::GetAtt` for AttrRefs inside intrinsic functions (`Join`, `Sub`, `If`, etc.) now correctly resolved (#92)
+  - Root cause: Path mismatch between discovery (Go field names) and serialization (CF intrinsic keys)
+  - Added `intrinsicFieldNames` mapping to translate CF array positions to Go field names
+- Discovery: Added all 263 AWS services to `knownResourcePackages` (#90)
+  - Previously only 21 services were recognized, causing resources from ApplicationAutoScaling, CloudWatch, ElasticLoadBalancingV2, AutoScaling, and 240+ other services to be silently skipped
+  - ECS schedule example now discovers 24 resources (was 15)
+
 ## [1.4.1] - 2026-01-07
 
 ### Fixed
