@@ -693,7 +693,7 @@ func codeUsesIntrinsics(code string) bool {
 		"AWS_REGION", "AWS_ACCOUNT_ID", "AWS_STACK_NAME", "AWS_STACK_ID",
 		"AWS_PARTITION", "AWS_URL_SUFFIX", "AWS_NO_VALUE", "AWS_NOTIFICATION_ARNS",
 		"PolicyDocument{", "PolicyStatement{", "DenyStatement{", "AllowStatement{",
-		"ServicePrincipal{", "AWSPrincipal{", "FederatedPrincipal{",
+		"ServicePrincipal{", "AWSPrincipal{", "FederatedPrincipal{", "Tag{",
 	}
 	for _, t := range intrinsicTypes {
 		if strings.Contains(code, t) {
@@ -1284,6 +1284,11 @@ func generatePropertyBlock(ctx *codegenContext, block propertyBlock) string {
 	// Always use value types (no & prefix) for AST extraction compatibility
 	// The consuming code will take addresses as needed
 	lines = append(lines, fmt.Sprintf("var %s = %s{", block.varName, block.typeName))
+
+	// Add intrinsics import if this is a Tag type
+	if block.typeName == "Tag" {
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+	}
 
 	// Set type context from block type name (e.g., "s3.Bucket_BucketEncryption" -> "Bucket_BucketEncryption")
 	// This is needed for nested property type resolution
