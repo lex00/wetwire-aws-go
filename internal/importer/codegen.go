@@ -1535,7 +1535,15 @@ func generateArrayElementVarName(ctx *codegenContext, parentVarName string, prop
 
 	// Use singular form for array element names
 	singularProp := singularize(propName)
-	return parentVarName + singularProp + suffix
+	baseName := parentVarName + singularProp + suffix
+
+	// Deduplicate: if name was already used, append an index
+	ctx.blockNameCount[baseName]++
+	count := ctx.blockNameCount[baseName]
+	if count > 1 {
+		return fmt.Sprintf("%s_%d", baseName, count)
+	}
+	return baseName
 }
 
 // cleanForVarName cleans a string value for use in a Go variable name.

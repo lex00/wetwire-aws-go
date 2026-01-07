@@ -26,6 +26,11 @@ var ServiceCatalogProductTagOptionsUser = servicecatalog.TagOption{
 	Value: ProductUser,
 }
 
+var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
+	AccountId: AccountIdOfChildAWSAccount,
+	PortfolioId: ServiceCatalogPortfolio,
+}
+
 var ServiceCatalogPortfolioTagOwner = Tag{
 	Key: "Owner",
 	Value: Owner,
@@ -62,9 +67,4 @@ var ServiceCatalogProductTagOptionsDept = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "Dept",
 	Value: ProductDept,
-}
-
-var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
-	AccountId: AccountIdOfChildAWSAccount,
-	PortfolioId: ServiceCatalogPortfolio,
 }

@@ -1081,3 +1081,34 @@ Resources:
 	assert.Contains(t, computeCode, "ResourceType:", "Nested types should use ResourceType field name")
 	assert.NotContains(t, computeCode, "ResourceTypeProp:", "Nested types should NOT use ResourceTypeProp")
 }
+
+// TestGenerateCode_DuplicateArrayElementNames tests that duplicate array elements get unique names.
+// Issue #57: Variable name redeclaration.
+func TestGenerateCode_DuplicateArrayElementNames(t *testing.T) {
+	content := []byte(`
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Test SG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 10.0.0.0/24
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 192.168.0.0/24
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "dupnames")
+	networkCode := files["network.go"]
+
+	// Should have two different variable names for the ingress rules
+	assert.Contains(t, networkCode, "PortN3306 =", "First ingress rule should have PortN3306")
+	assert.Contains(t, networkCode, "PortN3306_2 =", "Second ingress rule should have PortN3306_2")
+}

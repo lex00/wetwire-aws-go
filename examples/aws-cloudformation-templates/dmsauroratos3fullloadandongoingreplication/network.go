@@ -40,7 +40,7 @@ var AttachGateway = ec2.VPCGatewayAttachment{
 	VpcId: VPC,
 }
 
-var AuroraSecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress{
+var AuroraSecurityGroupSecurityGroupIngressPortN3306_2 = ec2.SecurityGroup_Ingress{
 	CidrIp: "10.0.0.0/24",
 	FromPort: "3306",
 	IpProtocol: "tcp",
@@ -57,7 +57,7 @@ var AuroraSecurityGroupSecurityGroupIngressPortN3306 = ec2.SecurityGroup_Ingress
 var AuroraSecurityGroup = ec2.SecurityGroup{
 	GroupDescription: "Security group for Aurora SampleDB DB Instance",
 	GroupName: "Aurora SampleDB Security Group",
-	SecurityGroupIngress: []any{AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306},
+	SecurityGroupIngress: []any{AuroraSecurityGroupSecurityGroupIngressPortN3306, AuroraSecurityGroupSecurityGroupIngressPortN3306_2},
 	VpcId: VPC,
 }
 

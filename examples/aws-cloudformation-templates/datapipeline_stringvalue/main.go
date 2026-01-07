@@ -83,7 +83,7 @@ var DynamoDBInputS3OutputHivePipelineObjectIoNegfileNegbufferNeFieldType = datap
 	StringValue: "Property",
 }
 
-var DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty = datapipeline.Pipeline_Field{
+var DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty_2 = datapipeline.Pipeline_Field{
 	Key: "property",
 	RefValue: "fs-s3-block-size",
 }
@@ -113,12 +113,12 @@ var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldType = datapipeli
 	StringValue: "EmrCluster",
 }
 
-var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications = datapipeline.Pipeline_Field{
+var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications_3 = datapipeline.Pipeline_Field{
 	Key: "applications",
 	StringValue: "pig",
 }
 
-var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications = datapipeline.Pipeline_Field{
+var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications_2 = datapipeline.Pipeline_Field{
 	Key: "applications",
 	StringValue: "hive",
 }
@@ -158,13 +158,13 @@ var DynamoDBInputS3OutputHivePipelineObjectIoNegfileNegbufferNe = datapipeline.P
 }
 
 var DynamoDBInputS3OutputHivePipelineObjectCoresite = datapipeline.Pipeline_PipelineObject{
-	Fields: []any{DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldType, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldClassification, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty},
+	Fields: []any{DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldType, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldClassification, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty, DynamoDBInputS3OutputHivePipelineObjectCoresiteFieldProperty_2},
 	Id: "coresite",
 	Name: "coresite",
 }
 
 var DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCc = datapipeline.Pipeline_PipelineObject{
-	Fields: []any{DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldReleaseLabel, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldType, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldConfiguration},
+	Fields: []any{DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldReleaseLabel, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications_2, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldApplications_3, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldType, DynamoDBInputS3OutputHivePipelineObjectResourceIdI1mCcFieldConfiguration},
 	Id: "ResourceId_I1mCc",
 	Name: "ReleaseLabelCluster",
 }
