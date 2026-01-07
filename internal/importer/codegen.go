@@ -16,12 +16,13 @@ import (
 // This matches the Python implementation in linter/splitting.py.
 var serviceCategories = map[string]string{
 	// Compute
-	"EC2":         "compute",
-	"Lambda":      "compute",
-	"ECS":         "compute",
-	"EKS":         "compute",
-	"Batch":       "compute",
-	"AutoScaling": "compute",
+	"EC2":                    "compute",
+	"Lambda":                 "compute",
+	"ECS":                    "compute",
+	"EKS":                    "compute",
+	"Batch":                  "compute",
+	"AutoScaling":            "compute",
+	"ApplicationAutoScaling": "compute",
 	// Storage
 	"S3":  "storage",
 	"EFS": "storage",

@@ -1435,3 +1435,86 @@ Resources:
 	assert.Contains(t, computeCode, `Variables: Json{`, "SubWithMap.Variables should be Json")
 	assert.NotContains(t, computeCode, `Variables: lambda.Function_Code{`, "Should NOT use struct type for Variables")
 }
+
+// TestGenerateCode_ApplicationAutoScaling tests that ApplicationAutoScaling resources
+// (ScalableTarget, ScalingPolicy) are correctly imported and not skipped.
+// Issue #90: ApplicationAutoScaling resources may be skipped during import
+func TestGenerateCode_ApplicationAutoScaling(t *testing.T) {
+	content := []byte(`
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DynamoDB with ApplicationAutoScaling
+
+Resources:
+  MyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TestTable
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  TableReadScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 100
+      MinCapacity: 5
+      ResourceId: !Sub table/${MyTable}
+      ScalableDimension: dynamodb:table:ReadCapacityUnits
+      ServiceNamespace: dynamodb
+
+  TableReadScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: ReadAutoScalingPolicy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref TableReadScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 70.0
+        PredefinedMetricSpecification:
+          PredefinedMetricType: DynamoDBReadCapacityUtilization
+`)
+
+	ir, err := ParseTemplateContent(content, "scaling_test.yaml")
+	require.NoError(t, err)
+
+	// Verify resources are in the IR
+	assert.Contains(t, ir.Resources, "MyTable", "MyTable should be in IR")
+	assert.Contains(t, ir.Resources, "TableReadScalableTarget", "TableReadScalableTarget should be in IR")
+	assert.Contains(t, ir.Resources, "TableReadScalingPolicy", "TableReadScalingPolicy should be in IR")
+
+	files := GenerateCode(ir, "scaling_test")
+
+	// DynamoDB goes to database.go
+	dbCode, hasDB := files["database.go"]
+	require.True(t, hasDB, "Should generate database.go for DynamoDB")
+	assert.Contains(t, dbCode, "var MyTable = dynamodb.Table{")
+
+	// ApplicationAutoScaling goes to compute.go (in serviceCategories map)
+	computeCode, hasCompute := files["compute.go"]
+	require.True(t, hasCompute, "Should generate compute.go for ApplicationAutoScaling resources")
+
+	// Check ScalableTarget is present
+	assert.Contains(t, computeCode, `"github.com/lex00/wetwire-aws-go/resources/applicationautoscaling"`,
+		"Should import applicationautoscaling package")
+	assert.Contains(t, computeCode, "var TableReadScalableTarget = applicationautoscaling.ScalableTarget{",
+		"ScalableTarget should be generated")
+	assert.Contains(t, computeCode, "MaxCapacity: 100",
+		"ScalableTarget should have MaxCapacity property")
+	assert.Contains(t, computeCode, "MinCapacity: 5",
+		"ScalableTarget should have MinCapacity property")
+	assert.Contains(t, computeCode, `ServiceNamespace: "dynamodb"`,
+		"ScalableTarget should have ServiceNamespace property")
+
+	// Check ScalingPolicy is present
+	assert.Contains(t, computeCode, "var TableReadScalingPolicy = applicationautoscaling.ScalingPolicy{",
+		"ScalingPolicy should be generated")
+	assert.Contains(t, computeCode, `PolicyName: "ReadAutoScalingPolicy"`,
+		"ScalingPolicy should have PolicyName property")
+}
