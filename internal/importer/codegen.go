@@ -978,7 +978,8 @@ func newCodegenContext(template *IRTemplate, packageName string) *codegenContext
 func generateParameter(ctx *codegenContext, param *IRParameter) string {
 	var lines []string
 
-	varName := param.LogicalID
+	// Capitalize parameter name to ensure it's exported
+	varName := sanitizeVarName(param.LogicalID)
 	if param.Description != "" {
 		// Wrap long descriptions to avoid multi-line comment issues
 		desc := wrapComment(param.Description, 80)
@@ -2097,10 +2098,10 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		if _, ok := ctx.template.Resources[target]; ok {
 			return sanitizeVarName(target)
 		}
-		// Check if it's a parameter - use bare name and track usage
+		// Check if it's a parameter - use sanitized name and track usage
 		if _, ok := ctx.template.Parameters[target]; ok {
 			ctx.usedParameters[target] = true
-			return target
+			return sanitizeVarName(target)
 		}
 		// Unknown reference - use sanitized variable name (let Go compiler catch undefined)
 		// This avoids generating Ref{} which violates style guidelines
