@@ -31,11 +31,11 @@ var myEC2InstanceSSMTagName = Tag{
 
 var myEC2InstanceSSMSsmAssociation1 = ec2.Instance_SsmAssociation{
 	AssociationParameters: []any{myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryId, myEC2InstanceSSMSsmAssociation1AssociationParameterDirectoryName, myEC2InstanceSSMSsmAssociation1AssociationParameterDnsIpAddresses},
-	DocumentName: myssmdocument,
+	DocumentName: Myssmdocument,
 }
 
-var myEC2InstanceSSM = ec2.Instance{
-	IamInstanceProfile: myInstanceProfile,
+var MyEC2InstanceSSM = ec2.Instance{
+	IamInstanceProfile: MyInstanceProfile,
 	ImageId: AMI,
 	InstanceType: InstanceType,
 	KeyName: KeyPair,

@@ -10,6 +10,6 @@ import (
 
 // TableNameOutput - Table name of the newly created DynamoDB table
 var TableNameOutput = Output{
-	Value:       myDynamoDBTable,
+	Value:       MyDynamoDBTable,
 	Description: "Table name of the newly created DynamoDB table",
 }

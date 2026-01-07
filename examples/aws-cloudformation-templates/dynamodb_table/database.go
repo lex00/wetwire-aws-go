@@ -27,7 +27,7 @@ var myDynamoDBTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 	AttributeType: HashKeyElementType,
 }
 
-var myDynamoDBTable = dynamodb.Table{
+var MyDynamoDBTable = dynamodb.Table{
 	AttributeDefinitions: []any{myDynamoDBTableAttributeDefinition1},
 	KeySchema: []any{myDynamoDBTableKeySchema1},
 	PointInTimeRecoverySpecification: myDynamoDBTablePointInTimeRecoverySpecification,

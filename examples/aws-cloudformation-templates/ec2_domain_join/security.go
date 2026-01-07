@@ -21,18 +21,18 @@ var myEC2SSMRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 	Principal: ServicePrincipal{"ec2.amazonaws.com"},
 }
 
-var myEC2SSMRole = iam.Role{
+var MyEC2SSMRole = iam.Role{
 	AssumeRolePolicyDocument: myEC2SSMRoleAssumeRolePolicyDocument,
 	ManagedPolicyArns: []any{"arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"},
 	RoleName: "DemoEC2SSMRole",
 }
 
-var myInstanceProfile = iam.InstanceProfile{
+var MyInstanceProfile = iam.InstanceProfile{
 	InstanceProfileName: "myEC2SSMRole",
 	Roles: []any{"DemoEC2SSMRole"},
 }
 
-var myssmdocument = ssm.Document{
+var Myssmdocument = ssm.Document{
 	Content: Json{
 	"description": "Join instances to an AWS Directory Service domain.",
 	"parameters": Json{

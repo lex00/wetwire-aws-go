@@ -10,25 +10,25 @@ import (
 
 // DirectoryAliasOutput - URL for the alias
 var DirectoryAliasOutput = Output{
-	Value:       rMSDirectory.Alias,
+	Value:       RMSDirectory.Alias,
 	Description: "URL for the alias",
 	Condition:   "cAlias",
 }
 
 // DirectoryIDOutput - ID of the MS Directory
 var DirectoryIDOutput = Output{
-	Value:       rMSDirectory,
+	Value:       RMSDirectory,
 	Description: "ID of the MS Directory",
 }
 
 // PrimaryDNSOutput - DNS IPs of the MS Directory
 var PrimaryDNSOutput = Output{
-	Value:       Select{Index: 0, List: rMSDirectory.DnsIpAddresses},
+	Value:       Select{Index: 0, List: RMSDirectory.DnsIpAddresses},
 	Description: "DNS IPs of the MS Directory",
 }
 
 // SecondaryDNSOutput - DNS IPs of the MSDirectory
 var SecondaryDNSOutput = Output{
-	Value:       Select{Index: 1, List: rMSDirectory.DnsIpAddresses},
+	Value:       Select{Index: 1, List: RMSDirectory.DnsIpAddresses},
 	Description: "DNS IPs of the MSDirectory",
 }

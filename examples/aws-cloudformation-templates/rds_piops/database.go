@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/rds"
 )
 
-var myDB = rds.DBInstance{
+var MyDB = rds.DBInstance{
 	AllocatedStorage: "100",
 	BackupRetentionPeriod: 7,
 	DBInstanceClass: "db.t3.small",

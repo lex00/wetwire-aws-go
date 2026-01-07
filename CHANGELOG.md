@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: `Fn::Transform` now generates `Transform{Name: "...", Parameters: {...}}` with proper struct fields instead of raw value passthrough
 - Codegen: `ResourceType` field in nested property types no longer incorrectly transformed to `ResourceTypeProp` (only top-level resources have the conflicting method)
 - Codegen: Duplicate array element variable names now get `_2`, `_3` suffixes to avoid redeclaration errors
+- Codegen: Lowercase resource names are now capitalized to ensure variables are exported (e.g., `myBucket` → `MyBucket`)
 
 ### Changed
 

@@ -50,7 +50,7 @@ var loadBalancerSubnetMapping1 = elasticloadbalancingv2.LoadBalancer_SubnetMappi
 	SubnetId: Select{Index: 0, List: Subnet1},
 }
 
-var loadBalancer = elasticloadbalancingv2.LoadBalancer{
+var LoadBalancer = elasticloadbalancingv2.LoadBalancer{
 	IpAddressType: ELBIpAddressType,
 	SubnetMappings: []any{loadBalancerSubnetMapping1, loadBalancerSubnetMapping2},
 	Type_: ELBType,
@@ -63,7 +63,7 @@ var ListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 
 var Listener = elasticloadbalancingv2.Listener{
 	DefaultActions: []any{ListenerDefaultActionForward},
-	LoadBalancerArn: loadBalancer,
+	LoadBalancerArn: LoadBalancer,
 	Port: "80",
 	Protocol: enums.Elbv2ProtocolEnumTcp,
 }
