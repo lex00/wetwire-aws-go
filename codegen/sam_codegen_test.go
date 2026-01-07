@@ -12,7 +12,7 @@ func TestGenerateSAMService(t *testing.T) {
 	if err != nil {
 		t.Fatalf("creating temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Generate SAM service
 	stats := &GenerationStats{}

@@ -10,11 +10,12 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 ## Status
 
-**v1.3.0 - SAM Support Complete**
+**v1.4.0 - Full Template Support**
 
 - All CLI commands implemented (build, validate, list, lint, init, import, design, test)
 - **263 services** (262 AWS + Alexa::ASK) with typed enum constants
 - **9 SAM resource types** (Function, Api, HttpApi, SimpleTable, LayerVersion, StateMachine, Application, Connector, GraphQLApi)
+- **Full template sections**: Parameters, Outputs, Mappings, Conditions with complete round-trip support
 - 254/254 AWS sample templates import successfully (100% success rate)
 
 See [CHANGELOG.md](CHANGELOG.md) for release details.
@@ -91,6 +92,36 @@ var DataTable = dynamodb.Table{
 ```
 
 SAM templates automatically include the `Transform: AWS::Serverless-2016-10-31` header.
+
+### Parameters and Outputs
+
+```go
+package infra
+
+import (
+    "github.com/lex00/wetwire-aws-go/resources/s3"
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
+)
+
+// Parameter with full CloudFormation metadata
+var Environment = Parameter{
+    Type:          "String",
+    Description:   "Deployment environment",
+    Default:       "dev",
+    AllowedValues: []any{"dev", "staging", "prod"},
+}
+
+// Use parameter directly in resources
+var DataBucket = s3.Bucket{
+    BucketName: Sub("${AWS::StackName}-data-${Environment}"),
+}
+
+// Stack output
+var BucketArnOutput = Output{
+    Description: "The ARN of the data bucket",
+    Value:       DataBucket.Arn,
+}
+```
 
 ## Installation
 

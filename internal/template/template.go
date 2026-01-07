@@ -14,15 +14,41 @@ import (
 
 // Builder constructs CloudFormation templates from discovered resources.
 type Builder struct {
-	resources map[string]wetwire.DiscoveredResource
-	values    map[string]any // Actual struct values for serialization
+	resources  map[string]wetwire.DiscoveredResource
+	parameters map[string]wetwire.DiscoveredParameter
+	outputs    map[string]wetwire.DiscoveredOutput
+	mappings   map[string]wetwire.DiscoveredMapping
+	conditions map[string]wetwire.DiscoveredCondition
+	values     map[string]any // Actual struct values for serialization
 }
 
 // NewBuilder creates a template builder from discovered resources.
 func NewBuilder(resources map[string]wetwire.DiscoveredResource) *Builder {
 	return &Builder{
-		resources: resources,
-		values:    make(map[string]any),
+		resources:  resources,
+		parameters: make(map[string]wetwire.DiscoveredParameter),
+		outputs:    make(map[string]wetwire.DiscoveredOutput),
+		mappings:   make(map[string]wetwire.DiscoveredMapping),
+		conditions: make(map[string]wetwire.DiscoveredCondition),
+		values:     make(map[string]any),
+	}
+}
+
+// NewBuilderFull creates a template builder from all discovered components.
+func NewBuilderFull(
+	resources map[string]wetwire.DiscoveredResource,
+	parameters map[string]wetwire.DiscoveredParameter,
+	outputs map[string]wetwire.DiscoveredOutput,
+	mappings map[string]wetwire.DiscoveredMapping,
+	conditions map[string]wetwire.DiscoveredCondition,
+) *Builder {
+	return &Builder{
+		resources:  resources,
+		parameters: parameters,
+		outputs:    outputs,
+		mappings:   mappings,
+		conditions: conditions,
+		values:     make(map[string]any),
 	}
 }
 
@@ -43,6 +69,37 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 	template := &wetwire.Template{
 		AWSTemplateFormatVersion: "2010-09-09",
 		Resources:                make(map[string]wetwire.ResourceDef),
+	}
+
+	// Build Parameters section
+	if len(b.parameters) > 0 {
+		template.Parameters = make(map[string]wetwire.Parameter)
+		for name := range b.parameters {
+			if val, ok := b.values[name]; ok {
+				param := b.serializeParameter(name, val)
+				template.Parameters[name] = param
+			}
+		}
+	}
+
+	// Build Mappings section
+	if len(b.mappings) > 0 {
+		template.Mappings = make(map[string]any)
+		for name := range b.mappings {
+			if val, ok := b.values[name]; ok {
+				template.Mappings[name] = val
+			}
+		}
+	}
+
+	// Build Conditions section
+	if len(b.conditions) > 0 {
+		template.Conditions = make(map[string]any)
+		for name := range b.conditions {
+			if val, ok := b.values[name]; ok {
+				template.Conditions[name] = val
+			}
+		}
 	}
 
 	// Track if any SAM resources are present
@@ -74,12 +131,106 @@ func (b *Builder) Build() (*wetwire.Template, error) {
 		}
 	}
 
+	// Build Outputs section
+	if len(b.outputs) > 0 {
+		template.Outputs = make(map[string]wetwire.Output)
+		for name := range b.outputs {
+			if val, ok := b.values[name]; ok {
+				output := b.serializeOutput(name, val)
+				template.Outputs[name] = output
+			}
+		}
+	}
+
 	// Set SAM Transform header if any SAM resources are present
 	if hasSAMResources {
 		template.Transform = "AWS::Serverless-2016-10-31"
 	}
 
 	return template, nil
+}
+
+// serializeParameter converts a Parameter value to the template format.
+func (b *Builder) serializeParameter(name string, value any) wetwire.Parameter {
+	// The value is already serialized as a map from the runner
+	valMap, ok := value.(map[string]any)
+	if !ok {
+		return wetwire.Parameter{Type: "String"}
+	}
+
+	param := wetwire.Parameter{}
+
+	if t, ok := valMap["Type"].(string); ok {
+		param.Type = t
+	} else {
+		param.Type = "String" // Default
+	}
+	if desc, ok := valMap["Description"].(string); ok {
+		param.Description = desc
+	}
+	if def, ok := valMap["Default"]; ok {
+		param.Default = def
+	}
+	if vals, ok := valMap["AllowedValues"].([]any); ok {
+		param.AllowedValues = vals
+	}
+	if pattern, ok := valMap["AllowedPattern"].(string); ok {
+		param.AllowedPattern = pattern
+	}
+	if desc, ok := valMap["ConstraintDescription"].(string); ok {
+		param.ConstraintDescription = desc
+	}
+	if v, ok := valMap["MinLength"].(float64); ok {
+		i := int(v)
+		param.MinLength = &i
+	}
+	if v, ok := valMap["MaxLength"].(float64); ok {
+		i := int(v)
+		param.MaxLength = &i
+	}
+	if v, ok := valMap["MinValue"].(float64); ok {
+		param.MinValue = &v
+	}
+	if v, ok := valMap["MaxValue"].(float64); ok {
+		param.MaxValue = &v
+	}
+	if v, ok := valMap["NoEcho"].(bool); ok {
+		param.NoEcho = v
+	}
+
+	return param
+}
+
+// serializeOutput converts an Output value to the template format.
+func (b *Builder) serializeOutput(name string, value any) wetwire.Output {
+	valMap, ok := value.(map[string]any)
+	if !ok {
+		return wetwire.Output{}
+	}
+
+	output := wetwire.Output{}
+
+	if desc, ok := valMap["Description"].(string); ok {
+		output.Description = desc
+	}
+	if val, ok := valMap["Value"]; ok {
+		output.Value = val
+	}
+	if exp, ok := valMap["Export"].(map[string]any); ok {
+		if expName, ok := exp["Name"].(string); ok {
+			output.Export = &struct {
+				Name string `json:"Name"`
+			}{Name: expName}
+		}
+	}
+	// Handle ExportName field (alternative format)
+	if expName, ok := valMap["ExportName"]; ok {
+		output.Export = &struct {
+			Name string `json:"Name"`
+		}{Name: fmt.Sprintf("%v", expName)}
+	}
+
+	return output
 }
 
 // serializeResource converts a Go struct to CloudFormation properties.

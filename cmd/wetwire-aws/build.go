@@ -41,7 +41,7 @@ Examples:
 }
 
 func runBuild(packages []string, format, outputFile string) error {
-	// Discover resources
+	// Discover resources and other template components
 	result, err := discover.Discover(discover.Options{
 		Packages: packages,
 	})
@@ -61,11 +61,24 @@ func runBuild(packages []string, format, outputFile string) error {
 		return outputResult(buildResult, format, outputFile)
 	}
 
-	// Build template
-	builder := template.NewBuilder(result.Resources)
+	// Build template with all discovered components
+	builder := template.NewBuilderFull(
+		result.Resources,
+		result.Parameters,
+		result.Outputs,
+		result.Mappings,
+		result.Conditions,
+	)
 
-	// Extract actual resource values by running a generated Go program
-	values, err := runner.ExtractValues(packages[0], result.Resources)
+	// Extract all values by running a generated Go program
+	values, err := runner.ExtractAll(
+		packages[0],
+		result.Resources,
+		result.Parameters,
+		result.Outputs,
+		result.Mappings,
+		result.Conditions,
+	)
 	if err != nil {
 		buildResult := wetwire.BuildResult{
 			Success: false,
@@ -74,9 +87,21 @@ func runBuild(packages []string, format, outputFile string) error {
 		return outputResult(buildResult, format, outputFile)
 	}
 
-	// Set the extracted values
-	for name, props := range values {
+	// Set all extracted values
+	for name, props := range values.Resources {
 		builder.SetValue(name, props)
+	}
+	for name, props := range values.Parameters {
+		builder.SetValue(name, props)
+	}
+	for name, props := range values.Outputs {
+		builder.SetValue(name, props)
+	}
+	for name, val := range values.Mappings {
+		builder.SetValue(name, val)
+	}
+	for name, val := range values.Conditions {
+		builder.SetValue(name, val)
 	}
 
 	tmpl, err := builder.Build()

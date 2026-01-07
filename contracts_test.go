@@ -110,7 +110,7 @@ func TestTemplate_JSON(t *testing.T) {
 				Type:          "String",
 				Description:   "Deployment environment",
 				Default:       "dev",
-				AllowedValues: []string{"dev", "staging", "prod"},
+				AllowedValues: []any{"dev", "staging", "prod"},
 			},
 		},
 		Outputs: map[string]Output{
@@ -284,7 +284,7 @@ func TestParameter_AllTypes(t *testing.T) {
 				Type:          "String",
 				Description:   "Environment name",
 				Default:       "dev",
-				AllowedValues: []string{"dev", "staging", "prod"},
+				AllowedValues: []any{"dev", "staging", "prod"},
 			},
 		},
 		{

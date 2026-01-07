@@ -75,12 +75,56 @@ type DiscoveredResource struct {
 	Dependencies []string
 }
 
+// DiscoveredParameter represents a parameter found by AST parsing.
+type DiscoveredParameter struct {
+	// Name is the variable name (becomes CloudFormation parameter name)
+	Name string
+	// File is the source file path
+	File string
+	// Line is the line number of the declaration
+	Line int
+}
+
+// DiscoveredOutput represents an output found by AST parsing.
+type DiscoveredOutput struct {
+	// Name is the variable name (becomes CloudFormation output name)
+	Name string
+	// File is the source file path
+	File string
+	// Line is the line number of the declaration
+	Line int
+}
+
+// DiscoveredMapping represents a mapping found by AST parsing.
+type DiscoveredMapping struct {
+	// Name is the variable name (becomes CloudFormation mapping name)
+	Name string
+	// File is the source file path
+	File string
+	// Line is the line number of the declaration
+	Line int
+}
+
+// DiscoveredCondition represents a condition found by AST parsing.
+type DiscoveredCondition struct {
+	// Name is the variable name (becomes CloudFormation condition name)
+	Name string
+	// Type is the condition type (e.g., "Equals", "And", "Or", "Not")
+	Type string
+	// File is the source file path
+	File string
+	// Line is the line number of the declaration
+	Line int
+}
+
 // Template represents a CloudFormation template.
 type Template struct {
 	AWSTemplateFormatVersion string                 `json:"AWSTemplateFormatVersion" yaml:"AWSTemplateFormatVersion"`
 	Transform                string                 `json:"Transform,omitempty" yaml:"Transform,omitempty"`
 	Description              string                 `json:"Description,omitempty" yaml:"Description,omitempty"`
 	Parameters               map[string]Parameter   `json:"Parameters,omitempty" yaml:"Parameters,omitempty"`
+	Mappings                 map[string]any         `json:"Mappings,omitempty" yaml:"Mappings,omitempty"`
+	Conditions               map[string]any         `json:"Conditions,omitempty" yaml:"Conditions,omitempty"`
 	Resources                map[string]ResourceDef `json:"Resources" yaml:"Resources"`
 	Outputs                  map[string]Output      `json:"Outputs,omitempty" yaml:"Outputs,omitempty"`
 }
@@ -92,12 +136,19 @@ type ResourceDef struct {
 	DependsOn  []string       `json:"DependsOn,omitempty" yaml:"DependsOn,omitempty"`
 }
 
-// Parameter is a CloudFormation template parameter.
+// Parameter is a CloudFormation template parameter for output serialization.
 type Parameter struct {
-	Type          string   `json:"Type"`
-	Description   string   `json:"Description,omitempty"`
-	Default       any      `json:"Default,omitempty"`
-	AllowedValues []string `json:"AllowedValues,omitempty"`
+	Type                  string   `json:"Type"`
+	Description           string   `json:"Description,omitempty"`
+	Default               any      `json:"Default,omitempty"`
+	AllowedValues         []any    `json:"AllowedValues,omitempty"`
+	AllowedPattern        string   `json:"AllowedPattern,omitempty"`
+	ConstraintDescription string   `json:"ConstraintDescription,omitempty"`
+	MinLength             *int     `json:"MinLength,omitempty"`
+	MaxLength             *int     `json:"MaxLength,omitempty"`
+	MinValue              *float64 `json:"MinValue,omitempty"`
+	MaxValue              *float64 `json:"MaxValue,omitempty"`
+	NoEcho                bool     `json:"NoEcho,omitempty"`
 }
 
 // Output is a CloudFormation template output.
