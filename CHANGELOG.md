@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-01-07
+
 ### Fixed
 
 - Codegen: `GetAZs{Region: AWS_REGION}` type mismatch - Region field expects string, not Ref type. Now generates `GetAZs{}` for `!GetAZs !Ref "AWS::Region"` patterns
@@ -22,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: Lowercase resource names are now capitalized to ensure variables are exported (e.g., `myBucket` → `MyBucket`)
 - Codegen: `Tag{}` type now correctly triggers intrinsics import (fixes undefined `Tag` errors)
 - Codegen: `!Sub ${Resource.Attr}` patterns now generate `Resource.Attr` field access instead of undefined `ResourceAttr` variable
+- Codegen: Nested property types inside `If{}` intrinsics now use correct type context (e.g., `Association_S3OutputLocation` instead of parent type)
+- Codegen: `SubWithMap` Variables field now generates `Json{}` instead of incorrectly typed struct
+- Codegen: Digit-prefixed variable names now use `N` prefix instead of `_` to keep variables exported (e.g., `2RouteTable` → `N2RouteTable`)
+- Registry: `wafv2.WebACL_Rule.Statement` now correctly maps to `WebACL_Statement` instead of `RuleGroup_Statement`
 
 ### Changed
 
