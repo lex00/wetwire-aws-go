@@ -326,3 +326,23 @@ func TestCfResourceType_SAM(t *testing.T) {
 		})
 	}
 }
+
+func TestCfResourceType_EC2(t *testing.T) {
+	tests := []struct {
+		goType   string
+		cfnType  string
+	}{
+		{"ec2.InternetGateway", "AWS::EC2::InternetGateway"},
+		{"ec2.EIP", "AWS::EC2::EIP"},
+		{"ec2.RouteTable", "AWS::EC2::RouteTable"},
+		{"ec2.VPC", "AWS::EC2::VPC"},
+		{"ec2.Subnet", "AWS::EC2::Subnet"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.goType, func(t *testing.T) {
+			result := cfResourceType(tt.goType)
+			assert.Equal(t, tt.cfnType, result)
+		})
+	}
+}
