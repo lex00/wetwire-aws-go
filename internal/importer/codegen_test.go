@@ -833,3 +833,39 @@ Resources:
 	// Should NOT generate field access for nested attributes
 	assert.NotContains(t, code, "MyDB.Endpoint.Address", "Should not use field access for nested attribute")
 }
+
+func TestGenerateCode_NoUnusedIntrinsicsImport(t *testing.T) {
+	// Test that files without intrinsic types don't import intrinsics
+	// Issue #43: Unused intrinsics import in some resource files
+	content := []byte(`
+Parameters:
+  BucketName:
+    Type: String
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: arn:aws:iam::123456789:role/lambda
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              pass
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "importtest")
+	storageCode := files["storage.go"]
+	computeCode := files["compute.go"]
+
+	// Neither file should import intrinsics - they only have resource references
+	assert.NotContains(t, storageCode, "github.com/lex00/wetwire-aws-go/intrinsics", "storage.go should not import intrinsics")
+	assert.NotContains(t, computeCode, "github.com/lex00/wetwire-aws-go/intrinsics", "compute.go should not import intrinsics")
+}

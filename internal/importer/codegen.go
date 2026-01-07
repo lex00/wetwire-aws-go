@@ -647,6 +647,12 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 			}
 		}
 
+		// Remove intrinsics import if the code doesn't actually use any intrinsic types
+		// Resource/parameter references resolve to direct variable names, not intrinsic types
+		if imports["github.com/lex00/wetwire-aws-go/intrinsics"] && !codeUsesIntrinsics(code) {
+			delete(imports, "github.com/lex00/wetwire-aws-go/intrinsics")
+		}
+
 		filename := category + ".go"
 		files[filename] = buildFile(ctx.packageName, description, imports, code)
 	}
@@ -654,15 +660,8 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 	// If there are only mappings and no main resources, still generate main.go
 	if _, hasMain := categoryCode["main"]; !hasMain {
 		if mappingsCode := generateMappings(ctx); mappingsCode != "" {
-			// Mappings are plain map literals - only add intrinsics import if the code
-			// actually uses intrinsic types (check the generated code, not global ctx.imports)
 			imports := make(map[string]bool)
-			if strings.Contains(mappingsCode, "Sub{") ||
-				strings.Contains(mappingsCode, "Ref{") ||
-				strings.Contains(mappingsCode, "GetAtt{") ||
-				strings.Contains(mappingsCode, "Join{") ||
-				strings.Contains(mappingsCode, "If{") ||
-				strings.Contains(mappingsCode, "FindInMap{") {
+			if codeUsesIntrinsics(mappingsCode) {
 				imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 			}
 			files["main.go"] = buildFile(ctx.packageName, "Mappings", imports, mappingsCode)
@@ -670,6 +669,27 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 	}
 
 	return files
+}
+
+// codeUsesIntrinsics checks if generated code actually uses intrinsic types.
+// Resource/parameter references resolve to direct variable names, not intrinsic types,
+// so we need to check if any intrinsic struct types are present in the code.
+func codeUsesIntrinsics(code string) bool {
+	intrinsicTypes := []string{
+		"Sub{", "SubWithMap{", "Ref{", "GetAtt{", "Join{", "Select{", "GetAZs{",
+		"If{", "Equals{", "And{", "Or{", "Not{", "FindInMap{", "Split{", "Cidr{",
+		"Condition{", "ImportValue{", "Transform{", "Json{", "Parameter{", "Output{",
+		"AWS_REGION", "AWS_ACCOUNT_ID", "AWS_STACK_NAME", "AWS_STACK_ID",
+		"AWS_PARTITION", "AWS_URL_SUFFIX", "AWS_NO_VALUE", "AWS_NOTIFICATION_ARNS",
+		"PolicyDocument{", "PolicyStatement{", "DenyStatement{", "AllowStatement{",
+		"ServicePrincipal{", "AWSPrincipal{", "FederatedPrincipal{",
+	}
+	for _, t := range intrinsicTypes {
+		if strings.Contains(code, t) {
+			return true
+		}
+	}
+	return false
 }
 
 // buildFile constructs a complete Go source file.
