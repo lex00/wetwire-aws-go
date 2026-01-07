@@ -1359,3 +1359,45 @@ Resources:
 	// Join.Values should wrap the parameter ref in []any{}
 	assert.Contains(t, storageCode, "Values: []any{SecurityGroupIds}", "Join.Values should wrap ref in []any{}")
 }
+
+// TestGenerateCode_NestedTypeInIntrinsic tests that nested types inside intrinsics
+// use the correct child type, not the parent type.
+// Issue #74: When S3Location is wrapped in If{}, it should use Association_S3OutputLocation,
+// not the parent Association_InstanceAssociationOutputLocation.
+func TestGenerateCode_NestedTypeInIntrinsic(t *testing.T) {
+	content := []byte(`
+Conditions:
+  HasS3Bucket:
+    !Not [!Equals [!Ref LogsBucketName, ""]]
+
+Parameters:
+  LogsBucketName:
+    Type: String
+    Description: S3 bucket name for logs
+
+Resources:
+  SSMAssociation:
+    Type: AWS::SSM::Association
+    Properties:
+      Name: AWS-RunPatchBaseline
+      OutputLocation:
+        S3Location:
+          Fn::If:
+            - HasS3Bucket
+            - OutputS3BucketName: !Ref LogsBucketName
+              OutputS3KeyPrefix: logs/ssm
+            - !Ref AWS::NoValue
+`)
+
+	ir, err := ParseTemplateContent(content, "ssmtest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "ssmtest")
+
+	// SSM goes to security.go
+	securityCode := files["security.go"]
+
+	// The S3Location value inside If should use Association_S3OutputLocation, not the parent type
+	assert.Contains(t, securityCode, "ssm.Association_S3OutputLocation{", "Should use correct nested type inside If")
+	assert.NotContains(t, securityCode, "ssm.Association_InstanceAssociationOutputLocation{OutputS3BucketName", "Should NOT use parent type for S3Location value")
+}
