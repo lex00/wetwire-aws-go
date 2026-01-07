@@ -26,12 +26,12 @@ var ADConnectorLambdaFunctionCode = lambda.Function_Code{
 
 var ADConnectorLambdaFunction = lambda.Function{
 	Code: ADConnectorLambdaFunctionCode,
-	Environment: &ADConnectorLambdaFunctionEnvironment,
+	Environment: ADConnectorLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "adconnector_custom_resource.lambda_handler",
 	MemorySize: 128,
 	Role: ADConnectorLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython38,
 	Timeout: 120,
-	VpcConfig: &ADConnectorLambdaFunctionVpcConfig,
+	VpcConfig: ADConnectorLambdaFunctionVpcConfig,
 }

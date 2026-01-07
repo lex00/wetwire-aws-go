@@ -52,7 +52,7 @@ var ServiceNetworkConfigurationAwsvpcConfiguration = ecs.Service_AwsVpcConfigura
 }
 
 var ServiceNetworkConfiguration = ecs.Service_NetworkConfiguration{
-	AwsvpcConfiguration: &ServiceNetworkConfigurationAwsvpcConfiguration,
+	AwsvpcConfiguration: ServiceNetworkConfigurationAwsvpcConfiguration,
 }
 
 var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
@@ -71,11 +71,11 @@ var Service = ecs.Service{
 	StackName,
 	"ClusterName",
 }}},
-	DeploymentConfiguration: &ServiceDeploymentConfiguration,
+	DeploymentConfiguration: ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LaunchType: enums.EcsLaunchTypeFargate,
 	LoadBalancers: []any{ServiceLoadBalancer1},
-	NetworkConfiguration: &ServiceNetworkConfiguration,
+	NetworkConfiguration: ServiceNetworkConfiguration,
 	ServiceName: ServiceName,
 	TaskDefinition: TaskDefinition,
 }

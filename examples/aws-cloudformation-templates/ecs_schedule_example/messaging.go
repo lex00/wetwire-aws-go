@@ -17,7 +17,7 @@ var ECSScheduledTaskTargetTarget1EcsParameters = events.Rule_EcsParameters{
 
 var ECSScheduledTaskTargetTarget1 = events.Rule_Target{
 	Arn: ECSCluster.Arn,
-	EcsParameters: &ECSScheduledTaskTargetTarget1EcsParameters,
+	EcsParameters: ECSScheduledTaskTargetTarget1EcsParameters,
 	Id: "Target1",
 	RoleArn: ECSEventRole.Arn,
 }

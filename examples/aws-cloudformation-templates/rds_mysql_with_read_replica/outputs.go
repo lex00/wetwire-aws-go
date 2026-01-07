@@ -24,9 +24,9 @@ var EC2PlatformOutput = Output{
 var JDBCConnectionStringOutput = Output{
 	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
-	MainDB.Endpoint.Address,
+	GetAtt{MainDB, "Endpoint.Address"},
 	":",
-	MainDB.Endpoint.Port,
+	GetAtt{MainDB, "Endpoint.Port"},
 	"/",
 	DBName,
 }},
@@ -37,9 +37,9 @@ var JDBCConnectionStringOutput = Output{
 var ReplicaJDBCConnectionStringOutput = Output{
 	Value:       Join{Delimiter: "", Values: []any{
 	"jdbc:mysql://",
-	ReplicaDB.Endpoint.Address,
+	GetAtt{ReplicaDB, "Endpoint.Address"},
 	":",
-	ReplicaDB.Endpoint.Port,
+	GetAtt{ReplicaDB, "Endpoint.Port"},
 	"/",
 	DBName,
 }},

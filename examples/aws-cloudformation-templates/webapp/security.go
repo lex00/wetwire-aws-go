@@ -31,7 +31,7 @@ var CognitoUserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfi
 }
 
 var CognitoUserPool = cognito.UserPool{
-	AdminCreateUserConfig: &CognitoUserPoolAdminCreateUserConfig,
+	AdminCreateUserConfig: CognitoUserPoolAdminCreateUserConfig,
 	AutoVerifiedAttributes: []any{"email"},
 	Schema: []any{CognitoUserPoolSchemaEmail, CognitoUserPoolSchemaGivenname, CognitoUserPoolSchemaFamilyname},
 	UserPoolName: AppName,
@@ -178,14 +178,14 @@ var SiteWebACLTagName = Tag{
 
 var SiteWebACLRuleAWSNegAWSManagedRule = wafv2.WebACL_Rule{
 	Name: "AWS-AWSManagedRulesCommonRuleSet",
-	OverrideAction: &SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction,
+	OverrideAction: SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction,
 	Priority: 0,
 	Statement: SiteWebACLRuleAWSNegAWSManagedRuleStatement,
 	VisibilityConfig: SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig,
 }
 
 var SiteWebACLDefaultAction = wafv2.WebACL_DefaultAction{
-	Allow: &SiteWebACLDefaultActionAllow,
+	Allow: SiteWebACLDefaultActionAllow,
 }
 
 var SiteWebACL = wafv2.WebACL{

@@ -22,7 +22,7 @@ var S3BucketSourceReplicationConfigurationRuleRule1DestinationAccessControlTrans
 }
 
 var S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteria = s3.Bucket_SourceSelectionCriteria{
-	SseKmsEncryptedObjects: &S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteriaSseKmsEncryptedObjects,
+	SseKmsEncryptedObjects: S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteriaSseKmsEncryptedObjects,
 }
 
 var S3BucketSourceReplicationConfigurationRuleRule1Filter = s3.Bucket_ReplicationRuleFilter{
@@ -30,10 +30,10 @@ var S3BucketSourceReplicationConfigurationRuleRule1Filter = s3.Bucket_Replicatio
 }
 
 var S3BucketSourceReplicationConfigurationRuleRule1Destination = s3.Bucket_ReplicationDestination{
-	AccessControlTranslation: &S3BucketSourceReplicationConfigurationRuleRule1DestinationAccessControlTranslation,
+	AccessControlTranslation: S3BucketSourceReplicationConfigurationRuleRule1DestinationAccessControlTranslation,
 	Account: AccountIdDestination,
 	Bucket: Sub{String: "arn:${AWS::Partition}:s3:::${AWS::StackName}-${AccountIdDestination}-bucket"},
-	EncryptionConfiguration: &S3BucketSourceReplicationConfigurationRuleRule1DestinationEncryptionConfiguration,
+	EncryptionConfiguration: S3BucketSourceReplicationConfigurationRuleRule1DestinationEncryptionConfiguration,
 }
 
 var S3BucketSourceReplicationConfigurationRuleRule1DeleteMarkerReplication = s3.Bucket_DeleteMarkerReplication{
@@ -46,18 +46,18 @@ var S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEn
 }
 
 var S3BucketSourceReplicationConfigurationRuleRule1 = s3.Bucket_ReplicationRule{
-	DeleteMarkerReplication: &S3BucketSourceReplicationConfigurationRuleRule1DeleteMarkerReplication,
+	DeleteMarkerReplication: S3BucketSourceReplicationConfigurationRuleRule1DeleteMarkerReplication,
 	Destination: S3BucketSourceReplicationConfigurationRuleRule1Destination,
-	Filter: &S3BucketSourceReplicationConfigurationRuleRule1Filter,
+	Filter: S3BucketSourceReplicationConfigurationRuleRule1Filter,
 	Id: "Rule1",
 	Priority: 0,
-	SourceSelectionCriteria: &S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteria,
+	SourceSelectionCriteria: S3BucketSourceReplicationConfigurationRuleRule1SourceSelectionCriteria,
 	Status: "Enabled",
 }
 
 var S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
 	BucketKeyEnabled: true,
-	ServerSideEncryptionByDefault: &S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: S3BucketSourceBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var S3BucketSourceVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -81,9 +81,9 @@ var S3BucketSourceBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var S3BucketSource = s3.Bucket{
-	BucketEncryption: &S3BucketSourceBucketEncryption,
+	BucketEncryption: S3BucketSourceBucketEncryption,
 	BucketName: Sub{String: "${AWS::StackName}-${AWS::AccountId}-bucket"},
-	PublicAccessBlockConfiguration: &S3BucketSourcePublicAccessBlockConfiguration,
-	ReplicationConfiguration: &S3BucketSourceReplicationConfiguration,
-	VersioningConfiguration: &S3BucketSourceVersioningConfiguration,
+	PublicAccessBlockConfiguration: S3BucketSourcePublicAccessBlockConfiguration,
+	ReplicationConfiguration: S3BucketSourceReplicationConfiguration,
+	VersioningConfiguration: S3BucketSourceVersioningConfiguration,
 }

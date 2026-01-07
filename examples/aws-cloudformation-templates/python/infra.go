@@ -9,7 +9,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 
-var Transform = cloudformation.Macro{
+var TransformResource = cloudformation.Macro{
 	Description: "Processes inline python in templates",
 	FunctionName: TransformFunction.Arn,
 	Name: Sub{String: "PyPlate"},

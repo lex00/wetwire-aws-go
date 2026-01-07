@@ -19,4 +19,6 @@ var ASCPrivateLinkCertificate = certificatemanager.Certificate{
 	ValidationMethod: "DNS",
 }
 
-// Skipped unknown resource type: ASCPrivateLinkEnablePrivateDNS (Custom::CustomResource)
+// ASCPrivateLinkEnablePrivateDNS is a placeholder for unknown resource type: Custom::CustomResource
+// This allows references from outputs and other resources to compile.
+var ASCPrivateLinkEnablePrivateDNS any = nil

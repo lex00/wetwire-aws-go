@@ -52,5 +52,5 @@ var ASCPrivateLinkLambdaFunction = lambda.Function{
 	Role: ASCPrivateLinkLambdaRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,
 	Timeout: 900,
-	VpcConfig: &ASCPrivateLinkLambdaFunctionVpcConfig,
+	VpcConfig: ASCPrivateLinkLambdaFunctionVpcConfig,
 }

@@ -21,7 +21,7 @@ var CentralEventBusDeadLetterConfig = events.EventBus_DeadLetterConfig{
 }
 
 var CentralEventBus = events.EventBus{
-	DeadLetterConfig: &CentralEventBusDeadLetterConfig,
+	DeadLetterConfig: CentralEventBusDeadLetterConfig,
 	Description: "A custom event bus in the central account to be used as a destination for events from a rule in target accounts",
 	Name: CentralEventBusName,
 }
@@ -48,7 +48,7 @@ var CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig = events.EventBus
 
 var CentralEventRuleTargetCloudFormationLogsTo = events.Rule_Target{
 	Arn: CentralEventLog.Arn,
-	DeadLetterConfig: &CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig,
+	DeadLetterConfig: CentralEventRuleTargetCloudFormationLogsToDeadLetterConfig,
 	Id: "CloudFormationLogsToCentralGroup",
 }
 

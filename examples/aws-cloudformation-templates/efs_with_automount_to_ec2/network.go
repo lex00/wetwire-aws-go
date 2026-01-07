@@ -50,7 +50,7 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
 	CrossZone: "true",
-	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	HealthCheck: ElasticLoadBalancerHealthCheck,
 	Listeners: []any{ElasticLoadBalancerListener1},
 	SecurityGroups: []any{ELBSecurityGroup},
 	Subnets: Subnets,

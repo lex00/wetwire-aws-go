@@ -44,11 +44,11 @@ var CloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1Ser
 }
 
 var CloudFrontLogsLogBucketObjectLockConfigurationRule = s3.Bucket_ObjectLockRule{
-	DefaultRetention: &CloudFrontLogsLogBucketObjectLockConfigurationRuleDefaultRetention,
+	DefaultRetention: CloudFrontLogsLogBucketObjectLockConfigurationRuleDefaultRetention,
 }
 
 var CloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &CloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: CloudFrontLogsLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var CloudFrontLogsLogBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -64,7 +64,7 @@ var CloudFrontLogsLogBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAcce
 
 var CloudFrontLogsLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfiguration{
 	ObjectLockEnabled: "Enabled",
-	Rule: &CloudFrontLogsLogBucketObjectLockConfigurationRule,
+	Rule: CloudFrontLogsLogBucketObjectLockConfigurationRule,
 }
 
 var CloudFrontLogsLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
@@ -72,12 +72,12 @@ var CloudFrontLogsLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var CloudFrontLogsLogBucket = s3.Bucket{
-	BucketEncryption: &CloudFrontLogsLogBucketBucketEncryption,
+	BucketEncryption: CloudFrontLogsLogBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-cflogs-logs-${AWS::Region}-${AWS::AccountId}"},
-	ObjectLockConfiguration: &CloudFrontLogsLogBucketObjectLockConfiguration,
+	ObjectLockConfiguration: CloudFrontLogsLogBucketObjectLockConfiguration,
 	ObjectLockEnabled: true,
-	PublicAccessBlockConfiguration: &CloudFrontLogsLogBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &CloudFrontLogsLogBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: CloudFrontLogsLogBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: CloudFrontLogsLogBucketVersioningConfiguration,
 }
 
 var CloudFrontLogsLogBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -110,7 +110,7 @@ var CloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration
 }
 
 var CloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &CloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: CloudFrontLogsReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var CloudFrontLogsReplicaBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -129,11 +129,11 @@ var CloudFrontLogsReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var CloudFrontLogsReplicaBucket = s3.Bucket{
-	BucketEncryption: &CloudFrontLogsReplicaBucketBucketEncryption,
+	BucketEncryption: CloudFrontLogsReplicaBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-cflogs-replicas-${AWS::Region}-${AWS::AccountId}"},
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &CloudFrontLogsReplicaBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &CloudFrontLogsReplicaBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: CloudFrontLogsReplicaBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: CloudFrontLogsReplicaBucketVersioningConfiguration,
 }
 
 var CloudFrontLogsReplicaBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -175,7 +175,7 @@ var CloudFrontLogsBucketReplicationConfigurationRuleEnabled = s3.Bucket_Replicat
 }
 
 var CloudFrontLogsBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &CloudFrontLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: CloudFrontLogsBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var CloudFrontLogsBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -203,13 +203,13 @@ var CloudFrontLogsBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var CloudFrontLogsBucket = s3.Bucket{
-	BucketEncryption: &CloudFrontLogsBucketBucketEncryption,
+	BucketEncryption: CloudFrontLogsBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-cflogs-${AWS::Region}-${AWS::AccountId}"},
-	LoggingConfiguration: &CloudFrontLogsBucketLoggingConfiguration,
+	LoggingConfiguration: CloudFrontLogsBucketLoggingConfiguration,
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &CloudFrontLogsBucketPublicAccessBlockConfiguration,
-	ReplicationConfiguration: &CloudFrontLogsBucketReplicationConfiguration,
-	VersioningConfiguration: &CloudFrontLogsBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: CloudFrontLogsBucketPublicAccessBlockConfiguration,
+	ReplicationConfiguration: CloudFrontLogsBucketReplicationConfiguration,
+	VersioningConfiguration: CloudFrontLogsBucketVersioningConfiguration,
 }
 
 var ContentBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -247,11 +247,11 @@ var ContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSide
 }
 
 var ContentLogBucketObjectLockConfigurationRule = s3.Bucket_ObjectLockRule{
-	DefaultRetention: &ContentLogBucketObjectLockConfigurationRuleDefaultRetention,
+	DefaultRetention: ContentLogBucketObjectLockConfigurationRuleDefaultRetention,
 }
 
 var ContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ContentLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ContentLogBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -267,7 +267,7 @@ var ContentLogBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAccessBlock
 
 var ContentLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfiguration{
 	ObjectLockEnabled: "Enabled",
-	Rule: &ContentLogBucketObjectLockConfigurationRule,
+	Rule: ContentLogBucketObjectLockConfigurationRule,
 }
 
 var ContentLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
@@ -275,12 +275,12 @@ var ContentLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ContentLogBucket = s3.Bucket{
-	BucketEncryption: &ContentLogBucketBucketEncryption,
+	BucketEncryption: ContentLogBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-logs-${AWS::Region}-${AWS::AccountId}"},
-	ObjectLockConfiguration: &ContentLogBucketObjectLockConfiguration,
+	ObjectLockConfiguration: ContentLogBucketObjectLockConfiguration,
 	ObjectLockEnabled: true,
-	PublicAccessBlockConfiguration: &ContentLogBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &ContentLogBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ContentLogBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: ContentLogBucketVersioningConfiguration,
 }
 
 var ContentLogBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -313,7 +313,7 @@ var ContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1Server
 }
 
 var ContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ContentReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ContentReplicaBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -332,11 +332,11 @@ var ContentReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ContentReplicaBucket = s3.Bucket{
-	BucketEncryption: &ContentReplicaBucketBucketEncryption,
+	BucketEncryption: ContentReplicaBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"},
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &ContentReplicaBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &ContentReplicaBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ContentReplicaBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: ContentReplicaBucketVersioningConfiguration,
 }
 
 var ContentReplicaBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -378,7 +378,7 @@ var ContentBucketReplicationConfigurationRuleEnabled = s3.Bucket_ReplicationRule
 }
 
 var ContentBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ContentBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ContentBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ContentBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -406,11 +406,11 @@ var ContentBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ContentBucket = s3.Bucket{
-	BucketEncryption: &ContentBucketBucketEncryption,
+	BucketEncryption: ContentBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-${AWS::Region}-${AWS::AccountId}"},
-	LoggingConfiguration: &ContentBucketLoggingConfiguration,
+	LoggingConfiguration: ContentBucketLoggingConfiguration,
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &ContentBucketPublicAccessBlockConfiguration,
-	ReplicationConfiguration: &ContentBucketReplicationConfiguration,
-	VersioningConfiguration: &ContentBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ContentBucketPublicAccessBlockConfiguration,
+	ReplicationConfiguration: ContentBucketReplicationConfiguration,
+	VersioningConfiguration: ContentBucketVersioningConfiguration,
 }

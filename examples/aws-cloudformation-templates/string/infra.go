@@ -8,7 +8,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 
-var Transform = cloudformation.Macro{
+var TransformResource = cloudformation.Macro{
 	Description: "Provides various string processing functions",
 	FunctionName: TransformFunction.Arn,
 	Name: "String",

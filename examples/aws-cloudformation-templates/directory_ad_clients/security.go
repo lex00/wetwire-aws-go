@@ -24,7 +24,7 @@ var JoinDomainAssociationInstancesOutputLocation = ssm.Association_InstanceAssoc
 var JoinDomainAssociationInstances = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaInstances-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
-	OutputLocation: &JoinDomainAssociationInstancesOutputLocation,
+	OutputLocation: JoinDomainAssociationInstancesOutputLocation,
 	Parameters: Json{
 	"directoryId": []any{DirectoryID},
 	"directoryName": []any{DirectoryName},
@@ -53,7 +53,7 @@ var JoinDomainAssociationTagsOutputLocation = ssm.Association_InstanceAssociatio
 var JoinDomainAssociationTags = ssm.Association{
 	AssociationName: Sub{String: "JoinDomain-Association-viaTags-${AWS::StackName}"},
 	Name: "AWS-JoinDirectoryServiceDomain",
-	OutputLocation: &JoinDomainAssociationTagsOutputLocation,
+	OutputLocation: JoinDomainAssociationTagsOutputLocation,
 	Parameters: Json{
 	"directoryId": []any{DirectoryID},
 	"directoryName": []any{DirectoryName},

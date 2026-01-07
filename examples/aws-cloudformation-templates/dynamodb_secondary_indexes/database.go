@@ -65,7 +65,7 @@ var TableOfBooksGlobalSecondaryIndexe1 = dynamodb.Table_GlobalSecondaryIndex{
 	IndexName: "TitleIndex",
 	KeySchema: []any{TableOfBooksGlobalSecondaryIndexe1KeySchema1},
 	Projection: TableOfBooksGlobalSecondaryIndexe1Projection,
-	ProvisionedThroughput: &TableOfBooksGlobalSecondaryIndexe1ProvisionedThroughput,
+	ProvisionedThroughput: TableOfBooksGlobalSecondaryIndexe1ProvisionedThroughput,
 }
 
 var TableOfBooksAttributeDefinition3 = dynamodb.Table_AttributeDefinition{
@@ -88,6 +88,6 @@ var TableOfBooks = dynamodb.Table{
 	GlobalSecondaryIndexes: []any{TableOfBooksGlobalSecondaryIndexe1},
 	KeySchema: []any{TableOfBooksKeySchema1, TableOfBooksKeySchema2},
 	LocalSecondaryIndexes: []any{TableOfBooksLocalSecondaryIndexe1},
-	PointInTimeRecoverySpecification: &TableOfBooksPointInTimeRecoverySpecification,
-	ProvisionedThroughput: &TableOfBooksProvisionedThroughput,
+	PointInTimeRecoverySpecification: TableOfBooksPointInTimeRecoverySpecification,
+	ProvisionedThroughput: TableOfBooksProvisionedThroughput,
 }

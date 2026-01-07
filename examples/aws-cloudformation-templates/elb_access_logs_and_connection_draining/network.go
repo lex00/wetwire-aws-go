@@ -56,10 +56,10 @@ var ElasticLoadBalancerAccessLoggingPolicy = elasticloadbalancing.LoadBalancer_A
 }
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
-	AccessLoggingPolicy: &ElasticLoadBalancerAccessLoggingPolicy,
-	AvailabilityZones: GetAZs{},
-	ConnectionDrainingPolicy: &ElasticLoadBalancerConnectionDrainingPolicy,
+	AccessLoggingPolicy: ElasticLoadBalancerAccessLoggingPolicy,
+	AvailabilityZones: []any{GetAZs{}},
+	ConnectionDrainingPolicy: ElasticLoadBalancerConnectionDrainingPolicy,
 	CrossZone: "true",
-	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	HealthCheck: ElasticLoadBalancerHealthCheck,
 	Listeners: []any{ElasticLoadBalancerListener1},
 }

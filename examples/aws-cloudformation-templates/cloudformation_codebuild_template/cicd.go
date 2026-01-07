@@ -15,37 +15,6 @@ var CodeCommitRepo = codecommit.Repository{
 	RepositoryName: Sub{String: "${AWS::StackName}-repo"},
 }
 
-var AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
-	Name: "SAMPLEENVVAR",
-	Type_: "PLAINTEXT",
-	Value: "test",
-}
-
-var AppDeploySource = codebuild.Project_Source{
-	BuildSpec: "codebuild-app-deploy.yml",
-	Type_: "CODEPIPELINE",
-}
-
-var AppDeployEnvironment = codebuild.Project_Environment{
-	ComputeType: "BUILD_GENERAL1_SMALL",
-	EnvironmentVariables: []any{AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR},
-	Image: DockerImage,
-	Type_: "LINUX_CONTAINER",
-}
-
-var AppDeployArtifacts = codebuild.Project_Artifacts{
-	EncryptionDisabled: true,
-	Type_: "CODEPIPELINE",
-}
-
-var AppDeploy = codebuild.Project{
-	Artifacts: AppDeployArtifacts,
-	Environment: AppDeployEnvironment,
-	Name: Sub{String: "${AWS::StackName}-app-deploy"},
-	ServiceRole: CodeBuildRole,
-	Source: AppDeploySource,
-}
-
 var AppBuildEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
 	Name: "SAMPLEENVVAR",
 	Type_: "PLAINTEXT",
@@ -75,4 +44,35 @@ var AppBuild = codebuild.Project{
 	Name: Sub{String: "${AWS::StackName}-app-build"},
 	ServiceRole: CodeBuildRole,
 	Source: AppBuildSource,
+}
+
+var AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR = codebuild.Project_EnvironmentVariable{
+	Name: "SAMPLEENVVAR",
+	Type_: "PLAINTEXT",
+	Value: "test",
+}
+
+var AppDeploySource = codebuild.Project_Source{
+	BuildSpec: "codebuild-app-deploy.yml",
+	Type_: "CODEPIPELINE",
+}
+
+var AppDeployEnvironment = codebuild.Project_Environment{
+	ComputeType: "BUILD_GENERAL1_SMALL",
+	EnvironmentVariables: []any{AppDeployEnvironmentEnvironmentVariableSAMPLEENVVAR},
+	Image: DockerImage,
+	Type_: "LINUX_CONTAINER",
+}
+
+var AppDeployArtifacts = codebuild.Project_Artifacts{
+	EncryptionDisabled: true,
+	Type_: "CODEPIPELINE",
+}
+
+var AppDeploy = codebuild.Project{
+	Artifacts: AppDeployArtifacts,
+	Environment: AppDeployEnvironment,
+	Name: Sub{String: "${AWS::StackName}-app-deploy"},
+	ServiceRole: CodeBuildRole,
+	Source: AppDeploySource,
 }

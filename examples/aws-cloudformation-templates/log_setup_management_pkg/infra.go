@@ -34,10 +34,10 @@ var TargetAccountLoggingAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var TargetAccountLogging = cloudformation.StackSet{
-	AutoDeployment: &TargetAccountLoggingAutoDeployment,
+	AutoDeployment: TargetAccountLoggingAutoDeployment,
 	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging. It configures logging resources in target accounts.",
-	OperationPreferences: &TargetAccountLoggingOperationPreferences,
+	OperationPreferences: TargetAccountLoggingOperationPreferences,
 	Parameters: []any{TargetAccountLoggingParameter1},
 	PermissionModel: "SERVICE_MANAGED",
 	StackInstancesGroup: []any{TargetAccountLoggingStackInstancesGroup1},

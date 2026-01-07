@@ -46,7 +46,7 @@ var Service = ecs.Service{
 	StackName,
 	"ClusterName",
 }}},
-	DeploymentConfiguration: &ServiceDeploymentConfiguration,
+	DeploymentConfiguration: ServiceDeploymentConfiguration,
 	DesiredCount: DesiredCount,
 	LoadBalancers: []any{ServiceLoadBalancer1},
 	ServiceName: ServiceName,

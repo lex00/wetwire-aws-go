@@ -47,7 +47,7 @@ var DistributionDistributionConfigOrigin1CustomOriginConfig = cloudfront.Distrib
 }
 
 var DistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: &DistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: DistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: DomainName,
 	Id: Sub{String: "CloudFront-${AWS::StackName}"},
 }

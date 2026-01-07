@@ -30,6 +30,6 @@ var myDynamoDBTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 var myDynamoDBTable = dynamodb.Table{
 	AttributeDefinitions: []any{myDynamoDBTableAttributeDefinition1},
 	KeySchema: []any{myDynamoDBTableKeySchema1},
-	PointInTimeRecoverySpecification: &myDynamoDBTablePointInTimeRecoverySpecification,
-	ProvisionedThroughput: &myDynamoDBTableProvisionedThroughput,
+	PointInTimeRecoverySpecification: myDynamoDBTablePointInTimeRecoverySpecification,
+	ProvisionedThroughput: myDynamoDBTableProvisionedThroughput,
 }

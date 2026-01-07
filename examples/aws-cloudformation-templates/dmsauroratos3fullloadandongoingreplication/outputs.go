@@ -9,7 +9,7 @@ import (
 )
 
 var AuroraEndpointOutput = Output{
-	Value:       AuroraCluster.Endpoint.Address,
+	Value:       GetAtt{AuroraCluster, "Endpoint.Address"},
 }
 
 var RegionNameOutput = Output{

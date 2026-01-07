@@ -6,4 +6,6 @@ package elasticache_snapshot
 
 var AWSRegion2AZMapping = map[string]map[string]interface {}{"us-east-1":map[string]interface {}{"A":"us-east-1b", "B":"us-east-1c", "C":"us-east-1c", "D":"us-east-1d"}, "us-west-1":map[string]interface {}{"A":"us-west-1b", "B":"us-west-1c"}, "us-west-2":map[string]interface {}{"A":"us-west-2a", "B":"us-west-2b", "C":"us-west-2c"}}
 
-// Skipped unknown resource type: EnableShapshotTrigger (Custom::Region)
+// EnableShapshotTrigger is a placeholder for unknown resource type: Custom::Region
+// This allows references from outputs and other resources to compile.
+var EnableShapshotTrigger any = nil

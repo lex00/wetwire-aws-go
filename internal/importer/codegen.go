@@ -923,6 +923,9 @@ type codegenContext struct {
 
 	// Track which parameters are directly referenced via Ref
 	usedParameters map[string]bool
+
+	// Track unknown resource types (placeholders) - GetAtt must use explicit GetAtt{} for these
+	unknownResources map[string]bool
 }
 
 // propertyBlock represents a top-level var declaration for a property type instance.
@@ -936,15 +939,24 @@ type propertyBlock struct {
 
 func newCodegenContext(template *IRTemplate, packageName string) *codegenContext {
 	ctx := &codegenContext{
-		template:       template,
-		packageName:    packageName,
-		imports:        make(map[string]bool),
-		blockNameCount: make(map[string]int),
-		usedParameters: make(map[string]bool),
+		template:         template,
+		packageName:      packageName,
+		imports:          make(map[string]bool),
+		blockNameCount:   make(map[string]int),
+		usedParameters:   make(map[string]bool),
+		unknownResources: make(map[string]bool),
 	}
 
 	// Topologically sort resources
 	ctx.resourceOrder = topologicalSort(template)
+
+	// Pre-scan for unknown resource types so GetAtt can use explicit GetAtt{} for them
+	for _, res := range template.Resources {
+		module, _ := resolveResourceType(res.ResourceType)
+		if module == "" {
+			ctx.unknownResources[res.LogicalID] = true
+		}
+	}
 
 	return ctx
 }
@@ -1043,8 +1055,11 @@ func generateResource(ctx *codegenContext, resource *IRResource) string {
 	// Resolve resource type to Go module and type
 	module, typeName := resolveResourceType(resource.ResourceType)
 	if module == "" {
-		// Skip unknown resource types entirely - don't generate broken code
-		return fmt.Sprintf("// Skipped unknown resource type: %s (%s)", resource.LogicalID, resource.ResourceType)
+		// Generate placeholder variable for unknown resource types so they can still be referenced
+		// This allows outputs and other resources to reference custom resources like Custom::*
+		varName := sanitizeVarName(resource.LogicalID)
+		return fmt.Sprintf("// %s is a placeholder for unknown resource type: %s\n// This allows references from outputs and other resources to compile.\nvar %s any = nil",
+			varName, resource.ResourceType, varName)
 	}
 
 	// Add import
@@ -2067,14 +2082,15 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				attr = fmt.Sprintf("%v", args[1])
 			}
 		}
-		// Check for nested attributes (e.g., "Endpoint.Address")
-		// These can't use field access pattern since AttrRef doesn't have sub-fields
-		if strings.Contains(attr, ".") {
+		// Check for nested attributes (e.g., "Endpoint.Address") or unknown resources
+		// These can't use field access pattern:
+		// - Nested attributes: AttrRef doesn't have sub-fields
+		// - Unknown resources: placeholder is `any` type with no fields
+		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] {
 			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 			return fmt.Sprintf("GetAtt{%s, %q}", sanitizeVarName(logicalID), attr)
 		}
 		// Use attribute access pattern - Resource.Attr
-		// Even for unknown resources, use this pattern (cross-file references)
 		// This avoids generating GetAtt{} which violates style guidelines
 		return fmt.Sprintf("%s.%s", sanitizeVarName(logicalID), attr)
 

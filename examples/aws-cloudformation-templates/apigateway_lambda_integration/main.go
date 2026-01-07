@@ -15,7 +15,7 @@ var RestApiEndpointConfiguration = apigateway.RestApi_EndpointConfiguration{
 
 var RestApi = apigateway.RestApi{
 	Description: "My Rest API",
-	EndpointConfiguration: &RestApiEndpointConfiguration,
+	EndpointConfiguration: RestApiEndpointConfiguration,
 	Name: "MyApi",
 }
 
@@ -33,6 +33,12 @@ var RequestModel = apigateway.Model{
 	"title": "MyModel",
 	"type": "object",
 },
+}
+
+var ApiResource = apigateway.Resource{
+	ParentId: RestApi.RootResourceId,
+	PathPart: "{city}",
+	RestApiId: RestApi,
 }
 
 var ApiMethodIntegrationIntegrationResponse1 = apigateway.Method_IntegrationResponse{
@@ -70,7 +76,7 @@ var ApiMethodIntegration = apigateway.Method_Integration{
 var ApiMethod = apigateway.Method{
 	AuthorizationType: "NONE",
 	HttpMethod: "ANY",
-	Integration: &ApiMethodIntegration,
+	Integration: ApiMethodIntegration,
 	MethodResponses: []any{ApiMethodMethodResponse1},
 	RequestModels: Json{
 	"application/json": RequestModel,
@@ -81,11 +87,5 @@ var ApiMethod = apigateway.Method{
 	"method.request.querystring.time": "true",
 },
 	ResourceId: ApiResource,
-	RestApiId: RestApi,
-}
-
-var ApiResource = apigateway.Resource{
-	ParentId: RestApi.RootResourceId,
-	PathPart: "{city}",
 	RestApiId: RestApi,
 }

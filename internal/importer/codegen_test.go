@@ -450,6 +450,39 @@ Resources:
 	for _, code := range files {
 		assert.NotContains(t, code, `resources/unknown`, "Should not import resources/unknown")
 	}
+
+	// Should generate placeholder variable for unknown resource
+	mainCode := files["main.go"]
+	assert.Contains(t, mainCode, "var MyCustomResource any = nil", "Should generate placeholder variable")
+	assert.Contains(t, mainCode, "placeholder for unknown resource type: Custom::MyResource", "Should have comment explaining placeholder")
+}
+
+// TestGenerateCode_UnknownResourceWithOutputRef tests that outputs can reference unknown resource types.
+// Bug: Outputs referencing Custom::* resources cause undefined variable errors.
+func TestGenerateCode_UnknownResourceWithOutputRef(t *testing.T) {
+	content := []byte(`
+Resources:
+  ADConnectorResource:
+    Type: Custom::ADConnectorResource
+    Properties:
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:MyFunction
+Outputs:
+  DirectoryId:
+    Value: !GetAtt ADConnectorResource.DirectoryId
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "adconnector")
+
+	// Should generate placeholder variable
+	mainCode := files["main.go"]
+	assert.Contains(t, mainCode, "var ADConnectorResource any = nil", "Should generate placeholder variable for Custom:: resource")
+
+	// Output should reference the placeholder (as GetAtt since custom resources have dynamic attrs)
+	outputsCode := files["outputs.go"]
+	assert.Contains(t, outputsCode, "GetAtt{ADConnectorResource", "Output should use GetAtt for custom resource attribute")
 }
 
 // TestGenerateCode_NoUnusedImports tests that intrinsics import is only added when used.

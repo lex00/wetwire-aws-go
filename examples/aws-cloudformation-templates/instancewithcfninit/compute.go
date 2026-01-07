@@ -15,7 +15,7 @@ var InstanceBlockDeviceMappingDevsda1Ebs = ec2.Instance_Ebs{
 
 var InstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &InstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: InstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var Instance = ec2.Instance{

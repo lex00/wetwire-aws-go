@@ -14,7 +14,7 @@ var BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryption
 }
 
 var BucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: BucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var BucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -33,10 +33,10 @@ var BucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var Bucket = s3.Bucket{
-	BucketEncryption: &BucketBucketEncryption,
+	BucketEncryption: BucketBucketEncryption,
 	BucketName: BucketName,
-	PublicAccessBlockConfiguration: &BucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &BucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: BucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: BucketVersioningConfiguration,
 }
 
 var BucketPolicyPolicyDocument = PolicyDocument{

@@ -21,7 +21,7 @@ var LaunchTemplateLaunchTemplateDataTagSpecification1 = ec2.CapacityReservationF
 
 var LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1 = ec2.EC2Fleet_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
+	Ebs: LaunchTemplateLaunchTemplateDataBlockDeviceMappingDevsda1Ebs,
 }
 
 var LaunchTemplateLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
@@ -59,7 +59,7 @@ var WebServerGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSp
 var WebServerGroup = autoscaling.AutoScalingGroup{
 	AvailabilityZones: AZs,
 	HealthCheckType: "ELB",
-	LaunchTemplate: &WebServerGroupLaunchTemplate,
+	LaunchTemplate: WebServerGroupLaunchTemplate,
 	MaxSize: "3",
 	MinSize: "1",
 	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},

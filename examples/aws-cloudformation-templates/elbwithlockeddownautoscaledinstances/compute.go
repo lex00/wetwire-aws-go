@@ -10,7 +10,7 @@ import (
 )
 
 var WebServerGroup = autoscaling.AutoScalingGroup{
-	AvailabilityZones: GetAZs{},
+	AvailabilityZones: []any{GetAZs{}},
 	LaunchConfigurationName: LaunchConfig,
 	LoadBalancerNames: []any{ElasticLoadBalancer},
 	MaxSize: "2",
