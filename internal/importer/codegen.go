@@ -164,6 +164,41 @@ var cfServiceToEnumService = map[string]string{
 	"events":                 "events",
 }
 
+// listTypeProperties are CloudFormation properties that expect list/array types ([]any in Go).
+// When assigning intrinsics like GetAZs{} to these, we need to wrap them in []any{}.
+var listTypeProperties = map[string]bool{
+	// Common list properties
+	"AvailabilityZones":                   true,
+	"SubnetIds":                           true,
+	"Subnets":                             true,
+	"SecurityGroupIds":                    true,
+	"SecurityGroups":                      true,
+	"VpcSecurityGroupIds":                 true,
+	"LoadBalancerNames":                   true,
+	"TargetGroupArns":                     true,
+	"NotificationConfigurations":          true,
+	"Regions":                             true,
+	"AdditionalPrimaryNodeSecurityGroups": true,
+	"AdditionalCoreNodeSecurityGroups":    true,
+	"StackSetRegions":                     true,
+}
+
+// isListTypeProperty checks if a property expects a list type ([]any).
+func isListTypeProperty(propName string) bool {
+	return listTypeProperties[propName]
+}
+
+// intrinsicReturnsListType checks if an intrinsic function returns a list.
+// These intrinsics need to be wrapped in []any{} when assigned to list-type fields.
+func intrinsicReturnsListType(intrinsic *IRIntrinsic) bool {
+	switch intrinsic.Type {
+	case IntrinsicGetAZs:
+		return true
+	default:
+		return false
+	}
+}
+
 // tryEnumConstant attempts to convert a string value to an enum constant reference.
 // Returns empty string if no enum mapping exists or the value is not a valid enum value.
 func tryEnumConstant(ctx *codegenContext, value string) string {
@@ -1044,7 +1079,13 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 
 	switch v := value.(type) {
 	case *IRIntrinsic:
-		return intrinsicToGo(ctx, v)
+		goCode := intrinsicToGo(ctx, v)
+		// If this property expects a list type and the intrinsic returns a list,
+		// wrap it in []any{} to satisfy Go's type system
+		if isListTypeProperty(propName) && intrinsicReturnsListType(v) {
+			return fmt.Sprintf("[]any{%s}", goCode)
+		}
+		return goCode
 
 	case bool:
 		if v {
@@ -1232,7 +1273,13 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 
 	switch v := value.(type) {
 	case *IRIntrinsic:
-		return intrinsicToGo(ctx, v)
+		goCode := intrinsicToGo(ctx, v)
+		// If this property expects a list type and the intrinsic returns a list,
+		// wrap it in []any{} to satisfy Go's type system
+		if isListTypeProperty(propName) && intrinsicReturnsListType(v) {
+			return fmt.Sprintf("[]any{%s}", goCode)
+		}
+		return goCode
 
 	case bool:
 		if v {
