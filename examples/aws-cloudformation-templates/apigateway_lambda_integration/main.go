@@ -35,6 +35,12 @@ var RequestModel = apigateway.Model{
 },
 }
 
+var ApiResource = apigateway.Resource{
+	ParentId: RestApi.RootResourceId,
+	PathPart: "{city}",
+	RestApiId: RestApi,
+}
+
 var ApiMethodIntegrationIntegrationResponse1 = apigateway.Method_IntegrationResponse{
 	StatusCode: "200",
 }
@@ -81,11 +87,5 @@ var ApiMethod = apigateway.Method{
 	"method.request.querystring.time": "true",
 },
 	ResourceId: ApiResource,
-	RestApiId: RestApi,
-}
-
-var ApiResource = apigateway.Resource{
-	ParentId: RestApi.RootResourceId,
-	PathPart: "{city}",
 	RestApiId: RestApi,
 }

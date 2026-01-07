@@ -183,6 +183,23 @@ var CloudFrontDistribution = cloudfront.Distribution{
 	DistributionConfig: CloudFrontDistributionDistributionConfig,
 }
 
+var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
+	Field: "path-pattern",
+	Values: []any{"/*"},
+}
+
+var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
+	TargetGroupArn: OriginALBTG,
+	Type_: "forward",
+}
+
+var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
+	Actions: []any{OriginALBHttpsListenerRuleActionForward},
+	Conditions: []any{OriginALBHttpsListenerRuleCondition1},
+	ListenerArn: OriginALBHttpsListener,
+	Priority: 1,
+}
+
 var OriginALBHttpsListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 	TargetGroupArn: OriginALBTG,
 	Type_: "forward",
@@ -199,23 +216,6 @@ var OriginALBHttpsListener = elasticloadbalancingv2.Listener{
 	Port: 443,
 	Protocol: enums.Elbv2ProtocolEnumHttps,
 	SslPolicy: "ELBSecurityPolicy-FS-2018-06",
-}
-
-var OriginALBHttpsListenerRuleCondition1 = elasticloadbalancingv2.ListenerRule_RuleCondition{
-	Field: "path-pattern",
-	Values: []any{"/*"},
-}
-
-var OriginALBHttpsListenerRuleActionForward = elasticloadbalancingv2.ListenerRule_Action{
-	TargetGroupArn: OriginALBTG,
-	Type_: "forward",
-}
-
-var OriginALBHttpsListenerRule = elasticloadbalancingv2.ListenerRule{
-	Actions: []any{OriginALBHttpsListenerRuleActionForward},
-	Conditions: []any{OriginALBHttpsListenerRuleCondition1},
-	ListenerArn: OriginALBHttpsListener,
-	Priority: 1,
 }
 
 var OriginALBTagEnvironment = Tag{

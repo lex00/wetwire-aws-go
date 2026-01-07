@@ -59,16 +59,16 @@ var ADConnectorWindowsEC2DomainJoinRole = iam.Role{
 	Tags: []any{ADConnectorWindowsEC2DomainJoinRoleTagStackName},
 }
 
-var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
-	Path: "/",
-	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
-}
-
 var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
 	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
 	Path: "/",
 	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
+}
+
+var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
+	Path: "/",
+	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
 }
 
 var ADConnectorLambdaRolePolicyADConnectorServiceAcPolicyDocument = PolicyDocument{

@@ -5,6 +5,7 @@
 package vpc_ec2_instance_with_multiple_static_ipaddresses
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 

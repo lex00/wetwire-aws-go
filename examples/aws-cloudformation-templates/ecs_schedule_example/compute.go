@@ -27,7 +27,7 @@ var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
 	LaunchConfigurationName: ContainerInstances,
 	MaxSize: MaxSize,
 	MinSize: "1",
-	VPCZoneIdentifier: SubnetId,
+	VPCZoneIdentifier: []any{SubnetId},
 }
 
 var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
