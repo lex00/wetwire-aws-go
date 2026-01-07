@@ -759,3 +759,38 @@ Resources:
 	assert.Contains(t, securityCode, "Description: TransformResource,", "Reference to Transform should use TransformResource")
 	assert.NotContains(t, securityCode, "Description: Transform,", "Should not use bare 'Transform' reference")
 }
+
+func TestGenerateCode_IfIntrinsicWithPropertyType(t *testing.T) {
+	// Test that If{} intrinsic on property type fields doesn't generate & prefix
+	// Issue #41: If{} intrinsic incompatible with pointer fields
+	content := []byte(`
+Conditions:
+  HasLogging:
+    !Equals [!Ref EnableLogging, "true"]
+Parameters:
+  EnableLogging:
+    Type: String
+    Default: "false"
+  LogBucket:
+    Type: String
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+      LoggingConfiguration: !If
+        - HasLogging
+        - DestinationBucketName: !Ref LogBucket
+        - !Ref "AWS::NoValue"
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "iftest")
+	code := files["storage.go"]
+
+	// Should generate If{} without & prefix for property type fields
+	assert.Contains(t, code, "LoggingConfiguration: If{", "Should generate If{} for conditional property")
+	assert.NotContains(t, code, "&If{", "Should not use & prefix with If{}")
+}

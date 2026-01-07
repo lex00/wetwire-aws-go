@@ -1211,10 +1211,7 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
-			// Add & if field expects a pointer
-			if needsPointer {
-				return "&" + blockVarName
-			}
+			// Pointer fields are now `any` type, so no & prefix needed
 			return blockVarName
 		}
 
@@ -1405,10 +1402,7 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
 
-			// Add & if field expects a pointer
-			if needsPointer {
-				return "&" + nestedVarName
-			}
+			// Pointer fields are now `any` type, so no & prefix needed
 			return nestedVarName
 		}
 
@@ -1730,8 +1724,8 @@ func valueToGoWithProperty(ctx *codegenContext, value any, indent int, propName 
 
 			// Restore type context
 			ctx.currentTypeName = savedTypeName
-			// Use pointer for property types (they're optional fields in the struct)
-			return fmt.Sprintf("&%s.%s{\n%s\n%s}", ctx.currentResource, typeName, strings.Join(items, "\n"), indentStr)
+			// Property type fields are now `any` type, so no & prefix needed
+			return fmt.Sprintf("%s.%s{\n%s\n%s}", ctx.currentResource, typeName, strings.Join(items, "\n"), indentStr)
 		}
 
 		// Check if we're at an array element level (propName is empty but currentTypeName is a property type)
