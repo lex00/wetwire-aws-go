@@ -487,7 +487,7 @@ type WebACL_Rule struct {
 	OverrideAction   any                        `json:"OverrideAction,omitempty"`
 	Priority         any                        `json:"Priority,omitempty"`
 	RuleLabels       []any                      `json:"RuleLabels,omitempty"`
-	Statement        RuleGroup_Statement        `json:"Statement,omitempty"`
+	Statement        WebACL_Statement        `json:"Statement,omitempty"`
 	VisibilityConfig RuleGroup_VisibilityConfig `json:"VisibilityConfig,omitempty"`
 }
 

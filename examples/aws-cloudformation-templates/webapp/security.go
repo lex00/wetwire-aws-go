@@ -154,8 +154,12 @@ var SiteWebACLRuleAWSNegAWSManagedRuleVisibilityConfig = wafv2.RuleGroup_Visibil
 	SampledRequestsEnabled: true,
 }
 
-var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.RuleGroup_Statement{
-	ManagedRuleGroupStatement: Json{"ExcludedRules": []any{Json{"Name": "NoUserAgent_HEADER"}}, "Name": "AWSManagedRulesCommonRuleSet", "VendorName": "AWS"},
+var SiteWebACLRuleAWSNegAWSManagedRuleStatement = wafv2.WebACL_Statement{
+	ManagedRuleGroupStatement: wafv2.WebACL_ManagedRuleGroupStatement{
+		ExcludedRules: []any{wafv2.WebACL_ExcludedRule{Name: "NoUserAgent_HEADER"}},
+		Name:          "AWSManagedRulesCommonRuleSet",
+		VendorName:    "AWS",
+	},
 }
 
 var SiteWebACLRuleAWSNegAWSManagedRuleOverrideAction = wafv2.WebACL_OverrideAction{
