@@ -363,6 +363,7 @@ success "Imported: $IMPORT_OK  Failed: $IMPORT_FAIL"
 
 # Step 6: Validate generated Go code
 VALIDATION_FAILED=()
+BUILD_FAILED=()
 
 if [ "$SKIP_VALIDATION" = false ]; then
     header "Validating Generated Templates"
@@ -394,6 +395,46 @@ if [ "$SKIP_VALIDATION" = false ]; then
 
     VALIDATED_COUNT=$((IMPORT_OK - ${#VALIDATION_FAILED[@]}))
     success "Validated: $VALIDATED_COUNT/$IMPORT_OK templates"
+
+    # Step 6b: Round-trip validation - build Go packages back to CloudFormation
+    header "Round-Trip Build Validation"
+
+    BUILD_OK=0
+    for pkg_dir in "$OUTPUT_DIR"/*/; do
+        [ -d "$pkg_dir" ] || continue
+
+        pkg_name=$(basename "$pkg_dir")
+
+        if should_skip_validation "$pkg_name"; then
+            continue
+        fi
+
+        # Run wetwire-aws build on the package
+        if build_output=$("$PROJECT_ROOT/wetwire-aws" build "$pkg_dir" 2>&1); then
+            # Check if build succeeded (look for "success":true in output)
+            if echo "$build_output" | grep -q '"success".*true'; then
+                BUILD_OK=$((BUILD_OK + 1))
+                if [ "$VERBOSE" = "true" ]; then
+                    success "$pkg_name (build OK)"
+                fi
+            else
+                BUILD_FAILED+=("$pkg_name")
+                if [ "$VERBOSE" = "true" ]; then
+                    error "$pkg_name (build failed)"
+                fi
+            fi
+        else
+            BUILD_FAILED+=("$pkg_name")
+            if [ "$VERBOSE" = "true" ]; then
+                error "$pkg_name (build error)"
+            fi
+        fi
+    done
+
+    success "Round-trip builds: $BUILD_OK successful"
+    if [ ${#BUILD_FAILED[@]} -gt 0 ]; then
+        warn "Build failures: ${#BUILD_FAILED[@]}"
+    fi
 fi
 
 # Step 7: Report
@@ -408,6 +449,9 @@ fi
 if [ ${#VALIDATION_FAILED[@]} -gt 0 ]; then
     warn "Failed validation: ${#VALIDATION_FAILED[@]}"
 fi
+if [ ${#BUILD_FAILED[@]} -gt 0 ]; then
+    warn "Failed round-trip builds: ${#BUILD_FAILED[@]}"
+fi
 echo ""
 
 info "Output directory: $OUTPUT_DIR"
@@ -421,7 +465,7 @@ SUCCESS_RATE=$((IMPORT_OK * 100 / TOTAL_TEMPLATES))
 info "Success rate: ${SUCCESS_RATE}%"
 
 # Exit with appropriate code
-if [ "$IMPORT_FAIL" -gt 0 ] || [ ${#VALIDATION_FAILED[@]} -gt 0 ]; then
+if [ "$IMPORT_FAIL" -gt 0 ] || [ ${#VALIDATION_FAILED[@]} -gt 0 ] || [ ${#BUILD_FAILED[@]} -gt 0 ]; then
     warn "Completed with failures - examples preserved for inspection"
     echo ""
     echo "Improvement suggestions:"
@@ -430,6 +474,6 @@ if [ "$IMPORT_FAIL" -gt 0 ] || [ ${#VALIDATION_FAILED[@]} -gt 0 ]; then
     echo "  3. Handle edge cases in resource property parsing"
     exit 1
 else
-    success "All templates imported and validated successfully!"
+    success "All templates imported, validated, and round-trip built successfully!"
     exit 0
 fi
