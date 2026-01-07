@@ -100,9 +100,10 @@ func main() {
 		serialized := serializeValue(reflect.ValueOf(value))
 		if m, ok := serialized.(map[string]any); ok {
 			props = m
-		} else {
-			// Fallback to JSON marshal
-			data, err := json.Marshal(value)
+		} else if serialized != nil {
+			// Handle other return types (e.g., map[string][]any for intrinsics)
+			// by converting through JSON
+			data, err := json.Marshal(serialized)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error marshaling %s: %v\n", name, err)
 				continue
@@ -111,6 +112,9 @@ func main() {
 				fmt.Fprintf(os.Stderr, "Error unmarshaling %s: %v\n", name, err)
 				continue
 			}
+		} else {
+			// serialized is nil, skip this variable
+			continue
 		}
 
 		result[name] = props
@@ -182,10 +186,118 @@ func serializeValueNested(v reflect.Value, nested bool) any {
 		}
 	}
 
-	// Check if value implements json.Marshaler (for other intrinsics like Sub, If, etc.)
-	// Exclude Parameter, Resource, and Output - we handle these specially
+	// Handle intrinsic types that can contain nested Parameters
+	// We serialize these manually to ensure Parameters get properly resolved
 	if v.CanInterface() {
 		iface := v.Interface()
+
+		// Handle intrinsics with nested values that might contain Parameters
+		switch val := iface.(type) {
+		case intrinsics.Equals:
+			return map[string][]any{
+				"Fn::Equals": {
+					serializeValueNested(reflect.ValueOf(val.Value1), true),
+					serializeValueNested(reflect.ValueOf(val.Value2), true),
+				},
+			}
+		case intrinsics.If:
+			return map[string][]any{
+				"Fn::If": {
+					val.Condition,
+					serializeValueNested(reflect.ValueOf(val.ValueIfTrue), true),
+					serializeValueNested(reflect.ValueOf(val.ValueIfFalse), true),
+				},
+			}
+		case intrinsics.Select:
+			return map[string][]any{
+				"Fn::Select": {
+					val.Index,
+					serializeValueNested(reflect.ValueOf(val.List), true),
+				},
+			}
+		case intrinsics.And:
+			conditions := make([]any, len(val.Conditions))
+			for i, c := range val.Conditions {
+				conditions[i] = serializeValueNested(reflect.ValueOf(c), true)
+			}
+			return map[string][]any{"Fn::And": conditions}
+		case intrinsics.Or:
+			conditions := make([]any, len(val.Conditions))
+			for i, c := range val.Conditions {
+				conditions[i] = serializeValueNested(reflect.ValueOf(c), true)
+			}
+			return map[string][]any{"Fn::Or": conditions}
+		case intrinsics.Not:
+			return map[string][]any{
+				"Fn::Not": {serializeValueNested(reflect.ValueOf(val.Condition), true)},
+			}
+		case intrinsics.Join:
+			values := make([]any, len(val.Values))
+			for i, v := range val.Values {
+				values[i] = serializeValueNested(reflect.ValueOf(v), true)
+			}
+			return map[string][]any{
+				"Fn::Join": {val.Delimiter, values},
+			}
+		case intrinsics.SubWithMap:
+			vars := make(map[string]any)
+			for k, v := range val.Variables {
+				vars[k] = serializeValueNested(reflect.ValueOf(v), true)
+			}
+			return map[string][]any{
+				"Fn::Sub": {val.String, vars},
+			}
+		case intrinsics.Base64:
+			return map[string]any{
+				"Fn::Base64": serializeValueNested(reflect.ValueOf(val.Value), true),
+			}
+		case intrinsics.ImportValue:
+			return map[string]any{
+				"Fn::ImportValue": serializeValueNested(reflect.ValueOf(val.ExportName), true),
+			}
+		case intrinsics.FindInMap:
+			return map[string][]any{
+				"Fn::FindInMap": {
+					val.MapName,
+					serializeValueNested(reflect.ValueOf(val.TopKey), true),
+					serializeValueNested(reflect.ValueOf(val.SecondKey), true),
+				},
+			}
+		case intrinsics.Split:
+			return map[string][]any{
+				"Fn::Split": {
+					val.Delimiter,
+					serializeValueNested(reflect.ValueOf(val.Source), true),
+				},
+			}
+		case intrinsics.Cidr:
+			return map[string][]any{
+				"Fn::Cidr": {
+					serializeValueNested(reflect.ValueOf(val.IPBlock), true),
+					serializeValueNested(reflect.ValueOf(val.Count), true),
+					serializeValueNested(reflect.ValueOf(val.CidrBits), true),
+				},
+			}
+		case intrinsics.Tag:
+			return map[string]any{
+				"Key":   val.Key,
+				"Value": serializeValueNested(reflect.ValueOf(val.Value), true),
+			}
+		case intrinsics.Transform:
+			params := make(map[string]any)
+			for k, v := range val.Parameters {
+				params[k] = serializeValueNested(reflect.ValueOf(v), true)
+			}
+			return map[string]any{
+				"Fn::Transform": map[string]any{
+					"Name":       val.Name,
+					"Parameters": params,
+				},
+			}
+		}
+
+		// For other MarshalJSON types (Ref, GetAtt, Sub, GetAZs, Condition)
+		// that don't contain nested values, use their MarshalJSON directly
 		_, isParam := iface.(intrinsics.Parameter)
 		_, isRes := iface.(Resource)
 		_, isOutput := iface.(intrinsics.Output)
