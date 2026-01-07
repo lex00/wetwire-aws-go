@@ -1332,3 +1332,30 @@ Resources:
 	assert.Contains(t, mainCode, "AdditionalMasterSecurityGroups: []any{MasterSecurityGroups}", "Should wrap in []any{}")
 	assert.Contains(t, mainCode, "AdditionalSlaveSecurityGroups: []any{SlaveSecurityGroups}", "Should wrap in []any{}")
 }
+
+// TestGenerateCode_JoinValuesWrapping tests that Join.Values wraps single
+// intrinsic references in []any{}.
+// Issue #73: Join{..., Values: SecurityGroupIds} should be Join{..., Values: []any{SecurityGroupIds}}
+func TestGenerateCode_JoinValuesWrapping(t *testing.T) {
+	content := []byte(`
+Parameters:
+  SecurityGroupIds:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: Security group IDs
+
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join ["-", !Ref SecurityGroupIds]
+`)
+
+	ir, err := ParseTemplateContent(content, "jointest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "jointest")
+	storageCode := files["storage.go"]
+
+	// Join.Values should wrap the parameter ref in []any{}
+	assert.Contains(t, storageCode, "Values: []any{SecurityGroupIds}", "Join.Values should wrap ref in []any{}")
+}

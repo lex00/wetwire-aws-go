@@ -2157,7 +2157,16 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 		if args, ok := intrinsic.Args.([]any); ok && len(args) >= 2 {
 			delimiter := valueToGo(ctx, args[0], 0)
-			values := valueToGo(ctx, args[1], 0)
+			// Check if the second argument is an intrinsic that needs wrapping
+			// Join.Values expects []any, but intrinsics like Ref resolve to bare var names
+			var values string
+			if valIntrinsic, ok := args[1].(*IRIntrinsic); ok {
+				// The intrinsic resolves to a variable name, wrap in []any{}
+				innerVal := intrinsicToGo(ctx, valIntrinsic)
+				values = fmt.Sprintf("[]any{%s}", innerVal)
+			} else {
+				values = valueToGo(ctx, args[1], 0)
+			}
 			return fmt.Sprintf("Join{Delimiter: %s, Values: %s}", delimiter, values)
 		}
 		return `Join{Delimiter: "", Values: nil}`
