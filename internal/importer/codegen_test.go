@@ -684,3 +684,27 @@ Resources:
 	hasValidSubnets := strings.Contains(code, "[]any{Subnets}") || strings.Contains(code, "SubnetIds: Subnets")
 	assert.True(t, hasValidSubnets, "Parameter should be usable in list-type fields")
 }
+
+// TestGenerateCode_SelectIndexAsInt tests that Select.Index is generated as int, not string.
+// Issue #39: Select index was generated as "0" instead of 0.
+func TestGenerateCode_SelectIndexAsInt(t *testing.T) {
+	content := []byte(`
+Resources:
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: vpc-123
+      CidrBlock: "10.0.0.0/24"
+      AvailabilityZone: !Select ["0", !GetAZs ""]
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "selecttest")
+	code := files["network.go"]
+
+	// Should have integer index, not string
+	assert.Contains(t, code, "Select{Index: 0,", "Select index should be integer, not string")
+	assert.NotContains(t, code, `Select{Index: "0"`, "Select index should not be quoted string")
+}
