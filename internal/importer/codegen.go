@@ -2550,6 +2550,10 @@ func SanitizeGoName(name string) string {
 			if unicode.IsLetter(r) || r == '_' {
 				// Capitalize first letter for export
 				result.WriteRune(unicode.ToUpper(r))
+			} else if unicode.IsDigit(r) {
+				// Names starting with digits need underscore prefix but preserve the digit
+				result.WriteRune('_')
+				result.WriteRune(r)
 			} else {
 				result.WriteRune('_')
 			}

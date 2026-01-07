@@ -321,13 +321,14 @@ func TestSanitizeGoName(t *testing.T) {
 		expected string
 	}{
 		{"ValidName", "ValidName"},
-		{"123Invalid", "_23Invalid"},
-		{"with-dash", "Withdash"},    // Capitalized for export
-		{"with.dot", "Withdot"},      // Capitalized for export
-		{"type", "Type"},             // Capitalized, no longer a keyword
-		{"package", "Package"},       // Capitalized, no longer a keyword
+		{"123Invalid", "_123Invalid"},             // Digits preserved with _ prefix
+		{"2RouteTableCondition", "_2RouteTableCondition"}, // Issue #76: digit prefix preserved
+		{"with-dash", "Withdash"},                 // Capitalized for export
+		{"with.dot", "Withdot"},                   // Capitalized for export
+		{"type", "Type"},                          // Capitalized, no longer a keyword
+		{"package", "Package"},                    // Capitalized, no longer a keyword
 		{"", "_"},
-		{"myBucket", "MyBucket"},     // Lowercase capitalized
+		{"myBucket", "MyBucket"},                  // Lowercase capitalized
 	}
 
 	for _, tt := range tests {
