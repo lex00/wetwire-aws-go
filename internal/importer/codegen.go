@@ -1361,7 +1361,24 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 
 	switch v := value.(type) {
 	case *IRIntrinsic:
-		goCode := intrinsicToGo(ctx, v)
+		// If we have a property name, update the type context before processing
+		// the intrinsic so that nested values use the correct type.
+		// For example, S3Location inside an If should use Association_S3OutputLocation,
+		// not the parent Association_InstanceAssociationOutputLocation.
+		var goCode string
+		if propName != "" {
+			typeName := getPropertyTypeName(ctx, propName)
+			if typeName != "" {
+				savedTypeName := ctx.currentTypeName
+				ctx.currentTypeName = typeName
+				goCode = intrinsicToGo(ctx, v)
+				ctx.currentTypeName = savedTypeName
+			} else {
+				goCode = intrinsicToGo(ctx, v)
+			}
+		} else {
+			goCode = intrinsicToGo(ctx, v)
+		}
 		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
 		if isListTypeProperty(propName) && intrinsicNeedsArrayWrapping(v) {
@@ -1423,6 +1440,20 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 				if k == "Ref" || strings.HasPrefix(k, "Fn::") || k == "Condition" {
 					intrinsic := mapToIntrinsic(v)
 					if intrinsic != nil {
+						// If we have a property name, update the type context before processing
+						// the intrinsic so that nested values use the correct type.
+						// For example, S3Location inside an If should use Association_S3OutputLocation,
+						// not the parent Association_InstanceAssociationOutputLocation.
+						if propName != "" {
+							typeName := getPropertyTypeName(ctx, propName)
+							if typeName != "" {
+								savedTypeName := ctx.currentTypeName
+								ctx.currentTypeName = typeName
+								result := intrinsicToGo(ctx, intrinsic)
+								ctx.currentTypeName = savedTypeName
+								return result
+							}
+						}
 						return intrinsicToGo(ctx, intrinsic)
 					}
 				}
@@ -1691,6 +1722,20 @@ func valueToGoWithProperty(ctx *codegenContext, value any, indent int, propName 
 
 	switch v := value.(type) {
 	case *IRIntrinsic:
+		// If we have a property name, update the type context before processing
+		// the intrinsic so that nested values use the correct type.
+		// For example, S3Location inside an If should use Association_S3OutputLocation,
+		// not the parent Association_InstanceAssociationOutputLocation.
+		if propName != "" {
+			typeName := getPropertyTypeName(ctx, propName)
+			if typeName != "" {
+				savedTypeName := ctx.currentTypeName
+				ctx.currentTypeName = typeName
+				result := intrinsicToGo(ctx, v)
+				ctx.currentTypeName = savedTypeName
+				return result
+			}
+		}
 		return intrinsicToGo(ctx, v)
 
 	case bool:
@@ -2182,7 +2227,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 			case int:
 				indexInt = idx
 			case string:
-				fmt.Sscanf(idx, "%d", &indexInt)
+				_, _ = fmt.Sscanf(idx, "%d", &indexInt)
 			}
 			list := valueToGo(ctx, args[1], 0)
 			return fmt.Sprintf("Select{Index: %d, List: %s}", indexInt, list)
