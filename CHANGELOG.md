@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: Unknown resource types (e.g., `Custom::*`) now generate `any` placeholder variables instead of comments, allowing outputs to reference them without undefined variable errors
 - Codegen: `Fn::Transform` now generates `Transform{Name: "...", Parameters: {...}}` with proper struct fields instead of raw value passthrough
 - Codegen: `ResourceType` field in nested property types no longer incorrectly transformed to `ResourceTypeProp` (only top-level resources have the conflicting method)
+- Codegen: Duplicate array element variable names now get `_2`, `_3` suffixes to avoid redeclaration errors
 
 ### Changed
 
