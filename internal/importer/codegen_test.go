@@ -1298,3 +1298,37 @@ Resources:
 	assert.Contains(t, computeCode, "KeyName: MyKeyPair", "Reference should use capitalized name")
 	assert.Contains(t, computeCode, "SubnetId: PPrivateSubnet1", "Reference should use capitalized name")
 }
+
+// TestGenerateCode_EMRListProperties tests that EMR security group list properties
+// are wrapped in []any{}.
+// Issue #72: AdditionalMasterSecurityGroups and AdditionalSlaveSecurityGroups
+func TestGenerateCode_EMRListProperties(t *testing.T) {
+	content := []byte(`
+Parameters:
+  MasterSecurityGroups:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: Additional master security groups
+  SlaveSecurityGroups:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: Additional slave security groups
+
+Resources:
+  EMRCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name: MyCluster
+      Instances:
+        AdditionalMasterSecurityGroups: !Ref MasterSecurityGroups
+        AdditionalSlaveSecurityGroups: !Ref SlaveSecurityGroups
+`)
+
+	ir, err := ParseTemplateContent(content, "emrtest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "emrtest")
+	mainCode := files["main.go"]
+
+	// EMR list properties should wrap refs in []any{}
+	assert.Contains(t, mainCode, "AdditionalMasterSecurityGroups: []any{MasterSecurityGroups}", "Should wrap in []any{}")
+	assert.Contains(t, mainCode, "AdditionalSlaveSecurityGroups: []any{SlaveSecurityGroups}", "Should wrap in []any{}")
+}

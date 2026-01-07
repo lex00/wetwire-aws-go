@@ -185,6 +185,8 @@ var listTypeProperties = map[string]bool{
 	"Regions":                             true,
 	"AdditionalPrimaryNodeSecurityGroups": true,
 	"AdditionalCoreNodeSecurityGroups":    true,
+	"AdditionalMasterSecurityGroups":      true,
+	"AdditionalSlaveSecurityGroups":       true,
 	"StackSetRegions":                     true,
 }
 
