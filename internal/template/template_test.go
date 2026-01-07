@@ -329,8 +329,8 @@ func TestCfResourceType_SAM(t *testing.T) {
 
 func TestCfResourceType_EC2(t *testing.T) {
 	tests := []struct {
-		goType   string
-		cfnType  string
+		goType  string
+		cfnType string
 	}{
 		{"ec2.InternetGateway", "AWS::EC2::InternetGateway"},
 		{"ec2.EIP", "AWS::EC2::EIP"},
@@ -345,4 +345,120 @@ func TestCfResourceType_EC2(t *testing.T) {
 			assert.Equal(t, tt.cfnType, result)
 		})
 	}
+}
+
+func TestBuilder_Build_OutputWithAttrRefInJoin(t *testing.T) {
+	// Test that AttrRef inside Join intrinsic is resolved correctly
+	// This tests the fix for issue #92 - empty GetAtt in intrinsic functions
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyALB": {
+			Name:    "MyALB",
+			Type:    "elasticloadbalancingv2.LoadBalancer",
+			Package: "infra",
+			File:    "network.go",
+			Line:    5,
+		},
+	}
+
+	outputs := map[string]wetwire.DiscoveredOutput{
+		"ALBUrl": {
+			Name: "ALBUrl",
+			File: "outputs.go",
+			Line: 10,
+			AttrRefUsages: []wetwire.AttrRefUsage{
+				{
+					ResourceName: "MyALB",
+					Attribute:    "DNSName",
+					FieldPath:    "Value.Values", // Go field path
+				},
+			},
+		},
+	}
+
+	builder := NewBuilderFull(resources, nil, outputs, nil, nil)
+	builder.SetValue("MyALB", map[string]any{
+		"Name": "my-alb",
+	})
+	// Simulate the serialized output value - Join becomes Fn::Join with array
+	// The AttrRef field access (MyALB.DNSName) serializes to empty GetAtt
+	builder.SetValue("ALBUrl", map[string]any{
+		"Value": map[string]any{
+			"Fn::Join": []any{
+				"",
+				[]any{
+					"https://",
+					map[string]any{
+						"Fn::GetAtt": []any{"", ""}, // Empty - needs to be resolved
+					},
+				},
+			},
+		},
+		"Description": "ALB URL",
+	})
+
+	template, err := builder.Build()
+	require.NoError(t, err)
+
+	// Verify the output exists
+	require.Contains(t, template.Outputs, "ALBUrl")
+	output := template.Outputs["ALBUrl"]
+
+	// The Value should be a Join with the GetAtt properly resolved
+	value, ok := output.Value.(map[string]any)
+	require.True(t, ok, "Value should be a map")
+
+	fnJoin, ok := value["Fn::Join"].([]any)
+	require.True(t, ok, "Should have Fn::Join")
+	require.Len(t, fnJoin, 2, "Fn::Join should have delimiter and values")
+
+	values, ok := fnJoin[1].([]any)
+	require.True(t, ok, "Second element should be values array")
+	require.Len(t, values, 2, "Values should have 2 elements")
+
+	// The second element should be the resolved GetAtt
+	getAttMap, ok := values[1].(map[string]any)
+	require.True(t, ok, "Second value should be a GetAtt map")
+
+	getAtt, ok := getAttMap["Fn::GetAtt"].([]string)
+	require.True(t, ok, "Should have Fn::GetAtt with string array")
+	assert.Equal(t, "MyALB", getAtt[0], "GetAtt resource should be resolved")
+	assert.Equal(t, "DNSName", getAtt[1], "GetAtt attribute should be resolved")
+}
+
+func TestBuilder_TransformValueWithPath_IntrinsicFieldMapping(t *testing.T) {
+	// Unit test for the intrinsic field name mapping
+	builder := NewBuilder(nil)
+
+	attrRefsByPath := map[string]wetwire.AttrRefUsage{
+		"Value.Values": {
+			ResourceName: "MyResource",
+			Attribute:    "Arn",
+			FieldPath:    "Value.Values",
+		},
+	}
+
+	// Simulate a serialized Join with empty GetAtt
+	input := map[string]any{
+		"Fn::Join": []any{
+			"-",
+			[]any{
+				"prefix",
+				map[string]any{
+					"Fn::GetAtt": []any{"", ""},
+				},
+			},
+		},
+	}
+
+	result := builder.transformValueWithPath(input, "Value", attrRefsByPath)
+
+	// Verify the GetAtt was resolved
+	resultMap := result.(map[string]any)
+	fnJoin := resultMap["Fn::Join"].([]any)
+	values := fnJoin[1].([]any)
+	getAttMap := values[1].(map[string]any)
+	getAtt := getAttMap["Fn::GetAtt"].([]string)
+
+	assert.Equal(t, "MyResource", getAtt[0])
+	assert.Equal(t, "Arn", getAtt[1])
 }

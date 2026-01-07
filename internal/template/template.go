@@ -385,6 +385,27 @@ func (b *Builder) transformRefs(name string, props map[string]any, res wetwire.D
 	return result
 }
 
+// intrinsicFieldNames maps CloudFormation intrinsic function keys to their Go field names.
+// This allows path matching to work when AttrRefs are used inside intrinsic functions.
+// The slice index corresponds to the position in the intrinsic's array value.
+var intrinsicFieldNames = map[string][]string{
+	"Fn::Join":        {"Delimiter", "Values"},
+	"Fn::Sub":         {"String"},            // SubWithMap has {"String", "Variables"}
+	"Fn::Select":      {"Index", "List"},
+	"Fn::If":          {"Condition", "TrueValue", "FalseValue"},
+	"Fn::GetAZs":      {"Region"},
+	"Fn::Split":       {"Delimiter", "String"},
+	"Fn::Base64":      {"String"},
+	"Fn::Cidr":        {"IpBlock", "Count", "CidrBits"},
+	"Fn::ImportValue": {"Name"},
+	"Fn::FindInMap":   {"MapName", "TopLevelKey", "SecondLevelKey"},
+	"Fn::Transform":   {"Name", "Parameters"},
+	"Fn::Equals":      {"Left", "Right"},
+	"Fn::And":         {"Conditions"},
+	"Fn::Or":          {"Conditions"},
+	"Fn::Not":         {"Condition"},
+}
+
 // stripArrayIndices removes array indices from a path for fuzzy matching.
 // e.g., "Policies[0].PolicyDocument.Statement[1].Resource[0]" -> "Policies.PolicyDocument.Statement.Resource"
 func stripArrayIndices(path string) string {
@@ -408,6 +429,12 @@ func stripArrayIndices(path string) string {
 }
 
 func (b *Builder) transformValueWithPath(value any, path string, attrRefsByPath map[string]wetwire.AttrRefUsage) any {
+	return b.transformValueWithPathAndContext(value, path, attrRefsByPath, "")
+}
+
+// transformValueWithPathAndContext is the internal implementation that tracks intrinsic context.
+// intrinsicKey is the current intrinsic function key (e.g., "Fn::Join") if we're inside one.
+func (b *Builder) transformValueWithPathAndContext(value any, path string, attrRefsByPath map[string]wetwire.AttrRefUsage, intrinsicKey string) any {
 	switch v := value.(type) {
 	case map[string]any:
 		// Check if this is a GetAtt with empty resource name
@@ -454,7 +481,12 @@ func (b *Builder) transformValueWithPath(value any, path string, attrRefsByPath 
 		result := make(map[string]any)
 		for key, val := range v {
 			newPath := path + "." + key
-			result[key] = b.transformValueWithPath(val, newPath, attrRefsByPath)
+			// If this is an intrinsic function key, pass it down to handle array field mapping
+			if _, isIntrinsic := intrinsicFieldNames[key]; isIntrinsic {
+				result[key] = b.transformValueWithPathAndContext(val, newPath, attrRefsByPath, key)
+			} else {
+				result[key] = b.transformValueWithPathAndContext(val, newPath, attrRefsByPath, "")
+			}
 		}
 		return result
 
@@ -462,8 +494,20 @@ func (b *Builder) transformValueWithPath(value any, path string, attrRefsByPath 
 		// Recursively transform slice elements
 		result := make([]any, len(v))
 		for i, elem := range v {
-			// For arrays, check if any AttrRefUsage matches the base path
-			result[i] = b.transformValueWithPath(elem, path, attrRefsByPath)
+			elemPath := path
+			// If we're inside an intrinsic function, use the Go field name for this position
+			if intrinsicKey != "" {
+				if fieldNames, ok := intrinsicFieldNames[intrinsicKey]; ok && i < len(fieldNames) {
+					// Replace the intrinsic key in path with the Go field name
+					// e.g., "Value.Fn::Join" + index 1 -> "Value.Values"
+					if idx := strings.LastIndex(path, "."+intrinsicKey); idx >= 0 {
+						elemPath = path[:idx+1] + fieldNames[i]
+					} else if path == intrinsicKey {
+						elemPath = fieldNames[i]
+					}
+				}
+			}
+			result[i] = b.transformValueWithPathAndContext(elem, elemPath, attrRefsByPath, "")
 		}
 		return result
 
