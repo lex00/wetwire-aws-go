@@ -1221,3 +1221,43 @@ Resources:
 	assert.Contains(t, mainCode, "ParentId: RestApi.RootResourceId", "Should use field access for Sub with GetAtt shorthand")
 	assert.NotContains(t, mainCode, "RestApiRootResourceId", "Should not generate undefined variable reference")
 }
+
+// TestGenerateCode_ListFieldWrapping tests that references to resources/parameters
+// are wrapped in []any{} when assigned to list-type fields like VPCZoneIdentifier.
+func TestGenerateCode_ListFieldWrapping(t *testing.T) {
+	content := []byte(`
+Parameters:
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Subnet IDs for autoscaling group
+
+Resources:
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: my-notifications
+
+  NotificationConfig:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: "1"
+      MaxSize: "3"
+      VPCZoneIdentifier: !Ref Subnets
+      NotificationConfigurations:
+        - TopicARN: !Ref NotificationTopic
+          NotificationTypes:
+            - autoscaling:EC2_INSTANCE_LAUNCH
+`)
+
+	ir, err := ParseTemplateContent(content, "asgtest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "asgtest")
+	computeCode := files["compute.go"]
+
+	// VPCZoneIdentifier should wrap Subnets parameter in []any{}
+	assert.Contains(t, computeCode, "VPCZoneIdentifier: []any{Subnets}", "Should wrap parameter ref in []any{} for VPCZoneIdentifier")
+
+	// TopicARN should wrap NotificationTopic resource ref in []any{}
+	assert.Contains(t, computeCode, "TopicARN: []any{NotificationTopic}", "Should wrap resource ref in []any{} for TopicARN")
+}
