@@ -9,45 +9,115 @@ import (
 )
 
 // LambdaFunctionName - Lambda Function Name for Custom Resource
-var LambdaFunctionName = Param("LambdaFunctionName")
+var LambdaFunctionName = Parameter{
+	Type: "String",
+	Description: "Lambda Function Name for Custom Resource",
+	Default: "CR-TagVpcPeeringConnections",
+	AllowedPattern: "^[\\w-]{1,64}$",
+	ConstraintDescription: "Max 64 alphanumeric characters. Also special characters supported [_, -]",
+}
 
-var LambdaLogLevel = Param("LambdaLogLevel")
+var LambdaLogLevel = Parameter{
+	Type: "String",
+	Default: "INFO",
+	AllowedValues: []any{"INFO", "DEBUG"},
+}
 
 // LambdaLogsCloudWatchKMSKey - (Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, ...
-var LambdaLogsCloudWatchKMSKey = Param("LambdaLogsCloudWatchKMSKey")
+var LambdaLogsCloudWatchKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	Default: "",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // LambdaLogsLogGroupRetention - Specifies the number of days you want to retain Lambda log events in the Clou...
-var LambdaLogsLogGroupRetention = Param("LambdaLogsLogGroupRetention")
+var LambdaLogsLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Specifies the number of days you want to retain Lambda log events in the CloudWatch Logs",
+	Default: 14,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // LambdaRoleName - Lambda Execution Role Name for the Custom Resource to Tag VPC Peering Connect...
-var LambdaRoleName = Param("LambdaRoleName")
+var LambdaRoleName = Parameter{
+	Type: "String",
+	Description: "Lambda Execution Role Name for the Custom Resource to Tag VPC Peering Connections",
+	Default: "Lambda-Role-CR-TagVpcPeeringConnections",
+	AllowedPattern: "^[\\w+=,.@-]{1,64}$",
+	ConstraintDescription: "Max 64 alphanumeric characters. Also special characters supported [+, =, ., @, -]",
+}
 
 // NumberOfRouteTables - Number of Route Table IDs to update. This must match your items in the comma-...
-var NumberOfRouteTables = Param("NumberOfRouteTables")
+var NumberOfRouteTables = Parameter{
+	Type: "String",
+	Description: "Number of Route Table IDs to update. This must match your items in the comma-separated list of RouteTableIds parameter.",
+	AllowedValues: []any{1, 2, 3, 4, 5, 6},
+}
 
 // NumberOfSecurityGroups - Number of Security Group IDs. This must match your selections in the list of ...
-var NumberOfSecurityGroups = Param("NumberOfSecurityGroups")
+var NumberOfSecurityGroups = Parameter{
+	Type: "String",
+	Description: "Number of Security Group IDs. This must match your selections in the list of SecurityGroupIds parameter.",
+	AllowedValues: []any{1, 2, 3, 4, 5, 6},
+}
 
 // PeerName - Name of the VPC Peer
-var PeerName = Param("PeerName")
+var PeerName = Parameter{
+	Type: "String",
+	Description: "Name of the VPC Peer",
+	MaxLength: IntPtr(255),
+}
 
 // PeerVPCCIDR - CIDR of the VPC Peer
-var PeerVPCCIDR = Param("PeerVPCCIDR")
+var PeerVPCCIDR = Parameter{
+	Type: "String",
+	Description: "CIDR of the VPC Peer",
+	AllowedPattern: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+	ConstraintDescription: "CIDR block parameter must be in the form x.x.x.x/16-28",
+}
 
 // RouteTableIds - Route Table IDs that will be updated to allow communications via the VPC peer...
-var RouteTableIds = Param("RouteTableIds")
+var RouteTableIds = Parameter{
+	Type: "String",
+	Description: "Route Table IDs that will be updated to allow communications via the VPC peering connection. Note, the logical order is preserved.",
+	AllowedPattern: "^(rtb-[0-9a-f]{17})$|^((rtb-[0-9a-f]{17}(,|, ))*rtb-[0-9a-f]{17})$",
+	ConstraintDescription: "Must have a prefix of \"rtb-\". Followed by 17 characters (numbers, letters \"a-f\"). Additional route tables can be provided, separated by a \"comma\".",
+}
 
 // SecurityGroupIds - Security Group IDs that will be updated to allow communications via the VPC p...
-var SecurityGroupIds = Param("SecurityGroupIds")
+var SecurityGroupIds = Parameter{
+	Type: "List<AWS::EC2::SecurityGroup::Id>",
+	Description: "Security Group IDs that will be updated to allow communications via the VPC peering connection. Note, the logical order is preserved.",
+}
 
 // TemplatesS3BucketName - Templates S3 bucket name for the CloudFormation templates. S3 bucket name can...
-var TemplatesS3BucketName = Param("TemplatesS3BucketName")
+var TemplatesS3BucketName = Parameter{
+	Type: "String",
+	Description: "Templates S3 bucket name for the CloudFormation templates. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	AllowedPattern: "^(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "Templates S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // TemplatesS3BucketRegion - AWS Region where the S3 bucket (TemplatesS3BucketName) is hosted.
-var TemplatesS3BucketRegion = Param("TemplatesS3BucketRegion")
+var TemplatesS3BucketRegion = Parameter{
+	Type: "String",
+	Description: "AWS Region where the S3 bucket (TemplatesS3BucketName) is hosted.",
+}
 
 // TemplatesS3KeyPrefix - S3 key prefix for the AWS CloudFormation templates. Key prefix can include nu...
-var TemplatesS3KeyPrefix = Param("TemplatesS3KeyPrefix")
+var TemplatesS3KeyPrefix = Parameter{
+	Type: "String",
+	Description: "S3 key prefix for the AWS CloudFormation templates. Key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+	AllowedPattern: "^[0-9a-zA-Z-/]*$",
+	ConstraintDescription: "Templates key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+}
 
 // VPCPeeringConnectionId - ID of the VPC Peering Connection
-var VPCPeeringConnectionId = Param("VPCPeeringConnectionId")
+var VPCPeeringConnectionId = Parameter{
+	Type: "String",
+	Description: "ID of the VPC Peering Connection",
+	AllowedPattern: "^pcx-[0-9a-f]{17}$",
+	ConstraintDescription: "Must have a prefix of \"pcx-\". Followed by 17 characters (numbers, letters \"a-f\")",
+}

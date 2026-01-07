@@ -9,13 +9,29 @@ import (
 )
 
 // InstanceType - EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "EC2 instance type",
+	Default: "t2.micro",
+	AllowedValues: []any{"t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "g2.2xlarge", "g2.8xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge", "d2.xlarge", "d2.2xlarge", "d2.4xlarge", "d2.8xlarge", "hs1.8xlarge", "cr1.8xlarge", "cc2.8xlarge"},
+	ConstraintDescription: "must be a valid EC2 instance type.",
+}
 
 // KeyName - The EC2 Key Pair to allow SSH access to the instances
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "The EC2 Key Pair to allow SSH access to the instances",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
 // Subnets - The list of SubnetIds, for at least two Availability Zones in the region in y...
-var Subnets = Param("Subnets")
+var Subnets = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "The list of SubnetIds, for at least two Availability Zones in the region in your Virtual Private Cloud (VPC) Defaults: ",
+}
 
 // VPC - VPC ID for EC2 and Elastic Load Balancer
-var VPC = Param("VPC")
+var VPC = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "VPC ID for EC2 and Elastic Load Balancer",
+}

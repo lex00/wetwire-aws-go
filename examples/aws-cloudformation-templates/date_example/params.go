@@ -9,10 +9,24 @@ import (
 )
 
 // Date - Date for this test (ISO 8601 format)
-var Date = Param("Date")
+var Date = Parameter{
+	Type: "String",
+	Description: "Date for this test (ISO 8601 format)",
+	Default: "",
+	AllowedPattern: "^$|^\\d{4}(-\\d\\d(-\\d\\d(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?)?)?$",
+}
 
 // Date2 - Second date for test to use (ISO 8601 format)
-var Date2 = Param("Date2")
+var Date2 = Parameter{
+	Type: "String",
+	Description: "Second date for test to use (ISO 8601 format)",
+	Default: "",
+	AllowedPattern: "^$|^\\d{4}(-\\d\\d(-\\d\\d(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?)?)?$",
+}
 
 // Days - Days
-var Days = Param("Days")
+var Days = Parameter{
+	Type: "Number",
+	Description: "Days",
+	Default: 1,
+}

@@ -9,13 +9,34 @@ import (
 )
 
 // HashKeyElementName - HashType PrimaryKey Name
-var HashKeyElementName = Param("HashKeyElementName")
+var HashKeyElementName = Parameter{
+	Type: "String",
+	Description: "HashType PrimaryKey Name",
+	AllowedPattern: "[a-zA-Z0-9]*",
+	ConstraintDescription: "must contain only alphanumberic characters",
+}
 
 // HashKeyElementType - HashType PrimaryKey Type
-var HashKeyElementType = Param("HashKeyElementType")
+var HashKeyElementType = Parameter{
+	Type: "String",
+	Description: "HashType PrimaryKey Type",
+	Default: "S",
+	AllowedPattern: "[S|N]",
+	ConstraintDescription: "must be either S or N",
+}
 
 // ReadCapacityUnits - Provisioned read throughput
-var ReadCapacityUnits = Param("ReadCapacityUnits")
+var ReadCapacityUnits = Parameter{
+	Type: "Number",
+	Description: "Provisioned read throughput",
+	Default: "5",
+	ConstraintDescription: "must be between 5 and 10000",
+}
 
 // WriteCapacityUnits - Provisioned write throughput
-var WriteCapacityUnits = Param("WriteCapacityUnits")
+var WriteCapacityUnits = Parameter{
+	Type: "Number",
+	Description: "Provisioned write throughput",
+	Default: "10",
+	ConstraintDescription: "must be between 5 and 10000",
+}

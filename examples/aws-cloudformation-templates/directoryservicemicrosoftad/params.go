@@ -9,27 +9,59 @@ import (
 )
 
 // pCreateAlias - A unique alias to assign to the Microsoft Active Directory in AWS. AWS Direct...
-var pCreateAlias = Param("pCreateAlias")
+var pCreateAlias = Parameter{
+	Type: "String",
+	Description: "A unique alias to assign to the Microsoft Active Directory in AWS. AWS Directory Service uses the alias to construct the access URL for the directory, such as http://alias.awsapps.com. By default, AWS CloudFormation does not create an alias.\n",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // pDomainName - The fully qualified name for the Microsoft Active Directory in AWS, such as c...
-var pDomainName = Param("pDomainName")
+var pDomainName = Parameter{
+	Type: "String",
+	Description: "The fully qualified name for the Microsoft Active Directory in AWS, such as corp.example.com. The name doesn't need to be publicly resolvable; it will resolve inside your VPC only.\n",
+	Default: "corp.example.com",
+}
 
 // pEdition - The AWS Microsoft AD edition. Valid values include Standard and Enterprise. T...
-var pEdition = Param("pEdition")
+var pEdition = Parameter{
+	Type: "String",
+	Description: "The AWS Microsoft AD edition. Valid values include Standard and Enterprise. The default is Enterprise.\n",
+	Default: "Enterprise",
+	AllowedValues: []any{"Standard", "Enterprise"},
+}
 
 // pEnableSingleSignOn - Whether to enable single sign-on for a Microsoft Active Directory in AWS. Sin...
-var pEnableSingleSignOn = Param("pEnableSingleSignOn")
+var pEnableSingleSignOn = Parameter{
+	Type: "String",
+	Description: "Whether to enable single sign-on for a Microsoft Active Directory in AWS. Single sign-on allows users in your directory to access certain AWS services from a computer joined to the directory without having to enter their credentials separately. If you don't specify a value, AWS CloudFormation disables single sign-on by default. If enabling SSO, then \"Create Alias\" need to be set to true.\n",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // pMicrosoftADShortName - The NetBIOS name for your domain, such as CORP. If you don't specify a value,...
-var pMicrosoftADShortName = Param("pMicrosoftADShortName")
+var pMicrosoftADShortName = Parameter{
+	Type: "String",
+	Description: "The NetBIOS name for your domain, such as CORP. If you don't specify a value, AWS Directory Service uses the first part of your directory DNS server name. For example, if your directory DNS server name is corp.example.com, AWS Directory Service specifies CORP for the NetBIOS name.\n",
+	Default: "corp",
+}
 
 // pPrivateSubnet1 - A subnet within the selected VPC. Each subnet must be in different Availabili...
-var pPrivateSubnet1 = Param("pPrivateSubnet1")
+var pPrivateSubnet1 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "A subnet within the selected VPC. Each subnet must be in different Availability Zones (AZs). AWS Directory Service creates a directory server and a DNS server in each subnet.\n",
+}
 
 // pPrivateSubnet2 - A second subnet in same VPC that is in different AZ. Each subnet must be in d...
-var pPrivateSubnet2 = Param("pPrivateSubnet2")
+var pPrivateSubnet2 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "A second subnet in same VPC that is in different AZ. Each subnet must be in different Availability Zones (AZs). AWS Directory Service creates a directory server and a DNS server in each subnet.\n",
+}
 
 // pVPCID - The VPC ID in which to create the Microsoft Active Directory server.
-var pVPCID = Param("pVPCID")
+var pVPCID = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "The VPC ID in which to create the Microsoft Active Directory server.\n",
+}
 
 var cAliasCondition = Equals{pCreateAlias, "true"}

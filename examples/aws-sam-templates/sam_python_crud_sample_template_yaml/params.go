@@ -8,8 +8,17 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var AWSEnv = Param("AWSEnv")
+var AWSEnv = Parameter{
+	Type: "String",
+	Default: "AWS",
+}
 
-var Region = Param("Region")
+var Region = Parameter{
+	Type: "String",
+	Default: "us-east-1",
+}
 
-var Table = Param("Table")
+var Table = Parameter{
+	Type: "String",
+	Default: "Activities",
+}

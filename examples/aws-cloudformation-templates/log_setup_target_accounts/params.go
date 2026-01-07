@@ -8,4 +8,6 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var CentralEventBusArn = Param("CentralEventBusArn")
+var CentralEventBusArn = Parameter{
+	Type: "String",
+}

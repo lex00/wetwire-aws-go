@@ -9,10 +9,22 @@ import (
 )
 
 // DeliveryChannelExists - Do you have an exisiting AWS Config delivery channel?
-var DeliveryChannelExists = Param("DeliveryChannelExists")
+var DeliveryChannelExists = Parameter{
+	Type: "String",
+	Description: "Do you have an exisiting AWS Config delivery channel?",
+	Default: "false",
+	AllowedValues: []any{"false", "true"},
+}
 
-var Ec2VolumeAutoEnableIO = Param("Ec2VolumeAutoEnableIO")
+var Ec2VolumeAutoEnableIO = Parameter{
+	Type: "String",
+	Default: "false",
+	AllowedValues: []any{"false", "true"},
+}
 
-var Ec2VolumeTagKey = Param("Ec2VolumeTagKey")
+var Ec2VolumeTagKey = Parameter{
+	Type: "String",
+	Default: "CostCenter",
+}
 
 var CreateDeliveryChannelCondition = Equals{DeliveryChannelExists, "false"}

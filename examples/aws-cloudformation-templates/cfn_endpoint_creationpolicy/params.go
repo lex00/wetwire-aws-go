@@ -9,25 +9,60 @@ import (
 )
 
 // EnvironmentName - An environment name that will be prefixed to resource names
-var EnvironmentName = Param("EnvironmentName")
+var EnvironmentName = Parameter{
+	Type: "String",
+	Description: "An environment name that will be prefixed to resource names",
+}
 
 // KeyName - Key pair for EC2 access
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Key pair for EC2 access",
+}
 
 // LinuxAMI - Managed AMI ID for Amazon Linux
-var LinuxAMI = Param("LinuxAMI")
+var LinuxAMI = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Description: "Managed AMI ID for Amazon Linux",
+	Default: "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2",
+}
 
 // PrivateSubnet1CIDR - Please enter the IP range (CIDR notation) for the private subnet in the first...
-var PrivateSubnet1CIDR = Param("PrivateSubnet1CIDR")
+var PrivateSubnet1CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone",
+	Default: "10.192.20.0/24",
+	AllowedPattern: "((\\d{1,3})\\.){3}\\d{1,3}/\\d{1,2}",
+}
 
 // PrivateSubnet2CIDR - Please enter the IP range (CIDR notation) for the private subnet in the secon...
-var PrivateSubnet2CIDR = Param("PrivateSubnet2CIDR")
+var PrivateSubnet2CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone",
+	Default: "10.192.21.0/24",
+	AllowedPattern: "((\\d{1,3})\\.){3}\\d{1,3}/\\d{1,2}",
+}
 
 // PublicSubnet1CIDR - Please enter the IP range (CIDR notation) for the public subnet in the first ...
-var PublicSubnet1CIDR = Param("PublicSubnet1CIDR")
+var PublicSubnet1CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone",
+	Default: "10.192.10.0/24",
+	AllowedPattern: "((\\d{1,3})\\.){3}\\d{1,3}/\\d{1,2}",
+}
 
 // PublicSubnet2CIDR - Please enter the IP range (CIDR notation) for the public subnet in the second...
-var PublicSubnet2CIDR = Param("PublicSubnet2CIDR")
+var PublicSubnet2CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone",
+	Default: "10.192.11.0/24",
+	AllowedPattern: "((\\d{1,3})\\.){3}\\d{1,3}/\\d{1,2}",
+}
 
 // VpcCIDR - Please enter the IP range (CIDR notation) for this VPC
-var VpcCIDR = Param("VpcCIDR")
+var VpcCIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for this VPC",
+	Default: "10.192.0.0/16",
+	AllowedPattern: "((\\d{1,3})\\.){3}\\d{1,3}/\\d{1,2}",
+}

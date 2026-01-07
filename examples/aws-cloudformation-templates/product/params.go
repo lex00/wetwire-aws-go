@@ -9,49 +9,114 @@ import (
 )
 
 // AppName - Please specify the Application Name. Used for tagging and resource names. Man...
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Please specify the Application Name. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "app",
+}
 
 // Dept - Please specify the Department. Used for tagging
-var Dept = Param("Dept")
+var Dept = Parameter{
+	Type: "String",
+	Description: "Please specify the Department. Used for tagging",
+	Default: "1234",
+}
 
 // Env - Please specify the target Environment. Used for tagging and resource names. M...
-var Env = Param("Env")
+var Env = Parameter{
+	Type: "String",
+	Description: "Please specify the target Environment. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "dev",
+	AllowedValues: []any{"test", "dev", "prod"},
+}
 
 // Owner - Please specify the Owner. Used for tagging
-var Owner = Param("Owner")
+var Owner = Parameter{
+	Type: "String",
+	Description: "Please specify the Owner. Used for tagging",
+	Default: "Owner",
+}
 
 // ProvisioningArtifactDescriptionParameter - Please specify ServiceCatalog Product Artifact Description.
-var ProvisioningArtifactDescriptionParameter = Param("ProvisioningArtifactDescriptionParameter")
+var ProvisioningArtifactDescriptionParameter = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Artifact Description.",
+	Default: "ProductExample",
+}
 
 // ProvisioningArtifactNameParameter - Please specify ServiceCatalog Product Artifact Name.
-var ProvisioningArtifactNameParameter = Param("ProvisioningArtifactNameParameter")
+var ProvisioningArtifactNameParameter = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Artifact Name.",
+	Default: "ProductExample",
+}
 
 // ProvisioningArtifactTemplateUrl - Please specify the S3 URL of the template
-var ProvisioningArtifactTemplateUrl = Param("ProvisioningArtifactTemplateUrl")
+var ProvisioningArtifactTemplateUrl = Parameter{
+	Type: "String",
+	Description: "Please specify the S3 URL of the template",
+	Default: "https://awsdocs.s3.amazonaws.com/servicecatalog/development-environment.template",
+}
 
 // SCProductDescription - Please specify ServiceCatalog Product Name Description.
-var SCProductDescription = Param("SCProductDescription")
+var SCProductDescription = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Name Description.",
+	Default: "ProductDescription",
+}
 
 // SCProductDistributor - Please specify ServiceCatalog Product Distributor.
-var SCProductDistributor = Param("SCProductDistributor")
+var SCProductDistributor = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Distributor.",
+	Default: "App Vendor",
+}
 
 // SCProductName - Please specify ServiceCatalog Product Name.
-var SCProductName = Param("SCProductName")
+var SCProductName = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Name.",
+	Default: "ProductName",
+}
 
 // SCProductOwner - Please specify ServiceCatalog Product Owner.
-var SCProductOwner = Param("SCProductOwner")
+var SCProductOwner = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Owner.",
+	Default: "ProductOwner",
+}
 
 // SCProductSupport - Please specify ServiceCatalog Product Support.
-var SCProductSupport = Param("SCProductSupport")
+var SCProductSupport = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Support.",
+	Default: "IT Support can be reached @support",
+}
 
 // SCSupportEmail - Please specify ServiceCatalog Product Support Email.
-var SCSupportEmail = Param("SCSupportEmail")
+var SCSupportEmail = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Support Email.",
+	Default: "support@example.com",
+}
 
 // SCSupportUrl - Please specify ServiceCatalog Product Support URL.
-var SCSupportUrl = Param("SCSupportUrl")
+var SCSupportUrl = Parameter{
+	Type: "String",
+	Description: "Please specify ServiceCatalog Product Support URL.",
+	Default: "https://www.support.example.com",
+}
 
 // ServiceCatalogPortfolioStackName - Please specify the Service Catalog Portfolio Stack Name.
-var ServiceCatalogPortfolioStackName = Param("ServiceCatalogPortfolioStackName")
+var ServiceCatalogPortfolioStackName = Parameter{
+	Type: "String",
+	Description: "Please specify the Service Catalog Portfolio Stack Name.",
+	Default: "",
+}
 
 // User - Please specify the User. Used for tagging
-var User = Param("User")
+var User = Parameter{
+	Type: "String",
+	Description: "Please specify the User. Used for tagging",
+	Default: "User",
+}

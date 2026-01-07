@@ -8,8 +8,17 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var ProjectName = Param("ProjectName")
+var ProjectName = Parameter{
+	Type: "String",
+	Default: "myIoTAnalyticsProject",
+}
 
-var ScheduleExpression = Param("ScheduleExpression")
+var ScheduleExpression = Parameter{
+	Type: "String",
+	Default: "cron(1/5 * * * ? *)",
+}
 
-var SqlQuery = Param("SqlQuery")
+var SqlQuery = Parameter{
+	Type: "String",
+	Default: "select * from myIoTAnalyticsProject_datastore ",
+}

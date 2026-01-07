@@ -9,30 +9,62 @@ import (
 )
 
 // DomainName - The fully qualified or wildcard domain name of DNS
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+	Description: "The fully qualified or wildcard domain name of DNS",
+}
 
 // HealthCheckPath - SAP Gateway's ping path to do health check
-var HealthCheckPath = Param("HealthCheckPath")
+var HealthCheckPath = Parameter{
+	Type: "String",
+	Description: "SAP Gateway's ping path to do health check",
+	Default: "/sap/public/ping",
+}
 
 // IP - SAP Gateway's private IP address within VPC
-var IP = Param("IP")
+var IP = Parameter{
+	Type: "String",
+	Description: "SAP Gateway's private IP address within VPC",
+}
 
 // InVpc - Choose Yes if SAP resides in above VPC; choose No otherwise (in cases of abov...
-var InVpc = Param("InVpc")
+var InVpc = Parameter{
+	Type: "String",
+	Description: "Choose Yes if SAP resides in above VPC; choose No otherwise (in cases of above VPC just peers with another SAP residing VPC)",
+	Default: "Yes",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // Port - SAP Gateway's HTTP or HTTPS (match with protocol you choose above) port number
-var Port = Param("Port")
+var Port = Parameter{
+	Type: "Number",
+	Description: "SAP Gateway's HTTP or HTTPS (match with protocol you choose above) port number",
+	Default: 50000,
+}
 
 // Protocol - SAP Gateway's connect protocol
-var Protocol = Param("Protocol")
+var Protocol = Parameter{
+	Type: "String",
+	Description: "SAP Gateway's connect protocol",
+	Default: "HTTP",
+	AllowedValues: []any{"HTTP", "HTTPS"},
+}
 
-var SecurityGroups = Param("SecurityGroups")
+var SecurityGroups = Parameter{
+	Type: "List<AWS::EC2::SecurityGroup::Id>",
+}
 
 // Subnets - The private subnets (must include one where SAP resides) of above VPC, recomm...
-var Subnets = Param("Subnets")
+var Subnets = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "The private subnets (must include one where SAP resides) of above VPC, recommend choose multiple covering different AZs",
+}
 
 // VpcId - VpcId of your existing Virtual Private Cloud (VPC) where SAP resides
-var VpcId = Param("VpcId")
+var VpcId = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "VpcId of your existing Virtual Private Cloud (VPC) where SAP resides",
+}
 
 var IpInVpcCondition = Equals{InVpc, "Yes"}
 

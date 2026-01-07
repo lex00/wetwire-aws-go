@@ -9,4 +9,7 @@ import (
 )
 
 // AdministrationAccountId - Account ID where the StackSet administration role exists
-var AdministrationAccountId = Param("AdministrationAccountId")
+var AdministrationAccountId = Parameter{
+	Type: "String",
+	Description: "Account ID where the StackSet administration role exists",
+}

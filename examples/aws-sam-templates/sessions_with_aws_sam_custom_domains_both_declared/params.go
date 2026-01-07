@@ -9,13 +9,24 @@ import (
 )
 
 // CertArn - Certificate ARN if exists. If not leave as none.
-var CertArn = Param("CertArn")
+var CertArn = Parameter{
+	Type: "String",
+	Description: "Certificate ARN if exists. If not leave as none.",
+	Default: "none",
+}
 
 // DomainName - Domian name for api
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+	Description: "Domian name for api",
+}
 
 // ZoneId - Zone ID if exists. If not leave as none.
-var ZoneId = Param("ZoneId")
+var ZoneId = Parameter{
+	Type: "String",
+	Description: "Zone ID if exists. If not leave as none.",
+	Default: "none",
+}
 
 var CreateCertCondition = Equals{CertArn, "none"}
 

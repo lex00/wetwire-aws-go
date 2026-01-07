@@ -9,10 +9,23 @@ import (
 )
 
 // ApiType - The Endpoint type for RESTApi
-var ApiType = Param("ApiType")
+var ApiType = Parameter{
+	Type: "String",
+	Description: "The Endpoint type for RESTApi",
+	Default: "REGIONAL",
+	AllowedValues: []any{"EDGE", "REGIONAL", "PRIVATE"},
+}
 
 // ApigatewayTimeout - ApiGateway Backend Integration timeout in milliseconds
-var ApigatewayTimeout = Param("ApigatewayTimeout")
+var ApigatewayTimeout = Parameter{
+	Type: "Number",
+	Description: "ApiGateway Backend Integration timeout in milliseconds",
+	Default: "29000",
+}
 
 // LambdaFunctionName - The Name for the Lambda Function
-var LambdaFunctionName = Param("LambdaFunctionName")
+var LambdaFunctionName = Parameter{
+	Type: "String",
+	Description: "The Name for the Lambda Function",
+	Default: "My-APIGW-Integ-Function",
+}

@@ -9,16 +9,36 @@ import (
 )
 
 // PrivateSubnet1CIDR - Please enter the IP range (CIDR notation) for the private subnet in the first...
-var PrivateSubnet1CIDR = Param("PrivateSubnet1CIDR")
+var PrivateSubnet1CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone",
+	Default: "10.192.20.0/24",
+}
 
 // PrivateSubnet2CIDR - Please enter the IP range (CIDR notation) for the private subnet in the secon...
-var PrivateSubnet2CIDR = Param("PrivateSubnet2CIDR")
+var PrivateSubnet2CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone",
+	Default: "10.192.21.0/24",
+}
 
 // PublicSubnet1CIDR - Please enter the IP range (CIDR notation) for the public subnet in the first ...
-var PublicSubnet1CIDR = Param("PublicSubnet1CIDR")
+var PublicSubnet1CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone",
+	Default: "10.192.10.0/24",
+}
 
 // PublicSubnet2CIDR - Please enter the IP range (CIDR notation) for the public subnet in the second...
-var PublicSubnet2CIDR = Param("PublicSubnet2CIDR")
+var PublicSubnet2CIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone",
+	Default: "10.192.11.0/24",
+}
 
 // VpcCIDR - Please enter the IP range (CIDR notation) for this VPC
-var VpcCIDR = Param("VpcCIDR")
+var VpcCIDR = Parameter{
+	Type: "String",
+	Description: "Please enter the IP range (CIDR notation) for this VPC",
+	Default: "10.192.0.0/16",
+}

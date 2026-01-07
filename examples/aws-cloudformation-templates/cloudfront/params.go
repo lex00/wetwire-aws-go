@@ -9,124 +9,307 @@ import (
 )
 
 // ACMCertificateIdentifier - The AWS Certificate Manager (ACM) certificate identifier.
-var ACMCertificateIdentifier = Param("ACMCertificateIdentifier")
+var ACMCertificateIdentifier = Parameter{
+	Type: "String",
+	Description: "The AWS Certificate Manager (ACM) certificate identifier.",
+	Default: "1234567890abcdefgh",
+}
 
 // ALBAttributeDeletionProtection - Origin ALB Target Group Unhealthy Threshold Count.
-var ALBAttributeDeletionProtection = Param("ALBAttributeDeletionProtection")
+var ALBAttributeDeletionProtection = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Unhealthy Threshold Count.",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // ALBAttributeIdleTimeOut - Origin ALB Target Group Unhealthy Threshold Count.
-var ALBAttributeIdleTimeOut = Param("ALBAttributeIdleTimeOut")
+var ALBAttributeIdleTimeOut = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Unhealthy Threshold Count.",
+	Default: "60",
+}
 
 // ALBAttributeRoutingHttp2 - Origin ALB Target Group Unhealthy Threshold Count.
-var ALBAttributeRoutingHttp2 = Param("ALBAttributeRoutingHttp2")
+var ALBAttributeRoutingHttp2 = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Unhealthy Threshold Count.",
+	Default: "true",
+	AllowedValues: []any{"true", "false"},
+}
 
 // ALBScheme - Origin ALB scheme.
-var ALBScheme = Param("ALBScheme")
+var ALBScheme = Parameter{
+	Type: "String",
+	Description: "Origin ALB scheme.",
+	Default: "internet-facing",
+	AllowedValues: []any{"internet-facing", "internal"},
+}
 
 // ALBTargetGroupAttributeDeregistration - Origin ALB Target Group Deregistration Timeout.
-var ALBTargetGroupAttributeDeregistration = Param("ALBTargetGroupAttributeDeregistration")
+var ALBTargetGroupAttributeDeregistration = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Deregistration Timeout.",
+	Default: "300",
+}
 
 // ALBTargetGroupHealthCheckIntervalSeconds - Origin ALB Target Group Health Check Interval in Seconds.
-var ALBTargetGroupHealthCheckIntervalSeconds = Param("ALBTargetGroupHealthCheckIntervalSeconds")
+var ALBTargetGroupHealthCheckIntervalSeconds = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Health Check Interval in Seconds.",
+	Default: "30",
+}
 
 // ALBTargetGroupHealthCheckTimeoutSeconds - Origin ALB Target Group Health Check Timeout in Seconds.
-var ALBTargetGroupHealthCheckTimeoutSeconds = Param("ALBTargetGroupHealthCheckTimeoutSeconds")
+var ALBTargetGroupHealthCheckTimeoutSeconds = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Health Check Timeout in Seconds.",
+	Default: "5",
+}
 
 // ALBTargetGroupHealthyThresholdCount - Origin ALB Target Group Healthy Threshold Count.
-var ALBTargetGroupHealthyThresholdCount = Param("ALBTargetGroupHealthyThresholdCount")
+var ALBTargetGroupHealthyThresholdCount = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Healthy Threshold Count.",
+	Default: "5",
+}
 
 // ALBTargetGroupUnhealthyThresholdCount - Origin ALB Target Group Unhealthy Threshold Count.
-var ALBTargetGroupUnhealthyThresholdCount = Param("ALBTargetGroupUnhealthyThresholdCount")
+var ALBTargetGroupUnhealthyThresholdCount = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Unhealthy Threshold Count.",
+	Default: "2",
+}
 
 // ALBType - AWS Load Balancer Type.
-var ALBType = Param("ALBType")
+var ALBType = Parameter{
+	Type: "String",
+	Description: "AWS Load Balancer Type.",
+	Default: "application",
+	AllowedValues: []any{"application", "network"},
+}
 
 // AlternateDomainNames - CNAMEs (alternate domain names), if any, for the distribution. Example. mydom...
-var AlternateDomainNames = Param("AlternateDomainNames")
+var AlternateDomainNames = Parameter{
+	Type: "String",
+	Description: "CNAMEs (alternate domain names), if any, for the distribution. Example. mydomain.com",
+	Default: "name.domain.com",
+}
 
 // AppName - Application environment name.
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Application environment name.",
+	Default: "example",
+}
 
 // BootVolSize - EC2 Instance Boot volume size.
-var BootVolSize = Param("BootVolSize")
+var BootVolSize = Parameter{
+	Type: "String",
+	Description: "EC2 Instance Boot volume size.",
+	Default: "100",
+}
 
 // BootVolType - EC2 Instance Boot volume type.
-var BootVolType = Param("BootVolType")
+var BootVolType = Parameter{
+	Type: "String",
+	Description: "EC2 Instance Boot volume type.",
+	Default: "gp2",
+	AllowedValues: []any{"gp2", "io1", "sc1", "st1"},
+}
 
 // Compress - CloudFront should support gzip compression requests: Accept-Encoding: gzip.
-var Compress = Param("Compress")
+var Compress = Parameter{
+	Type: "String",
+	Description: "CloudFront should support gzip compression requests: Accept-Encoding: gzip.",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // DefaultTTL - The default time in seconds that objects stay in CloudFront caches before Clo...
-var DefaultTTL = Param("DefaultTTL")
+var DefaultTTL = Parameter{
+	Type: "String",
+	Description: "The default time in seconds that objects stay in CloudFront caches before CloudFront forwards another request to your custom origin. By default, AWS CloudFormation specifies 86400 seconds (one day).",
+	Default: "0",
+}
 
 // EC2ImageId - EC2 AMI Id
-var EC2ImageId = Param("EC2ImageId")
+var EC2ImageId = Parameter{
+	Type: "AWS::EC2::Image::Id",
+	Description: "EC2 AMI Id",
+	Default: "ami-0d85a662720db9789",
+}
 
 // EC2InstanceType - Amazon EC2 instance type.
-var EC2InstanceType = Param("EC2InstanceType")
+var EC2InstanceType = Parameter{
+	Type: "String",
+	Description: "Amazon EC2 instance type.",
+	Default: "t2.small",
+	AllowedValues: []any{"t2.small", "t2.medium", "t2.large", "t2.xlarge", "t2.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m4.16xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.12xlarge", "m5.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.12xlarge", "m5d.24xlarge"},
+}
 
 // Environment - Please specify the target environment.
-var Environment = Param("Environment")
+var Environment = Parameter{
+	Type: "String",
+	Description: "Please specify the target environment.",
+	Default: "dev",
+	AllowedValues: []any{"prod", "staging", "dev", "qa"},
+}
 
 // ForwardCookies - Forwards specified cookies to the origin of the cache behavior.
-var ForwardCookies = Param("ForwardCookies")
+var ForwardCookies = Parameter{
+	Type: "String",
+	Description: "Forwards specified cookies to the origin of the cache behavior.",
+	Default: "all",
+	AllowedValues: []any{"all", "whitelist", "none"},
+}
 
 // HealthCheckPath - Origin ALB Target Group Health Check Path.
-var HealthCheckPath = Param("HealthCheckPath")
+var HealthCheckPath = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Health Check Path.",
+	Default: "/health.html",
+}
 
 // HealthCheckProtocol - Origin ALB Target Group Health Check Protocol.
-var HealthCheckProtocol = Param("HealthCheckProtocol")
+var HealthCheckProtocol = Parameter{
+	Type: "String",
+	Description: "Origin ALB Target Group Health Check Protocol.",
+	Default: "HTTP",
+	AllowedValues: []any{"HTTPS", "HTTP"},
+}
 
 // IPV6Enabled - Should CloudFront to respond to IPv6 DNS requests with an IPv6 address for yo...
-var IPV6Enabled = Param("IPV6Enabled")
+var IPV6Enabled = Parameter{
+	Type: "String",
+	Description: "Should CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution.",
+	Default: "true",
+	AllowedValues: []any{"true", "false"},
+}
 
 // KeyPairName - EC2 KeyPair.
-var KeyPairName = Param("KeyPairName")
+var KeyPairName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "EC2 KeyPair.",
+	ConstraintDescription: "Must be the name of an existing EC2 KeyPair",
+}
 
 // LambdaEventType - Please specify the event type that triggers a Lambda function invocation.
-var LambdaEventType = Param("LambdaEventType")
+var LambdaEventType = Parameter{
+	Type: "String",
+	Description: "Please specify the event type that triggers a Lambda function invocation.",
+	Default: "viewer-response",
+	AllowedValues: []any{"viewer-request", "origin-request", "origin-response", "viewer-response"},
+}
 
 // LoggingBucketVersioning - The versioning state of an Amazon S3 bucket. If you enable versioning, you mu...
-var LoggingBucketVersioning = Param("LoggingBucketVersioning")
+var LoggingBucketVersioning = Parameter{
+	Type: "String",
+	Description: "The versioning state of an Amazon S3 bucket. If you enable versioning, you must suspend versioning to disable it.",
+	Default: "Suspended",
+	AllowedValues: []any{"Enabled", "Suspended"},
+}
 
 // MaxTTL - The maximum time in seconds that objects stay in CloudFront caches before Clo...
-var MaxTTL = Param("MaxTTL")
+var MaxTTL = Parameter{
+	Type: "String",
+	Description: "The maximum time in seconds that objects stay in CloudFront caches before CloudFront forwards another request to your custom origin. By default, AWS CloudFormation specifies 31536000 seconds (one year).",
+	Default: "0",
+}
 
 // MinTTL - The minimum amount of time that you want objects to stay in the cache before ...
-var MinTTL = Param("MinTTL")
+var MinTTL = Parameter{
+	Type: "String",
+	Description: "The minimum amount of time that you want objects to stay in the cache before CloudFront queries your origin to see whether the object has been updated.",
+	Default: "0",
+}
 
 // MinimumProtocolVersion - The minimum version of the SSL protocol that you want CloudFront to use for H...
-var MinimumProtocolVersion = Param("MinimumProtocolVersion")
+var MinimumProtocolVersion = Parameter{
+	Type: "String",
+	Description: "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections.",
+	Default: "TLSv1",
+	AllowedValues: []any{"TLSv1", "TLSv1.2_2018", "TLSv1.1_2016", "TLSv1_2016", "SSLv3"},
+}
 
 // OriginALBTGPort - Port number the application is running on, for Origin ALB Target Group and He...
-var OriginALBTGPort = Param("OriginALBTGPort")
+var OriginALBTGPort = Parameter{
+	Type: "String",
+	Description: "Port number the application is running on, for Origin ALB Target Group and Health Check port.",
+	Default: "8080",
+}
 
 // OriginKeepaliveTimeout - You can create a custom keep-alive timeout. All timeout units are in seconds....
-var OriginKeepaliveTimeout = Param("OriginKeepaliveTimeout")
+var OriginKeepaliveTimeout = Parameter{
+	Type: "String",
+	Description: "You can create a custom keep-alive timeout. All timeout units are in seconds. The default keep-alive timeout is 5 seconds, but you can configure custom timeout lengths. The minimum timeout length is 1 second; the maximum is 60 seconds.",
+	Default: "60",
+}
 
 // OriginProtocolPolicy - CloudFront Origin Protocol Policy to apply to your origin.
-var OriginProtocolPolicy = Param("OriginProtocolPolicy")
+var OriginProtocolPolicy = Parameter{
+	Type: "String",
+	Description: "CloudFront Origin Protocol Policy to apply to your origin.",
+	Default: "http-only",
+	AllowedValues: []any{"http-only", "match-viewer", "https-only"},
+}
 
 // OriginReadTimeout - You can create a custom origin read timeout. All timeout units are in seconds...
-var OriginReadTimeout = Param("OriginReadTimeout")
+var OriginReadTimeout = Parameter{
+	Type: "String",
+	Description: "You can create a custom origin read timeout. All timeout units are in seconds. The default origin read timeout is 30 seconds, but you can configure custom timeout lengths. The minimum timeout length is 4 seconds; the maximum is 60 seconds.",
+	Default: "30",
+}
 
 // PriceClass - The price class that corresponds with the maximum price that you want to pay ...
-var PriceClass = Param("PriceClass")
+var PriceClass = Parameter{
+	Type: "String",
+	Description: "The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify PriceClass_All, CloudFront responds to requests for your objects from all CloudFront edge locations.",
+	Default: "PriceClass_All",
+	AllowedValues: []any{"PriceClass_All", "PriceClass_100", "PriceClass_200"},
+}
 
 // PublicSubnetId1 - Please specify first public subnet ID.
-var PublicSubnetId1 = Param("PublicSubnetId1")
+var PublicSubnetId1 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "Please specify first public subnet ID.",
+	ConstraintDescription: "Must be a valid subnet ID in the selected VPC",
+}
 
 // PublicSubnetId2 - Please specify second public subnet ID.
-var PublicSubnetId2 = Param("PublicSubnetId2")
+var PublicSubnetId2 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "Please specify second public subnet ID.",
+	ConstraintDescription: "Must be a valid subnet ID in the selected VPC",
+}
 
 // QueryString - CIndicates whether you want CloudFront to forward query strings to the origin...
-var QueryString = Param("QueryString")
+var QueryString = Parameter{
+	Type: "String",
+	Description: "CIndicates whether you want CloudFront to forward query strings to the origin that is associated with this cache behavior.",
+	Default: "true",
+	AllowedValues: []any{"true", "false"},
+}
 
 // SslSupportMethod - Specifies how CloudFront serves HTTPS requests.
-var SslSupportMethod = Param("SslSupportMethod")
+var SslSupportMethod = Parameter{
+	Type: "String",
+	Description: "Specifies how CloudFront serves HTTPS requests.",
+	Default: "sni-only",
+	AllowedValues: []any{"sni-only", "vip"},
+}
 
 // ViewerProtocolPolicy - The protocol that users can use to access the files in the origin that you sp...
-var ViewerProtocolPolicy = Param("ViewerProtocolPolicy")
+var ViewerProtocolPolicy = Parameter{
+	Type: "String",
+	Description: "The protocol that users can use to access the files in the origin that you specified in the TargetOriginId property when the default cache behavior is applied to a request.",
+	Default: "redirect-to-https",
+	AllowedValues: []any{"redirect-to-https", "allow-all", "https-only"},
+}
 
 // VpcId - Please specify the VPC ID.
-var VpcId = Param("VpcId")
+var VpcId = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "Please specify the VPC ID.",
+	ConstraintDescription: "Must be a valid VPC ID",
+}

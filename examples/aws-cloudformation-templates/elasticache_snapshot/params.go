@@ -9,15 +9,34 @@ import (
 )
 
 // EnableSnapshotting - elasticache snapshot enable
-var EnableSnapshotting = Param("EnableSnapshotting")
+var EnableSnapshotting = Parameter{
+	Type: "String",
+	Description: "elasticache snapshot enable",
+	Default: "True",
+	AllowedValues: []any{"True", "False"},
+}
 
 // RedisNodeType - elasticache Redis Node Instance Type
-var RedisNodeType = Param("RedisNodeType")
+var RedisNodeType = Parameter{
+	Type: "String",
+	Description: "elasticache Redis Node Instance Type",
+	Default: "cache.m3.medium",
+	AllowedValues: []any{"cache.m3.medium"},
+	ConstraintDescription: "must be an m3.medium - the least costly machine that can use a Replication Group.",
+}
 
 // SnapshotRetentionLimit - elasticache Snapshot Retention Limit
-var SnapshotRetentionLimit = Param("SnapshotRetentionLimit")
+var SnapshotRetentionLimit = Parameter{
+	Type: "String",
+	Description: "elasticache Snapshot Retention Limit",
+	Default: "28",
+}
 
 // SnapshotWindow - Snapshot Window
-var SnapshotWindow = Param("SnapshotWindow")
+var SnapshotWindow = Parameter{
+	Type: "String",
+	Description: "Snapshot Window",
+	Default: "02:00-03:00",
+}
 
 var EnableBackupsCondition = Equals{EnableSnapshotting, "True"}

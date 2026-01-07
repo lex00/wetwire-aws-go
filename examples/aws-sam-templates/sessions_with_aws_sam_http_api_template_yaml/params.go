@@ -9,7 +9,13 @@ import (
 )
 
 // Audience - Client id for user pool
-var Audience = Param("Audience")
+var Audience = Parameter{
+	Type: "String",
+	Description: "Client id for user pool",
+}
 
 // UserPoolId - User poolID for Cognito provider
-var UserPoolId = Param("UserPoolId")
+var UserPoolId = Parameter{
+	Type: "String",
+	Description: "User poolID for Cognito provider",
+}

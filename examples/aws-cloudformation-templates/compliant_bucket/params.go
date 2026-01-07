@@ -9,4 +9,7 @@ import (
 )
 
 // AppName - This name be used as a prefix for resource names
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "This name be used as a prefix for resource names",
+}

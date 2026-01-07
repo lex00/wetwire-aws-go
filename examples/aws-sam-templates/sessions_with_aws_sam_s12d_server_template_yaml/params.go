@@ -9,15 +9,30 @@ import (
 )
 
 // AppName - Name of application (no spaces). Value must be globally unique
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Name of application (no spaces). Value must be globally unique",
+	Default: "shortener",
+}
 
 // ClientAddress - URL for client
-var ClientAddress = Param("ClientAddress")
+var ClientAddress = Parameter{
+	Type: "String",
+	Description: "URL for client",
+}
 
 // CustomDomain - Custom domain added to client
-var CustomDomain = Param("CustomDomain")
+var CustomDomain = Parameter{
+	Type: "String",
+	Description: "Custom domain added to client",
+	Default: "none",
+}
 
 // UseLocalClient - Enables public client and local client for testing. (Less secure)
-var UseLocalClient = Param("UseLocalClient")
+var UseLocalClient = Parameter{
+	Type: "String",
+	Description: "Enables public client and local client for testing. (Less secure)",
+	Default: "false",
+}
 
 var IsLocalCondition = Equals{UseLocalClient, "true"}

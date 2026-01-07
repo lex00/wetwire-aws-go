@@ -9,88 +9,207 @@ import (
 )
 
 // AppName - Please specify the Application Name. Used for tagging and resource names. Man...
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Please specify the Application Name. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "appname",
+}
 
 // BackupRetentionPeriod - Backup retention period (in days). Must be between 1 - 35
-var BackupRetentionPeriod = Param("BackupRetentionPeriod")
+var BackupRetentionPeriod = Parameter{
+	Type: "String",
+	Description: "Backup retention period (in days).  Must be between 1 - 35",
+	Default: 31,
+	AllowedPattern: "([1-9]|[12][0-9]|3[0-5])",
+}
 
 // DBClusterIdentifier - Neptune DB cluster identifier. Must contain from 1 to 63 alphanumeric charact...
-var DBClusterIdentifier = Param("DBClusterIdentifier")
+var DBClusterIdentifier = Parameter{
+	Type: "String",
+	Description: "Neptune DB cluster identifier. Must contain from 1 to 63 alphanumeric characters or hyphens. First character must be a letter. Cannot end with a hyphen or contain two consecutive hyphens.",
+}
 
 // DBInstanceClass - Neptune DB instance class that will be used for primary and all replicas
-var DBInstanceClass = Param("DBInstanceClass")
+var DBInstanceClass = Parameter{
+	Type: "String",
+	Description: "Neptune DB instance class that will be used for primary and all replicas",
+	Default: "db.r4.large",
+	AllowedValues: []any{"db.r4.large", "db.r4.xlarge", "db.r4.2xlarge", "db.r4.4xlarge", "db.r4.8xlarge"},
+}
 
 // Env - Please specify the target Environment. Used for tagging and resource names. M...
-var Env = Param("Env")
+var Env = Parameter{
+	Type: "String",
+	Description: "Please specify the target Environment. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "dev",
+	AllowedValues: []any{"test", "dev", "prod"},
+}
 
 // GremlinRequestsPerSecThreshold - Gremlin Requests Per Sec alarm threshold. Alert when Gremlin Requests Per Sec...
-var GremlinRequestsPerSecThreshold = Param("GremlinRequestsPerSecThreshold")
+var GremlinRequestsPerSecThreshold = Parameter{
+	Type: "String",
+	Description: "Gremlin Requests Per Sec alarm threshold. Alert when Gremlin Requests Per Sec goes above this value. In percentage used",
+	Default: 10000,
+}
 
 // HighCpuAlarmThreshold - High CPU alarm threshold. Alert when CPU goes above this value. In percentage...
-var HighCpuAlarmThreshold = Param("HighCpuAlarmThreshold")
+var HighCpuAlarmThreshold = Parameter{
+	Type: "String",
+	Description: "High CPU alarm threshold. Alert when CPU goes above this value.  In percentage used",
+	Default: 80,
+	AllowedPattern: "(100|[1-9]?[0-9])$",
+}
 
 // IAMAuthEnabled - Neptune DB IAM authentication
-var IAMAuthEnabled = Param("IAMAuthEnabled")
+var IAMAuthEnabled = Parameter{
+	Type: "String",
+	Description: "Neptune DB IAM authentication",
+	Default: false,
+	AllowedValues: []any{true, false},
+}
 
 // LowMemoryAlarmThreshold - Low memory alarm threshold. Alert when memory falls below this value. In bytes
-var LowMemoryAlarmThreshold = Param("LowMemoryAlarmThreshold")
+var LowMemoryAlarmThreshold = Parameter{
+	Type: "Number",
+	Description: "Low memory alarm threshold. Alert when memory falls below this value.  In bytes",
+	Default: 700000000,
+}
 
 // MajorVersionUpgrade - Neptune DB major version upgrade
-var MajorVersionUpgrade = Param("MajorVersionUpgrade")
+var MajorVersionUpgrade = Parameter{
+	Type: "String",
+	Description: "Neptune DB major version upgrade",
+	Default: true,
+	AllowedValues: []any{true, false},
+}
 
 // MinorVersionUpgrade - Neptune DB minor version upgrade
-var MinorVersionUpgrade = Param("MinorVersionUpgrade")
+var MinorVersionUpgrade = Parameter{
+	Type: "String",
+	Description: "Neptune DB minor version upgrade",
+	Default: true,
+	AllowedValues: []any{true, false},
+}
 
 // NeptuneDBClusterPreferredBackupWindow - Neptune DB cluster preferred backup window. Constrains - Must be in the forma...
-var NeptuneDBClusterPreferredBackupWindow = Param("NeptuneDBClusterPreferredBackupWindow")
+var NeptuneDBClusterPreferredBackupWindow = Parameter{
+	Type: "String",
+	Description: "Neptune DB cluster preferred backup window. Constrains - Must be in the format hh24:mi-hh24:mi. Must be in Universal Coordinated Time (UTC). Must not conflict with the preferred maintenance window. Must be at least 30 minutes.",
+	Default: "02:00-03:00",
+}
 
 // NeptuneDBClusterPreferredMaintenanceWindow - Neptune DB cluster preferred maintenance window. Format - ddd:hh24:mi-ddd:hh2...
-var NeptuneDBClusterPreferredMaintenanceWindow = Param("NeptuneDBClusterPreferredMaintenanceWindow")
+var NeptuneDBClusterPreferredMaintenanceWindow = Parameter{
+	Type: "String",
+	Description: "Neptune DB cluster preferred maintenance window. Format - ddd:hh24:mi-ddd:hh24:mi. Valid Days - Mon, Tue, Wed, Thu, Fri, Sat, Sun. Constraints - Minimum 30-minute window.",
+	Default: "mon:03:00-mon:04:00",
+}
 
 // NeptuneDBInstancePreferredMaintenanceWindow - Neptune DB instance preferred maintenance window. Format - ddd:hh24:mi-ddd:hh...
-var NeptuneDBInstancePreferredMaintenanceWindow = Param("NeptuneDBInstancePreferredMaintenanceWindow")
+var NeptuneDBInstancePreferredMaintenanceWindow = Parameter{
+	Type: "String",
+	Description: "Neptune DB instance preferred maintenance window. Format - ddd:hh24:mi-ddd:hh24:mi. Valid Days - Mon, Tue, Wed, Thu, Fri, Sat, Sun. Constraints - Minimum 30-minute window.",
+	Default: "mon:03:00-mon:04:00",
+}
 
 // NeptuneDBSubnetGroupName - The name for the DB Subnet Group. This value is stored as a lowercase string....
-var NeptuneDBSubnetGroupName = Param("NeptuneDBSubnetGroupName")
+var NeptuneDBSubnetGroupName = Parameter{
+	Type: "String",
+	Description: "The name for the DB Subnet Group. This value is stored as a lowercase string. Constraints, Must contain no more than 255 letters, numbers, periods, underscores, spaces, or hyphens. Must not be default.",
+}
 
 // NeptuneQueryTimeout - Neptune DB parameters. Allowed values "10-2147483647"
-var NeptuneQueryTimeout = Param("NeptuneQueryTimeout")
+var NeptuneQueryTimeout = Parameter{
+	Type: "String",
+	Description: "Neptune DB parameters. Allowed values \"10-2147483647\"",
+	Default: 120000,
+}
 
 // NeptuneSNSTopicArn - Custom SNS topic alarm. Optional. If not provided, an new SNS topic will be c...
-var NeptuneSNSTopicArn = Param("NeptuneSNSTopicArn")
+var NeptuneSNSTopicArn = Parameter{
+	Type: "String",
+	Description: "Custom SNS topic alarm. Optional. If not provided, an new SNS topic will be created for you",
+}
 
 // Owner - Please specify the Owner. Used for tagging
-var Owner = Param("Owner")
+var Owner = Parameter{
+	Type: "String",
+	Description: "Please specify the Owner. Used for tagging",
+	Default: "",
+}
 
 // Port - Port used to connect to the Neptune cluster. Must be a valid port number between
-var Port = Param("Port")
+var Port = Parameter{
+	Type: "String",
+	Description: "Port used to connect to the Neptune cluster. Must be a valid port number between",
+	Default: 8182,
+}
 
 // SNSEmailSubscription - SNS Email subscription. Optional. If not provided, no alarm subscriptions wil...
-var SNSEmailSubscription = Param("SNSEmailSubscription")
+var SNSEmailSubscription = Parameter{
+	Type: "String",
+	Description: "SNS Email subscription. Optional. If not provided, no alarm subscriptions will be created",
+	AllowedPattern: "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$|^$",
+}
 
 // SparqlRequestsPerSecThreshold - Sparql Requests Per Sec alarm threshold. Alert when Sparql Requests Per Sec g...
-var SparqlRequestsPerSecThreshold = Param("SparqlRequestsPerSecThreshold")
+var SparqlRequestsPerSecThreshold = Parameter{
+	Type: "String",
+	Description: "Sparql Requests Per Sec alarm threshold. Alert when Sparql Requests Per Sec goes above this value. In percentage used",
+	Default: 10000,
+}
 
 // Storage - Please specify the Storage Type. Used for tagging
-var Storage = Param("Storage")
+var Storage = Parameter{
+	Type: "String",
+	Description: "Please specify the Storage Type. Used for tagging",
+	Default: "ebs",
+	AllowedValues: []any{"ebs", "efs", "s3"},
+}
 
 // StorageEncrypted - Data-at-rest encryption
-var StorageEncrypted = Param("StorageEncrypted")
+var StorageEncrypted = Parameter{
+	Type: "String",
+	Description: "Data-at-rest encryption",
+	Default: false,
+	AllowedValues: []any{true, false},
+}
 
 // Tier - Please specify the Tier. Used for tagging
-var Tier = Param("Tier")
+var Tier = Parameter{
+	Type: "String",
+	Description: "Please specify the Tier. Used for tagging",
+	Default: "",
+}
 
 // UploadAuditLogs - Enable upload of audit logs?
-var UploadAuditLogs = Param("UploadAuditLogs")
+var UploadAuditLogs = Parameter{
+	Type: "String",
+	Description: "Enable upload of audit logs?",
+	Default: "Yes",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // User - Please specify the User. Used for tagging
-var User = Param("User")
+var User = Parameter{
+	Type: "String",
+	Description: "Please specify the User. Used for tagging",
+	Default: "test",
+}
 
 // VPCStack - Please specify the VPC Stack Name.
-var VPCStack = Param("VPCStack")
+var VPCStack = Parameter{
+	Type: "String",
+	Description: "Please specify the VPC Stack Name.",
+	Default: "vpc",
+}
 
 // Version - Please specify the Application Version. Used for tagging
-var Version = Param("Version")
+var Version = Parameter{
+	Type: "String",
+	Description: "Please specify the Application Version. Used for tagging",
+	Default: "",
+}
 
 var CreateSnsSubscriptionCondition = Not{Equals{SNSEmailSubscription, ""}}
 

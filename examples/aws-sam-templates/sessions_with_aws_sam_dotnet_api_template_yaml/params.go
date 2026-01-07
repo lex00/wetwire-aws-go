@@ -9,7 +9,13 @@ import (
 )
 
 // EnvironmentTagName - Environment Name (injected by Stackery at deployment time)
-var EnvironmentTagName = Param("EnvironmentTagName")
+var EnvironmentTagName = Parameter{
+	Type: "String",
+	Description: "Environment Name (injected by Stackery at deployment time)",
+}
 
 // StackTagName - Stack Name (injected by Stackery at deployment time)
-var StackTagName = Param("StackTagName")
+var StackTagName = Parameter{
+	Type: "String",
+	Description: "Stack Name (injected by Stackery at deployment time)",
+}

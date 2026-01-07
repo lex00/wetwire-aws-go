@@ -9,4 +9,7 @@ import (
 )
 
 // CodeBuildStack - Name of the code build stack which should have been deployed before this stack
-var CodeBuildStack = Param("CodeBuildStack")
+var CodeBuildStack = Parameter{
+	Type: "String",
+	Description: "Name of the code build stack which should have been deployed before this stack",
+}

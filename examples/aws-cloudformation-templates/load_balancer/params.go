@@ -8,12 +8,22 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var CertificateArn = Param("CertificateArn")
+var CertificateArn = Parameter{
+	Type: "String",
+}
 
-var DestinationSecurityGroupId = Param("DestinationSecurityGroupId")
+var DestinationSecurityGroupId = Parameter{
+	Type: "String",
+}
 
-var PublicSubnet1 = Param("PublicSubnet1")
+var PublicSubnet1 = Parameter{
+	Type: "String",
+}
 
-var PublicSubnet2 = Param("PublicSubnet2")
+var PublicSubnet2 = Parameter{
+	Type: "String",
+}
 
-var VPCId = Param("VPCId")
+var VPCId = Parameter{
+	Type: "String",
+}

@@ -8,4 +8,7 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var DbEngine = Param("DbEngine")
+var DbEngine = Parameter{
+	Type: "AWS::SSM::Parameter::Value<String>",
+	Default: "/myApp/DbEngine",
+}

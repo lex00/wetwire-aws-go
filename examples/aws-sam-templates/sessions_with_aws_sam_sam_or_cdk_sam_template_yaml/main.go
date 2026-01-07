@@ -27,37 +27,6 @@ var uploadSignerLambda = serverless.Function{
 }},
 }
 
-var httpApi = serverless.HttpApi{
-	DefinitionBody: Json{
-	"info": Json{
-	"title": "Signed URL Generator - Built with AWS SAM",
-},
-	"openapi": "3.0.1",
-	"paths": Json{
-	"/": Json{
-	"post": Json{
-	"responses": Json{
-	"default": Json{
-	"description": "Step Function Response",
-},
-},
-	"x-amazon-apigateway-integration": Json{
-	"connectionType": "INTERNET",
-	"credentials": httpApiRole.Arn,
-	"integrationSubtype": "StepFunctions-StartSyncExecution",
-	"payloadFormatVersion": "1.0",
-	"requestParameters": Json{
-	"Input": "$request.body",
-	"StateMachineArn": urlStateMachine.Arn,
-},
-	"type": "aws_proxy",
-},
-},
-},
-},
-},
-}
-
 var fetchedShortUrlLambda = serverless.Function{
 	CodeUri: "lambda/fetchShortUrl/",
 	Events: Json{
@@ -184,4 +153,35 @@ var urlStateMachine = serverless.StateMachine{
 	"Enabled": true,
 },
 	Type_: "EXPRESS",
+}
+
+var httpApi = serverless.HttpApi{
+	DefinitionBody: Json{
+	"info": Json{
+	"title": "Signed URL Generator - Built with AWS SAM",
+},
+	"openapi": "3.0.1",
+	"paths": Json{
+	"/": Json{
+	"post": Json{
+	"responses": Json{
+	"default": Json{
+	"description": "Step Function Response",
+},
+},
+	"x-amazon-apigateway-integration": Json{
+	"connectionType": "INTERNET",
+	"credentials": httpApiRole.Arn,
+	"integrationSubtype": "StepFunctions-StartSyncExecution",
+	"payloadFormatVersion": "1.0",
+	"requestParameters": Json{
+	"Input": "$request.body",
+	"StateMachineArn": urlStateMachine.Arn,
+},
+	"type": "aws_proxy",
+},
+},
+},
+},
+},
 }

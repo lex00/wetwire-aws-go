@@ -8,66 +8,160 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var AMAZONLINUX2 = Param("AMAZONLINUX2")
+var AMAZONLINUX2 = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-ebs",
+}
 
 // DirectoryID - Directory ID
-var DirectoryID = Param("DirectoryID")
+var DirectoryID = Parameter{
+	Type: "String",
+	Description: "Directory ID",
+	AllowedPattern: "^d-[0-9a-f]{10}$",
+}
 
 // DirectoryName - Fully qualified name of the on-premises directory, such as corp.example.com
-var DirectoryName = Param("DirectoryName")
+var DirectoryName = Parameter{
+	Type: "String",
+	Description: "Fully qualified name of the on-premises directory, such as corp.example.com",
+	AllowedPattern: "[a-zA-Z0-9-]+\\..+",
+	MinLength: IntPtr(3),
+	MaxLength: IntPtr(25),
+}
 
 // DomainDNSServer1 - (Optional) Domain DNS Server 1. If DNS servers are not set, then you need to ...
-var DomainDNSServer1 = Param("DomainDNSServer1")
+var DomainDNSServer1 = Parameter{
+	Type: "String",
+	Description: "(Optional) Domain DNS Server 1. If DNS servers are not set, then you need to ensure the DNS servers the EC2 instances are using can resolve the AD domain.",
+	AllowedPattern: "^$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+}
 
 // DomainDNSServer2 - (Optional) Domain DNS Server 2. If DNS servers are not set, then you need to ...
-var DomainDNSServer2 = Param("DomainDNSServer2")
+var DomainDNSServer2 = Parameter{
+	Type: "String",
+	Description: "(Optional) Domain DNS Server 2. If DNS servers are not set, then you need to ensure the DNS servers the EC2 instances are using can resolve the AD domain.",
+	AllowedPattern: "^$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+}
 
 // DomainDNSServer3 - (Optional) Domain DNS Server 3. If DNS servers are not set, then you need to ...
-var DomainDNSServer3 = Param("DomainDNSServer3")
+var DomainDNSServer3 = Parameter{
+	Type: "String",
+	Description: "(Optional) Domain DNS Server 3. If DNS servers are not set, then you need to ensure the DNS servers the EC2 instances are using can resolve the AD domain.",
+	AllowedPattern: "^$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+}
 
 // DomainDNSServer4 - (Optional) Domain DNS Server 4. If DNS servers are not set, then you need to ...
-var DomainDNSServer4 = Param("DomainDNSServer4")
+var DomainDNSServer4 = Parameter{
+	Type: "String",
+	Description: "(Optional) Domain DNS Server 4. If DNS servers are not set, then you need to ensure the DNS servers the EC2 instances are using can resolve the AD domain.",
+	AllowedPattern: "^$|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+}
 
 // DomainMember1NetBIOSName - NetBIOS name of Domain Member 1 (using inline SSM association). Note, if comp...
-var DomainMember1NetBIOSName = Param("DomainMember1NetBIOSName")
+var DomainMember1NetBIOSName = Parameter{
+	Type: "String",
+	Description: "NetBIOS name of Domain Member 1 (using inline SSM association). Note, if computer name existed in AD before, delete from AD first.",
+	Default: "SERVER1",
+	AllowedPattern: "[a-zA-Z0-9-]+",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(15),
+}
 
 // DomainMember2NetBIOSName - NetBIOS name of Domain Member 2 (using SSM association via instance id). Note...
-var DomainMember2NetBIOSName = Param("DomainMember2NetBIOSName")
+var DomainMember2NetBIOSName = Parameter{
+	Type: "String",
+	Description: "NetBIOS name of Domain Member 2 (using SSM association via instance id). Note, if computer name existed in AD before, delete from AD first.",
+	Default: "SERVER2",
+	AllowedPattern: "[a-zA-Z0-9-]+",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(15),
+}
 
 // DomainMember3NetBIOSName - NetBIOS name of Domain Member 3 (using SSM association via tag). Note, if com...
-var DomainMember3NetBIOSName = Param("DomainMember3NetBIOSName")
+var DomainMember3NetBIOSName = Parameter{
+	Type: "String",
+	Description: "NetBIOS name of Domain Member 3 (using SSM association via tag). Note, if computer name existed in AD before, delete from AD first.",
+	Default: "SERVER3",
+	AllowedPattern: "[a-zA-Z0-9-]+",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(15),
+}
 
 // DomainMember4NetBIOSName - NetBIOS name of Domain Member 4 (AmazonLinux2)
-var DomainMember4NetBIOSName = Param("DomainMember4NetBIOSName")
+var DomainMember4NetBIOSName = Parameter{
+	Type: "String",
+	Description: "NetBIOS name of Domain Member 4 (AmazonLinux2)",
+	Default: "SERVER4",
+	AllowedPattern: "[a-zA-Z0-9-]+",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(15),
+}
 
 // DomainMembersInstanceType - Amazon EC2 instance type for the AD Server instances
-var DomainMembersInstanceType = Param("DomainMembersInstanceType")
+var DomainMembersInstanceType = Parameter{
+	Type: "String",
+	Description: "Amazon EC2 instance type for the AD Server instances",
+	Default: "t3.medium",
+	AllowedValues: []any{"t3.medium", "t3.large"},
+}
 
 // DomainMembersLinuxInstanceProfile - Existing IAM InstanceProfile with Linux EC2 seamless join domain rights
-var DomainMembersLinuxInstanceProfile = Param("DomainMembersLinuxInstanceProfile")
+var DomainMembersLinuxInstanceProfile = Parameter{
+	Type: "String",
+	Description: "Existing IAM InstanceProfile with Linux EC2 seamless join domain rights",
+	AllowedPattern: "[\\w+=,.@-]+",
+}
 
 // DomainMembersSGID - Security Group ID for Domain Members Security Group
-var DomainMembersSGID = Param("DomainMembersSGID")
+var DomainMembersSGID = Parameter{
+	Type: "AWS::EC2::SecurityGroup::Id",
+	Description: "Security Group ID for Domain Members Security Group",
+}
 
 // DomainMembersWindowsInstanceProfile - Existing IAM InstanceProfile with Windows EC2 seamless join domain rights
-var DomainMembersWindowsInstanceProfile = Param("DomainMembersWindowsInstanceProfile")
+var DomainMembersWindowsInstanceProfile = Parameter{
+	Type: "String",
+	Description: "Existing IAM InstanceProfile with Windows EC2 seamless join domain rights",
+	AllowedPattern: "[\\w+=,.@-]+",
+}
 
 // EBSKMSKey - (Optional) KMS Alias, Key ID, Key ID ARN or Alias ARN to use for encrypting t...
-var EBSKMSKey = Param("EBSKMSKey")
+var EBSKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Alias, Key ID, Key ID ARN or Alias ARN to use for encrypting the EBS volumes. If empty, the default key for EBS encryption will be used of `alias/aws/ebs` or the CMK set as the default EBS encryption key.",
+	AllowedPattern: "^$|(^alias/[a-zA-Z0-9/-]{1,256}$)|(^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$)|(^arn:(aws[a-z-]*)?:kms:.*:\\d{12}:key/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$)|(^arn:(aws[a-z-]*)?:kms:.*:\\d{12}:alias/[a-zA-Z0-9/-]{1,256}$)",
+}
 
 // KeyPairName - KeyPair for ONPREMISES INSTANCES
-var KeyPairName = Param("KeyPairName")
+var KeyPairName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "KeyPair for ONPREMISES INSTANCES",
+}
 
 // PrivateSubnet1ID - ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)
-var PrivateSubnet1ID = Param("PrivateSubnet1ID")
+var PrivateSubnet1ID = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)",
+}
 
 // PrivateSubnet2ID - ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)
-var PrivateSubnet2ID = Param("PrivateSubnet2ID")
+var PrivateSubnet2ID = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)",
+}
 
 // SSMLogsBucketName - (Optional) SSM Logs bucket name for where Systems Manager logs should store l...
-var SSMLogsBucketName = Param("SSMLogsBucketName")
+var SSMLogsBucketName = Parameter{
+	Type: "String",
+	Description: "(Optional) SSM Logs bucket name for where Systems Manager logs should store log files. SSM Logs bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	AllowedPattern: "^$|(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "SSM Logs bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
-var WINFULLBASE = Param("WINFULLBASE")
+var WINFULLBASE = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base",
+}
 
 var DomainDNSServer1ConditionCondition = Not{Equals{DomainDNSServer1, ""}}
 

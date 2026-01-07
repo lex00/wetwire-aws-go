@@ -9,7 +9,17 @@ import (
 )
 
 // EnvName - Name of an environment. 'dev', 'staging', 'prod' and any name.
-var EnvName = Param("EnvName")
+var EnvName = Parameter{
+	Type: "String",
+	Description: "Name of an environment. 'dev', 'staging', 'prod' and any name.",
+	AllowedPattern: "^.*[^0-9]$",
+	ConstraintDescription: "Must end with non-numeric character.",
+}
 
 // LambdaHandlerPath - Path of a Lambda Handler.
-var LambdaHandlerPath = Param("LambdaHandlerPath")
+var LambdaHandlerPath = Parameter{
+	Type: "String",
+	Description: "Path of a Lambda Handler.",
+	AllowedPattern: "^.*[^0-9]$",
+	ConstraintDescription: "Must end with non-numeric character.",
+}

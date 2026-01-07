@@ -9,4 +9,7 @@ import (
 )
 
 // CertificateARN - The Amazon Resource Name (ARN) of an existing AWS IoT certificate aws iot cre...
-var CertificateARN = Param("CertificateARN")
+var CertificateARN = Parameter{
+	Type: "String",
+	Description: "The Amazon Resource Name (ARN) of an existing AWS IoT certificate aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile certificate.pem.crt --private-key-outfile private.pem.key",
+}

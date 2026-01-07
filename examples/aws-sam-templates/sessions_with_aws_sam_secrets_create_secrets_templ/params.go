@@ -9,16 +9,35 @@ import (
 )
 
 // DbEngine - DB Engine
-var DbEngine = Param("DbEngine")
+var DbEngine = Parameter{
+	Type: "String",
+	Description: "DB Engine",
+	Default: "MySQL",
+}
 
 // DbName - Name of DB to use
-var DbName = Param("DbName")
+var DbName = Parameter{
+	Type: "String",
+	Description: "Name of DB to use",
+	NoEcho: true,
+}
 
 // DbPassword - Password for DB
-var DbPassword = Param("DbPassword")
+var DbPassword = Parameter{
+	Type: "String",
+	Description: "Password for DB",
+	NoEcho: true,
+}
 
 // DbUsername - Username for DB
-var DbUsername = Param("DbUsername")
+var DbUsername = Parameter{
+	Type: "String",
+	Description: "Username for DB",
+	NoEcho: true,
+}
 
 // DbVersion - DB Version
-var DbVersion = Param("DbVersion")
+var DbVersion = Parameter{
+	Type: "String",
+	Description: "DB Version",
+}

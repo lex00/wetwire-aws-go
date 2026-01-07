@@ -9,4 +9,9 @@ import (
 )
 
 // PeerOwnerIds - AWS account IDs (comma-separated) of the owners of the requester VPCs. (i.e.,...
-var PeerOwnerIds = Param("PeerOwnerIds")
+var PeerOwnerIds = Parameter{
+	Type: "String",
+	Description: "AWS account IDs (comma-separated) of the owners of the requester VPCs. (i.e., 123456789012,4567890123)",
+	AllowedPattern: "^(\\d{12})$|^((\\d{12}(,|, ))*\\d{12})$",
+	ConstraintDescription: "Must be 12 digits. Additional accounts can be provided, separated by a \"comma\"",
+}

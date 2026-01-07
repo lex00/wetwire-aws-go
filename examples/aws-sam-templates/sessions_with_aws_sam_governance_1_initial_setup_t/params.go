@@ -9,6 +9,10 @@ import (
 )
 
 // MainRegion - Main region for the account
-var MainRegion = Param("MainRegion")
+var MainRegion = Parameter{
+	Type: "String",
+	Description: "Main region for the account",
+	Default: "us-west-2",
+}
 
 var IsMainRegionCondition = Equals{MainRegion, AWS_REGION}

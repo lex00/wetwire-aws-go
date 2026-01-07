@@ -9,25 +9,54 @@ import (
 )
 
 // DelaySeconds - The time in seconds that the delivery of all messages in the queue is delayed...
-var DelaySeconds = Param("DelaySeconds")
+var DelaySeconds = Parameter{
+	Type: "Number",
+	Description: "The time in seconds that the delivery of all messages in the queue is delayed. You can specify an integer value of 0 to 900 (15 minutes).",
+	Default: "5",
+}
 
 // KmsMasterKeyIdForSqs - (Optional) For unencrypted leave blank. The ID or Alias of an AWS managed or ...
-var KmsMasterKeyIdForSqs = Param("KmsMasterKeyIdForSqs")
+var KmsMasterKeyIdForSqs = Parameter{
+	Type: "String",
+	Description: "(Optional) For unencrypted leave blank. The ID or Alias of an AWS managed or a custom CMK.",
+	Default: "alias/aws/sqs",
+}
 
 // MaximumMessageSize - The limit of how many bytes that a message can contain before Amazon SQS reje...
-var MaximumMessageSize = Param("MaximumMessageSize")
+var MaximumMessageSize = Parameter{
+	Type: "Number",
+	Description: "The limit of how many bytes that a message can contain before Amazon SQS rejects it, 1024 bytes (1 KiB) to 262144 bytes (256 KiB)",
+	Default: "262144",
+}
 
 // MessageRetentionPeriod - The number of seconds that Amazon SQS retains a message. You can specify an i...
-var MessageRetentionPeriod = Param("MessageRetentionPeriod")
+var MessageRetentionPeriod = Parameter{
+	Type: "Number",
+	Description: "The number of seconds that Amazon SQS retains a message. You can specify an integer value from 60 seconds (1 minute) to 1209600 seconds (14 days). ",
+	Default: "345600",
+}
 
 // ReceiveMessageWaitTimeSeconds - Specifies the duration, in seconds, that the ReceiveMessage action call waits...
-var ReceiveMessageWaitTimeSeconds = Param("ReceiveMessageWaitTimeSeconds")
+var ReceiveMessageWaitTimeSeconds = Parameter{
+	Type: "Number",
+	Description: "Specifies the duration, in seconds, that the ReceiveMessage action call waits until a message is in the queue in order to include it in the response, as opposed to returning an empty response if a message is not yet available. 1 to 20",
+	Default: "0",
+}
 
 // UsedeadletterQueue - A dead-letter queue is a queue that other (source) queues can target for mess...
-var UsedeadletterQueue = Param("UsedeadletterQueue")
+var UsedeadletterQueue = Parameter{
+	Type: "String",
+	Description: "A dead-letter queue is a queue that other (source) queues can target for messages that can't be processed (consumed) successfully. You can set aside and isolate these messages in the dead-letter queue to determine why their processing doesn't succeed.",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // VisibilityTimeout - Time in seconds. This should be longer than the time it would take to process...
-var VisibilityTimeout = Param("VisibilityTimeout")
+var VisibilityTimeout = Parameter{
+	Type: "Number",
+	Description: "Time in seconds. This should be longer than the time it would take to process and delete a message, this should not exceed 12 hours.",
+	Default: "5",
+}
 
 var CreateDeadLetterQueueCondition = Equals{UsedeadletterQueue, "true"}
 

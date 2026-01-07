@@ -9,10 +9,22 @@ import (
 )
 
 // AppName - This name is used as a prefix for resource names
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "This name is used as a prefix for resource names",
+	Default: "rain-webapp-sample",
+}
 
 // LambdaCodeS3Bucket - The bucket where your lambda handler is
-var LambdaCodeS3Bucket = Param("LambdaCodeS3Bucket")
+var LambdaCodeS3Bucket = Parameter{
+	Type: "String",
+	Description: "The bucket where your lambda handler is",
+	Default: "rain-artifacts-207567786752-us-east-1",
+}
 
 // LambdaCodeS3Key - The object key for your lambda handler
-var LambdaCodeS3Key = Param("LambdaCodeS3Key")
+var LambdaCodeS3Key = Parameter{
+	Type: "String",
+	Description: "The object key for your lambda handler",
+	Default: "512113b95e9fc6345b2e19a43350af82aaa815011120288f16b1f281d5efdc95",
+}

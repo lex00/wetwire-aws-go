@@ -8,15 +8,28 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var AddGroupsToScopes = Param("AddGroupsToScopes")
+var AddGroupsToScopes = Parameter{
+	Type: "String",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // AdminEmail - Email address for administrator
-var AdminEmail = Param("AdminEmail")
+var AdminEmail = Parameter{
+	Type: "String",
+	Description: "Email address for administrator",
+}
 
 // AppName - Name of the application
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Name of the application",
+}
 
 // ClientDomains - Array of domains allowed to use this UserPool
-var ClientDomains = Param("ClientDomains")
+var ClientDomains = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "Array of domains allowed to use this UserPool",
+}
 
 var ScopeGroupsCondition = Equals{AddGroupsToScopes, "true"}

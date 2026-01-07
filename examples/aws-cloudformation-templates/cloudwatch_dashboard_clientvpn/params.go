@@ -9,7 +9,17 @@ import (
 )
 
 // ClientVPNLogGroup - Name of the Client VPN CloudWatch Log Group
-var ClientVPNLogGroup = Param("ClientVPNLogGroup")
+var ClientVPNLogGroup = Parameter{
+	Type: "String",
+	Description: "Name of the Client VPN CloudWatch Log Group",
+	Default: "aws/aws-client-vpn/prod",
+}
 
 // Folder - (Optional) Folder to store the queries in.
-var Folder = Param("Folder")
+var Folder = Parameter{
+	Type: "String",
+	Description: "(Optional) Folder to store the queries in.",
+	Default: "aws-client-vpn",
+	AllowedPattern: "^[a-zA-Z0-9/-]*$",
+	ConstraintDescription: "Folder name must contain only alphanumeric characters. Slashes (/) are folder separators.",
+}

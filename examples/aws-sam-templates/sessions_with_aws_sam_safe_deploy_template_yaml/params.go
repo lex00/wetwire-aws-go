@@ -9,4 +9,7 @@ import (
 )
 
 // ClientDomains - Array of domains for CORS
-var ClientDomains = Param("ClientDomains")
+var ClientDomains = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "Array of domains for CORS",
+}

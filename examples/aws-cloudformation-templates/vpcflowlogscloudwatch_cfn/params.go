@@ -9,21 +9,49 @@ import (
 )
 
 // VPCFlowLogsCloudWatchKMSKey - (Optional) KMS Key ARN to use for encrypting the VPC flow logs data. If empty...
-var VPCFlowLogsCloudWatchKMSKey = Param("VPCFlowLogsCloudWatchKMSKey")
+var VPCFlowLogsCloudWatchKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the VPC flow logs data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // VPCFlowLogsLogFormat - The fields to include in the flow log record, in the order in which they shou...
-var VPCFlowLogsLogFormat = Param("VPCFlowLogsLogFormat")
+var VPCFlowLogsLogFormat = Parameter{
+	Type: "String",
+	Description: "The fields to include in the flow log record, in the order in which they should appear. Specify the fields using the ${field-id} format, separated by spaces. Using the Default Format as the default value.",
+	Default: "${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}",
+	AllowedPattern: "^(\\$\\{[a-z-]+\\})$|^((\\$\\{[a-z-]+\\} )*\\$\\{[a-z-]+\\})$",
+}
 
 // VPCFlowLogsLogGroupRetention - Number of days to retain the VPC Flow Logs in CloudWatch
-var VPCFlowLogsLogGroupRetention = Param("VPCFlowLogsLogGroupRetention")
+var VPCFlowLogsLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Number of days to retain the VPC Flow Logs in CloudWatch",
+	Default: 14,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // VPCFlowLogsMaxAggregationInterval - The maximum interval of time during which a flow of packets is captured and a...
-var VPCFlowLogsMaxAggregationInterval = Param("VPCFlowLogsMaxAggregationInterval")
+var VPCFlowLogsMaxAggregationInterval = Parameter{
+	Type: "String",
+	Description: "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. You can specify 60 seconds (1 minute) or 600 seconds (10 minutes).",
+	Default: 600,
+	AllowedValues: []any{60, 600},
+}
 
 // VPCFlowLogsTrafficType - The type of traffic to log. You can log traffic that the resource accepts or ...
-var VPCFlowLogsTrafficType = Param("VPCFlowLogsTrafficType")
+var VPCFlowLogsTrafficType = Parameter{
+	Type: "String",
+	Description: "The type of traffic to log. You can log traffic that the resource accepts or rejects, or all traffic.",
+	Default: "REJECT",
+	AllowedValues: []any{"ACCEPT", "ALL", "REJECT"},
+}
 
 // VPCID - ID of the VPC (e.g., vpc-0343606e)
-var VPCID = Param("VPCID")
+var VPCID = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "ID of the VPC (e.g., vpc-0343606e)",
+}
 
 var VPCFlowLogsCloudWatchKMSKeyConditionCondition = Not{Equals{VPCFlowLogsCloudWatchKMSKey, ""}}

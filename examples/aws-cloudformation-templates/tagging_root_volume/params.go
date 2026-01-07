@@ -9,18 +9,41 @@ import (
 )
 
 // InstanceAZ - EC2 AZ.
-var InstanceAZ = Param("InstanceAZ")
+var InstanceAZ = Parameter{
+	Type: "AWS::EC2::AvailabilityZone::Name",
+	Description: "EC2 AZ.",
+	ConstraintDescription: "Must be the name of an availabity zone.",
+}
 
 // InstanceType - EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "EC2 instance type",
+	Default: "t2.micro",
+	AllowedValues: []any{"t2.micro", "t2.small", "t2.medium", "t2.large", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge"},
+	ConstraintDescription: "Please choose a valid instance type.",
+}
 
 // KeyName - Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.",
+}
 
 // LinuxAMIID - The Latest Amazon Linux 2 AMI taken from the public Systems Manager Parameter...
-var LinuxAMIID = Param("LinuxAMIID")
+var LinuxAMIID = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Description: "The Latest Amazon Linux 2 AMI taken from the public Systems Manager Parameter Store",
+	Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+}
 
-var SubnetId = Param("SubnetId")
+var SubnetId = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+}
 
 // WindowsAMIID - The Latest Windows 2016 AMI taken from the public Systems Manager Parameter S...
-var WindowsAMIID = Param("WindowsAMIID")
+var WindowsAMIID = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Description: "The Latest Windows 2016 AMI taken from the public Systems Manager Parameter Store",
+	Default: "/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base",
+}

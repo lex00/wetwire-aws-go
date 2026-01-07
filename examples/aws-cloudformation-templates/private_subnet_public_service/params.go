@@ -9,33 +9,73 @@ import (
 )
 
 // ContainerCpu - How much CPU to give the container. 1024 is 1 CPU
-var ContainerCpu = Param("ContainerCpu")
+var ContainerCpu = Parameter{
+	Type: "Number",
+	Description: "How much CPU to give the container. 1024 is 1 CPU",
+	Default: 256,
+}
 
 // ContainerMemory - How much memory in megabytes to give the container
-var ContainerMemory = Param("ContainerMemory")
+var ContainerMemory = Parameter{
+	Type: "Number",
+	Description: "How much memory in megabytes to give the container",
+	Default: 512,
+}
 
 // ContainerPort - What port number the application inside the docker container is binding to
-var ContainerPort = Param("ContainerPort")
+var ContainerPort = Parameter{
+	Type: "Number",
+	Description: "What port number the application inside the docker container is binding to",
+	Default: 80,
+}
 
 // DesiredCount - How many copies of the service task to run
-var DesiredCount = Param("DesiredCount")
+var DesiredCount = Parameter{
+	Type: "Number",
+	Description: "How many copies of the service task to run",
+	Default: 2,
+}
 
 // ImageUrl - The url of a docker image that contains the application process that will han...
-var ImageUrl = Param("ImageUrl")
+var ImageUrl = Parameter{
+	Type: "String",
+	Description: "The url of a docker image that contains the application process that will handle the traffic for this service",
+	Default: "nginx",
+}
 
 // Path - A path on the public load balancer that this service should be connected to. ...
-var Path = Param("Path")
+var Path = Parameter{
+	Type: "String",
+	Description: "A path on the public load balancer that this service should be connected to. Use * to send all load balancer traffic to this service.",
+	Default: "*",
+}
 
 // Priority - The priority for the routing rule added to the load balancer. This only appli...
-var Priority = Param("Priority")
+var Priority = Parameter{
+	Type: "Number",
+	Description: "The priority for the routing rule added to the load balancer. This only applies if your have multiple services which have been assigned to different paths on the load balancer.",
+	Default: 1,
+}
 
 // Role - (Optional) An IAM role to give the service's containers if the code within ne...
-var Role = Param("Role")
+var Role = Parameter{
+	Type: "String",
+	Description: "(Optional) An IAM role to give the service's containers if the code within needs to access other AWS resources like S3 buckets, DynamoDB tables, etc",
+	Default: "",
+}
 
 // ServiceName - A name for the service
-var ServiceName = Param("ServiceName")
+var ServiceName = Parameter{
+	Type: "String",
+	Description: "A name for the service",
+	Default: "nginx",
+}
 
 // StackName - The name of the parent Fargate networking stack that you created. Necessary t...
-var StackName = Param("StackName")
+var StackName = Parameter{
+	Type: "String",
+	Description: "The name of the parent Fargate networking stack that you created. Necessary to locate and reference resources created by that stack.",
+	Default: "production",
+}
 
 var HasCustomRoleCondition = Not{Equals{Role, ""}}

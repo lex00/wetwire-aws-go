@@ -9,70 +9,183 @@ import (
 )
 
 // ADConnectorDescription - Description for the directory
-var ADConnectorDescription = Param("ADConnectorDescription")
+var ADConnectorDescription = Parameter{
+	Type: "String",
+	Description: "Description for the directory",
+	Default: "On-premises AD",
+	AllowedPattern: "^[A-Za-z0-9][\\w@#%*+=:?.\\/! -]*$",
+	MaxLength: IntPtr(128),
+}
 
 // ADConnectorSize - Size of the directory
-var ADConnectorSize = Param("ADConnectorSize")
+var ADConnectorSize = Parameter{
+	Type: "String",
+	Description: "Size of the directory",
+	Default: "Small",
+	AllowedValues: []any{"Small", "Large"},
+}
 
 // CreateADConnectorDomainMembersSG - Create Domain Members Security Group. Note, using allow any type rules, restr...
-var CreateADConnectorDomainMembersSG = Param("CreateADConnectorDomainMembersSG")
+var CreateADConnectorDomainMembersSG = Parameter{
+	Type: "String",
+	Description: "Create Domain Members Security Group. Note, using allow any type rules, restrict accordingly.",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // CreateDHCPOptionSet - Create DHCP Option Set
-var CreateDHCPOptionSet = Param("CreateDHCPOptionSet")
+var CreateDHCPOptionSet = Parameter{
+	Type: "String",
+	Description: "Create DHCP Option Set",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // CreateLinuxEC2DomainJoinResources - Create AWS resources (IAM role, instance profile, & secret) to support seamle...
-var CreateLinuxEC2DomainJoinResources = Param("CreateLinuxEC2DomainJoinResources")
+var CreateLinuxEC2DomainJoinResources = Parameter{
+	Type: "String",
+	Description: "Create AWS resources (IAM role, instance profile, & secret) to support seamless domain join Linux EC2 instances",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // CreateWindowsEC2DomainJoinResources - Create AWS resources (IAM role & instnace profile)to support seamless domain ...
-var CreateWindowsEC2DomainJoinResources = Param("CreateWindowsEC2DomainJoinResources")
+var CreateWindowsEC2DomainJoinResources = Parameter{
+	Type: "String",
+	Description: "Create AWS resources (IAM role & instnace profile)to support seamless domain join Windows EC2 instances",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // DomainDNSName - Fully qualified name of the on-premises directory, such as corp.example.com
-var DomainDNSName = Param("DomainDNSName")
+var DomainDNSName = Parameter{
+	Type: "String",
+	Description: "Fully qualified name of the on-premises directory, such as corp.example.com",
+	AllowedPattern: "[a-zA-Z0-9-]+\\..+",
+	MinLength: IntPtr(3),
+	MaxLength: IntPtr(25),
+}
 
 // DomainDNSServers - DNS or domain controller servers for the on-premises directory.
-var DomainDNSServers = Param("DomainDNSServers")
+var DomainDNSServers = Parameter{
+	Type: "String",
+	Description: "DNS or domain controller servers for the on-premises directory.",
+	AllowedPattern: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(,|, ))*(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+	ConstraintDescription: "Must be in the form of IP address. Additional IP addresses can be provided, separated by a \"comma\". (e.g., 10.1.1.1,10.2.2.2) Additional IP addresses can be provided, separated by a \"comma\".",
+}
 
 // DomainJoinUser - Username of a user in the existing directory
-var DomainJoinUser = Param("DomainJoinUser")
+var DomainJoinUser = Parameter{
+	Type: "String",
+	Description: "Username of a user in the existing directory",
+	AllowedPattern: "[a-zA-Z0-9]*",
+	MinLength: IntPtr(5),
+	MaxLength: IntPtr(25),
+}
 
 // DomainJoinUserPassword - Password for the existing user account
-var DomainJoinUserPassword = Param("DomainJoinUserPassword")
+var DomainJoinUserPassword = Parameter{
+	Type: "String",
+	Description: "Password for the existing user account",
+	AllowedPattern: "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+	MinLength: IntPtr(8),
+	MaxLength: IntPtr(32),
+	NoEcho: true,
+}
 
 // DomainNetBiosName - Short name of your existing directory, such as CORP
-var DomainNetBiosName = Param("DomainNetBiosName")
+var DomainNetBiosName = Parameter{
+	Type: "String",
+	Description: "Short name of your existing directory, such as CORP",
+	AllowedPattern: "[a-zA-Z0-9-]+",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(15),
+}
 
 // LambdaFunctionName - Lambda Function Name for Custom Resource.
-var LambdaFunctionName = Param("LambdaFunctionName")
+var LambdaFunctionName = Parameter{
+	Type: "String",
+	Description: "Lambda Function Name for Custom Resource.",
+	Default: "CR-ADConnector",
+	AllowedPattern: "^[\\w-]{1,64}$",
+	ConstraintDescription: "Max 64 alphanumeric characters. Also special characters supported [_, -]",
+}
 
 // LambdaLogLevel - Lambda logging level
-var LambdaLogLevel = Param("LambdaLogLevel")
+var LambdaLogLevel = Parameter{
+	Type: "String",
+	Description: "Lambda logging level",
+	Default: "INFO",
+	AllowedValues: []any{"INFO", "DEBUG"},
+}
 
 // LambdaLogsCloudWatchKMSKey - (Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, ...
-var LambdaLogsCloudWatchKMSKey = Param("LambdaLogsCloudWatchKMSKey")
+var LambdaLogsCloudWatchKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*){1}:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // LambdaLogsLogGroupRetention - Specifies the number of days you want to retain Lambda log events in the Clou...
-var LambdaLogsLogGroupRetention = Param("LambdaLogsLogGroupRetention")
+var LambdaLogsLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Specifies the number of days you want to retain Lambda log events in the CloudWatch Logs",
+	Default: 14,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // LambdaS3BucketName - Lambda S3 bucket name for the Lambda deployment package. Lambda bucket name c...
-var LambdaS3BucketName = Param("LambdaS3BucketName")
+var LambdaS3BucketName = Parameter{
+	Type: "String",
+	Description: "Lambda S3 bucket name for the Lambda deployment package. Lambda bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	AllowedPattern: "(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "Lambda S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // LambdaZipFileName - Amazon S3 key of the deployment package.
-var LambdaZipFileName = Param("LambdaZipFileName")
+var LambdaZipFileName = Parameter{
+	Type: "String",
+	Description: "Amazon S3 key of the deployment package.",
+	Default: "adconnector_custom_resource.zip",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(1024),
+}
 
 // PrivateSubnet1ID - ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)
-var PrivateSubnet1ID = Param("PrivateSubnet1ID")
+var PrivateSubnet1ID = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)",
+}
 
 // PrivateSubnet2ID - ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)
-var PrivateSubnet2ID = Param("PrivateSubnet2ID")
+var PrivateSubnet2ID = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)",
+}
 
 // SSMLogsBucketName - (Optional) SSM Logs bucket name for where Systems Manager logs should store l...
-var SSMLogsBucketName = Param("SSMLogsBucketName")
+var SSMLogsBucketName = Parameter{
+	Type: "String",
+	Description: "(Optional) SSM Logs bucket name for where Systems Manager logs should store log files. SSM Logs bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	Default: "",
+	AllowedPattern: "^$|(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "SSM Logs bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // SecretsManagerDomainCredentialsSecretsKMSKey - (Optional) KMS Key ARN to use for encrypting the SecretsManager domain creden...
-var SecretsManagerDomainCredentialsSecretsKMSKey = Param("SecretsManagerDomainCredentialsSecretsKMSKey")
+var SecretsManagerDomainCredentialsSecretsKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the SecretsManager domain credentials secret. If empty, encryption is enabled with SecretsManager managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // VPCID - ID of the VPC (e.g., vpc-0343606e)
-var VPCID = Param("VPCID")
+var VPCID = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "ID of the VPC (e.g., vpc-0343606e)",
+}
 
 var DHCPOptionSetConditionCondition = Equals{CreateDHCPOptionSet, "Yes"}
 

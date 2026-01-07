@@ -9,4 +9,8 @@ import (
 )
 
 // DockerImage - Docker image to use for the build phase
-var DockerImage = Param("DockerImage")
+var DockerImage = Parameter{
+	Type: "String",
+	Description: "Docker image to use for the build phase",
+	Default: "aws/codebuild/standard:7.0",
+}

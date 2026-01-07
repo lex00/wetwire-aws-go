@@ -9,16 +9,38 @@ import (
 )
 
 // ClientIP - The IP address range that can be used to connect to the RDS instances from yo...
-var ClientIP = Param("ClientIP")
+var ClientIP = Parameter{
+	Type: "String",
+	Description: "The IP address range that can be used to connect to the RDS instances from your local machine. It must be a valid IP CIDR range of the form x.x.x.x/x. Pls get your address using checkip.amazonaws.com or whatsmyip.org",
+	Default: "0.0.0.0/0",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+	ConstraintDescription: "It must be a valid IP CIDR range of the form x.x.x.x/x. Suggest to enable access to your IP address only. Pls get your address using checkip.amazonaws.com or whatsmyip.org.",
+}
 
 // ExistsDMSCloudwatchRole - If the dms-cloudwatch-logs-role exists in your account, please enter Y, else ...
-var ExistsDMSCloudwatchRole = Param("ExistsDMSCloudwatchRole")
+var ExistsDMSCloudwatchRole = Parameter{
+	Type: "String",
+	Description: "If the dms-cloudwatch-logs-role exists in your account, please enter Y, else enter N",
+	Default: "N",
+	AllowedPattern: "[YN]",
+	ConstraintDescription: "Permitted value is Y or N.",
+}
 
 // ExistsDMSVPCRole - If the dms-vpc-role exists in your account, please enter Y, else enter N
-var ExistsDMSVPCRole = Param("ExistsDMSVPCRole")
+var ExistsDMSVPCRole = Parameter{
+	Type: "String",
+	Description: "If the dms-vpc-role exists in your account, please enter Y, else enter N",
+	Default: "N",
+	AllowedPattern: "[YN]",
+	ConstraintDescription: "Permitted value is Y or N.",
+}
 
 // SnapshotIdentifier - The ARN of the Aurora DB Cluster Snapshot used to populate the Aurora DB Clus...
-var SnapshotIdentifier = Param("SnapshotIdentifier")
+var SnapshotIdentifier = Parameter{
+	Type: "String",
+	Description: "The ARN of the Aurora DB Cluster Snapshot used to populate the Aurora DB Cluster that will be used as the source for the DMS task.",
+	Default: "arn:aws:rds:us-east-1:01234567890123:cluster-snapshot:dms-sampledb-snapshot",
+}
 
 var NotExistsDMSCloudwatchRoleCondition = Equals{ExistsDMSCloudwatchRole, "N"}
 

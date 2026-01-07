@@ -9,45 +9,105 @@ import (
 )
 
 // AccountIdOfChildAWSAccount - Please specify the Sub AWS Account ID.
-var AccountIdOfChildAWSAccount = Param("AccountIdOfChildAWSAccount")
+var AccountIdOfChildAWSAccount = Parameter{
+	Type: "String",
+	Description: "Please specify the Sub AWS Account ID.",
+	Default: "1234567890",
+}
 
 // ActivateProductTagOptions - Activate Custom Tag Options? Used for portfolio tagging
-var ActivateProductTagOptions = Param("ActivateProductTagOptions")
+var ActivateProductTagOptions = Parameter{
+	Type: "String",
+	Description: "Activate Custom Tag Options? Used for portfolio tagging",
+	Default: "true",
+	AllowedValues: []any{"true", "false"},
+}
 
 // Dept - Please specify the Department. Used for tagging
-var Dept = Param("Dept")
+var Dept = Parameter{
+	Type: "String",
+	Description: "Please specify the Department. Used for tagging",
+	Default: "1234",
+}
 
 // Env - Please specify the target Environment. Used for tagging and resource names. M...
-var Env = Param("Env")
+var Env = Parameter{
+	Type: "String",
+	Description: "Please specify the target Environment. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "dev",
+	AllowedValues: []any{"test", "dev", "prod"},
+}
 
 // Owner - Please specify the Owner. Used for tagging
-var Owner = Param("Owner")
+var Owner = Parameter{
+	Type: "String",
+	Description: "Please specify the Owner. Used for tagging",
+	Default: "Owner",
+}
 
 // PortfolioDescription - Please specify the Portfolio Description.
-var PortfolioDescription = Param("PortfolioDescription")
+var PortfolioDescription = Parameter{
+	Type: "String",
+	Description: "Please specify the Portfolio Description.",
+	Default: "Service Catalog Portfolio for Business Unit (BU)",
+}
 
 // PortfolioDisplayName - Please specify the Portfolio Description. Must satisfy regular expression pat...
-var PortfolioDisplayName = Param("PortfolioDisplayName")
+var PortfolioDisplayName = Parameter{
+	Type: "String",
+	Description: "Please specify the Portfolio Description. Must satisfy regular expression pattern, (^[a-zA-Z0-9_\\-]*)",
+	Default: "Test_Portfolio",
+}
 
 // PortfolioProviderName - Please specify the Portfolio Provider Name.
-var PortfolioProviderName = Param("PortfolioProviderName")
+var PortfolioProviderName = Parameter{
+	Type: "String",
+	Description: "Please specify the Portfolio Provider Name.",
+	Default: "IT Provider",
+}
 
 // ProductDept - Please specify the Department. Used for tagging
-var ProductDept = Param("ProductDept")
+var ProductDept = Parameter{
+	Type: "String",
+	Description: "Please specify the Department. Used for tagging",
+	Default: "1234",
+}
 
 // ProductEnv - Please specify the target Environment. Used for tagging and resource names. M...
-var ProductEnv = Param("ProductEnv")
+var ProductEnv = Parameter{
+	Type: "String",
+	Description: "Please specify the target Environment. Used for tagging and resource names. Mandatory LOWER CASE.",
+	Default: "dev",
+	AllowedValues: []any{"test", "dev", "prod"},
+}
 
 // ProductOwner - Please specify the Owner. Used for tagging
-var ProductOwner = Param("ProductOwner")
+var ProductOwner = Parameter{
+	Type: "String",
+	Description: "Please specify the Owner. Used for tagging",
+	Default: "Owner",
+}
 
 // ProductUser - Please specify the User. Used for tagging
-var ProductUser = Param("ProductUser")
+var ProductUser = Parameter{
+	Type: "String",
+	Description: "Please specify the User. Used for tagging",
+	Default: "User",
+}
 
 // ShareThisPortfolio - Please specify if this Portfolio will be Shared with additonal accounts?
-var ShareThisPortfolio = Param("ShareThisPortfolio")
+var ShareThisPortfolio = Parameter{
+	Type: "String",
+	Description: "Please specify if this Portfolio will be Shared with additonal accounts?",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // User - Please specify the User. Used for tagging
-var User = Param("User")
+var User = Parameter{
+	Type: "String",
+	Description: "Please specify the User. Used for tagging",
+	Default: "User",
+}
 
 var ConditionShareThisPortfolioCondition = Equals{ShareThisPortfolio, "true"}

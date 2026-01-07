@@ -9,14 +9,31 @@ import (
 )
 
 // CoreName - Greengrass Core name to be created. A "Thing" with be created with _Core appe...
-var CoreName = Param("CoreName")
+var CoreName = Parameter{
+	Type: "String",
+	Description: "Greengrass Core name to be created. A \"Thing\" with be created with _Core appended to the name",
+	Default: "gg_cfn",
+}
 
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Default: "t3.micro",
+}
 
-var LatestAmiId = Param("LatestAmiId")
+var LatestAmiId = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+}
 
 // SecurityAccessCIDR - CIDR block to limit inbound access for only SSH
-var SecurityAccessCIDR = Param("SecurityAccessCIDR")
+var SecurityAccessCIDR = Parameter{
+	Type: "String",
+	Description: "CIDR block to limit inbound access for only SSH",
+	Default: "0.0.0.0/0",
+}
 
 // myKeyPair - Amazon EC2 Key Pair for accessing Greengrass Core instance
-var myKeyPair = Param("myKeyPair")
+var myKeyPair = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Amazon EC2 Key Pair for accessing Greengrass Core instance",
+}

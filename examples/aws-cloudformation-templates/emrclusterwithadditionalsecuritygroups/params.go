@@ -9,40 +9,84 @@ import (
 )
 
 // AdditionalCoreNodeSecurityGroups - Comma-delimited list of additional security groups for core and task nodes
-var AdditionalCoreNodeSecurityGroups = Param("AdditionalCoreNodeSecurityGroups")
+var AdditionalCoreNodeSecurityGroups = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "Comma-delimited list of additional security groups for core and task nodes",
+}
 
 // AdditionalPrimaryNodeSecurityGroups - Comma-delimited list of additional security groups for primary nodes
-var AdditionalPrimaryNodeSecurityGroups = Param("AdditionalPrimaryNodeSecurityGroups")
+var AdditionalPrimaryNodeSecurityGroups = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "Comma-delimited list of additional security groups for primary nodes",
+}
 
 // Applications - Please select which application will be installed on the cluster. This would ...
-var Applications = Param("Applications")
+var Applications = Parameter{
+	Type: "String",
+	Description: "Please select which application will be installed on the cluster. This would be either Ganglia and spark, or Ganglia and s3 backed Hbase",
+	AllowedValues: []any{"Spark", "Hbase"},
+}
 
 // CoreInstanceType - Instance type to be used for core instances.
-var CoreInstanceType = Param("CoreInstanceType")
+var CoreInstanceType = Parameter{
+	Type: "String",
+	Description: "Instance type to be used for core instances.",
+	Default: "m3.xlarge",
+}
 
 // EMRClusterName - Name of the cluster
-var EMRClusterName = Param("EMRClusterName")
+var EMRClusterName = Parameter{
+	Type: "String",
+	Description: "Name of the cluster",
+	Default: "emrcluster",
+}
 
 // KeyName - Must be an existing Keyname
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "String",
+	Description: "Must be an existing Keyname",
+}
 
 // LogUri - Must be a valid S3 URL
-var LogUri = Param("LogUri")
+var LogUri = Parameter{
+	Type: "String",
+	Description: "Must be a valid S3 URL",
+	Default: "s3://emrclusterlogbucket/",
+}
 
 // MasterInstanceType - Instance type to be used for the master instance.
-var MasterInstanceType = Param("MasterInstanceType")
+var MasterInstanceType = Parameter{
+	Type: "String",
+	Description: "Instance type to be used for the master instance.",
+	Default: "m3.xlarge",
+}
 
 // NumberOfCoreInstances - Must be a valid number
-var NumberOfCoreInstances = Param("NumberOfCoreInstances")
+var NumberOfCoreInstances = Parameter{
+	Type: "Number",
+	Description: "Must be a valid number",
+	Default: 2,
+}
 
 // ReleaseLabel - Must be a valid EMR release version
-var ReleaseLabel = Param("ReleaseLabel")
+var ReleaseLabel = Parameter{
+	Type: "String",
+	Description: "Must be a valid EMR release version",
+	Default: "emr-5.7.0",
+}
 
 // S3DataUri - Must be a valid S3 bucket URL
-var S3DataUri = Param("S3DataUri")
+var S3DataUri = Parameter{
+	Type: "String",
+	Description: "Must be a valid S3 bucket URL",
+	Default: "s3://emrclusterdatabucket/",
+}
 
 // SubnetID - Must be a valid public subnet ID
-var SubnetID = Param("SubnetID")
+var SubnetID = Parameter{
+	Type: "String",
+	Description: "Must be a valid public subnet ID",
+}
 
 var HbaseCondition = Equals{Applications, "Hbase"}
 

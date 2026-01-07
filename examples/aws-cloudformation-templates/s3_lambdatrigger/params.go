@@ -9,4 +9,7 @@ import (
 )
 
 // NotificationBucket - S3 bucket name that is the trigger to lambda
-var NotificationBucket = Param("NotificationBucket")
+var NotificationBucket = Parameter{
+	Type: "String",
+	Description: "S3 bucket name that is the trigger to lambda",
+}

@@ -9,25 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudwatch"
 )
 
-var NeptunePrimaryGremlinRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
-	Name: "DBClusterIdentifier",
-	Value: "gremlin-cluster",
-}
-
-var NeptunePrimaryGremlinRequestsPerSecAlarm = cloudwatch.Alarm{
-	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB Gremlin Requests Per Second"},
-	ComparisonOperator: "GreaterThanOrEqualToThreshold",
-	Dimensions: []any{NeptunePrimaryGremlinRequestsPerSecAlarmDimensionDBClusterIdentifier},
-	EvaluationPeriods: 2,
-	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
-	MetricName: "GremlinRequestsPerSec",
-	Namespace: "AWS/Neptune",
-	Period: 300,
-	Statistic: "Average",
-	Threshold: GremlinRequestsPerSecThreshold,
-}
-
 var NeptunePrimaryMemoryAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
 	Name: "DBClusterIdentifier",
 	Value: NeptuneDBCluster,
@@ -46,6 +27,25 @@ var NeptunePrimaryMemoryAlarm = cloudwatch.Alarm{
 	Statistic: "Average",
 	Threshold: LowMemoryAlarmThreshold,
 	Unit: "Bytes",
+}
+
+var NeptunePrimaryGremlinRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{
+	Name: "DBClusterIdentifier",
+	Value: "gremlin-cluster",
+}
+
+var NeptunePrimaryGremlinRequestsPerSecAlarm = cloudwatch.Alarm{
+	AlarmActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
+	AlarmDescription: Sub{String: "${Env}-${AppName} primary DB Gremlin Requests Per Second"},
+	ComparisonOperator: "GreaterThanOrEqualToThreshold",
+	Dimensions: []any{NeptunePrimaryGremlinRequestsPerSecAlarmDimensionDBClusterIdentifier},
+	EvaluationPeriods: 2,
+	InsufficientDataActions: []any{If{"CreateSnsTopic", NeptuneAlarmTopic, NeptuneSNSTopicArn}},
+	MetricName: "GremlinRequestsPerSec",
+	Namespace: "AWS/Neptune",
+	Period: 300,
+	Statistic: "Average",
+	Threshold: GremlinRequestsPerSecThreshold,
 }
 
 var NeptunePrimarySparqlRequestsPerSecAlarmDimensionDBClusterIdentifier = cloudwatch.Alarm_Dimension{

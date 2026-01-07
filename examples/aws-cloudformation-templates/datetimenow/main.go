@@ -10,7 +10,20 @@ import (
 
 var TransformFunction = serverless.Function{
 	Handler: "index.handler",
-	InlineCode: "import datetime\ndef handler(event, context):\n    response = {\n        'requestId': event['requestId'],\n        'status': 'success'\n    }\n    try:\n        format = event['params']['format']\n        response['fragment'] = datetime.datetime.now().strftime(format)\n    except Exception as e:\n        response['status'] = 'failure'\n        response['errorMessage'] = str(e)\n    return response\n",
+	InlineCode: `import datetime
+def handler(event, context):
+    response = {
+        'requestId': event['requestId'],
+        'status': 'success'
+    }
+    try:
+        format = event['params']['format']
+        response['fragment'] = datetime.datetime.now().strftime(format)
+    except Exception as e:
+        response['status'] = 'failure'
+        response['errorMessage'] = str(e)
+    return response
+`,
 	MemorySize: 128,
 	Runtime: "python3.11",
 	Timeout: 3,

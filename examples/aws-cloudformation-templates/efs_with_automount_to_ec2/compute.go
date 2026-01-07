@@ -26,16 +26,16 @@ var AutoScalingGroup = autoscaling.AutoScalingGroup{
 	VPCZoneIdentifier: Subnets,
 }
 
-var ScaleUpPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: AutoScalingGroup,
-	Cooldown: "60",
-	ScalingAdjustment: "1",
-}
-
 var ScaleDownPolicy = autoscaling.ScalingPolicy{
 	AdjustmentType: "ChangeInCapacity",
 	AutoScalingGroupName: AutoScalingGroup,
 	Cooldown: "60",
 	ScalingAdjustment: "-1",
+}
+
+var ScaleUpPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: AutoScalingGroup,
+	Cooldown: "60",
+	ScalingAdjustment: "1",
 }

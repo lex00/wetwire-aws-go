@@ -9,4 +9,7 @@ import (
 )
 
 // AccountIdDestination - Account Id of the destination AWS Account for replication (ie: 123456789012).
-var AccountIdDestination = Param("AccountIdDestination")
+var AccountIdDestination = Parameter{
+	Type: "String",
+	Description: "Account Id of the destination AWS Account for replication (ie: 123456789012).",
+}

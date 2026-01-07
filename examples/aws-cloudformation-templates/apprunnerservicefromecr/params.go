@@ -9,7 +9,15 @@ import (
 )
 
 // ECRURL - URL of the ECR Repository.
-var ECRURL = Param("ECRURL")
+var ECRURL = Parameter{
+	Type: "String",
+	Description: "URL of the ECR Repository.",
+	Default: "123456789012.dkr.ecr.us-east-2.amazonaws.com/cfntest:apache",
+}
 
 // TCPPORT - Port on which the container is listening.
-var TCPPORT = Param("TCPPORT")
+var TCPPORT = Parameter{
+	Type: "Number",
+	Description: "Port on which the container is listening.",
+	Default: 80,
+}

@@ -9,46 +9,112 @@ import (
 )
 
 // CreateVPCFlowLogsToCloudWatch - Create VPC flow logs for the VPC and publish them to CloudWatch
-var CreateVPCFlowLogsToCloudWatch = Param("CreateVPCFlowLogsToCloudWatch")
+var CreateVPCFlowLogsToCloudWatch = Parameter{
+	Type: "String",
+	Description: "Create VPC flow logs for the VPC and publish them to CloudWatch",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // CreateVPCFlowLogsToS3 - Create VPC flow logs for the VPC and publish them to S3
-var CreateVPCFlowLogsToS3 = Param("CreateVPCFlowLogsToS3")
+var CreateVPCFlowLogsToS3 = Parameter{
+	Type: "String",
+	Description: "Create VPC flow logs for the VPC and publish them to S3",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // S3AccessLogsBucketName - (Optional) S3 Server Access Logs bucket name for where Amazon S3 should store...
-var S3AccessLogsBucketName = Param("S3AccessLogsBucketName")
+var S3AccessLogsBucketName = Parameter{
+	Type: "String",
+	Description: "(Optional) S3 Server Access Logs bucket name for where Amazon S3 should store server access log files. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-). If empty, a new S3 bucket will be created as a destination for S3 server access logs, it will follow the format, aws-s3-access-logs-<account>-<region>",
+	AllowedPattern: "^$|^(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // TemplatesS3BucketName - Templates S3 bucket name for the CloudFormation templates. S3 bucket name can...
-var TemplatesS3BucketName = Param("TemplatesS3BucketName")
+var TemplatesS3BucketName = Parameter{
+	Type: "String",
+	Description: "Templates S3 bucket name for the CloudFormation templates. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	AllowedPattern: "^(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "Templates S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // TemplatesS3BucketRegion - The AWS Region where the Templates S3 bucket (TemplatesS3BucketName) is hosted.
-var TemplatesS3BucketRegion = Param("TemplatesS3BucketRegion")
+var TemplatesS3BucketRegion = Parameter{
+	Type: "String",
+	Description: "The AWS Region where the Templates S3 bucket (TemplatesS3BucketName) is hosted.",
+}
 
 // VPCFlowLogsBucketKMSKey - (Optional) KMS Key ID or ARN to use for the default encryption. If empty, ser...
-var VPCFlowLogsBucketKMSKey = Param("VPCFlowLogsBucketKMSKey")
+var VPCFlowLogsBucketKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ID or ARN to use for the default encryption. If empty, server-side encryption with Amazon S3-managed encryption keys (SSE-S3) will be used. Note, will only be set if S3 Bucket parameter, \"VPCFlowLogsBucketName\", was not provided, thus a new S3 bucket is being created.",
+	AllowedPattern: "^$|^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ID example: 1234abcd-12ab-34cd-56ef-1234567890ab  Key ARN examlpe:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // VPCFlowLogsBucketKeyEnabled - Set to true to have Amazon S3 use an S3 Bucket Key with server-side encryptio...
-var VPCFlowLogsBucketKeyEnabled = Param("VPCFlowLogsBucketKeyEnabled")
+var VPCFlowLogsBucketKeyEnabled = Parameter{
+	Type: "String",
+	Description: "Set to true to have Amazon S3 use an S3 Bucket Key with server-side encryption using KMS (SSE-KMS). If false, S3 Bucket Key is not enabled. Note, will only be set if KMS Key parameter, \"VPCFlowLogsBucketKMSKey\", was provided.",
+	Default: false,
+	AllowedValues: []any{true, false},
+}
 
 // VPCFlowLogsBucketName - (Optional) S3 bucket name where VPC Flow Log data can be published. S3 bucket...
-var VPCFlowLogsBucketName = Param("VPCFlowLogsBucketName")
+var VPCFlowLogsBucketName = Parameter{
+	Type: "String",
+	Description: "(Optional) S3 bucket name where VPC Flow Log data can be published. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-). If empty, a new S3 bucket will be created for VPC Flow Log data to be published.",
+	AllowedPattern: "^$|^(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // VPCFlowLogsCloudWatchKMSKey - (Optional) KMS Key ARN to use for encrypting the VPC flow logs data. If empty...
-var VPCFlowLogsCloudWatchKMSKey = Param("VPCFlowLogsCloudWatchKMSKey")
+var VPCFlowLogsCloudWatchKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the VPC flow logs data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // VPCFlowLogsLogFormat - The fields to include in the flow log record, in the order in which they shou...
-var VPCFlowLogsLogFormat = Param("VPCFlowLogsLogFormat")
+var VPCFlowLogsLogFormat = Parameter{
+	Type: "String",
+	Description: "The fields to include in the flow log record, in the order in which they should appear. Specify the fields using the ${field-id} format, separated by spaces. Using the Default Format as the default value.",
+	Default: "${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}",
+	AllowedPattern: "^(\\$\\{[a-z-]+\\})$|^((\\$\\{[a-z-]+\\} )*\\$\\{[a-z-]+\\})$",
+}
 
 // VPCFlowLogsLogGroupRetention - Number of days to retain the VPC Flow Logs in CloudWatch
-var VPCFlowLogsLogGroupRetention = Param("VPCFlowLogsLogGroupRetention")
+var VPCFlowLogsLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Number of days to retain the VPC Flow Logs in CloudWatch",
+	Default: 14,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // VPCFlowLogsMaxAggregationInterval - The maximum interval of time during which a flow of packets is captured and a...
-var VPCFlowLogsMaxAggregationInterval = Param("VPCFlowLogsMaxAggregationInterval")
+var VPCFlowLogsMaxAggregationInterval = Parameter{
+	Type: "String",
+	Description: "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. You can specify 60 seconds (1 minute) or 600 seconds (10 minutes).",
+	Default: 600,
+	AllowedValues: []any{60, 600},
+}
 
 // VPCFlowLogsTrafficType - The type of traffic to log. You can log traffic that the resource accepts or ...
-var VPCFlowLogsTrafficType = Param("VPCFlowLogsTrafficType")
+var VPCFlowLogsTrafficType = Parameter{
+	Type: "String",
+	Description: "The type of traffic to log. You can log traffic that the resource accepts or rejects, or all traffic.",
+	Default: "REJECT",
+	AllowedValues: []any{"ACCEPT", "ALL", "REJECT"},
+}
 
 // VPCID - ID of the VPC (e.g., vpc-0343606e)
-var VPCID = Param("VPCID")
+var VPCID = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "ID of the VPC (e.g., vpc-0343606e)",
+}
 
 var VPCFlowLogsToCloudWatchConditionCondition = Equals{CreateVPCFlowLogsToCloudWatch, "Yes"}
 

@@ -9,25 +9,51 @@ import (
 )
 
 // AccessPointName - Name for the EFS access point
-var AccessPointName = Param("AccessPointName")
+var AccessPointName = Parameter{
+	Type: "String",
+	Description: "Name for the EFS access point",
+	Default: "SampleEFSAccessPoint",
+}
 
 // EFSFileSystemName - Name for the EFS file system
-var EFSFileSystemName = Param("EFSFileSystemName")
+var EFSFileSystemName = Parameter{
+	Type: "String",
+	Description: "Name for the EFS file system",
+	Default: "SampleEFSFilesystem",
+}
 
 // SecurityGroup1 - Security group for the first EFS mount target
-var SecurityGroup1 = Param("SecurityGroup1")
+var SecurityGroup1 = Parameter{
+	Type: "AWS::EC2::SecurityGroup::Id",
+	Description: "Security group for the first EFS mount target",
+}
 
 // SecurityGroup2 - Security group for the second EFS mount target
-var SecurityGroup2 = Param("SecurityGroup2")
+var SecurityGroup2 = Parameter{
+	Type: "AWS::EC2::SecurityGroup::Id",
+	Description: "Security group for the second EFS mount target",
+}
 
 // SecurityGroup3 - Security group for the third EFS mount target
-var SecurityGroup3 = Param("SecurityGroup3")
+var SecurityGroup3 = Parameter{
+	Type: "AWS::EC2::SecurityGroup::Id",
+	Description: "Security group for the third EFS mount target",
+}
 
 // Subnet1 - A subnet for the first EFS mount target
-var Subnet1 = Param("Subnet1")
+var Subnet1 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "A subnet for the first EFS mount target",
+}
 
 // Subnet2 - A subnet for the second EFS mount target
-var Subnet2 = Param("Subnet2")
+var Subnet2 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "A subnet for the second EFS mount target",
+}
 
 // Subnet3 - A subnet for the third EFS mount target
-var Subnet3 = Param("Subnet3")
+var Subnet3 = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "A subnet for the third EFS mount target",
+}

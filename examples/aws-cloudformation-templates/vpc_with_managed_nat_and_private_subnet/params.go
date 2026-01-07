@@ -9,4 +9,8 @@ import (
 )
 
 // VPCName - The name of the VPC being created.
-var VPCName = Param("VPCName")
+var VPCName = Parameter{
+	Type: "String",
+	Description: "The name of the VPC being created.",
+	Default: "VPC Public and Private with NAT",
+}

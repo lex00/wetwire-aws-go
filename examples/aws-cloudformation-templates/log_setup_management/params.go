@@ -8,18 +8,40 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var CentralEventBusName = Param("CentralEventBusName")
+var CentralEventBusName = Parameter{
+	Type: "String",
+	Default: "central-cloudformation",
+}
 
-var CentralEventLogName = Param("CentralEventLogName")
+var CentralEventLogName = Parameter{
+	Type: "String",
+	Default: "central-cloudformation-logs",
+}
 
 // KmsKeyId - The ID of an AWS Key Management Service (KMS) for Amazon SQS, or a custom KMS...
-var KmsKeyId = Param("KmsKeyId")
+var KmsKeyId = Parameter{
+	Type: "String",
+	Description: "The ID of an AWS Key Management Service (KMS) for Amazon SQS, or a custom KMS. To use the AWS managed KMS for Amazon SQS, specify a (default) alias ARN, alias name (for example alias/aws/sqs), key ARN, or key ID",
+	Default: "alias/aws/sqs",
+}
 
 // OUID - The Id of the Organization Unit to deploy the stack set to.
-var OUID = Param("OUID")
+var OUID = Parameter{
+	Type: "String",
+	Description: "The Id of the Organization Unit to deploy the stack set to.",
+	Default: "ou-qxtx-vv0thlla",
+}
 
 // OrgID - The Id of the Organization to verify the cross account API call. All accounts...
-var OrgID = Param("OrgID")
+var OrgID = Parameter{
+	Type: "String",
+	Description: "The Id of the Organization to verify the cross account API call. All accounts in this org will be granted permissions to put events onto the default event bus in this account. Note that this is not the OUID, it's the org itself and should start with o-",
+	Default: "o-jhfo4fcm1s",
+}
 
 // StackSetRegions - AWS Regions where stack instances should be deployed in target accounts
-var StackSetRegions = Param("StackSetRegions")
+var StackSetRegions = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "AWS Regions where stack instances should be deployed in target accounts",
+	Default: "us-east-1,eu-west-1",
+}

@@ -9,4 +9,8 @@ import (
 )
 
 // AppName - This name will be used as part of resource names
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "This name will be used as part of resource names",
+	Default: "stacksets-sample",
+}

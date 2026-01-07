@@ -9,4 +9,7 @@ import (
 )
 
 // Subnet - ID of the Subnet the instance should be launched in, this will link the insta...
-var Subnet = Param("Subnet")
+var Subnet = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "ID of the Subnet the instance should be launched in, this will link the instance to the same VPC.",
+}

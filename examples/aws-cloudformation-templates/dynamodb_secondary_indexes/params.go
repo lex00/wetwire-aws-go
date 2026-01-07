@@ -9,7 +9,17 @@ import (
 )
 
 // ReadCapacityUnits - Provisioned read throughput
-var ReadCapacityUnits = Param("ReadCapacityUnits")
+var ReadCapacityUnits = Parameter{
+	Type: "Number",
+	Description: "Provisioned read throughput",
+	Default: "5",
+	ConstraintDescription: "must be between 5 and 10000",
+}
 
 // WriteCapacityUnits - Provisioned write throughput
-var WriteCapacityUnits = Param("WriteCapacityUnits")
+var WriteCapacityUnits = Parameter{
+	Type: "Number",
+	Description: "Provisioned write throughput",
+	Default: "10",
+	ConstraintDescription: "must be between 5 and 10000",
+}

@@ -9,4 +9,9 @@ import (
 )
 
 // DBUser - The database admin account username
-var DBUser = Param("DBUser")
+var DBUser = Parameter{
+	Type: "String",
+	Description: "The database admin account username",
+	AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*",
+	ConstraintDescription: "must begin with a letter and contain only alphanumeric characters.",
+}

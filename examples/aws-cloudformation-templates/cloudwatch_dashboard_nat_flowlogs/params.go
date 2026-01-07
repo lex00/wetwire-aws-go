@@ -9,13 +9,25 @@ import (
 )
 
 // LogGroupName - The ARN of the log group to query
-var LogGroupName = Param("LogGroupName")
+var LogGroupName = Parameter{
+	Type: "String",
+	Description: "The ARN of the log group to query",
+}
 
 // NatGatewayID - The ID of the NAT Gateway
-var NatGatewayID = Param("NatGatewayID")
+var NatGatewayID = Parameter{
+	Type: "String",
+	Description: "The ID of the NAT Gateway",
+}
 
 // NatGatewayPrivateIP - The private IP address of the NAT Gateway
-var NatGatewayPrivateIP = Param("NatGatewayPrivateIP")
+var NatGatewayPrivateIP = Parameter{
+	Type: "String",
+	Description: "The private IP address of the NAT Gateway",
+}
 
 // VpcCidr - The CIDR block of the VPC
-var VpcCidr = Param("VpcCidr")
+var VpcCidr = Parameter{
+	Type: "String",
+	Description: "The CIDR block of the VPC",
+}

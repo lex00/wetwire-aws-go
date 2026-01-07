@@ -9,24 +9,60 @@ import (
 )
 
 // InstanceType - WebServer EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "WebServer EC2 instance type",
+	Default: "t3.micro",
+	ConstraintDescription: "must be a valid EC2 instance type.",
+}
 
 // KeyName - Name of an existing EC2 KeyPair to enable SSH access to the instance
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
-var LatestAMI = Param("LatestAMI")
+var LatestAMI = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+}
 
 // PrimaryIPAddress - Primary private IP. This must be a valid IP address for Subnet
-var PrimaryIPAddress = Param("PrimaryIPAddress")
+var PrimaryIPAddress = Parameter{
+	Type: "String",
+	Description: "Primary private IP. This must be a valid IP address for Subnet",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})",
+	ConstraintDescription: "must be a valid IP address of the form x.x.x.x.",
+}
 
 // SSHLocation - The IP address range that can be used to SSH to the EC2 instances
-var SSHLocation = Param("SSHLocation")
+var SSHLocation = Parameter{
+	Type: "String",
+	Description: "The IP address range that can be used to SSH to the EC2 instances",
+	Default: "0.0.0.0/0",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+	ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x.",
+}
 
 // SecondaryIPAddress - Secondary private IP. This ust be a valid IP address for Subnet
-var SecondaryIPAddress = Param("SecondaryIPAddress")
+var SecondaryIPAddress = Parameter{
+	Type: "String",
+	Description: "Secondary private IP. This ust be a valid IP address for Subnet",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})",
+	ConstraintDescription: "must be a valid IP address of the form x.x.x.x.",
+}
 
 // SubnetId - SubnetId of an existing subnet (for the primary network) in your Virtual Priv...
-var SubnetId = Param("SubnetId")
+var SubnetId = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "SubnetId of an existing subnet (for the primary network) in your Virtual Private Cloud (VPC)",
+	ConstraintDescription: "must be an existing subnet in the selected Virtual Private Cloud.",
+}
 
 // VpcId - VpcId of your existing Virtual Private Cloud (VPC)
-var VpcId = Param("VpcId")
+var VpcId = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "VpcId of your existing Virtual Private Cloud (VPC)",
+	ConstraintDescription: "must be the VPC Id of an existing Virtual Private Cloud.",
+}

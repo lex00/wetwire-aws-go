@@ -8,4 +8,6 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var pGlueJobName = Param("pGlueJobName")
+var pGlueJobName = Parameter{
+	Type: "String",
+}

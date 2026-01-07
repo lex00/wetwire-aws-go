@@ -9,15 +9,35 @@ import (
 )
 
 // IAMRole - EC2 attached IAM role
-var IAMRole = Param("IAMRole")
+var IAMRole = Parameter{
+	Type: "String",
+	Description: "EC2 attached IAM role",
+	Default: "CloudWatchAgentAdminRole",
+	ConstraintDescription: "must be an existing IAM role which will be attached to EC2 instance.",
+}
 
 // InstanceAMI - Managed AMI ID for EC2 Instance
-var InstanceAMI = Param("InstanceAMI")
+var InstanceAMI = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Description: "Managed AMI ID for EC2 Instance",
+	Default: "/aws/service/ami-windows-latest/Windows_Server-2022-English-Full-SQL_2022_Web",
+}
 
 // InstanceType - EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "EC2 instance type",
+	Default: "t3.medium",
+	ConstraintDescription: "must be a valid EC2 instance type.",
+}
 
 // KeyName - Name of an existing EC2 KeyPair to enable SSH access to the instance
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
-var SubnetId = Param("SubnetId")
+var SubnetId = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+}

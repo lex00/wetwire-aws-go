@@ -9,4 +9,8 @@ import (
 )
 
 // AppName - Name of the application
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "Name of the application",
+	Default: "AppConfigLambda",
+}

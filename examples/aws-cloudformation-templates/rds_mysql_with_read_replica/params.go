@@ -9,25 +9,64 @@ import (
 )
 
 // DBAllocatedStorage - The size of the database (Gb)
-var DBAllocatedStorage = Param("DBAllocatedStorage")
+var DBAllocatedStorage = Parameter{
+	Type: "Number",
+	Description: "The size of the database (Gb)",
+	Default: "5",
+	ConstraintDescription: "must be between 5 and 1024Gb.",
+}
 
 // DBInstanceClass - The database instance type
-var DBInstanceClass = Param("DBInstanceClass")
+var DBInstanceClass = Parameter{
+	Type: "String",
+	Description: "The database instance type",
+	Default: "db.t3.medium",
+	ConstraintDescription: "must select a valid database instance type.",
+}
 
 // DBName - The database name
-var DBName = Param("DBName")
+var DBName = Parameter{
+	Type: "String",
+	Description: "The database name",
+	Default: "MyDatabase",
+	AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*",
+	ConstraintDescription: "must begin with a letter and contain only alphanumeric characters.",
+}
 
 // DBUser - The database admin account username
-var DBUser = Param("DBUser")
+var DBUser = Parameter{
+	Type: "String",
+	Description: "The database admin account username",
+	AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*",
+	ConstraintDescription: "must begin with a letter and contain only alphanumeric characters.",
+}
 
 // EC2SecurityGroup - The EC2 security group that contains instances that need access to the database
-var EC2SecurityGroup = Param("EC2SecurityGroup")
+var EC2SecurityGroup = Parameter{
+	Type: "String",
+	Description: "The EC2 security group that contains instances that need access to the database",
+	Default: "default",
+	AllowedPattern: "[a-zA-Z0-9\\-]+",
+	ConstraintDescription: "must be a valid security group name.",
+}
 
 // EnableReadReplica - Enable the ReadReplica
-var EnableReadReplica = Param("EnableReadReplica")
+var EnableReadReplica = Parameter{
+	Type: "String",
+	Description: "Enable the ReadReplica",
+	Default: "true",
+	AllowedValues: []any{"true", "false"},
+	ConstraintDescription: "must be true or false.",
+}
 
 // MultiAZ - Multi-AZ master database
-var MultiAZ = Param("MultiAZ")
+var MultiAZ = Parameter{
+	Type: "String",
+	Description: "Multi-AZ master database",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+	ConstraintDescription: "must be true or false.",
+}
 
 var EnableReadReplicaCondition = Equals{EnableReadReplica, "true"}
 

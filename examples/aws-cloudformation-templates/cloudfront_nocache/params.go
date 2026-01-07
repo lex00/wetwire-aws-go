@@ -8,8 +8,15 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+}
 
-var Name = Param("Name")
+var Name = Parameter{
+	Type: "String",
+}
 
-var Port = Param("Port")
+var Port = Parameter{
+	Type: "String",
+	Default: 80,
+}

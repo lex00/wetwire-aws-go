@@ -8,14 +8,29 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var ELBIpAddressType = Param("ELBIpAddressType")
+var ELBIpAddressType = Parameter{
+	Type: "String",
+	Default: "ipv4",
+	AllowedValues: []any{"ipv4", "dualstack"},
+}
 
-var ELBType = Param("ELBType")
+var ELBType = Parameter{
+	Type: "String",
+	Default: "network",
+}
 
 // Subnet1 - ID of the Subnet the instance should be launched in, this will link the insta...
-var Subnet1 = Param("Subnet1")
+var Subnet1 = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "ID of the Subnet the instance should be launched in, this will link the instance to the same VPC.",
+}
 
 // Subnet2 - ID of the Subnet the instance should be launched in, this will link the insta...
-var Subnet2 = Param("Subnet2")
+var Subnet2 = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "ID of the Subnet the instance should be launched in, this will link the instance to the same VPC.",
+}
 
-var VPC = Param("VPC")
+var VPC = Parameter{
+	Type: "List<AWS::EC2::VPC::Id>",
+}

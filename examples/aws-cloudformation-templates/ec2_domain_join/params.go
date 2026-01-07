@@ -9,27 +9,56 @@ import (
 )
 
 // ADDirectoryId - Active DirectoryId. Eg. d-12345679a
-var ADDirectoryId = Param("ADDirectoryId")
+var ADDirectoryId = Parameter{
+	Type: "String",
+	Description: "Active DirectoryId. Eg. d-12345679a",
+}
 
 // ADDirectoryName - Active Directory Name. Eg. my.ad.com
-var ADDirectoryName = Param("ADDirectoryName")
+var ADDirectoryName = Parameter{
+	Type: "String",
+	Description: "Active Directory Name. Eg. my.ad.com",
+}
 
 // ADDnsIpAddresses1 - Active Directory DNS 1. Eg. 10.0.0.142
-var ADDnsIpAddresses1 = Param("ADDnsIpAddresses1")
+var ADDnsIpAddresses1 = Parameter{
+	Type: "String",
+	Description: "Active Directory DNS 1. Eg. 10.0.0.142",
+}
 
 // ADDnsIpAddresses2 - Active Directory DNS 2. Eg. 10.0.0.143
-var ADDnsIpAddresses2 = Param("ADDnsIpAddresses2")
+var ADDnsIpAddresses2 = Parameter{
+	Type: "String",
+	Description: "Active Directory DNS 2. Eg. 10.0.0.143",
+}
 
 // AMI - Windows 2016 AMI available in your region
-var AMI = Param("AMI")
+var AMI = Parameter{
+	Type: "AWS::EC2::Image::Id",
+	Description: "Windows 2016 AMI available in your region",
+}
 
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Default: "t2.small",
+	AllowedValues: []any{"t1.micro", "t2.micro", "t2.small", "t2.medium", "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "g2.2xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge", "d2.xlarge", "d2.2xlarge", "d2.4xlarge", "d2.8xlarge", "hs1.8xlarge", "cr1.8xlarge", "cc2.8xlarge"},
+	ConstraintDescription: "Must be a valid EC2 instance type.",
+}
 
 // KeyPair - KeyPair for EC2 Instance
-var KeyPair = Param("KeyPair")
+var KeyPair = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "KeyPair for EC2 Instance",
+}
 
 // PublicSubnet - Subnet to place instance in
-var PublicSubnet = Param("PublicSubnet")
+var PublicSubnet = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+	Description: "Subnet to place instance in",
+}
 
 // VPC - VPC to place instance in
-var VPC = Param("VPC")
+var VPC = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "VPC to place instance in",
+}

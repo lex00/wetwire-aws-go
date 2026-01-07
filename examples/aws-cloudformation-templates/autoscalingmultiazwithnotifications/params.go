@@ -9,33 +9,73 @@ import (
 )
 
 // AZs - Availability Zones to be used
-var AZs = Param("AZs")
+var AZs = Parameter{
+	Type: "List<AWS::EC2::AvailabilityZone::Name>",
+	Description: "Availability Zones to be used",
+}
 
 // CertificateArn - Certificate ARN for HTTPS
-var CertificateArn = Param("CertificateArn")
+var CertificateArn = Parameter{
+	Type: "String",
+	Description: "Certificate ARN for HTTPS",
+}
 
 // InstanceType - WebServer EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "WebServer EC2 instance type",
+	Default: "t4g.micro",
+}
 
 // KeyName - The EC2 Key Pair to allow SSH access to the instances
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "The EC2 Key Pair to allow SSH access to the instances",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
 // KmsKeyArn - KMS Key ARN to encrypt data
-var KmsKeyArn = Param("KmsKeyArn")
+var KmsKeyArn = Parameter{
+	Type: "String",
+	Description: "KMS Key ARN to encrypt data",
+}
 
-var LatestAmiId = Param("LatestAmiId")
+var LatestAmiId = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-arm64",
+}
 
 // OperatorEMail - Email address to notify if there are any scaling operations
-var OperatorEMail = Param("OperatorEMail")
+var OperatorEMail = Parameter{
+	Type: "String",
+	Description: "Email address to notify if there are any scaling operations",
+}
 
 // SSHLocation - The IP address range that can be used to SSH to the EC2 instances
-var SSHLocation = Param("SSHLocation")
+var SSHLocation = Parameter{
+	Type: "String",
+	Description: "The IP address range that can be used to SSH to the EC2 instances",
+	Default: "192.168.1.0/24",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+	ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x.",
+	MinLength: IntPtr(9),
+	MaxLength: IntPtr(18),
+}
 
 // SecurityGroups - Security Groups to be used
-var SecurityGroups = Param("SecurityGroups")
+var SecurityGroups = Parameter{
+	Type: "List<AWS::EC2::SecurityGroup::Id>",
+	Description: "Security Groups to be used",
+}
 
 // Subnets - Subnets to be used
-var Subnets = Param("Subnets")
+var Subnets = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "Subnets to be used",
+}
 
 // VPC - VPC to be used
-var VPC = Param("VPC")
+var VPC = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "VPC to be used",
+}

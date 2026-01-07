@@ -8,4 +8,7 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var InputString = Param("InputString")
+var InputString = Parameter{
+	Type: "String",
+	Default: "This is a test input string",
+}

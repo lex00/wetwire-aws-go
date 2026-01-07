@@ -9,7 +9,13 @@ import (
 )
 
 // AppName - This name be used as a prefix for resource names
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+	Description: "This name be used as a prefix for resource names",
+}
 
 // WebACL - The web acl id of a CLOUDFRONT scoped web acl in us-east-1
-var WebACL = Param("WebACL")
+var WebACL = Parameter{
+	Type: "String",
+	Description: "The web acl id of a CLOUDFRONT scoped web acl in us-east-1",
+}

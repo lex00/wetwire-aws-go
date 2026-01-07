@@ -9,7 +9,13 @@ import (
 )
 
 // BucketName - The name of the S3 Bucket to create, make this unique
-var BucketName = Param("BucketName")
+var BucketName = Parameter{
+	Type: "String",
+	Description: "The name of the S3 Bucket to create, make this unique",
+}
 
 // PublisherAccountID - The AWS account ID with whom you are sharing access
-var PublisherAccountID = Param("PublisherAccountID")
+var PublisherAccountID = Parameter{
+	Type: "String",
+	Description: "The AWS account ID with whom you are sharing access",
+}

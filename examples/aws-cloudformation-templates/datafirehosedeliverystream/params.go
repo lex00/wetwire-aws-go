@@ -9,21 +9,44 @@ import (
 )
 
 // CloudWatchLogGroupRetention - Define the number of days to retain destination error logs.
-var CloudWatchLogGroupRetention = Param("CloudWatchLogGroupRetention")
+var CloudWatchLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Define the number of days to retain destination error logs.",
+	Default: 3,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // CloudWatchLogsKMSKey - (Optional) KMS Key ARN to use for encrypting the delivery stream destination ...
-var CloudWatchLogsKMSKey = Param("CloudWatchLogsKMSKey")
+var CloudWatchLogsKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the delivery stream destination error log data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*){1}:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:012345678901:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // DeliveryStreamName - Name of Amazon Data Firehose delivery stream
-var DeliveryStreamName = Param("DeliveryStreamName")
+var DeliveryStreamName = Parameter{
+	Type: "String",
+	Description: "Name of Amazon Data Firehose delivery stream",
+	Default: "my-delivery-stream",
+}
 
 // DestinationBucketName - Name of an existing Amazon S3 bucket
-var DestinationBucketName = Param("DestinationBucketName")
+var DestinationBucketName = Parameter{
+	Type: "String",
+	Description: "Name of an existing Amazon S3 bucket",
+}
 
 // LogGroupName - Name of the Amazon CloudWatch log group that will be created.
-var LogGroupName = Param("LogGroupName")
+var LogGroupName = Parameter{
+	Type: "String",
+	Description: "Name of the Amazon CloudWatch log group that will be created.",
+}
 
 // LogStreamName - Name of the Amazon CloudWatch log stream that will be created.
-var LogStreamName = Param("LogStreamName")
+var LogStreamName = Parameter{
+	Type: "String",
+	Description: "Name of the Amazon CloudWatch log stream that will be created.",
+}
 
 var CloudWatchLogsKMSKeyConditionCondition = Not{Equals{CloudWatchLogsKMSKey, ""}}

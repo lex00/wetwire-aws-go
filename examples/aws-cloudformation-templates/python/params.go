@@ -9,9 +9,16 @@ import (
 )
 
 // AdditionalExecutionPolicy - An optional IAM Policy ARN to add to the Lambda's execution role so that the ...
-var AdditionalExecutionPolicy = Param("AdditionalExecutionPolicy")
+var AdditionalExecutionPolicy = Parameter{
+	Type: "String",
+	Description: "An optional IAM Policy ARN to add to the Lambda's execution role so that \nthe template's Python code can call AWS services.\n",
+}
 
 // LambdaTimeout - Optional setting of the Lambda's execution timeout (in seconds). The default ...
-var LambdaTimeout = Param("LambdaTimeout")
+var LambdaTimeout = Parameter{
+	Type: "Number",
+	Description: "Optional setting of the Lambda's execution timeout (in seconds). \nThe default of 3 seconds won't be enough if you call AWS services; \nthen at least 10 seconds is recommended, more depending on complexity.\n",
+	Default: 3,
+}
 
 var AdditionalPolicyProvidedCondition = Not{Equals{AdditionalExecutionPolicy, ""}}

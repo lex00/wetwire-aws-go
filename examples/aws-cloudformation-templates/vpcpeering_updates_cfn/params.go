@@ -9,25 +9,55 @@ import (
 )
 
 // NumberOfRouteTables - Number of Route Table IDs to update. This must match your items in the comma-...
-var NumberOfRouteTables = Param("NumberOfRouteTables")
+var NumberOfRouteTables = Parameter{
+	Type: "String",
+	Description: "Number of Route Table IDs to update. This must match your items in the comma-separated list of RouteTableIds parameter.",
+	AllowedValues: []any{1, 2, 3, 4, 5, 6},
+}
 
 // NumberOfSecurityGroups - Number of Security Group IDs. This must match your selections in the list of ...
-var NumberOfSecurityGroups = Param("NumberOfSecurityGroups")
+var NumberOfSecurityGroups = Parameter{
+	Type: "String",
+	Description: "Number of Security Group IDs. This must match your selections in the list of SecurityGroupIds parameter.",
+	AllowedValues: []any{1, 2, 3, 4, 5, 6},
+}
 
 // PeerName - Name of the VPC Peer
-var PeerName = Param("PeerName")
+var PeerName = Parameter{
+	Type: "String",
+	Description: "Name of the VPC Peer",
+	MaxLength: IntPtr(255),
+}
 
 // PeerVPCCIDR - CIDR of the VPC Peer
-var PeerVPCCIDR = Param("PeerVPCCIDR")
+var PeerVPCCIDR = Parameter{
+	Type: "String",
+	Description: "CIDR of the VPC Peer",
+	AllowedPattern: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+	ConstraintDescription: "CIDR block parameter must be in the form x.x.x.x/16-28",
+}
 
 // RouteTableIds - Route Table IDs that will be updated to allow communications via the VPC peer...
-var RouteTableIds = Param("RouteTableIds")
+var RouteTableIds = Parameter{
+	Type: "String",
+	Description: "Route Table IDs that will be updated to allow communications via the VPC peering connection. Note, the logical order is preserved.",
+	AllowedPattern: "^(rtb-[0-9a-f]{17})$|^((rtb-[0-9a-f]{17}(,|, ))*rtb-[0-9a-f]{17})$",
+	ConstraintDescription: "Must have a prefix of \"rtb-\". Followed by 17 characters (numbers, letters \"a-f\"). Additional route tables can be provided, separated by a \"comma\".",
+}
 
 // SecurityGroupIds - Security Group IDs that will be updated to allow communications via the VPC p...
-var SecurityGroupIds = Param("SecurityGroupIds")
+var SecurityGroupIds = Parameter{
+	Type: "List<AWS::EC2::SecurityGroup::Id>",
+	Description: "Security Group IDs that will be updated to allow communications via the VPC peering connection. Note, the logical order is preserved.",
+}
 
 // VPCPeeringConnectionId - ID of the VPC Peering Connection
-var VPCPeeringConnectionId = Param("VPCPeeringConnectionId")
+var VPCPeeringConnectionId = Parameter{
+	Type: "String",
+	Description: "ID of the VPC Peering Connection",
+	AllowedPattern: "^pcx-[0-9a-f]{17}$",
+	ConstraintDescription: "Must have a prefix of \"pcx-\". Followed by 17 characters (numbers, letters \"a-f\")",
+}
 
 var _RouteTableConditionCondition = Or{[]any{
 	Equals{NumberOfRouteTables, 2},

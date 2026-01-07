@@ -9,10 +9,21 @@ import (
 )
 
 // CertArn - Certificate ARN
-var CertArn = Param("CertArn")
+var CertArn = Parameter{
+	Type: "String",
+	Description: "Certificate ARN",
+	Default: "none",
+}
 
 // DomainName - Domian name for api
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+	Description: "Domian name for api",
+}
 
 // ZoneId - Zone ID
-var ZoneId = Param("ZoneId")
+var ZoneId = Parameter{
+	Type: "String",
+	Description: "Zone ID",
+	Default: "none",
+}

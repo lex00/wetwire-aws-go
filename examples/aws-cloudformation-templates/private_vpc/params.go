@@ -9,13 +9,31 @@ import (
 )
 
 // DesiredCapacity - Number of EC2 instances to launch in your ECS cluster.
-var DesiredCapacity = Param("DesiredCapacity")
+var DesiredCapacity = Parameter{
+	Type: "Number",
+	Description: "Number of EC2 instances to launch in your ECS cluster.",
+	Default: "3",
+}
 
 // ECSAMI - AMI ID
-var ECSAMI = Param("ECSAMI")
+var ECSAMI = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Description: "AMI ID",
+	Default: "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id",
+}
 
 // InstanceType - EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "EC2 instance type",
+	Default: "c4.xlarge",
+	AllowedValues: []any{"t2.micro", "t2.small", "t2.medium", "t2.large", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge"},
+	ConstraintDescription: "Please choose a valid instance type.",
+}
 
 // MaxSize - Maximum number of EC2 instances that can be launched in your ECS cluster.
-var MaxSize = Param("MaxSize")
+var MaxSize = Parameter{
+	Type: "Number",
+	Description: "Maximum number of EC2 instances that can be launched in your ECS cluster.",
+	Default: "6",
+}

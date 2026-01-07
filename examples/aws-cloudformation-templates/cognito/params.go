@@ -8,6 +8,10 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var AppName = Param("AppName")
+var AppName = Parameter{
+	Type: "String",
+}
 
-var CallbackURL = Param("CallbackURL")
+var CallbackURL = Parameter{
+	Type: "String",
+}

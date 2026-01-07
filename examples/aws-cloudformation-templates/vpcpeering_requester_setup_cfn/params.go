@@ -9,18 +9,39 @@ import (
 )
 
 // PeerName - Name of the VPC Peer
-var PeerName = Param("PeerName")
+var PeerName = Parameter{
+	Type: "String",
+	Description: "Name of the VPC Peer",
+	MaxLength: IntPtr(255),
+}
 
 // PeerOwnerId - AWS account ID of the owner of the accepter VPC
-var PeerOwnerId = Param("PeerOwnerId")
+var PeerOwnerId = Parameter{
+	Type: "String",
+	Description: "AWS account ID of the owner of the accepter VPC",
+	AllowedPattern: "^\\d{12}$",
+	ConstraintDescription: "Must be 12 digits.",
+}
 
 // PeerRoleARN - ARN of the VPC peer role for the peering connection in another AWS account. R...
-var PeerRoleARN = Param("PeerRoleARN")
+var PeerRoleARN = Parameter{
+	Type: "String",
+	Description: "ARN of the VPC peer role for the peering connection in another AWS account. Required when you are peering a VPC in a different AWS account.",
+	AllowedPattern: "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role\\/([\\w+=,.@-]*\\/)*[\\w+=,.@-]+",
+}
 
 // PeerVPCID - ID of the VPC with which you are creating the VPC peering connection
-var PeerVPCID = Param("PeerVPCID")
+var PeerVPCID = Parameter{
+	Type: "String",
+	Description: "ID of the VPC with which you are creating the VPC peering connection",
+	AllowedPattern: "^vpc-[0-9a-f]{17}$",
+	ConstraintDescription: "Must have a prefix of \"vpc-\". Followed by 17 characters (numbers, letters \"a-f\")",
+}
 
 // VPCID - ID of the VPC
-var VPCID = Param("VPCID")
+var VPCID = Parameter{
+	Type: "AWS::EC2::VPC::Id",
+	Description: "ID of the VPC",
+}
 
 var PeerRoleConditionCondition = Not{Equals{PeerRoleARN, ""}}

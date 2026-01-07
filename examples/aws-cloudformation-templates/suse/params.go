@@ -9,18 +9,45 @@ import (
 )
 
 // IAMRole - EC2 attached IAM role
-var IAMRole = Param("IAMRole")
+var IAMRole = Parameter{
+	Type: "String",
+	Description: "EC2 attached IAM role",
+	Default: "CloudWatchAgentAdminRole",
+	ConstraintDescription: "must be an existing IAM role which will be attached to EC2 instance.",
+}
 
 // InstanceType - EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "EC2 instance type",
+	Default: "t3.medium",
+	ConstraintDescription: "must be a valid EC2 instance type.",
+}
 
 // KeyName - Name of an existing EC2 KeyPair to enable SSH access to the instance
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
 // SSHLocation - The IP address range that can be used to SSH to the EC2 instances
-var SSHLocation = Param("SSHLocation")
+var SSHLocation = Parameter{
+	Type: "String",
+	Description: "The IP address range that can be used to SSH to the EC2 instances",
+	Default: "0.0.0.0/0",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+	ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x.",
+}
 
 // SUSEVersion - SUSE Linux Enterprise Server version to deploy
-var SUSEVersion = Param("SUSEVersion")
+var SUSEVersion = Parameter{
+	Type: "String",
+	Description: "SUSE Linux Enterprise Server version to deploy",
+	Default: "SLES15SP5",
+	AllowedValues: []any{"SLES15SP5"},
+}
 
-var SubnetId = Param("SubnetId")
+var SubnetId = Parameter{
+	Type: "AWS::EC2::Subnet::Id",
+}

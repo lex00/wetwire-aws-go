@@ -9,4 +9,7 @@ import (
 )
 
 // DomainName - Domian name for api
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+	Description: "Domian name for api",
+}

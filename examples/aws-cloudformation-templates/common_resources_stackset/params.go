@@ -8,4 +8,7 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var OUID = Param("OUID")
+var OUID = Parameter{
+	Type: "String",
+	Default: "ou-qxtx-vv0thlla",
+}

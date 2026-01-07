@@ -9,13 +9,25 @@ import (
 )
 
 // AggregateAccount - Aggregate account ID
-var AggregateAccount = Param("AggregateAccount")
+var AggregateAccount = Parameter{
+	Type: "String",
+	Description: "Aggregate account ID",
+	NoEcho: true,
+}
 
 // MainRegion - Main region for the account
-var MainRegion = Param("MainRegion")
+var MainRegion = Parameter{
+	Type: "String",
+	Description: "Main region for the account",
+	Default: "us-west-2",
+}
 
 // SubAccountList - List of sub accounts to be monitored
-var SubAccountList = Param("SubAccountList")
+var SubAccountList = Parameter{
+	Type: "CommaDelimitedList",
+	Description: "List of sub accounts to be monitored",
+	NoEcho: true,
+}
 
 var IsAggregateAccountCondition = Equals{AggregateAccount, AWS_ACCOUNT_ID}
 

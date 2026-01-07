@@ -9,24 +9,51 @@ import (
 )
 
 // CreateAlias - Only required for applications which need a URL to connect to the directory
-var CreateAlias = Param("CreateAlias")
+var CreateAlias = Parameter{
+	Type: "String",
+	Description: "Only required for applications which need a URL to connect to the directory",
+	Default: "false",
+	AllowedValues: []any{"true", "false"},
+}
 
 // DomainName - FQDN of the domain for this directory
-var DomainName = Param("DomainName")
+var DomainName = Parameter{
+	Type: "String",
+	Description: "FQDN of the domain for this directory",
+	Default: "corp.example.com",
+}
 
 // PrivateSubnet1 - Subnet to be used for the Directoty
-var PrivateSubnet1 = Param("PrivateSubnet1")
+var PrivateSubnet1 = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "Subnet to be used for the Directoty",
+}
 
 // PrivateSubnet2 - Subnet to be used for the Directoty
-var PrivateSubnet2 = Param("PrivateSubnet2")
+var PrivateSubnet2 = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+	Description: "Subnet to be used for the Directoty",
+}
 
 // SimpleADShortName - Netbios name of the domain for this directory
-var SimpleADShortName = Param("SimpleADShortName")
+var SimpleADShortName = Parameter{
+	Type: "String",
+	Description: "Netbios name of the domain for this directory",
+	Default: "corp",
+}
 
 // Size - Size of the Simple AD
-var Size = Param("Size")
+var Size = Parameter{
+	Type: "String",
+	Description: "Size of the Simple AD",
+	Default: "Small",
+	AllowedValues: []any{"Small", "Large"},
+}
 
 // VPCID - The VPC the directory will be created in
-var VPCID = Param("VPCID")
+var VPCID = Parameter{
+	Type: "List<AWS::EC2::VPC::Id>",
+	Description: "The VPC the directory will be created in",
+}
 
 var AliasCondition = Equals{CreateAlias, "true"}

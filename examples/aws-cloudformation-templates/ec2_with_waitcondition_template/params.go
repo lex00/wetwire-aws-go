@@ -9,46 +9,110 @@ import (
 )
 
 // AgentID - Mark current agent
-var AgentID = Param("AgentID")
+var AgentID = Parameter{
+	Type: "String",
+	Description: " Mark current agent",
+}
 
 // BudgetCode - Budget code to save money
-var BudgetCode = Param("BudgetCode")
+var BudgetCode = Parameter{
+	Type: "String",
+	Description: " Budget code to save money",
+	Default: "A019517",
+	ConstraintDescription: "must be a valid budget code.",
+}
 
 // ImageId - Basic instance ami
-var ImageId = Param("ImageId")
+var ImageId = Parameter{
+	Type: "AWS::EC2::Image::Id",
+	Description: "Basic instance ami",
+}
 
 // InstanceName - Name of EC2 instance
-var InstanceName = Param("InstanceName")
+var InstanceName = Parameter{
+	Type: "String",
+	Description: "Name of EC2 instance",
+	ConstraintDescription: "must be a valid EC2 instance string name.",
+}
 
 // InstanceType - Basic EC2 instance type
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Description: "Basic EC2 instance type",
+	Default: "c4.2xlarge",
+	AllowedValues: []any{"t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "g2.2xlarge", "g2.8xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge", "d2.xlarge", "d2.2xlarge", "d2.4xlarge", "d2.8xlarge", "hs1.8xlarge", "cr1.8xlarge", "cc2.8xlarge"},
+	ConstraintDescription: "must be a valid EC2 instance type.",
+}
 
 // IsMaster - Mark master agent
-var IsMaster = Param("IsMaster")
+var IsMaster = Parameter{
+	Type: "String",
+	Description: "Mark master agent",
+	Default: "False",
+}
 
 // KeyName - Name of an existing EC2 KeyPair to enable SSH access to the instance
-var KeyName = Param("KeyName")
+var KeyName = Parameter{
+	Type: "AWS::EC2::KeyPair::KeyName",
+	Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+	Default: "slinger_testing",
+	ConstraintDescription: "must be the name of an existing EC2 KeyPair.",
+}
 
 // LaunchPlatform - Mark current platform
-var LaunchPlatform = Param("LaunchPlatform")
+var LaunchPlatform = Parameter{
+	Type: "String",
+	Description: " Mark current platform",
+	Default: "bitstorm_dev",
+	ConstraintDescription: "must be a valid platform like bitstorm_qc bitstorm_dev bitstorm_staggin bitstorm_live.",
+}
 
 // LaunchUser - Mark current tester
-var LaunchUser = Param("LaunchUser")
+var LaunchUser = Parameter{
+	Type: "String",
+	Description: " Mark current tester",
+	Default: "null",
+	ConstraintDescription: "must be a valid and existing tester.",
+}
 
 // MasterID - Mark master ID
-var MasterID = Param("MasterID")
+var MasterID = Parameter{
+	Type: "String",
+	Description: "Mark master ID",
+	Default: "null",
+}
 
 // SSHLocation - The IP address range that can be used to SSH to the EC2 instances
-var SSHLocation = Param("SSHLocation")
+var SSHLocation = Parameter{
+	Type: "String",
+	Description: " The IP address range that can be used to SSH to the EC2 instances",
+	Default: "0.0.0.0/0",
+	AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+	ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x.",
+}
 
 // SubnetId - SubnetId of an existing subnet in your Virtual Private Cloud (VPC)
-var SubnetId = Param("SubnetId")
+var SubnetId = Parameter{
+	Type: "String",
+	Description: "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+}
 
 // TestID - Mark current testcase
-var TestID = Param("TestID")
+var TestID = Parameter{
+	Type: "String",
+	Description: " Mark current testcase",
+	ConstraintDescription: "must be a valid and existing testcase id.",
+}
 
 // TestTarget - Mark current test target
-var TestTarget = Param("TestTarget")
+var TestTarget = Parameter{
+	Type: "String",
+	Description: " Mark current test target",
+	ConstraintDescription: "must be a valid and existing test target name.",
+}
 
 // VpcId - VpcId of your existing Virtual Private Cloud (VPC)
-var VpcId = Param("VpcId")
+var VpcId = Parameter{
+	Type: "String",
+	Description: "VpcId of your existing Virtual Private Cloud (VPC)",
+}

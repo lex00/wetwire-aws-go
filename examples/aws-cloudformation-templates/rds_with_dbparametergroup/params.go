@@ -9,7 +9,18 @@ import (
 )
 
 // DBName - The database name
-var DBName = Param("DBName")
+var DBName = Parameter{
+	Type: "String",
+	Description: "The database name",
+	Default: "MyDatabase",
+	AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*",
+	ConstraintDescription: "must begin with a letter and contain only alphanumeric characters.",
+}
 
 // DBUser - The database admin account username
-var DBUser = Param("DBUser")
+var DBUser = Parameter{
+	Type: "String",
+	Description: "The database admin account username",
+	AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*",
+	ConstraintDescription: "must begin with a letter and contain only alphanumeric characters.",
+}

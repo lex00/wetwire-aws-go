@@ -9,47 +9,116 @@ import (
 )
 
 // CreateDirectoryAlias - Create an alias for the directory. The alias is used to construct the access ...
-var CreateDirectoryAlias = Param("CreateDirectoryAlias")
+var CreateDirectoryAlias = Parameter{
+	Type: "String",
+	Description: "Create an alias for the directory. The alias is used to construct the access URL for the directory, such as http://<alias>.awsapps.com. NOTE, after an alias has been created, it cannot be deleted or reused. Hence if a different alias already exists, then you must use the existing alias (also shown in CloudFormation error).",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // CreateDirectoryConsoleDelegatedAccessRoles - Create sample IAM ROLES that can be used to delegate users/groups access to c...
-var CreateDirectoryConsoleDelegatedAccessRoles = Param("CreateDirectoryConsoleDelegatedAccessRoles")
+var CreateDirectoryConsoleDelegatedAccessRoles = Parameter{
+	Type: "String",
+	Description: "Create sample IAM ROLES that can be used to delegate users/groups access to certain areas of the AWS Management Console. User/Group assignment to these IAM roles has to be done manually via Directory Services -> Directory -> Application Management Tab.",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // DirectoryAlias - (Optional) Specifies an alias to be assigned to the directory, such as http:/...
-var DirectoryAlias = Param("DirectoryAlias")
+var DirectoryAlias = Parameter{
+	Type: "String",
+	Description: "(Optional) Specifies an alias to be assigned to the directory, such as http://<alias>.awsapps.com. Note, after alias is created it cannot be deleted or reused. Note, will only be set, if `CreateDirectoryAlias` parameter, has a value of `Yes`.",
+	AllowedPattern: "^$|^(?!d-)([\\da-zA-Z]+)([-]*[\\da-zA-Z])*$",
+	MaxLength: IntPtr(62),
+}
 
 // DirectoryID - Directory ID that will have settings updated
-var DirectoryID = Param("DirectoryID")
+var DirectoryID = Parameter{
+	Type: "String",
+	Description: "Directory ID that will have settings updated",
+	AllowedPattern: "^d-[0-9a-f]{10}$",
+}
 
 // DirectoryMonitoringEmail - Email for SNS Topic to monitor directory changes.
-var DirectoryMonitoringEmail = Param("DirectoryMonitoringEmail")
+var DirectoryMonitoringEmail = Parameter{
+	Type: "String",
+	Description: "Email for SNS Topic to monitor directory changes.",
+	AllowedPattern: "^[\\w%+.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,63}$",
+}
 
 // DirectoryMonitoringSNSTopicKMSKey - (Optional) KMS Key ID to use for encrypting the directory monitoring SNS topi...
-var DirectoryMonitoringSNSTopicKMSKey = Param("DirectoryMonitoringSNSTopicKMSKey")
+var DirectoryMonitoringSNSTopicKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ID to use for encrypting the directory monitoring SNS topic messages. If empty, encryption is enabled with SNS managing the server-side encryption keys.",
+	AllowedPattern: "^$|^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
+	ConstraintDescription: "Key ID example: 1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // EnableDirectorySSO - Enable single sign-on for a directory. Single sign-on allows users in your di...
-var EnableDirectorySSO = Param("EnableDirectorySSO")
+var EnableDirectorySSO = Parameter{
+	Type: "String",
+	Description: "Enable single sign-on for a directory. Single sign-on allows users in your directory to access certain AWS services from a computer joined to the directory without having to enter their credentials separately. If true, \"DirectoryAlias\" must also be true, & \"DirectoryAlias\" parameter input required.",
+	Default: "No",
+	AllowedValues: []any{"Yes", "No"},
+}
 
 // LambdaFunctionName - Lambda Function Name for Custom Resource
-var LambdaFunctionName = Param("LambdaFunctionName")
+var LambdaFunctionName = Parameter{
+	Type: "String",
+	Description: "Lambda Function Name for Custom Resource",
+	Default: "CR-DirectorySettings",
+	AllowedPattern: "^[\\w-]{1,64}$",
+	ConstraintDescription: "Max 64 alphanumeric characters. Also special characters supported [_, -]",
+}
 
 // LambdaLogLevel - Lambda logging level
-var LambdaLogLevel = Param("LambdaLogLevel")
+var LambdaLogLevel = Parameter{
+	Type: "String",
+	Description: "Lambda logging level",
+	Default: "INFO",
+	AllowedValues: []any{"INFO", "DEBUG"},
+}
 
 // LambdaLogsCloudWatchKMSKey - (Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, ...
-var LambdaLogsCloudWatchKMSKey = Param("LambdaLogsCloudWatchKMSKey")
+var LambdaLogsCloudWatchKMSKey = Parameter{
+	Type: "String",
+	Description: "(Optional) KMS Key ARN to use for encrypting the Lambda logs data. If empty, encryption is enabled with CloudWatch Logs managing the server-side encryption keys.",
+	AllowedPattern: "^$|^arn:(aws[a-zA-Z-]*)?:kms:[a-z0-9-]+:\\d{12}:key\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+	ConstraintDescription: "Key ARN example:  arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+}
 
 // LambdaLogsLogGroupRetention - Specifies the number of days you want to retain Lambda log events in the Clou...
-var LambdaLogsLogGroupRetention = Param("LambdaLogsLogGroupRetention")
+var LambdaLogsLogGroupRetention = Parameter{
+	Type: "String",
+	Description: "Specifies the number of days you want to retain Lambda log events in the CloudWatch Logs",
+	Default: 14,
+	AllowedValues: []any{1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653},
+}
 
 // LambdaS3BucketName - Lambda S3 bucket name for the Lambda deployment package. Lambda bucket name c...
-var LambdaS3BucketName = Param("LambdaS3BucketName")
+var LambdaS3BucketName = Parameter{
+	Type: "String",
+	Description: "Lambda S3 bucket name for the Lambda deployment package. Lambda bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+	AllowedPattern: "(?=^.{3,63}$)(?!.*[.-]{2})(?!.*[--]{2})(?!^(?:(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\\.(?!$)|$)){4}$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+	ConstraintDescription: "Lambda S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+}
 
 // LambdaZipFileName - Amazon S3 key of the deployment package.
-var LambdaZipFileName = Param("LambdaZipFileName")
+var LambdaZipFileName = Parameter{
+	Type: "String",
+	Description: "Amazon S3 key of the deployment package.",
+	Default: "directory_settings_custom_resource.zip",
+	MinLength: IntPtr(1),
+	MaxLength: IntPtr(1024),
+}
 
-var SecurityGroups = Param("SecurityGroups")
+var SecurityGroups = Parameter{
+	Type: "List<AWS::EC2::SecurityGroup::Id>",
+}
 
-var Subnets = Param("Subnets")
+var Subnets = Parameter{
+	Type: "List<AWS::EC2::Subnet::Id>",
+}
 
 var DirectoryConsoleDelegatedAccessRolesConditionCondition = Equals{CreateDirectoryConsoleDelegatedAccessRoles, "Yes"}
 

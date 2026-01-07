@@ -9,4 +9,7 @@ import (
 )
 
 // AppBucketName - REQUIRED: Unique S3 bucket name to use for the app.
-var AppBucketName = Param("AppBucketName")
+var AppBucketName = Parameter{
+	Type: "String",
+	Description: "REQUIRED: Unique S3 bucket name to use for the app.",
+}

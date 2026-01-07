@@ -8,6 +8,12 @@ import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-var InstanceType = Param("InstanceType")
+var InstanceType = Parameter{
+	Type: "String",
+	Default: "m5.large",
+}
 
-var LatestAMI = Param("LatestAMI")
+var LatestAMI = Parameter{
+	Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+	Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+}

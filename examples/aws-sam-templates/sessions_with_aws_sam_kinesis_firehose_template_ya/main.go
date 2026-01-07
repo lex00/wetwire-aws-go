@@ -13,6 +13,23 @@ import (
 var CountTable = serverless.SimpleTable{
 }
 
+var ProcessFunctionEnvironment = serverless.Function_Environment{
+	Variables: Json{"TABLE_NAME": ProcessedDataTable},
+}
+
+var ProcessFunction = serverless.Function{
+	CodeUri: "src/",
+	Environment: &ProcessFunctionEnvironment,
+	Handler: "process.handler",
+	Policies: []any{Json{
+	"DynamoDBCrudPolicy": Json{
+	"TableName": ProcessedDataTable,
+},
+}},
+	Runtime: "nodejs16.x",
+	Timeout: 180,
+}
+
 var CountFunctionEnvironment = serverless.Function_Environment{
 	Variables: Json{"TABLE_NAME": CountTable},
 }
@@ -28,6 +45,26 @@ var CountFunction = serverless.Function{
 }},
 	Runtime: "nodejs16.x",
 	Timeout: 180,
+}
+
+var KinesisAnalyticsOutputOutputLambdaOutput = kinesisanalytics.ApplicationOutput_LambdaOutput{
+	ResourceARN: CountFunction.Arn,
+	RoleARN: KinesisAnalyticsAccessRole.Arn,
+}
+
+var KinesisAnalyticsOutputOutputDestinationSchema = kinesisanalytics.ApplicationOutput_DestinationSchema{
+	RecordFormatType: "JSON",
+}
+
+var KinesisAnalyticsOutputOutput = kinesisanalytics.ApplicationOutput_Output{
+	DestinationSchema: KinesisAnalyticsOutputOutputDestinationSchema,
+	LambdaOutput: &KinesisAnalyticsOutputOutputLambdaOutput,
+	Name: "LINK_STREAM",
+}
+
+var KinesisAnalyticsOutput = kinesisanalytics.ApplicationOutput{
+	ApplicationName: KinesisAnalyticsApp,
+	Output: KinesisAnalyticsOutputOutput,
 }
 
 var KinesisAnalyticsAppInput1InputSchemaRecordFormat = kinesisanalytics.ApplicationReferenceDataSource_RecordFormat{
@@ -80,41 +117,4 @@ var KinesisAnalyticsApp = kinesisanalytics.Application{
     GROUP BY "resourcePath", STEP("SESSIONS_STREAM_001".ROWTIME BY INTERVAL '10' SECOND);
 `,
 	Inputs: []any{KinesisAnalyticsAppInput1},
-}
-
-var ProcessFunctionEnvironment = serverless.Function_Environment{
-	Variables: Json{"TABLE_NAME": ProcessedDataTable},
-}
-
-var ProcessFunction = serverless.Function{
-	CodeUri: "src/",
-	Environment: &ProcessFunctionEnvironment,
-	Handler: "process.handler",
-	Policies: []any{Json{
-	"DynamoDBCrudPolicy": Json{
-	"TableName": ProcessedDataTable,
-},
-}},
-	Runtime: "nodejs16.x",
-	Timeout: 180,
-}
-
-var KinesisAnalyticsOutputOutputLambdaOutput = kinesisanalytics.ApplicationOutput_LambdaOutput{
-	ResourceARN: CountFunction.Arn,
-	RoleARN: KinesisAnalyticsAccessRole.Arn,
-}
-
-var KinesisAnalyticsOutputOutputDestinationSchema = kinesisanalytics.ApplicationOutput_DestinationSchema{
-	RecordFormatType: "JSON",
-}
-
-var KinesisAnalyticsOutputOutput = kinesisanalytics.ApplicationOutput_Output{
-	DestinationSchema: KinesisAnalyticsOutputOutputDestinationSchema,
-	LambdaOutput: &KinesisAnalyticsOutputOutputLambdaOutput,
-	Name: "LINK_STREAM",
-}
-
-var KinesisAnalyticsOutput = kinesisanalytics.ApplicationOutput{
-	ApplicationName: KinesisAnalyticsApp,
-	Output: KinesisAnalyticsOutputOutput,
 }

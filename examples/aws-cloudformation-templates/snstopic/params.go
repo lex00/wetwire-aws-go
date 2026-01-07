@@ -9,7 +9,15 @@ import (
 )
 
 // SubscriptionEndPoint - The endpoint that receives notifications from the Amazon SNS topic. The endpo...
-var SubscriptionEndPoint = Param("SubscriptionEndPoint")
+var SubscriptionEndPoint = Parameter{
+	Type: "String",
+	Description: "The endpoint that receives notifications from the Amazon SNS topic. The endpoint value depends on the protocol that you specify. This could be a URL or ARN",
+}
 
 // SubscriptionProtocol - The subscription's protocol
-var SubscriptionProtocol = Param("SubscriptionProtocol")
+var SubscriptionProtocol = Parameter{
+	Type: "String",
+	Description: "The subscription's protocol",
+	Default: "sqs",
+	AllowedValues: []any{"http", "https", "email", "email-json", "sms", "sqs", "application", "lambda"},
+}
