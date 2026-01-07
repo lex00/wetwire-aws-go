@@ -2047,6 +2047,12 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				attr = fmt.Sprintf("%v", args[1])
 			}
 		}
+		// Check for nested attributes (e.g., "Endpoint.Address")
+		// These can't use field access pattern since AttrRef doesn't have sub-fields
+		if strings.Contains(attr, ".") {
+			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+			return fmt.Sprintf("GetAtt{%s, %q}", sanitizeVarName(logicalID), attr)
+		}
 		// Use attribute access pattern - Resource.Attr
 		// Even for unknown resources, use this pattern (cross-file references)
 		// This avoids generating GetAtt{} which violates style guidelines

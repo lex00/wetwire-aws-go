@@ -794,3 +794,42 @@ Resources:
 	assert.Contains(t, code, "LoggingConfiguration: If{", "Should generate If{} for conditional property")
 	assert.NotContains(t, code, "&If{", "Should not use & prefix with If{}")
 }
+
+func TestGenerateCode_NestedGetAtt(t *testing.T) {
+	// Test that nested GetAtt attributes like "Endpoint.Address" use explicit GetAtt{}
+	// Issue #42: Nested GetAtt attributes not supported
+	content := []byte(`
+Resources:
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+  MyApp:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: arn:aws:iam::123456789:role/lambda
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              pass
+      Environment:
+        Variables:
+          DB_HOST: !GetAtt MyDB.Endpoint.Address
+          DB_PORT: !GetAtt MyDB.Endpoint.Port
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "nestedtest")
+	code := files["compute.go"]
+
+	// Should generate explicit GetAtt{} for nested attributes
+	assert.Contains(t, code, `GetAtt{MyDB, "Endpoint.Address"}`, "Should use GetAtt{} for nested attribute")
+	assert.Contains(t, code, `GetAtt{MyDB, "Endpoint.Port"}`, "Should use GetAtt{} for nested attribute")
+	// Should NOT generate field access for nested attributes
+	assert.NotContains(t, code, "MyDB.Endpoint.Address", "Should not use field access for nested attribute")
+}
