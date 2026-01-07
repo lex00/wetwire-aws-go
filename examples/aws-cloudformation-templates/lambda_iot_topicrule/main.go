@@ -55,7 +55,7 @@ var IoTTopicRuleTopicRulePayloadAction1Lambda = iot.TopicRule_LambdaAction{
 }
 
 var IoTTopicRuleTopicRulePayloadAction1 = iot.TopicRule_Action{
-	Lambda: &IoTTopicRuleTopicRulePayloadAction1Lambda,
+	Lambda: IoTTopicRuleTopicRulePayloadAction1Lambda,
 }
 
 var IoTTopicRuleTopicRulePayload = iot.TopicRule_TopicRulePayload{

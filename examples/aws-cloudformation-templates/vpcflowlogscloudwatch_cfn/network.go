@@ -5,7 +5,6 @@
 package vpcflowlogscloudwatch_cfn
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 

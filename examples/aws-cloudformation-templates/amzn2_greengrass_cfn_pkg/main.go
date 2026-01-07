@@ -23,18 +23,18 @@ var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExe
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution = greengrass.FunctionDefinitionVersion_Execution{
 	IsolationMode: "GreengrassContainer",
-	RunAs: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs,
+	RunAs: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecutionRunAs,
 }
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment = greengrass.FunctionDefinitionVersion_Environment{
 	AccessSysfs: "false",
-	Execution: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
+	Execution: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironmentExecution,
 	Variables: Json{"CORE_NAME": CoreName},
 }
 
 var FunctionDefinitionInitialVersionFunction1FunctionConfiguration = greengrass.FunctionDefinitionVersion_FunctionConfiguration{
 	EncodingType: "binary",
-	Environment: &FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment,
+	Environment: FunctionDefinitionInitialVersionFunction1FunctionConfigurationEnvironment,
 	Executable: "index.py",
 	MemorySize: "65536",
 	Pinned: "true",
@@ -59,20 +59,26 @@ var FunctionDefinitionInitialVersionDefaultConfig = greengrass.FunctionDefinitio
 }
 
 var FunctionDefinitionInitialVersion = greengrass.FunctionDefinition_FunctionDefinitionVersion{
-	DefaultConfig: &FunctionDefinitionInitialVersionDefaultConfig,
+	DefaultConfig: FunctionDefinitionInitialVersionDefaultConfig,
 	Functions: []any{FunctionDefinitionInitialVersionFunction1},
 }
 
 var FunctionDefinition = greengrass.FunctionDefinition{
-	InitialVersion: &FunctionDefinitionInitialVersion,
+	InitialVersion: FunctionDefinitionInitialVersion,
 	Name: "FunctionDefinition",
 }
 
-// Skipped unknown resource type: GroupDeploymentReset (Custom::GroupDeploymentReset)
+// GroupDeploymentReset is a placeholder for unknown resource type: Custom::GroupDeploymentReset
+// This allows references from outputs and other resources to compile.
+var GroupDeploymentReset any = nil
 
-// Skipped unknown resource type: InstanceAZ (Custom::InstanceAZ)
+// InstanceAZ is a placeholder for unknown resource type: Custom::InstanceAZ
+// This allows references from outputs and other resources to compile.
+var InstanceAZ any = nil
 
-// Skipped unknown resource type: IoTThing (Custom::IoTThing)
+// IoTThing is a placeholder for unknown resource type: Custom::IoTThing
+// This allows references from outputs and other resources to compile.
+var IoTThing any = nil
 
 var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core{
 	CertificateArn: Join{Delimiter: ":", Values: []any{
@@ -83,7 +89,7 @@ var GreengrassCoreDefinitionVersionCore1 = greengrass.CoreDefinitionVersion_Core
 	AWS_ACCOUNT_ID,
 	Join{Delimiter: "/", Values: []any{
 	"cert",
-	IoTThing.certificateId,
+	GetAtt{IoTThing, "certificateId"},
 }},
 }},
 	Id: Join{Delimiter: "_", Values: []any{
@@ -147,7 +153,7 @@ var SubscriptionDefinitionInitialVersion = greengrass.SubscriptionDefinition_Sub
 }
 
 var SubscriptionDefinition = greengrass.SubscriptionDefinition{
-	InitialVersion: &SubscriptionDefinitionInitialVersion,
+	InitialVersion: SubscriptionDefinitionInitialVersion,
 	Name: "SubscriptionDefinition",
 }
 
@@ -158,7 +164,7 @@ var GreengrassGroupInitialVersion = greengrass.Group_GroupVersion{
 }
 
 var GreengrassGroup = greengrass.Group{
-	InitialVersion: &GreengrassGroupInitialVersion,
+	InitialVersion: GreengrassGroupInitialVersion,
 	Name: CoreName,
 	RoleArn: GreengrassResourceRole.Arn,
 }

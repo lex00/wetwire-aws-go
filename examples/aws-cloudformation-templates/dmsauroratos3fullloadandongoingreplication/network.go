@@ -67,7 +67,7 @@ var DBSubnet1TagApplication = Tag{
 }
 
 var DBSubnet1 = ec2.Subnet{
-	AvailabilityZone: Select{Index: "0", List: GetAZs{}},
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
 	CidrBlock: "10.0.0.0/26",
 	Tags: []any{DBSubnet1TagApplication},
 	VpcId: VPC,
@@ -79,7 +79,7 @@ var DBSubnet2TagApplication = Tag{
 }
 
 var DBSubnet2 = ec2.Subnet{
-	AvailabilityZone: Select{Index: "1", List: GetAZs{}},
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
 	CidrBlock: "10.0.0.64/26",
 	Tags: []any{DBSubnet2TagApplication},
 	VpcId: VPC,

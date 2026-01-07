@@ -29,7 +29,7 @@ def lambda_handler(event, context):
 var LambdaFunction = lambda.Function{
 	Code: LambdaFunctionCode,
 	Description: "LambdaFunction using python3.12.",
-	Environment: &LambdaFunctionEnvironment,
+	Environment: LambdaFunctionEnvironment,
 	FunctionName: Sub{String: "lambda-function-${EnvName}"},
 	Handler: LambdaHandlerPath,
 	MemorySize: 128,

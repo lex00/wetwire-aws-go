@@ -14,7 +14,7 @@ var AppRunnerSourceConfigurationImageRepositoryImageConfiguration = apprunner.Se
 }
 
 var AppRunnerSourceConfigurationImageRepository = apprunner.Service_ImageRepository{
-	ImageConfiguration: &AppRunnerSourceConfigurationImageRepositoryImageConfiguration,
+	ImageConfiguration: AppRunnerSourceConfigurationImageRepositoryImageConfiguration,
 	ImageIdentifier: ECRURL,
 	ImageRepositoryType: "ECR",
 }
@@ -24,9 +24,9 @@ var AppRunnerSourceConfigurationAuthenticationConfiguration = apprunner.Service_
 }
 
 var AppRunnerSourceConfiguration = apprunner.Service_SourceConfiguration{
-	AuthenticationConfiguration: &AppRunnerSourceConfigurationAuthenticationConfiguration,
+	AuthenticationConfiguration: AppRunnerSourceConfigurationAuthenticationConfiguration,
 	AutoDeploymentsEnabled: true,
-	ImageRepository: &AppRunnerSourceConfigurationImageRepository,
+	ImageRepository: AppRunnerSourceConfigurationImageRepository,
 }
 
 var AppRunner = apprunner.Service{

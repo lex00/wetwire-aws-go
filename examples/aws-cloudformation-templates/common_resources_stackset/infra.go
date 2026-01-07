@@ -35,10 +35,10 @@ var StackSetAutoDeployment = cloudformation.StackSet_AutoDeployment{
 }
 
 var StackSet = cloudformation.StackSet{
-	AutoDeployment: &StackSetAutoDeployment,
+	AutoDeployment: StackSetAutoDeployment,
 	Capabilities: []any{"CAPABILITY_IAM"},
 	Description: "This stack set is part of a sample that demonstrates how to set up cross account logging",
-	OperationPreferences: &StackSetOperationPreferences,
+	OperationPreferences: StackSetOperationPreferences,
 	Parameters: []any{StackSetParameter1},
 	PermissionModel: "SERVICE_MANAGED",
 	StackInstancesGroup: []any{StackSetStackInstancesGroup1},

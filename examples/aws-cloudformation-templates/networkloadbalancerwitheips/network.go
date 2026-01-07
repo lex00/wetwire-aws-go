@@ -37,17 +37,17 @@ var TargetGroup = elasticloadbalancingv2.TargetGroup{
 	Port: 10,
 	Protocol: enums.Elbv2ProtocolEnumTcp,
 	TargetGroupAttributes: []any{TargetGroupTargetGroupAttributeDeregistrationdelayt},
-	VpcId: Select{Index: "0", List: VPC},
+	VpcId: Select{Index: 0, List: VPC},
 }
 
 var loadBalancerSubnetMapping2 = elasticloadbalancingv2.LoadBalancer_SubnetMapping{
 	AllocationId: EIP2.AllocationId,
-	SubnetId: Select{Index: "0", List: Subnet2},
+	SubnetId: Select{Index: 0, List: Subnet2},
 }
 
 var loadBalancerSubnetMapping1 = elasticloadbalancingv2.LoadBalancer_SubnetMapping{
 	AllocationId: EIP1.AllocationId,
-	SubnetId: Select{Index: "0", List: Subnet1},
+	SubnetId: Select{Index: 0, List: Subnet1},
 }
 
 var loadBalancer = elasticloadbalancingv2.LoadBalancer{

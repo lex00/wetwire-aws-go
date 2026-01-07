@@ -20,7 +20,7 @@ var ServerTagName = Tag{
 
 var ServerBlockDeviceMappingDevxvda = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/xvda",
-	Ebs: &ServerBlockDeviceMappingDevxvdaEbs,
+	Ebs: ServerBlockDeviceMappingDevxvdaEbs,
 }
 
 var Server = ec2.Instance{

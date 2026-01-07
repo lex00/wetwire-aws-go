@@ -19,7 +19,7 @@ var LoggingBucketOwnershipControlsRule1 = s3.Bucket_OwnershipControlsRule{
 }
 
 var LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: LoggingBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var LoggingBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -43,11 +43,11 @@ var LoggingBucketBucketEncryption = s3.Bucket_BucketEncryption{
 
 var LoggingBucket = s3.Bucket{
 	AccessControl: "LogDeliveryWrite",
-	BucketEncryption: &LoggingBucketBucketEncryption,
+	BucketEncryption: LoggingBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"},
-	OwnershipControls: &LoggingBucketOwnershipControls,
-	PublicAccessBlockConfiguration: &LoggingBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &LoggingBucketVersioningConfiguration,
+	OwnershipControls: LoggingBucketOwnershipControls,
+	PublicAccessBlockConfiguration: LoggingBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: LoggingBucketVersioningConfiguration,
 }
 
 var LoggingBucketPolicyPolicyDocument = PolicyDocument{

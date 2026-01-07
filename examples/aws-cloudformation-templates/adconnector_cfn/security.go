@@ -59,10 +59,10 @@ var ADConnectorWindowsEC2DomainJoinRole = iam.Role{
 	Tags: []any{ADConnectorWindowsEC2DomainJoinRoleTagStackName},
 }
 
-var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
+var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
 	Path: "/",
-	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
+	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
 }
 
 var ADConnectorLambdaRolePolicyADConnectorServiceAcPolicyDocument = PolicyDocument{
@@ -171,6 +171,12 @@ var ADConnectorLinuxEC2SeamlessDomainJoinSecret = secretsmanager.Secret{
 	SecretString: Sub{String: "{ \"awsSeamlessDomainUsername\" : \"${DomainJoinUser}\", \"awsSeamlessDomainPassword\" : \"${DomainJoinUserPassword}\" }"},
 }
 
+var ADConnectorWindowsEC2DomainJoinInstanceProfile = iam.InstanceProfile{
+	InstanceProfileName: ADConnectorWindowsEC2DomainJoinRole,
+	Path: "/",
+	Roles: []any{ADConnectorWindowsEC2DomainJoinRole},
+}
+
 var ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocument = PolicyDocument{
 	Statement: []any{ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2SPolicyDocumentStatement0},
 	Version: "2012-10-17",
@@ -227,10 +233,4 @@ var ADConnectorLinuxEC2DomainJoinRole = iam.Role{
 	Policies: []any{ADConnectorLinuxEC2DomainJoinRolePolicySSMAgent, ADConnectorLinuxEC2DomainJoinRolePolicyADConnectorLinuxEC2S},
 	RoleName: Sub{String: "${DomainNetBiosName}-LinuxEC2DomainJoinRole-ADConnector"},
 	Tags: []any{ADConnectorLinuxEC2DomainJoinRoleTagStackName},
-}
-
-var ADConnectorLinuxEC2DomainJoinInstanceProfile = iam.InstanceProfile{
-	InstanceProfileName: ADConnectorLinuxEC2DomainJoinRole,
-	Path: "/",
-	Roles: []any{ADConnectorLinuxEC2DomainJoinRole},
 }

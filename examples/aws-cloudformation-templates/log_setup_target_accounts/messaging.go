@@ -21,7 +21,7 @@ var CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig = events.EventB
 
 var CloudFormationEventRuleTargetCentralEventBus = events.Rule_Target{
 	Arn: CentralEventBusArn,
-	DeadLetterConfig: &CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig,
+	DeadLetterConfig: CloudFormationEventRuleTargetCentralEventBusDeadLetterConfig,
 	Id: "CentralEventBus",
 	RoleArn: EventBridgeRole.Arn,
 }

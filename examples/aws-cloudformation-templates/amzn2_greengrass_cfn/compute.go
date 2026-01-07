@@ -185,7 +185,7 @@ var GroupDeploymentResetFunctionCode = lambda.Function_Code{
 var GroupDeploymentResetFunction = lambda.Function{
 	Code: GroupDeploymentResetFunctionCode,
 	Description: "Resets any deployments during stack delete and manages Greengrass service role needs",
-	Environment: &GroupDeploymentResetFunctionEnvironment,
+	Environment: GroupDeploymentResetFunctionEnvironment,
 	Handler: "index.handler",
 	Role: LambdaExecutionRole.Arn,
 	Runtime: enums.LambdaRuntimePython312,

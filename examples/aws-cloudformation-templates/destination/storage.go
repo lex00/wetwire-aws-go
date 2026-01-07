@@ -16,7 +16,7 @@ var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerS
 
 var S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
 	BucketKeyEnabled: true,
-	ServerSideEncryptionByDefault: &S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: S3BucketDestinationBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var S3BucketDestinationVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -35,10 +35,10 @@ var S3BucketDestinationBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var S3BucketDestination = s3.Bucket{
-	BucketEncryption: &S3BucketDestinationBucketEncryption,
+	BucketEncryption: S3BucketDestinationBucketEncryption,
 	BucketName: Sub{String: "${AWS::StackName}-${AWS::AccountId}-bucket"},
-	PublicAccessBlockConfiguration: &S3BucketDestinationPublicAccessBlockConfiguration,
-	VersioningConfiguration: &S3BucketDestinationVersioningConfiguration,
+	PublicAccessBlockConfiguration: S3BucketDestinationPublicAccessBlockConfiguration,
+	VersioningConfiguration: S3BucketDestinationVersioningConfiguration,
 }
 
 var S3BucketDestinationPolicyPolicyDocument = PolicyDocument{

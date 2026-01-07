@@ -8,7 +8,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/cloudformation"
 )
 
-var Transform = cloudformation.Macro{
+var TransformResource = cloudformation.Macro{
 	Description: "Provides the current datetime as string in the format requested.",
 	FunctionName: TransformFunction.Arn,
 	Name: "DatetimeNow",

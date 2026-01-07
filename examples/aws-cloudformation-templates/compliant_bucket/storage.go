@@ -44,11 +44,11 @@ var ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1Serv
 }
 
 var ObjectStorageLogBucketObjectLockConfigurationRule = s3.Bucket_ObjectLockRule{
-	DefaultRetention: &ObjectStorageLogBucketObjectLockConfigurationRuleDefaultRetention,
+	DefaultRetention: ObjectStorageLogBucketObjectLockConfigurationRuleDefaultRetention,
 }
 
 var ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ObjectStorageLogBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageLogBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -64,7 +64,7 @@ var ObjectStorageLogBucketPublicAccessBlockConfiguration = s3.Bucket_PublicAcces
 
 var ObjectStorageLogBucketObjectLockConfiguration = s3.Bucket_ObjectLockConfiguration{
 	ObjectLockEnabled: "Enabled",
-	Rule: &ObjectStorageLogBucketObjectLockConfigurationRule,
+	Rule: ObjectStorageLogBucketObjectLockConfigurationRule,
 }
 
 var ObjectStorageLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
@@ -72,12 +72,12 @@ var ObjectStorageLogBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageLogBucket = s3.Bucket{
-	BucketEncryption: &ObjectStorageLogBucketBucketEncryption,
+	BucketEncryption: ObjectStorageLogBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-logs-${AWS::Region}-${AWS::AccountId}"},
-	ObjectLockConfiguration: &ObjectStorageLogBucketObjectLockConfiguration,
+	ObjectLockConfiguration: ObjectStorageLogBucketObjectLockConfiguration,
 	ObjectLockEnabled: true,
-	PublicAccessBlockConfiguration: &ObjectStorageLogBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &ObjectStorageLogBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ObjectStorageLogBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: ObjectStorageLogBucketVersioningConfiguration,
 }
 
 var ObjectStorageLogBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -110,7 +110,7 @@ var ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1
 }
 
 var ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ObjectStorageReplicaBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageReplicaBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -129,11 +129,11 @@ var ObjectStorageReplicaBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageReplicaBucket = s3.Bucket{
-	BucketEncryption: &ObjectStorageReplicaBucketBucketEncryption,
+	BucketEncryption: ObjectStorageReplicaBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-replicas-${AWS::Region}-${AWS::AccountId}"},
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &ObjectStorageReplicaBucketPublicAccessBlockConfiguration,
-	VersioningConfiguration: &ObjectStorageReplicaBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ObjectStorageReplicaBucketPublicAccessBlockConfiguration,
+	VersioningConfiguration: ObjectStorageReplicaBucketVersioningConfiguration,
 }
 
 var ObjectStorageReplicaBucketPolicyPolicyPolicyDocument = PolicyDocument{
@@ -175,7 +175,7 @@ var ObjectStorageBucketReplicationConfigurationRuleEnabled = s3.Bucket_Replicati
 }
 
 var ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1 = s3.Bucket_ServerSideEncryptionRule{
-	ServerSideEncryptionByDefault: &ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
+	ServerSideEncryptionByDefault: ObjectStorageBucketBucketEncryptionServerSideEncryptionConfiguration1ServerSideEncryptionByDefault,
 }
 
 var ObjectStorageBucketVersioningConfiguration = s3.Bucket_VersioningConfiguration{
@@ -203,11 +203,11 @@ var ObjectStorageBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var ObjectStorageBucket = s3.Bucket{
-	BucketEncryption: &ObjectStorageBucketBucketEncryption,
+	BucketEncryption: ObjectStorageBucketBucketEncryption,
 	BucketName: Sub{String: "${AppName}-${AWS::Region}-${AWS::AccountId}"},
-	LoggingConfiguration: &ObjectStorageBucketLoggingConfiguration,
+	LoggingConfiguration: ObjectStorageBucketLoggingConfiguration,
 	ObjectLockEnabled: false,
-	PublicAccessBlockConfiguration: &ObjectStorageBucketPublicAccessBlockConfiguration,
-	ReplicationConfiguration: &ObjectStorageBucketReplicationConfiguration,
-	VersioningConfiguration: &ObjectStorageBucketVersioningConfiguration,
+	PublicAccessBlockConfiguration: ObjectStorageBucketPublicAccessBlockConfiguration,
+	ReplicationConfiguration: ObjectStorageBucketReplicationConfiguration,
+	VersioningConfiguration: ObjectStorageBucketVersioningConfiguration,
 }

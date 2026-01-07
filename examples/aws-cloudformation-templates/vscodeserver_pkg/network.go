@@ -280,7 +280,7 @@ var CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig = cloudfro
 }
 
 var CloudFrontDistributionDistributionConfigOrigin1 = cloudfront.Distribution_Origin{
-	CustomOriginConfig: &CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
+	CustomOriginConfig: CloudFrontDistributionDistributionConfigOrigin1CustomOriginConfig,
 	DomainName: Server.PublicDnsName,
 	Id: Sub{String: "CloudFront-${AWS::StackName}"},
 }

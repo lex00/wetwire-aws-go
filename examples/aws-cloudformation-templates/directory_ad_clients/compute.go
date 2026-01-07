@@ -39,7 +39,7 @@ var DomainMember1WithInlineSsmAssociationSsmAssociation1 = ec2.Instance_SsmAssoc
 
 var DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
+	Ebs: DomainMember1WithInlineSsmAssociationBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember1WithInlineSsmAssociation = ec2.Instance{
@@ -70,7 +70,7 @@ var DomainMember2WithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: DomainMember2WithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember2WithSsmAssociationInstance = ec2.Instance{
@@ -105,7 +105,7 @@ var DomainMember3WithSsmAssociationTagTagName = Tag{
 
 var DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
+	Ebs: DomainMember3WithSsmAssociationTagBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember3WithSsmAssociationTag = ec2.Instance{
@@ -135,7 +135,7 @@ var DomainMember4LinuxWithSsmAssociationInstanceTagName = Tag{
 
 var DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1 = ec2.Instance_BlockDeviceMapping{
 	DeviceName: "/dev/sda1",
-	Ebs: &DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
+	Ebs: DomainMember4LinuxWithSsmAssociationInstanceBlockDeviceMappingDevsda1Ebs,
 }
 
 var DomainMember4LinuxWithSsmAssociationInstance = ec2.Instance{

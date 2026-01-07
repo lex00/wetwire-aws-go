@@ -5,6 +5,7 @@
 package amzn2_greengrass_cfn_pkg
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/ec2"
 )
 
@@ -42,7 +43,7 @@ var RouteTablePublicInternetRoute = ec2.Route{
 }
 
 var SubnetAPublic = ec2.Subnet{
-	AvailabilityZone: InstanceAZ.AvailabilityZone,
+	AvailabilityZone: GetAtt{InstanceAZ, "AvailabilityZone"},
 	CidrBlock: "172.31.0.0/24",
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,

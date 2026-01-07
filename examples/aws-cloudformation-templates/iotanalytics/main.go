@@ -46,8 +46,8 @@ var PipelineTagProject = Tag{
 }
 
 var PipelinePipelineActivity1 = iotanalytics.Pipeline_Activity{
-	Channel: &PipelinePipelineActivity1Channel,
-	Datastore: &PipelinePipelineActivity1Datastore,
+	Channel: PipelinePipelineActivity1Channel,
+	Datastore: PipelinePipelineActivity1Datastore,
 }
 
 var Pipeline = iotanalytics.Pipeline{
@@ -65,7 +65,7 @@ var SqlDatasetAction1QueryAction = iotanalytics.Dataset_QueryAction{
 }
 
 var SqlDatasetTrigger1 = iotanalytics.Dataset_Trigger{
-	Schedule: &SqlDatasetTrigger1Schedule,
+	Schedule: SqlDatasetTrigger1Schedule,
 }
 
 var SqlDatasetTagProject = Tag{
@@ -80,13 +80,13 @@ var SqlDatasetRetentionPeriod = iotanalytics.Dataset_RetentionPeriod{
 
 var SqlDatasetAction1 = iotanalytics.Dataset_Action{
 	ActionName: "SqlAction",
-	QueryAction: &SqlDatasetAction1QueryAction,
+	QueryAction: SqlDatasetAction1QueryAction,
 }
 
 var SqlDataset = iotanalytics.Dataset{
 	Actions: []any{SqlDatasetAction1},
 	DatasetName: Sub{String: "${ProjectName}_dataset"},
-	RetentionPeriod: &SqlDatasetRetentionPeriod,
+	RetentionPeriod: SqlDatasetRetentionPeriod,
 	Tags: []any{SqlDatasetTagProject},
 	Triggers: []any{SqlDatasetTrigger1},
 }

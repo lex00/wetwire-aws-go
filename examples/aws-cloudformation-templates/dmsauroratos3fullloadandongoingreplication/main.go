@@ -5,6 +5,7 @@
 package dmsauroratos3fullloadandongoingreplication
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/dms"
 )
 
@@ -13,7 +14,7 @@ var AuroraSourceEndpoint = dms.Endpoint{
 	EngineName: "AURORA",
 	Password: "{{resolve:secretsmanager:aurora-source-enpoint-password:SecretString:password}}",
 	Port: 3306,
-	ServerName: AuroraCluster.Endpoint.Address,
+	ServerName: GetAtt{AuroraCluster, "Endpoint.Address"},
 	Username: "admin",
 }
 
@@ -40,7 +41,7 @@ var S3TargetEndpoint = dms.Endpoint{
 	EndpointType: "target",
 	EngineName: "S3",
 	ExtraConnectionAttributes: "addColumnName=true",
-	S3Settings: &S3TargetEndpointS3Settings,
+	S3Settings: S3TargetEndpointS3Settings,
 }
 
 var DMSReplicationTask = dms.ReplicationTask{

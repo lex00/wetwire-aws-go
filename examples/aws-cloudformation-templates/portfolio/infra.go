@@ -5,7 +5,6 @@
 package portfolio
 
 import (
-	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/servicecatalog"
 )
 
@@ -25,6 +24,11 @@ var ServiceCatalogProductTagOptionsUser = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "User",
 	Value: ProductUser,
+}
+
+var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
+	AccountId: AccountIdOfChildAWSAccount,
+	PortfolioId: ServiceCatalogPortfolio,
 }
 
 var ServiceCatalogPortfolioTagOwner = Tag{
@@ -63,9 +67,4 @@ var ServiceCatalogProductTagOptionsDept = servicecatalog.TagOption{
 	Active: ActivateProductTagOptions,
 	Key: "Dept",
 	Value: ProductDept,
-}
-
-var ServiceCatalogPortfolioShare = servicecatalog.PortfolioShare{
-	AccountId: AccountIdOfChildAWSAccount,
-	PortfolioId: ServiceCatalogPortfolio,
 }

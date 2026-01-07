@@ -15,5 +15,5 @@ var DBCredentialGenerateSecretString = secretsmanager.Secret_GenerateSecretStrin
 }
 
 var DBCredential = secretsmanager.Secret{
-	GenerateSecretString: &DBCredentialGenerateSecretString,
+	GenerateSecretString: DBCredentialGenerateSecretString,
 }

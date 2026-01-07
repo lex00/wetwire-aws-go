@@ -68,7 +68,7 @@ def handler(event, context):
 
 var TagVpcPeeringConnectionsLambdaFunction = lambda.Function{
 	Code: TagVpcPeeringConnectionsLambdaFunctionCode,
-	Environment: &TagVpcPeeringConnectionsLambdaFunctionEnvironment,
+	Environment: TagVpcPeeringConnectionsLambdaFunctionEnvironment,
 	FunctionName: LambdaFunctionName,
 	Handler: "index.handler",
 	MemorySize: 128,

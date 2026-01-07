@@ -50,9 +50,9 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 }
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
-	AvailabilityZones: GetAZs{},
+	AvailabilityZones: []any{GetAZs{}},
 	CrossZone: "true",
-	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	HealthCheck: ElasticLoadBalancerHealthCheck,
 	Instances: []any{EC2Instance1, EC2Instance2},
 	LBCookieStickinessPolicy: []any{ElasticLoadBalancerLBCookieStickinessPolicyMyLBPolicy},
 	Listeners: []any{ElasticLoadBalancerListener1},

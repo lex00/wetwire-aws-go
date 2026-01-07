@@ -21,7 +21,7 @@ var JwtResourceHandlerCode = lambda.Function_Code{
 
 var JwtResourceHandler = lambda.Function{
 	Code: JwtResourceHandlerCode,
-	Environment: &JwtResourceHandlerEnvironment,
+	Environment: JwtResourceHandlerEnvironment,
 	FunctionName: Sub{String: "${AppName}-jwt-handler"},
 	Handler: "bootstrap",
 	Role: JwtResourceHandlerRole.Arn,
@@ -53,7 +53,7 @@ var TestResourceHandlerCode = lambda.Function_Code{
 
 var TestResourceHandler = lambda.Function{
 	Code: TestResourceHandlerCode,
-	Environment: &TestResourceHandlerEnvironment,
+	Environment: TestResourceHandlerEnvironment,
 	FunctionName: Sub{String: "${AppName}-test-handler"},
 	Handler: "bootstrap",
 	Role: TestResourceHandlerRole.Arn,

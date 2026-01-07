@@ -25,7 +25,7 @@ var ServiceScalingPolicy = applicationautoscaling.ScalingPolicy{
 	PolicyName: "AStepPolicy",
 	PolicyType: "StepScaling",
 	ScalingTargetId: ServiceScalingTarget,
-	StepScalingPolicyConfiguration: &ServiceScalingPolicyStepScalingPolicyConfiguration,
+	StepScalingPolicyConfiguration: ServiceScalingPolicyStepScalingPolicyConfiguration,
 }
 
 var ServiceScalingTarget = applicationautoscaling.ScalableTarget{

@@ -28,7 +28,7 @@ var UserPoolAdminCreateUserConfig = cognito.UserPool_AdminCreateUserConfig{
 }
 
 var UserPool = cognito.UserPool{
-	AdminCreateUserConfig: &UserPoolAdminCreateUserConfig,
+	AdminCreateUserConfig: UserPoolAdminCreateUserConfig,
 	AutoVerifiedAttributes: []any{"email"},
 	MfaConfiguration: "OFF",
 	Schema: []any{UserPoolSchemaEmail, UserPoolSchemaGivenname, UserPoolSchemaFamilyname},

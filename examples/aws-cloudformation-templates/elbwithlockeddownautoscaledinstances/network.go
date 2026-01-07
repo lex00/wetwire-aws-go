@@ -25,9 +25,9 @@ var ElasticLoadBalancerHealthCheck = elasticloadbalancing.LoadBalancer_HealthChe
 }
 
 var ElasticLoadBalancer = elasticloadbalancing.LoadBalancer{
-	AvailabilityZones: GetAZs{},
+	AvailabilityZones: []any{GetAZs{}},
 	CrossZone: "true",
-	HealthCheck: &ElasticLoadBalancerHealthCheck,
+	HealthCheck: ElasticLoadBalancerHealthCheck,
 	Listeners: []any{ElasticLoadBalancerListener1},
 }
 
@@ -41,8 +41,8 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	FromPort: "80",
 	IpProtocol: "tcp",
-	SourceSecurityGroupName: ElasticLoadBalancer.SourceSecurityGroup.GroupName,
-	SourceSecurityGroupOwnerId: ElasticLoadBalancer.SourceSecurityGroup.OwnerAlias,
+	SourceSecurityGroupName: GetAtt{ElasticLoadBalancer, "SourceSecurityGroup.GroupName"},
+	SourceSecurityGroupOwnerId: GetAtt{ElasticLoadBalancer, "SourceSecurityGroup.OwnerAlias"},
 	ToPort: "80",
 }
 

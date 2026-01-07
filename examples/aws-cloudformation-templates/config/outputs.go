@@ -9,7 +9,7 @@ import (
 )
 
 var ConfigRuleForVolumeAutoEnableIOComplianceTypeOutput = Output{
-	Value:       ConfigRuleForVolumeAutoEnableIO.Compliance.Type,
+	Value:       GetAtt{ConfigRuleForVolumeAutoEnableIO, "Compliance.Type"},
 }
 
 var ConfigRuleForVolumeTagsArnOutput = Output{
