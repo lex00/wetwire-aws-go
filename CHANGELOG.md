@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Codegen: `GetAZs{Region: AWS_REGION}` type mismatch - Region field expects string, not Ref type. Now generates `GetAZs{}` for `!GetAZs !Ref "AWS::Region"` patterns
 - Codegen: Unused intrinsics import removed from all generated files (not just mappings)
-- Codegen: Wrap list-returning intrinsics like `GetAZs{}` in `[]any{}` for list-type fields like `AvailabilityZones`
+- Codegen: Wrap intrinsics (`GetAZs{}`, `Split{}`, `If{}`, Parameter refs) in `[]any{}` for list-type fields like `SecurityGroupIds`, `SubnetIds`
 - Codegen: `Select{Index: "0"}` generates string instead of int - now correctly generates `Select{Index: 0}`
 - Codegen: Variable names colliding with intrinsics types (e.g., `Transform`, `Output`) now get `Resource` suffix
 - Codegen: Nested GetAtt attributes (e.g., `!GetAtt MyDB.Endpoint.Address`) now generate `GetAtt{MyDB, "Endpoint.Address"}` instead of invalid field access

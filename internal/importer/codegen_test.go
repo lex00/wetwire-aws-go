@@ -902,3 +902,93 @@ Resources:
 	assert.NotContains(t, storageCode, "github.com/lex00/wetwire-aws-go/intrinsics", "storage.go should not import intrinsics")
 	assert.NotContains(t, computeCode, "github.com/lex00/wetwire-aws-go/intrinsics", "compute.go should not import intrinsics")
 }
+
+// TestGenerateCode_ParameterInArrayField tests that Parameters used in []any fields get wrapped.
+// Issue #52: Parameter types incompatible with []any fields.
+func TestGenerateCode_ParameterInArrayField(t *testing.T) {
+	content := []byte(`
+Parameters:
+  SecurityGroups:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+Resources:
+  MyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: test
+      Runtime: python3.12
+      Handler: index.handler
+      Role: arn:aws:iam::123456789:role/lambda
+      Code:
+        ZipFile: "def handler(e,c): pass"
+      VpcConfig:
+        SecurityGroupIds: !Ref SecurityGroups
+        SubnetIds: !Ref Subnets
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "paramarray")
+	computeCode := files["compute.go"]
+
+	// Parameters used in list fields should be wrapped in []any{}
+	assert.Contains(t, computeCode, "[]any{SecurityGroups}", "SecurityGroups parameter should be wrapped in []any{}")
+	assert.Contains(t, computeCode, "[]any{Subnets}", "Subnets parameter should be wrapped in []any{}")
+}
+
+// TestGenerateCode_SplitInArrayField tests that Split{} used in []any fields gets wrapped.
+// Issue #52: Split intrinsic incompatible with []any fields.
+func TestGenerateCode_SplitInArrayField(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-12345678
+      SecurityGroupIds: !Split [",", "sg-123,sg-456"]
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "splitarray")
+	computeCode := files["compute.go"]
+
+	// Split{} used in list fields should be wrapped in []any{}
+	assert.Contains(t, computeCode, "[]any{Split{", "Split{} should be wrapped in []any{}")
+}
+
+// TestGenerateCode_IfInArrayField tests that If{} used in []any fields gets wrapped.
+// Issue #52: If intrinsic incompatible with []any fields.
+func TestGenerateCode_IfInArrayField(t *testing.T) {
+	content := []byte(`
+Conditions:
+  UseMultiAZ:
+    !Equals [!Ref "AWS::Region", "us-east-1"]
+Resources:
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      MasterUsername: admin
+      MasterUserPassword: password123
+      VPCSecurityGroups:
+        !If
+          - UseMultiAZ
+          - - sg-primary
+            - sg-secondary
+          - - sg-single
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "ifarray")
+	databaseCode := files["database.go"]
+
+	// If{} used in list fields should be wrapped in []any{}
+	assert.Contains(t, databaseCode, "[]any{If{", "If{} should be wrapped in []any{}")
+}
