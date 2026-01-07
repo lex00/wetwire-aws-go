@@ -33,6 +33,12 @@ type Resource interface {
 	ResourceType() string
 }
 
+// parameterNames maps Parameter signature to logical name
+var parameterNames = make(map[string]string)
+
+// resourceSignatures maps resource JSON signature to logical name
+var resourceSignatures = make(map[string]string)
+
 func main() {
 	// Use reflection to find all exported variables in the package
 	pkgValue := reflect.ValueOf(pkg.{{.FirstVar}})
@@ -40,6 +46,26 @@ func main() {
 
 	// The resources are discovered via var names passed as arguments
 	varNames := os.Args[1:]
+
+	// First pass: collect all Parameter values and build name lookup
+	// Also collect resources for Ref generation
+	for _, name := range varNames {
+		value := getVar(name)
+		if value == nil {
+			continue
+		}
+		if param, ok := value.(intrinsics.Parameter); ok {
+			// Create a signature from the parameter's exported fields
+			sig := paramSignature(param)
+			parameterNames[sig] = name
+		}
+		// Check if it's a resource (has ResourceType method)
+		if res, ok := value.(Resource); ok {
+			// Create signature from ResourceType + JSON serialization
+			sig := resourceSignature(res)
+			resourceSignatures[sig] = name
+		}
+	}
 
 	result := make(map[string]map[string]any)
 
@@ -70,16 +96,21 @@ func main() {
 			continue
 		}
 
-		// Serialize to JSON and back to get a map
-		data, err := json.Marshal(value)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error marshaling %s: %v\n", name, err)
-			continue
-		}
-
-		if err := json.Unmarshal(data, &props); err != nil {
-			fmt.Fprintf(os.Stderr, "Error unmarshaling %s: %v\n", name, err)
-			continue
+		// Serialize using custom function that handles Parameter refs
+		serialized := serializeValue(reflect.ValueOf(value))
+		if m, ok := serialized.(map[string]any); ok {
+			props = m
+		} else {
+			// Fallback to JSON marshal
+			data, err := json.Marshal(value)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error marshaling %s: %v\n", name, err)
+				continue
+			}
+			if err := json.Unmarshal(data, &props); err != nil {
+				fmt.Fprintf(os.Stderr, "Error unmarshaling %s: %v\n", name, err)
+				continue
+			}
 		}
 
 		result[name] = props
@@ -87,6 +118,201 @@ func main() {
 
 	output, _ := json.Marshal(result)
 	fmt.Println(string(output))
+}
+
+// paramSignature creates a unique signature for a Parameter based on its fields
+func paramSignature(p intrinsics.Parameter) string {
+	// Use JSON encoding of exported fields as signature
+	data, _ := json.Marshal(p.ToDefinition())
+	return string(data)
+}
+
+// resourceSignature creates a unique signature for a Resource
+func resourceSignature(r Resource) string {
+	// Use ResourceType + JSON of the struct as signature
+	data, _ := json.Marshal(r)
+	return r.ResourceType() + ":" + string(data)
+}
+
+// serializeValue converts a value to JSON-compatible format, handling Parameters specially
+// When nested=true, Resources are converted to Refs (for use inside Outputs, etc.)
+func serializeValue(v reflect.Value) any {
+	return serializeValueNested(v, false)
+}
+
+func serializeValueNested(v reflect.Value, nested bool) any {
+	if !v.IsValid() {
+		return nil
+	}
+
+	// Handle pointers
+	if v.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return nil
+		}
+		return serializeValueNested(v.Elem(), nested)
+	}
+
+	// Handle interfaces
+	if v.Kind() == reflect.Interface {
+		if v.IsNil() {
+			return nil
+		}
+		return serializeValueNested(v.Elem(), nested)
+	}
+
+	// Check if this is a Parameter - convert to Ref with name lookup
+	if v.Type().String() == "intrinsics.Parameter" {
+		param := v.Interface().(intrinsics.Parameter)
+		sig := paramSignature(param)
+		if name, found := parameterNames[sig]; found {
+			return map[string]any{"Ref": name}
+		}
+		// Fallback - shouldn't happen if all parameters are discovered
+		return map[string]any{"Ref": ""}
+	}
+
+	// Check if this is a Resource - convert to Ref with name lookup (only when nested)
+	if nested && v.CanInterface() {
+		if res, ok := v.Interface().(Resource); ok {
+			sig := resourceSignature(res)
+			if name, found := resourceSignatures[sig]; found {
+				return map[string]any{"Ref": name}
+			}
+		}
+	}
+
+	// Check if value implements json.Marshaler (for other intrinsics like Sub, If, etc.)
+	// Exclude Parameter, Resource, and Output - we handle these specially
+	if v.CanInterface() {
+		iface := v.Interface()
+		_, isParam := iface.(intrinsics.Parameter)
+		_, isRes := iface.(Resource)
+		_, isOutput := iface.(intrinsics.Output)
+		if !isParam && !isRes && !isOutput {
+			if marshaler, ok := iface.(json.Marshaler); ok {
+				data, err := marshaler.MarshalJSON()
+				if err == nil {
+					var result any
+					if json.Unmarshal(data, &result) == nil {
+						return result
+					}
+				}
+			}
+		}
+	}
+
+	switch v.Kind() {
+	case reflect.Struct:
+		result := make(map[string]any)
+		t := v.Type()
+		for i := 0; i < v.NumField(); i++ {
+			field := t.Field(i)
+			if !field.IsExported() {
+				continue
+			}
+			// Get JSON tag name
+			name := field.Name
+			if tag := field.Tag.Get("json"); tag != "" {
+				parts := splitFirst(tag, ',')
+				if parts != "-" && parts != "" {
+					name = parts
+				} else if parts == "-" {
+					continue
+				}
+			}
+			fieldVal := v.Field(i)
+			if isZero(fieldVal) {
+				continue
+			}
+			// All struct fields are nested
+			serialized := serializeValueNested(fieldVal, true)
+			if serialized != nil {
+				result[name] = serialized
+			}
+		}
+		if len(result) == 0 {
+			return nil
+		}
+		return result
+
+	case reflect.Slice, reflect.Array:
+		if v.Len() == 0 {
+			return nil
+		}
+		result := make([]any, v.Len())
+		for i := 0; i < v.Len(); i++ {
+			result[i] = serializeValueNested(v.Index(i), true)
+		}
+		return result
+
+	case reflect.Map:
+		if v.Len() == 0 {
+			return nil
+		}
+		result := make(map[string]any)
+		iter := v.MapRange()
+		for iter.Next() {
+			key := fmt.Sprintf("%v", iter.Key().Interface())
+			result[key] = serializeValueNested(iter.Value(), true)
+		}
+		return result
+
+	case reflect.String:
+		s := v.String()
+		if s == "" {
+			return nil
+		}
+		return s
+
+	case reflect.Bool:
+		return v.Bool()
+
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return v.Int()
+
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return v.Uint()
+
+	case reflect.Float32, reflect.Float64:
+		return v.Float()
+
+	default:
+		if v.CanInterface() {
+			return v.Interface()
+		}
+		return nil
+	}
+}
+
+func splitFirst(s string, sep byte) string {
+	for i := 0; i < len(s); i++ {
+		if s[i] == sep {
+			return s[:i]
+		}
+	}
+	return s
+}
+
+func isZero(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Ptr, reflect.Interface:
+		return v.IsNil()
+	case reflect.Slice, reflect.Map:
+		return v.IsNil() || v.Len() == 0
+	case reflect.String:
+		return v.String() == ""
+	case reflect.Struct:
+		// Check if all fields are zero
+		for i := 0; i < v.NumField(); i++ {
+			if !isZero(v.Field(i)) {
+				return false
+			}
+		}
+		return true
+	default:
+		return false
+	}
 }
 
 func getVar(name string) any {
@@ -211,7 +437,7 @@ require %s v0.0.0
 	// Parse the output
 	var result map[string]map[string]any
 	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
-		return nil, fmt.Errorf("parsing output: %w\noutput: %s", err, stdout.String())
+		return nil, fmt.Errorf("parsing output: %w\noutput: %s\nstderr: %s", err, stdout.String(), stderr.String())
 	}
 
 	return result, nil
@@ -522,7 +748,7 @@ require %s v0.0.0
 	// Parse the output
 	var result map[string]map[string]any
 	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
-		return nil, fmt.Errorf("parsing output: %w\noutput: %s", err, stdout.String())
+		return nil, fmt.Errorf("parsing output: %w\noutput: %s\nstderr: %s", err, stdout.String(), stderr.String())
 	}
 
 	return result, nil
