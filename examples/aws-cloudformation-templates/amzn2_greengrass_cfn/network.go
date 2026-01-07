@@ -43,7 +43,7 @@ var RouteTablePublicInternetRoute = ec2.Route{
 }
 
 var SubnetAPublic = ec2.Subnet{
-	AvailabilityZone: GetAtt{InstanceAZ, "AvailabilityZone"},
+	AvailabilityZone: GetAtt{"InstanceAZ", "AvailabilityZone"},
 	CidrBlock: "172.31.0.0/24",
 	MapPublicIpOnLaunch: true,
 	VpcId: VPC,

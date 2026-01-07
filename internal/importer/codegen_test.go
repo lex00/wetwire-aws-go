@@ -992,3 +992,63 @@ Resources:
 	// If{} used in list fields should be wrapped in []any{}
 	assert.Contains(t, databaseCode, "[]any{If{", "If{} should be wrapped in []any{}")
 }
+
+// TestGenerateCode_TransformStruct tests that Fn::Transform generates correct Transform struct.
+// Issue #55: Transform intrinsic struct incomplete.
+func TestGenerateCode_TransformStruct(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+      Tags:
+        - Key: Date
+          Value:
+            Fn::Transform:
+              Name: Date
+              Parameters:
+                Date: "2024-01-01"
+                Operation: Current
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "transformtest")
+	storageCode := files["storage.go"]
+
+	// Transform struct should have Name and Parameters fields
+	assert.Contains(t, storageCode, `Transform{Name: "Date"`, "Transform should have Name field")
+	assert.Contains(t, storageCode, "Parameters:", "Transform should have Parameters field")
+}
+
+// TestGenerateCode_TransformListFormat tests that Fn::Transform with list format works.
+// Some templates use list format: Fn::Transform: [{Name: ..., Parameters: ...}]
+func TestGenerateCode_TransformListFormat(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+      Tags:
+        - Key: Date
+          Value:
+            Fn::Transform:
+              - Name: Date
+                Parameters:
+                  Date: "2024-01-01"
+                  Operation: Current
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "transformlist")
+	storageCode := files["storage.go"]
+
+	// Transform struct should have Name and Parameters fields even with list format
+	assert.Contains(t, storageCode, `Transform{Name: "Date"`, "Transform should have Name field")
+	assert.Contains(t, storageCode, "Parameters:", "Transform should have Parameters field")
+}

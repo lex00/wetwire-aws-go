@@ -10,8 +10,8 @@ import (
 )
 
 var ASCPrivateLinkLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
-	SecurityGroupIds: SecurityGroups,
-	SubnetIds: Subnets,
+	SecurityGroupIds: []any{SecurityGroups},
+	SubnetIds: []any{Subnets},
 }
 
 var ASCPrivateLinkLambdaFunctionCode = lambda.Function_Code{

@@ -29,7 +29,7 @@ var LaunchTemplateLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData{
 	ImageId: LatestAmiId,
 	InstanceType: InstanceType,
 	KeyName: KeyName,
-	SecurityGroupIds: SecurityGroups,
+	SecurityGroupIds: []any{SecurityGroups},
 	TagSpecifications: []any{LaunchTemplateLaunchTemplateDataTagSpecification1},
 	UserData: Base64{Sub{String: "#!/bin/bash\n/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchTemplate --region ${AWS::Region}\n/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}\n"}},
 }
@@ -46,6 +46,13 @@ var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
 	ScalingAdjustment: -1,
 }
 
+var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: WebServerGroup,
+	Cooldown: "60",
+	ScalingAdjustment: 1,
+}
+
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
 	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
 	TopicARN: NotificationTopic,
@@ -57,7 +64,7 @@ var WebServerGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSp
 }
 
 var WebServerGroup = autoscaling.AutoScalingGroup{
-	AvailabilityZones: AZs,
+	AvailabilityZones: []any{AZs},
 	HealthCheckType: "ELB",
 	LaunchTemplate: WebServerGroupLaunchTemplate,
 	MaxSize: "3",
@@ -65,11 +72,4 @@ var WebServerGroup = autoscaling.AutoScalingGroup{
 	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},
 	TargetGroupARNs: []any{TargetGroup},
 	VPCZoneIdentifier: Subnets,
-}
-
-var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: WebServerGroup,
-	Cooldown: "60",
-	ScalingAdjustment: 1,
 }

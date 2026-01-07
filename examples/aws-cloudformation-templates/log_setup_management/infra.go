@@ -14,7 +14,7 @@ var TargetAccountLoggingStackInstancesGroup1DeploymentTargets = cloudformation.S
 
 var TargetAccountLoggingStackInstancesGroup1 = cloudformation.StackSet_StackInstances{
 	DeploymentTargets: TargetAccountLoggingStackInstancesGroup1DeploymentTargets,
-	Regions: StackSetRegions,
+	Regions: []any{StackSetRegions},
 }
 
 var TargetAccountLoggingParameter2 = cloudformation.StackSet_Parameter{

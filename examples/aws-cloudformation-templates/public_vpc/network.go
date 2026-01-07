@@ -62,25 +62,6 @@ var PublicRoute = ec2.Route{
 	RouteTableId: PublicRouteTable,
 }
 
-var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
-	Key: "idle_timeout.timeout_seconds",
-	Value: "30",
-}
-
-var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
-	LoadBalancerAttributes: []any{PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse},
-	Scheme: "internet-facing",
-	SecurityGroups: []any{PublicLoadBalancerSG},
-	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
-}
-
-var PublicSubnetTwo = ec2.Subnet{
-	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
-	MapPublicIpOnLaunch: true,
-	VpcId: VPC,
-}
-
 var PublicLoadBalancerListenerDefaultActionForward = elasticloadbalancingv2.Listener_Action{
 	TargetGroupArn: DummyTargetGroupPublic,
 	Type_: "forward",
@@ -98,6 +79,11 @@ var EcsHostSecurityGroup = ec2.SecurityGroup{
 	VpcId: VPC,
 }
 
+var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
+	RouteTableId: PublicRouteTable,
+	SubnetId: PublicSubnetOne,
+}
+
 var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
 	Description: "Ingress from other hosts in the same security group",
 	GroupId: EcsHostSecurityGroup,
@@ -105,14 +91,23 @@ var EcsSecurityGroupIngressFromSelf = ec2.SecurityGroupIngress{
 	SourceSecurityGroupId: EcsHostSecurityGroup,
 }
 
-var PublicSubnetOneRouteTableAssociation = ec2.SubnetRouteTableAssociation{
-	RouteTableId: PublicRouteTable,
-	SubnetId: PublicSubnetOne,
-}
-
 var PublicSubnetTwoRouteTableAssociation = ec2.SubnetRouteTableAssociation{
 	RouteTableId: PublicRouteTable,
 	SubnetId: PublicSubnetTwo,
+}
+
+var PublicSubnetTwo = ec2.Subnet{
+	AvailabilityZone: Select{Index: 1, List: GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicTwo", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
+}
+
+var PublicSubnetOne = ec2.Subnet{
+	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
+	CidrBlock: FindInMap{"SubnetConfig", "PublicOne", "CIDR"},
+	MapPublicIpOnLaunch: true,
+	VpcId: VPC,
 }
 
 var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
@@ -122,9 +117,14 @@ var EcsSecurityGroupIngressFromPublicALB = ec2.SecurityGroupIngress{
 	SourceSecurityGroupId: PublicLoadBalancerSG,
 }
 
-var PublicSubnetOne = ec2.Subnet{
-	AvailabilityZone: Select{Index: 0, List: GetAZs{}},
-	CidrBlock: FindInMap{"SubnetConfig", "PublicOne", "CIDR"},
-	MapPublicIpOnLaunch: true,
-	VpcId: VPC,
+var PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse = elasticloadbalancingv2.LoadBalancer_LoadBalancerAttribute{
+	Key: "idle_timeout.timeout_seconds",
+	Value: "30",
+}
+
+var PublicLoadBalancer = elasticloadbalancingv2.LoadBalancer{
+	LoadBalancerAttributes: []any{PublicLoadBalancerLoadBalancerAttributeIdletimeouttimeoutse},
+	Scheme: "internet-facing",
+	SecurityGroups: []any{PublicLoadBalancerSG},
+	Subnets: []any{PublicSubnetOne, PublicSubnetTwo},
 }

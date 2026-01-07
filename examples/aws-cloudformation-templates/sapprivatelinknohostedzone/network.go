@@ -19,7 +19,7 @@ var ASCPrivateLinkNLBLoadBalancerAttributeLoadbalancingcrosszo = elasticloadbala
 var ASCPrivateLinkNLB = elasticloadbalancingv2.LoadBalancer{
 	LoadBalancerAttributes: []any{ASCPrivateLinkNLBLoadBalancerAttributeLoadbalancingcrosszo},
 	Scheme: "internal",
-	Subnets: Subnets,
+	Subnets: []any{Subnets},
 	Type_: "network",
 }
 

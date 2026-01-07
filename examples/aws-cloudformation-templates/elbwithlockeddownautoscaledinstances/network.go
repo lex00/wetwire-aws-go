@@ -41,8 +41,8 @@ var InstanceSecurityGroupSecurityGroupIngressPortN22 = ec2.SecurityGroup_Ingress
 var InstanceSecurityGroupSecurityGroupIngressPortN80 = ec2.SecurityGroup_Ingress{
 	FromPort: "80",
 	IpProtocol: "tcp",
-	SourceSecurityGroupName: GetAtt{ElasticLoadBalancer, "SourceSecurityGroup.GroupName"},
-	SourceSecurityGroupOwnerId: GetAtt{ElasticLoadBalancer, "SourceSecurityGroup.OwnerAlias"},
+	SourceSecurityGroupName: GetAtt{"ElasticLoadBalancer", "SourceSecurityGroup.GroupName"},
+	SourceSecurityGroupOwnerId: GetAtt{"ElasticLoadBalancer", "SourceSecurityGroup.OwnerAlias"},
 	ToPort: "80",
 }
 

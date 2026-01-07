@@ -10,6 +10,6 @@ import (
 
 // DirectoryAliasUrlOutput - Directory Alias
 var DirectoryAliasUrlOutput = Output{
-	Value:       GetAtt{DirectorySettingsResource, "AliasUrl"},
+	Value:       GetAtt{"DirectorySettingsResource", "AliasUrl"},
 	Description: "Directory Alias",
 }

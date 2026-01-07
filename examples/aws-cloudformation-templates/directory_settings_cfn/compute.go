@@ -11,8 +11,8 @@ import (
 )
 
 var DirectorySettingsLambdaFunctionVpcConfig = lambda.Function_VpcConfig{
-	SecurityGroupIds: SecurityGroups,
-	SubnetIds: Subnets,
+	SecurityGroupIds: []any{SecurityGroups},
+	SubnetIds: []any{Subnets},
 }
 
 var DirectorySettingsLambdaFunctionEnvironment = lambda.Function_Environment{
