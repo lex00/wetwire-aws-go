@@ -480,9 +480,9 @@ Outputs:
 	mainCode := files["main.go"]
 	assert.Contains(t, mainCode, "var ADConnectorResource any = nil", "Should generate placeholder variable for Custom:: resource")
 
-	// Output should reference the placeholder (as GetAtt since custom resources have dynamic attrs)
+	// Output should reference the placeholder (as GetAtt with quoted logical ID)
 	outputsCode := files["outputs.go"]
-	assert.Contains(t, outputsCode, "GetAtt{ADConnectorResource", "Output should use GetAtt for custom resource attribute")
+	assert.Contains(t, outputsCode, `GetAtt{"ADConnectorResource"`, "Output should use GetAtt with quoted logical ID for custom resource")
 }
 
 // TestGenerateCode_NoUnusedImports tests that intrinsics import is only added when used.
@@ -860,9 +860,9 @@ Resources:
 	files := GenerateCode(ir, "nestedtest")
 	code := files["compute.go"]
 
-	// Should generate explicit GetAtt{} for nested attributes
-	assert.Contains(t, code, `GetAtt{MyDB, "Endpoint.Address"}`, "Should use GetAtt{} for nested attribute")
-	assert.Contains(t, code, `GetAtt{MyDB, "Endpoint.Port"}`, "Should use GetAtt{} for nested attribute")
+	// Should generate explicit GetAtt{} for nested attributes with quoted logical ID
+	assert.Contains(t, code, `GetAtt{"MyDB", "Endpoint.Address"}`, "Should use GetAtt{} with quoted logical ID for nested attribute")
+	assert.Contains(t, code, `GetAtt{"MyDB", "Endpoint.Port"}`, "Should use GetAtt{} with quoted logical ID for nested attribute")
 	// Should NOT generate field access for nested attributes
 	assert.NotContains(t, code, "MyDB.Endpoint.Address", "Should not use field access for nested attribute")
 }

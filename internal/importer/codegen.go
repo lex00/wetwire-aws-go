@@ -2094,7 +2094,8 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		// - Unknown resources: placeholder is `any` type with no fields
 		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] {
 			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
-			return fmt.Sprintf("GetAtt{%s, %q}", sanitizeVarName(logicalID), attr)
+			// Use string literal for logical ID since GetAtt.LogicalName expects string
+			return fmt.Sprintf("GetAtt{%q, %q}", logicalID, attr)
 		}
 		// Use attribute access pattern - Resource.Attr
 		// This avoids generating GetAtt{} which violates style guidelines

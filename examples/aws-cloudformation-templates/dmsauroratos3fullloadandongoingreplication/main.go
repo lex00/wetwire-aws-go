@@ -14,7 +14,7 @@ var AuroraSourceEndpoint = dms.Endpoint{
 	EngineName: "AURORA",
 	Password: "{{resolve:secretsmanager:aurora-source-enpoint-password:SecretString:password}}",
 	Port: 3306,
-	ServerName: GetAtt{AuroraCluster, "Endpoint.Address"},
+	ServerName: GetAtt{"AuroraCluster", "Endpoint.Address"},
 	Username: "admin",
 }
 
