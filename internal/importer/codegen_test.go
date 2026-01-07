@@ -708,3 +708,54 @@ Resources:
 	assert.Contains(t, code, "Select{Index: 0,", "Select index should be integer, not string")
 	assert.NotContains(t, code, `Select{Index: "0"`, "Select index should not be quoted string")
 }
+
+func TestGenerateCode_TransformVariableCollision(t *testing.T) {
+	// Test that a resource named "Transform" doesn't collide with intrinsics.Transform type
+	content := []byte(`
+Resources:
+  Transform:
+    Type: AWS::CloudFormation::Macro
+    Properties:
+      Name: MyMacro
+      FunctionName: arn:aws:lambda:us-east-1:123456789:function:MyMacro
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "transformtest")
+	code := files["infra.go"]
+
+	// Should rename "Transform" to "TransformResource" to avoid collision with intrinsics.Transform
+	assert.Contains(t, code, "var TransformResource = cloudformation.Macro{", "Transform should be renamed to TransformResource")
+	assert.NotContains(t, code, "var Transform = cloudformation.Macro{", "Should not use bare 'Transform' variable name")
+}
+
+func TestGenerateCode_ReservedNameReferences(t *testing.T) {
+	// Test that references to resources with reserved names are also sanitized
+	content := []byte(`
+Resources:
+  Transform:
+    Type: AWS::CloudFormation::Macro
+    Properties:
+      Name: MyMacro
+      FunctionName: arn:aws:lambda:us-east-1:123456789:function:MyMacro
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement: []
+      Description: !Ref Transform
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "reftest")
+	securityCode := files["security.go"]
+
+	// Reference to Transform should also use the sanitized name
+	assert.Contains(t, securityCode, "Description: TransformResource,", "Reference to Transform should use TransformResource")
+	assert.NotContains(t, securityCode, "Description: Transform,", "Should not use bare 'Transform' reference")
+}

@@ -183,6 +183,39 @@ var listTypeProperties = map[string]bool{
 	"StackSetRegions":                     true,
 }
 
+// reservedVarNames are names that collide with types exported from the intrinsics package
+// (which is dot-imported). When a resource has one of these logical IDs, we append "Resource".
+var reservedVarNames = map[string]bool{
+	"Transform": true, // intrinsics.Transform
+	"Output":    true, // intrinsics.Output
+	"Condition": true, // intrinsics.Condition
+	"Tag":       true, // intrinsics.Tag
+	"Parameter": true, // intrinsics.Parameter
+	"Mapping":   true, // intrinsics.Mapping
+	"Ref":       true, // intrinsics.Ref
+	"GetAtt":    true, // intrinsics.GetAtt
+	"Sub":       true, // intrinsics.Sub
+	"Join":      true, // intrinsics.Join
+	"Select":    true, // intrinsics.Select
+	"If":        true, // intrinsics.If
+	"And":       true, // intrinsics.And
+	"Or":        true, // intrinsics.Or
+	"Not":       true, // intrinsics.Not
+	"Equals":    true, // intrinsics.Equals
+	"GetAZs":    true, // intrinsics.GetAZs
+	"Split":     true, // intrinsics.Split
+	"Cidr":      true, // intrinsics.Cidr
+	"FindInMap": true, // intrinsics.FindInMap
+}
+
+// sanitizeVarName returns a safe Go variable name that doesn't collide with intrinsics types.
+func sanitizeVarName(name string) string {
+	if reservedVarNames[name] {
+		return name + "Resource"
+	}
+	return name
+}
+
 // isListTypeProperty checks if a property expects a list type ([]any).
 func isListTypeProperty(propName string) bool {
 	return listTypeProperties[propName]
@@ -1053,7 +1086,7 @@ func generateResource(ctx *codegenContext, resource *IRResource) string {
 		lines = append(lines, "") // blank line between blocks
 	}
 
-	varName := resource.LogicalID
+	varName := sanitizeVarName(resource.LogicalID)
 
 	// Build struct literal for the resource
 	lines = append(lines, fmt.Sprintf("var %s = %s.%s{", varName, module, typeName))
@@ -1993,18 +2026,18 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		if strings.HasPrefix(target, "AWS::") {
 			return pseudoParameterToGo(ctx, target)
 		}
-		// Check if it's a known resource - use bare name (no-parens pattern)
+		// Check if it's a known resource - use sanitized name (no-parens pattern)
 		if _, ok := ctx.template.Resources[target]; ok {
-			return target
+			return sanitizeVarName(target)
 		}
 		// Check if it's a parameter - use bare name and track usage
 		if _, ok := ctx.template.Parameters[target]; ok {
 			ctx.usedParameters[target] = true
 			return target
 		}
-		// Unknown reference - use bare variable name (let Go compiler catch undefined)
+		// Unknown reference - use sanitized variable name (let Go compiler catch undefined)
 		// This avoids generating Ref{} which violates style guidelines
-		return target
+		return sanitizeVarName(target)
 
 	case IntrinsicGetAtt:
 		var logicalID, attr string
@@ -2023,7 +2056,7 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		// Use attribute access pattern - Resource.Attr
 		// Even for unknown resources, use this pattern (cross-file references)
 		// This avoids generating GetAtt{} which violates style guidelines
-		return fmt.Sprintf("%s.%s", logicalID, attr)
+		return fmt.Sprintf("%s.%s", sanitizeVarName(logicalID), attr)
 
 	case IntrinsicSub:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
