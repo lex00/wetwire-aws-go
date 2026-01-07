@@ -18893,7 +18893,7 @@ var PropertyTypeMap = map[string]string{
 	"wafv2.WebACL_Rule.ChallengeConfig": "RuleGroup_ChallengeConfig",
 	"wafv2.WebACL_Rule.OverrideAction": "WebACL_OverrideAction",
 	"wafv2.WebACL_Rule.RuleLabels": "RuleGroup_Label",
-	"wafv2.WebACL_Rule.Statement": "RuleGroup_Statement",
+	"wafv2.WebACL_Rule.Statement": "WebACL_Statement",
 	"wafv2.WebACL_Rule.VisibilityConfig": "RuleGroup_VisibilityConfig",
 	"wafv2.WebACL_RuleAction.Allow": "RuleGroup_AllowAction",
 	"wafv2.WebACL_RuleAction.Block": "RuleGroup_BlockAction",
