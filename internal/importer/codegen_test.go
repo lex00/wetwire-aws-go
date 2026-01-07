@@ -1261,3 +1261,40 @@ Resources:
 	// TopicARN should wrap NotificationTopic resource ref in []any{}
 	assert.Contains(t, computeCode, "TopicARN: []any{NotificationTopic}", "Should wrap resource ref in []any{} for TopicARN")
 }
+
+// TestGenerateCode_LowercaseParameterNames tests that parameter names starting with
+// lowercase letters are capitalized to be exported.
+// Issue #71: Parameters like myKeyPair should become MyKeyPair
+func TestGenerateCode_LowercaseParameterNames(t *testing.T) {
+	content := []byte(`
+Parameters:
+  myKeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Amazon EC2 Key Pair
+  pPrivateSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: First private subnet
+
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref myKeyPair
+      SubnetId: !Ref pPrivateSubnet1
+`)
+
+	ir, err := ParseTemplateContent(content, "paramtest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "paramtest")
+	paramsCode := files["params.go"]
+	computeCode := files["compute.go"]
+
+	// Parameter names should be capitalized for export
+	assert.Contains(t, paramsCode, "var MyKeyPair = Parameter{", "lowercase myKeyPair should become MyKeyPair")
+	assert.Contains(t, paramsCode, "var PPrivateSubnet1 = Parameter{", "pPrivateSubnet1 should become PPrivateSubnet1")
+
+	// References should use capitalized names
+	assert.Contains(t, computeCode, "KeyName: MyKeyPair", "Reference should use capitalized name")
+	assert.Contains(t, computeCode, "SubnetId: PPrivateSubnet1", "Reference should use capitalized name")
+}
