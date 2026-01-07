@@ -1324,7 +1324,8 @@ func generatePropertyBlock(ctx *codegenContext, block propertyBlock) string {
 		}
 
 		// Transform field name for Go keyword conflicts
-		goFieldName := transformGoFieldName(k)
+		// Use type-aware transformation to handle ResourceType correctly for nested types
+		goFieldName := transformGoFieldNameForType(k, ctx.currentTypeName)
 		lines = append(lines, fmt.Sprintf("\t%s: %s,", goFieldName, fieldVal))
 	}
 

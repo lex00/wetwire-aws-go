@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: Nested GetAtt attributes (e.g., `!GetAtt MyDB.Endpoint.Address`) now generate `GetAtt{MyDB, "Endpoint.Address"}` instead of invalid field access
 - Codegen: Unknown resource types (e.g., `Custom::*`) now generate `any` placeholder variables instead of comments, allowing outputs to reference them without undefined variable errors
 - Codegen: `Fn::Transform` now generates `Transform{Name: "...", Parameters: {...}}` with proper struct fields instead of raw value passthrough
+- Codegen: `ResourceType` field in nested property types no longer incorrectly transformed to `ResourceTypeProp` (only top-level resources have the conflicting method)
 
 ### Changed
 

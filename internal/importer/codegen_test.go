@@ -1052,3 +1052,32 @@ Resources:
 	assert.Contains(t, storageCode, `Transform{Name: "Date"`, "Transform should have Name field")
 	assert.Contains(t, storageCode, "Parameters:", "Transform should have Parameters field")
 }
+
+// TestGenerateCode_ResourceTypeFieldInNestedType tests that ResourceType field in nested types
+// is NOT transformed to ResourceTypeProp.
+// Issue #56: Only top-level resources have the ResourceType() method that conflicts.
+func TestGenerateCode_ResourceTypeFieldInNestedType(t *testing.T) {
+	content := []byte(`
+Resources:
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: MyInstance
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "restype")
+	computeCode := files["compute.go"]
+
+	// ResourceType field in nested TagSpecification should stay as "ResourceType"
+	// not be transformed to "ResourceTypeProp"
+	assert.Contains(t, computeCode, "ResourceType:", "Nested types should use ResourceType field name")
+	assert.NotContains(t, computeCode, "ResourceTypeProp:", "Nested types should NOT use ResourceTypeProp")
+}
