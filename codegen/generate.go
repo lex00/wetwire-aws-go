@@ -367,9 +367,11 @@ func resolveTypeReferences(goType string, qualifiedNames map[string]string, isPo
 		goType = qn
 	}
 
-	// Handle pointers for optional fields (after type resolution)
+	// Use `any` for pointer/optional fields to allow intrinsics like If{}
+	// CloudFormation allows intrinsics for any property, but *Type is too restrictive.
+	// Using `any` preserves type safety for direct usage while allowing If{}, Sub{}, etc.
 	if isPointer {
-		goType = "*" + goType
+		return "any"
 	}
 
 	return goType

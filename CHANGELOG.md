@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: `Select{Index: "0"}` generates string instead of int - now correctly generates `Select{Index: 0}`
 - Codegen: Variable names colliding with intrinsics types (e.g., `Transform`, `Output`) now get `Resource` suffix
 
+### Changed
+
+- Resource types: Pointer fields (`*Type`) changed to `any` to allow intrinsics like `If{}`, `Sub{}` etc.
+  - Previously `LoggingConfiguration: &VPCFlowLogsBucketLoggingConfig` - incompatible with `If{}`
+  - Now `LoggingConfiguration: VPCFlowLogsBucketLoggingConfig` or `LoggingConfiguration: If{...}`
+  - Fixes: vpcflowlogss3, directory_ad_clients, rds_mysql_with_read_replica templates
+
 ## [1.4.0] - 2026-01-06
 
 ### Added
