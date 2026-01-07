@@ -2048,6 +2048,16 @@ func simplifySubString(ctx *codegenContext, s string) string {
 				// Pseudo-parameter: return constant
 				return pseudoParameterToGo(ctx, inner)
 			}
+			// Check for GetAtt pattern: ${Resource.Attribute}
+			// In Sub templates, ${Resource.Attr} is shorthand for !GetAtt Resource.Attr
+			if parts := strings.SplitN(inner, ".", 2); len(parts) == 2 {
+				logicalID, attr := parts[0], parts[1]
+				// Check if the first part is a known resource
+				if _, ok := ctx.template.Resources[logicalID]; ok {
+					// Generate field access pattern: Resource.Attr
+					return fmt.Sprintf("%s.%s", sanitizeVarName(logicalID), attr)
+				}
+			}
 			// Regular variable reference
 			// Check if it's a known resource or parameter
 			if _, ok := ctx.template.Resources[inner]; ok {

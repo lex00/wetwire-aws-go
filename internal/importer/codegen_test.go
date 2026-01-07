@@ -1161,3 +1161,63 @@ Resources:
 	assert.Contains(t, networkCode, `"github.com/lex00/wetwire-aws-go/intrinsics"`, "Should import intrinsics for Tag type")
 	assert.Contains(t, networkCode, "Tag{", "Should have Tag literal")
 }
+
+// TestGenerateCode_GetAttRootResourceId tests that !GetAtt RestApi.RootResourceId generates
+// correct field access pattern instead of undefined variable reference.
+// Issue #60: Undefined resource reference for GetAtt attributes.
+func TestGenerateCode_GetAttRootResourceId(t *testing.T) {
+	content := []byte(`
+Resources:
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: MyApi
+
+  TestResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: test
+      RestApiId: !Ref RestApi
+`)
+
+	ir, err := ParseTemplateContent(content, "apitest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "apitest")
+	mainCode := files["main.go"]
+
+	// Should generate RestApi.RootResourceId field access, not RestApiRootResourceId variable
+	assert.Contains(t, mainCode, "ParentId: RestApi.RootResourceId", "Should use field access for GetAtt")
+	assert.NotContains(t, mainCode, "RestApiRootResourceId", "Should not generate undefined variable reference")
+}
+
+// TestGenerateCode_SubGetAttPattern tests that !Sub ${RestApi.RootResourceId} generates
+// correct field access pattern instead of undefined variable reference.
+// Issue #60: Sub shorthand for GetAtt was being sanitized incorrectly.
+func TestGenerateCode_SubGetAttPattern(t *testing.T) {
+	content := []byte(`
+Resources:
+  RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: MyApi
+
+  TestResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Sub ${RestApi.RootResourceId}
+      PathPart: test
+      RestApiId: !Ref RestApi
+`)
+
+	ir, err := ParseTemplateContent(content, "apitest")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "apitest")
+	mainCode := files["main.go"]
+
+	// Should generate RestApi.RootResourceId field access, not RestApiRootResourceId variable
+	assert.Contains(t, mainCode, "ParentId: RestApi.RootResourceId", "Should use field access for Sub with GetAtt shorthand")
+	assert.NotContains(t, mainCode, "RestApiRootResourceId", "Should not generate undefined variable reference")
+}

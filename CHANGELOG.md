@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Codegen: Duplicate array element variable names now get `_2`, `_3` suffixes to avoid redeclaration errors
 - Codegen: Lowercase resource names are now capitalized to ensure variables are exported (e.g., `myBucket` → `MyBucket`)
 - Codegen: `Tag{}` type now correctly triggers intrinsics import (fixes undefined `Tag` errors)
+- Codegen: `!Sub ${Resource.Attr}` patterns now generate `Resource.Attr` field access instead of undefined `ResourceAttr` variable
 
 ### Changed
 
