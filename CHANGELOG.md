@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Codegen: `GetAZs{Region: AWS_REGION}` type mismatch - Region field expects string, not Ref type. Now generates `GetAZs{}` for `!GetAZs !Ref "AWS::Region"` patterns
+- Codegen: Unused intrinsics import in mappings-only main.go files
+
 ## [1.4.0] - 2026-01-06
 
 ### Added

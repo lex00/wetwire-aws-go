@@ -536,3 +536,92 @@ Resources:
 
 	assert.True(t, vpcIdx < subnetIdx, "VPC should be defined before Subnet")
 }
+
+// TestGenerateCode_GetAZsRegionStringField tests that GetAZs.Region uses empty string, not AWS_REGION.
+// Issue #36: GetAZs{Region: AWS_REGION} causes type mismatch - Region field expects string, not Ref.
+func TestGenerateCode_GetAZsRegionStringField(t *testing.T) {
+	content := []byte(`
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.1.0/24"
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs:
+              Ref: "AWS::Region"
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "aztest")
+	code := files["network.go"]
+
+	// Should NOT use AWS_REGION in GetAZs - Region field is string type, not any
+	assert.NotContains(t, code, "GetAZs{Region: AWS_REGION}", "GetAZs.Region should not use AWS_REGION (Ref type)")
+
+	// Should generate valid Go code - either GetAZs{} or GetAZs{Region: ""}
+	// Both are valid and mean "use current region"
+	hasValidGetAZs := strings.Contains(code, `GetAZs{}`) || strings.Contains(code, `GetAZs{Region: ""}`)
+	assert.True(t, hasValidGetAZs, "GetAZs should be generated without AWS_REGION")
+}
+
+// TestGenerateCode_GetAZsEmptyString tests that GetAZs with empty string generates valid code.
+func TestGenerateCode_GetAZsEmptyString(t *testing.T) {
+	content := []byte(`
+Resources:
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: "10.0.1.0/24"
+      AvailabilityZone: !Select [0, !GetAZs ""]
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "aztest2")
+	code := files["network.go"]
+
+	// Should generate valid GetAZs - either GetAZs{} or GetAZs{Region: ""}
+	// Both forms are equivalent (empty string means current region)
+	hasValidGetAZs := strings.Contains(code, `GetAZs{}`) || strings.Contains(code, `GetAZs{Region: ""}`)
+	assert.True(t, hasValidGetAZs, "GetAZs with empty string should generate valid code")
+	assert.NotContains(t, code, "AWS_REGION", "GetAZs should not use AWS_REGION")
+}
+
+// TestGenerateCode_ParamsOnlyNoUnusedImports tests that params-only templates don't have unused resource imports.
+// Issue #36: When only parameters are used, resource imports should not be added.
+func TestGenerateCode_ParamsOnlyNoUnusedImports(t *testing.T) {
+	content := []byte(`
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment name
+    Default: dev
+
+  BucketName:
+    Type: String
+    Description: S3 bucket name
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "paramsonly")
+
+	// Check that no resource packages are imported (params-only template)
+	for filename, code := range files {
+		// Should not import any resource packages
+		assert.NotContains(t, code, `"github.com/lex00/wetwire-aws-go/resources/`,
+			"File %s should not import resource packages for params-only template", filename)
+	}
+}

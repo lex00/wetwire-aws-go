@@ -14,6 +14,19 @@ import (
 var ECSCluster = ecs.Cluster{
 }
 
+var ECSAutoScalingGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
+	LaunchTemplateId: ContainerInstances,
+	Version: ContainerInstances.LatestVersionNumber,
+}
+
+var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
+	DesiredCapacity: DesiredCapacity,
+	LaunchTemplate: &ECSAutoScalingGroupLaunchTemplate,
+	MaxSize: MaxSize,
+	MinSize: "1",
+	VPCZoneIdentifier: []any{PublicSubnetOne, PublicSubnetTwo},
+}
+
 var ContainerInstancesLaunchTemplateDataIamInstanceProfile = ec2.LaunchTemplate_IamInstanceProfile{
 	Arn: EC2InstanceProfile.Arn,
 }
@@ -28,17 +41,4 @@ var ContainerInstancesLaunchTemplateData = ec2.LaunchTemplate_LaunchTemplateData
 
 var ContainerInstances = ec2.LaunchTemplate{
 	LaunchTemplateData: ContainerInstancesLaunchTemplateData,
-}
-
-var ECSAutoScalingGroupLaunchTemplate = autoscaling.AutoScalingGroup_LaunchTemplateSpecification{
-	LaunchTemplateId: ContainerInstances,
-	Version: ContainerInstances.LatestVersionNumber,
-}
-
-var ECSAutoScalingGroup = autoscaling.AutoScalingGroup{
-	DesiredCapacity: DesiredCapacity,
-	LaunchTemplate: &ECSAutoScalingGroupLaunchTemplate,
-	MaxSize: MaxSize,
-	MinSize: "1",
-	VPCZoneIdentifier: []any{PublicSubnetOne, PublicSubnetTwo},
 }

@@ -586,10 +586,15 @@ func GenerateCode(template *IRTemplate, packageName string) map[string]string {
 	// If there are only mappings and no main resources, still generate main.go
 	if _, hasMain := categoryCode["main"]; !hasMain {
 		if mappingsCode := generateMappings(ctx); mappingsCode != "" {
-			// Only add intrinsics import if mappings actually use intrinsics
-			// (ctx.imports was populated during generateMappings)
+			// Mappings are plain map literals - only add intrinsics import if the code
+			// actually uses intrinsic types (check the generated code, not global ctx.imports)
 			imports := make(map[string]bool)
-			if ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] {
+			if strings.Contains(mappingsCode, "Sub{") ||
+				strings.Contains(mappingsCode, "Ref{") ||
+				strings.Contains(mappingsCode, "GetAtt{") ||
+				strings.Contains(mappingsCode, "Join{") ||
+				strings.Contains(mappingsCode, "If{") ||
+				strings.Contains(mappingsCode, "FindInMap{") {
 				imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 			}
 			files["main.go"] = buildFile(ctx.packageName, "Mappings", imports, mappingsCode)
@@ -2013,8 +2018,22 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		if intrinsic.Args == nil || intrinsic.Args == "" {
 			return "GetAZs{}"
 		}
-		region := valueToGo(ctx, intrinsic.Args, 0)
-		return fmt.Sprintf("GetAZs{Region: %s}", region)
+		// Special case: GetAZs with !Ref "AWS::Region" should use empty string
+		// GetAZs.Region is a string field, not any, so we can't use AWS_REGION (Ref type)
+		// Empty string in GetAZs means "current region" which is the same as AWS::Region
+		if nested, ok := intrinsic.Args.(*IRIntrinsic); ok {
+			if nested.Type == IntrinsicRef {
+				if refName, ok := nested.Args.(string); ok && refName == "AWS::Region" {
+					return "GetAZs{}"
+				}
+			}
+		}
+		// For literal string regions, use them directly
+		if regionStr, ok := intrinsic.Args.(string); ok {
+			return fmt.Sprintf("GetAZs{Region: %q}", regionStr)
+		}
+		// Fallback for other cases - use empty string (safest)
+		return "GetAZs{}"
 
 	case IntrinsicIf:
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
