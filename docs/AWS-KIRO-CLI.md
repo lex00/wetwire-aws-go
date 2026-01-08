@@ -1,0 +1,271 @@
+# Kiro CLI Integration
+
+Use Kiro CLI with wetwire-aws for AI-assisted infrastructure design in corporate AWS environments.
+
+## Prerequisites
+
+- AWS account with appropriate permissions
+- Go 1.23+ installed
+- Kiro CLI installed ([kiro.dev/cli](https://kiro.dev/cli))
+
+---
+
+## Step 1: Install wetwire-aws
+
+### Option A: Using uv (recommended)
+
+```bash
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install wetwire-aws via uvx
+uvx --from wetwire-aws wetwire-aws --version
+```
+
+### Option B: Using Go
+
+```bash
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
+```
+
+### Option C: Pre-built binaries
+
+Download from [GitHub Releases](https://github.com/lex00/wetwire-aws-go/releases):
+
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-arm64.tar.gz | tar xz
+curl -L https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-arm64.tar.gz | tar xz
+
+# Move to PATH
+sudo mv wetwire-aws wetwire-aws-mcp /usr/local/bin/
+```
+
+### Verify installation
+
+```bash
+wetwire-aws --version
+wetwire-aws-mcp  # Should start MCP server (Ctrl+C to exit)
+```
+
+---
+
+## Step 2: Install Kiro CLI
+
+```bash
+# Install Kiro CLI
+curl -fsSL https://cli.kiro.dev/install | bash
+
+# Verify installation
+kiro-cli --version
+
+# Sign in (opens browser)
+kiro-cli login
+```
+
+---
+
+## Step 3: Configure Kiro for wetwire-aws
+
+Run the design command with `--provider kiro` to auto-configure:
+
+```bash
+# Create a project directory
+mkdir my-infra && cd my-infra
+
+# Initialize Go module
+go mod init my-infra
+
+# Run design with Kiro provider (auto-installs configs on first run)
+wetwire-aws design --provider kiro "Create an S3 bucket"
+```
+
+This automatically installs:
+
+| File | Purpose |
+|------|---------|
+| `~/.kiro/agents/wetwire-runner.json` | Kiro agent configuration |
+| `.kiro/mcp.json` | Project MCP server configuration |
+
+### Manual configuration (optional)
+
+If you prefer to configure manually:
+
+**~/.kiro/agents/wetwire-runner.json:**
+```json
+{
+  "name": "wetwire-runner",
+  "description": "Infrastructure code generator using wetwire-aws",
+  "prompt": "You are an infrastructure design assistant...",
+  "model": "claude-sonnet-4",
+  "mcpServers": {
+    "wetwire": {
+      "command": "wetwire-aws-mcp",
+      "args": []
+    }
+  },
+  "tools": ["*"]
+}
+```
+
+**.kiro/mcp.json:**
+```json
+{
+  "mcpServers": {
+    "wetwire": {
+      "command": "wetwire-aws-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+---
+
+## Step 4: Run Kiro with wetwire design
+
+### Using the wetwire-aws CLI
+
+```bash
+# Start Kiro design session
+wetwire-aws design --provider kiro "Create a serverless API with Lambda and DynamoDB"
+```
+
+This launches Kiro CLI with the wetwire-runner agent and your prompt.
+
+### Using Kiro CLI directly
+
+```bash
+# Start chat with wetwire-runner agent
+kiro-cli chat --agent wetwire-runner
+
+# Or with an initial prompt
+kiro-cli chat --agent wetwire-runner "Create an S3 bucket with versioning"
+```
+
+---
+
+## Available MCP Tools
+
+The wetwire-aws MCP server exposes three tools to Kiro:
+
+| Tool | Description | Example |
+|------|-------------|---------|
+| `wetwire_init` | Initialize a new project | `wetwire_init(path="./myapp")` |
+| `wetwire_lint` | Lint code for issues | `wetwire_lint(path="./infra/...")` |
+| `wetwire_build` | Generate CloudFormation template | `wetwire_build(path="./infra/...", format="json")` |
+
+---
+
+## Example Session
+
+```
+$ wetwire-aws design --provider kiro "Create an S3 bucket with versioning and encryption"
+
+Installed Kiro agent config: ~/.kiro/agents/wetwire-runner.json
+Installed project MCP config: .kiro/mcp.json
+Starting Kiro CLI design session...
+
+> I'll help you create an S3 bucket with versioning and encryption enabled.
+
+Let me initialize the project and create the infrastructure code.
+
+[Calling wetwire_init...]
+[Calling wetwire_lint...]
+[Calling wetwire_build...]
+
+I've created the following files:
+- infra/storage.go
+
+The S3 bucket includes:
+- Versioning enabled
+- Server-side encryption with AES-256
+- Public access blocked
+
+Would you like me to add any additional configurations?
+```
+
+---
+
+## Workflow
+
+The Kiro agent follows this workflow:
+
+1. **Explore** - Understand your requirements
+2. **Plan** - Design the infrastructure architecture
+3. **Implement** - Generate Go code using wetwire-aws patterns
+4. **Lint** - Run `wetwire_lint` to check for issues
+5. **Build** - Run `wetwire_build` to generate CloudFormation template
+
+---
+
+## Deploying Generated Templates
+
+After Kiro generates your infrastructure code:
+
+```bash
+# Build the CloudFormation template
+wetwire-aws build ./infra > template.json
+
+# Deploy with AWS CLI
+aws cloudformation deploy \
+  --template-file template.json \
+  --stack-name my-stack \
+  --capabilities CAPABILITY_IAM
+
+# Or use SAM CLI for serverless
+sam deploy --template-file template.json --stack-name my-stack --guided
+```
+
+---
+
+## Troubleshooting
+
+### MCP server not found
+
+```
+Mcp error: -32002: No such file or directory
+```
+
+**Solution:** Ensure `wetwire-aws-mcp` is in your PATH:
+
+```bash
+which wetwire-aws-mcp
+
+# If not found, add to PATH or reinstall
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
+```
+
+### Kiro CLI not found
+
+```
+kiro-cli not found in PATH
+```
+
+**Solution:** Install Kiro CLI:
+
+```bash
+curl -fsSL https://cli.kiro.dev/install | bash
+```
+
+### Authentication issues
+
+```
+Error: Not authenticated
+```
+
+**Solution:** Sign in to Kiro:
+
+```bash
+kiro-cli login
+```
+
+---
+
+## See Also
+
+- [CLI Reference](CLI.md) - Full wetwire-aws CLI documentation
+- [Quick Start](QUICK_START.md) - Getting started with wetwire-aws
+- [Kiro CLI Docs](https://kiro.dev/docs/cli/) - Official Kiro documentation
+- [Kiro MCP Integration](https://kiro.dev/docs/cli/mcp/) - MCP configuration reference
