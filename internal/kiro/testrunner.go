@@ -171,7 +171,15 @@ func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
 
 // RunWithPersona runs a test with simulated persona responses.
 // This sends the initial prompt followed by persona-appropriate responses.
-func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, personaResponses []string) (*TestResult, error) {
+func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, persona *Persona) (*TestResult, error) {
+	if persona == nil {
+		return r.Run(ctx, prompt)
+	}
+	return r.runWithResponses(ctx, prompt, persona.Responses)
+}
+
+// runWithResponses runs a test with the given responses to clarifying questions.
+func (r *TestRunner) runWithResponses(ctx context.Context, prompt string, personaResponses []string) (*TestResult, error) {
 	// Check if kiro-cli is installed
 	if _, err := exec.LookPath("kiro-cli"); err != nil {
 		return nil, fmt.Errorf("kiro-cli not found in PATH\n\nInstall Kiro CLI: https://kiro.dev/cli")

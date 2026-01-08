@@ -23,6 +23,7 @@ func newTestCmd() *cobra.Command {
 	var maxLintCycles int
 	var stream bool
 	var provider string
+	var allPersonas bool
 
 	cmd := &cobra.Command{
 		Use:   "test [prompt]",
@@ -42,10 +43,14 @@ Providers:
 
 Example:
     wetwire-aws test --persona beginner "Create an S3 bucket with versioning"
-    wetwire-aws test --provider kiro "Create an S3 bucket"`,
+    wetwire-aws test --provider kiro "Create an S3 bucket"
+    wetwire-aws test --provider kiro --all-personas "Create an S3 bucket"`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			prompt := args[0]
+			if allPersonas {
+				return runTestAllPersonas(prompt, outputDir, scenario, maxLintCycles, stream, provider)
+			}
 			return runTest(prompt, outputDir, personaName, scenario, maxLintCycles, stream, provider)
 		},
 	}
@@ -56,6 +61,7 @@ Example:
 	cmd.Flags().IntVarP(&maxLintCycles, "max-lint-cycles", "l", 3, "Maximum lint/fix cycles")
 	cmd.Flags().BoolVarP(&stream, "stream", "s", false, "Stream AI responses")
 	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
+	cmd.Flags().BoolVar(&allPersonas, "all-personas", false, "Run test with all personas")
 
 	return cmd
 }
@@ -63,7 +69,7 @@ Example:
 func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool, provider string) error {
 	switch provider {
 	case "kiro":
-		return runTestKiro(prompt, outputDir, scenario, stream)
+		return runTestKiro(prompt, outputDir, personaName, scenario, stream)
 	case "anthropic":
 		return runTestAnthropic(prompt, outputDir, personaName, scenario, maxLintCycles, stream)
 	default:
@@ -71,7 +77,52 @@ func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int,
 	}
 }
 
-func runTestKiro(prompt, outputDir, scenario string, stream bool) error {
+func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, stream bool, provider string) error {
+	personaNames := kiro.AllPersonaNames()
+	results := make(map[string]*kiro.TestResult)
+	var failed []string
+
+	fmt.Printf("Running tests with all %d personas\n\n", len(personaNames))
+
+	for _, personaName := range personaNames {
+		// Create persona-specific output directory
+		personaOutputDir := fmt.Sprintf("%s/%s", outputDir, personaName)
+
+		fmt.Printf("=== Running persona: %s ===\n", personaName)
+
+		var err error
+		switch provider {
+		case "kiro":
+			err = runTestKiro(prompt, personaOutputDir, personaName, scenario, stream)
+		case "anthropic":
+			err = runTestAnthropic(prompt, personaOutputDir, personaName, scenario, maxLintCycles, stream)
+		default:
+			return fmt.Errorf("unknown provider: %s", provider)
+		}
+
+		if err != nil {
+			fmt.Printf("Persona %s: FAILED - %v\n\n", personaName, err)
+			failed = append(failed, personaName)
+		} else {
+			fmt.Printf("Persona %s: PASSED\n\n", personaName)
+		}
+	}
+
+	// Print summary
+	fmt.Println("\n=== All Personas Summary ===")
+	fmt.Printf("Total: %d\n", len(personaNames))
+	fmt.Printf("Passed: %d\n", len(personaNames)-len(failed))
+	fmt.Printf("Failed: %d\n", len(failed))
+	if len(failed) > 0 {
+		fmt.Printf("Failed personas: %v\n", failed)
+		return fmt.Errorf("%d personas failed", len(failed))
+	}
+
+	_ = results // For future detailed result tracking
+	return nil
+}
+
+func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) error {
 	// Check if Kiro tests are disabled
 	if os.Getenv("SKIP_KIRO_TESTS") == "1" {
 		fmt.Println("Skipping Kiro test (SKIP_KIRO_TESTS=1)")
@@ -90,6 +141,9 @@ func runTestKiro(prompt, outputDir, scenario string, stream bool) error {
 		cancel()
 	}()
 
+	// Get persona
+	persona, _ := kiro.GetPersona(personaName)
+
 	// Create test runner
 	runner := kiro.NewTestRunner(outputDir)
 
@@ -105,11 +159,11 @@ func runTestKiro(prompt, outputDir, scenario string, stream bool) error {
 		return fmt.Errorf("preparing test environment: %w", err)
 	}
 
-	fmt.Printf("Running Kiro test with scenario '%s'\n", scenario)
+	fmt.Printf("Running Kiro test with persona '%s' and scenario '%s'\n", personaName, scenario)
 	fmt.Printf("Prompt: %s\n\n", prompt)
 
-	// Run the test
-	result, err := runner.Run(ctx, prompt)
+	// Run the test with persona
+	result, err := runner.RunWithPersona(ctx, prompt, persona)
 	if err != nil {
 		return fmt.Errorf("test failed: %w", err)
 	}
@@ -117,6 +171,7 @@ func runTestKiro(prompt, outputDir, scenario string, stream bool) error {
 	// Print summary
 	fmt.Println("\n--- Test Summary ---")
 	fmt.Printf("Provider: kiro\n")
+	fmt.Printf("Persona: %s\n", personaName)
 	fmt.Printf("Scenario: %s\n", scenario)
 	fmt.Printf("Duration: %s\n", result.Duration)
 	fmt.Printf("Success: %v\n", result.Success)
