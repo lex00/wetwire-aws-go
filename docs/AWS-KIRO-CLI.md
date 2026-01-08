@@ -267,6 +267,32 @@ kiro-cli login
 
 ---
 
+## Known Limitations
+
+### Automated Testing
+
+When using `wetwire-aws test --provider kiro`, tests run in non-interactive mode (`--no-interactive`). This means:
+
+- The agent runs autonomously without waiting for user input
+- Persona simulation is limited - all personas behave similarly
+- The agent won't ask clarifying questions
+
+For true persona simulation with multi-turn conversations, use the Anthropic provider:
+
+```bash
+wetwire-aws test --provider anthropic --persona expert "Create an S3 bucket"
+```
+
+### Interactive Design Mode
+
+Interactive design mode (`wetwire-aws design --provider kiro`) works fully as expected:
+
+- Real-time conversation with the agent
+- Agent can ask clarifying questions
+- Lint loop executes as specified in the agent prompt
+
+---
+
 ## See Also
 
 - [CLI Reference](CLI.md) - Full wetwire-aws CLI documentation

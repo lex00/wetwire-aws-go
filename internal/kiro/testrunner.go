@@ -170,7 +170,14 @@ func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
 }
 
 // RunWithPersona runs a test with simulated persona responses.
-// This sends the initial prompt followed by persona-appropriate responses.
+//
+// LIMITATION: With --no-interactive mode, kiro-cli runs autonomously without
+// waiting for user input. The persona responses are sent but likely ignored.
+// This means Kiro tests don't truly simulate different personas - the agent
+// runs the same way regardless of persona. For true persona simulation, use
+// the Anthropic provider which has proper AI developer integration.
+//
+// The persona parameter is kept for API compatibility and future improvements.
 func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, persona *Persona) (*TestResult, error) {
 	if persona == nil {
 		return r.Run(ctx, prompt)

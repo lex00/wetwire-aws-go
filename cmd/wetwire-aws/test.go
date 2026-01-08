@@ -41,6 +41,10 @@ Providers:
   - anthropic (default): Uses Anthropic API with wetwire-core-go
   - kiro: Uses Kiro CLI (set SKIP_KIRO_TESTS=1 to skip in CI)
 
+NOTE: Kiro provider runs in non-interactive mode, so persona simulation is
+limited. The agent runs autonomously without waiting for responses. For true
+persona simulation with multi-turn conversations, use the anthropic provider.
+
 Example:
     wetwire-aws test --persona beginner "Create an S3 bucket with versioning"
     wetwire-aws test --provider kiro "Create an S3 bucket"
