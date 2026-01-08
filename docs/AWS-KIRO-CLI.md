@@ -4,42 +4,46 @@ Use Kiro CLI with wetwire-aws for AI-assisted infrastructure design in corporate
 
 ## Prerequisites
 
-- AWS account with appropriate permissions
 - Go 1.23+ installed
-- Kiro CLI installed ([kiro.dev/cli](https://kiro.dev/cli))
+- Kiro CLI installed ([installation guide](https://kiro.dev/docs/cli/installation/))
+- AWS Builder ID or GitHub/Google account (for Kiro authentication)
 
 ---
 
 ## Step 1: Install wetwire-aws
 
-### Option A: Using uv (recommended)
-
-```bash
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install wetwire-aws via uvx
-uvx --from wetwire-aws wetwire-aws --version
-```
-
-### Option B: Using Go
+### Option A: Using Go (recommended)
 
 ```bash
 go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
 ```
 
-### Option C: Pre-built binaries
+### Option B: Pre-built binaries
 
 Download from [GitHub Releases](https://github.com/lex00/wetwire-aws-go/releases):
 
 ```bash
 # macOS (Apple Silicon)
-curl -L https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-arm64.tar.gz | tar xz
-curl -L https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-arm64.tar.gz | tar xz
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-arm64
+chmod +x wetwire-aws-darwin-arm64
+sudo mv wetwire-aws-darwin-arm64 /usr/local/bin/wetwire-aws
 
-# Move to PATH
-sudo mv wetwire-aws wetwire-aws-mcp /usr/local/bin/
+# macOS (Intel)
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-amd64
+chmod +x wetwire-aws-darwin-amd64
+sudo mv wetwire-aws-darwin-amd64 /usr/local/bin/wetwire-aws
+
+# Linux (x86-64)
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-linux-amd64
+chmod +x wetwire-aws-linux-amd64
+sudo mv wetwire-aws-linux-amd64 /usr/local/bin/wetwire-aws
+```
+
+**Note:** Pre-built binaries only include `wetwire-aws`. For Kiro integration, you must also build `wetwire-aws-mcp` from source:
+
+```bash
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
 ```
 
 ### Verify installation
@@ -267,5 +271,5 @@ kiro-cli login
 
 - [CLI Reference](CLI.md) - Full wetwire-aws CLI documentation
 - [Quick Start](QUICK_START.md) - Getting started with wetwire-aws
+- [Kiro CLI Installation](https://kiro.dev/docs/cli/installation/) - Official installation guide
 - [Kiro CLI Docs](https://kiro.dev/docs/cli/) - Official Kiro documentation
-- [Kiro MCP Integration](https://kiro.dev/docs/cli/mcp/) - MCP configuration reference
