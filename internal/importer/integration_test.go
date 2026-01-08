@@ -94,27 +94,19 @@ func TestExamplesBuild(t *testing.T) {
 				t.Fatalf("wetwire-aws build failed for %s: %v\n%s", example, err, string(buildOutput))
 			}
 
-			// Step 3: Parse and validate the output
-			var result BuildResult
-			if err := json.Unmarshal(buildOutput, &result); err != nil {
+			// Step 3: Parse and validate the output (raw CloudFormation template)
+			var template map[string]any
+			if err := json.Unmarshal(buildOutput, &template); err != nil {
 				t.Fatalf("failed to parse build output for %s: %v\n%s", example, err, string(buildOutput))
 			}
 
-			if !result.Success {
-				t.Fatalf("build failed for %s: %v", example, result.Errors)
+			// Validate it's a CloudFormation template
+			if _, ok := template["AWSTemplateFormatVersion"]; !ok {
+				t.Fatalf("output is not a valid CloudFormation template for %s", example)
 			}
 
 			// Step 4: Check for empty refs in the template
-			// We need to scan the raw JSON map, not the struct
-			var rawResult map[string]any
-			if err := json.Unmarshal(buildOutput, &rawResult); err != nil {
-				t.Fatalf("failed to parse raw output for %s: %v", example, err)
-			}
-			template, ok := rawResult["template"].(map[string]any)
-			if !ok {
-				t.Fatalf("template not found in output for %s", example)
-			}
-			emptyGetAtts, emptyRefs := findEmptyRefs(template, "template")
+			emptyGetAtts, emptyRefs := findEmptyRefs(template, "")
 			// Fail on empty GetAtts (fixed in #86)
 			if len(emptyGetAtts) > 0 {
 				t.Errorf("found %d empty GetAtts in %s:\n%s", len(emptyGetAtts), example, strings.Join(emptyGetAtts, "\n"))
@@ -125,29 +117,14 @@ func TestExamplesBuild(t *testing.T) {
 			}
 
 			// Step 5: Validate resource count
-			if len(result.Resources) == 0 && len(result.Template.Resources) > 0 {
-				t.Errorf("resources list empty but template has %d resources", len(result.Template.Resources))
+			resources, _ := template["Resources"].(map[string]any)
+			if len(resources) == 0 {
+				t.Errorf("template has no resources for %s", example)
 			}
 		})
 	}
 }
 
-// BuildResult matches the JSON output from wetwire-aws build
-type BuildResult struct {
-	Success   bool       `json:"success"`
-	Template  CFTemplate `json:"template"`
-	Resources []string   `json:"resources"`
-	Errors    []string   `json:"errors"`
-}
-
-// CFTemplate represents the CloudFormation template structure
-type CFTemplate struct {
-	AWSTemplateFormatVersion string                    `json:"AWSTemplateFormatVersion"`
-	Parameters               map[string]any            `json:"Parameters"`
-	Conditions               map[string]any            `json:"Conditions"`
-	Resources                map[string]any            `json:"Resources"`
-	Outputs                  map[string]any            `json:"Outputs"`
-}
 
 // findEmptyRefs recursively searches for empty ref patterns in the JSON structure.
 // Returns two lists: empty GetAtts and empty Refs.

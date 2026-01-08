@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -139,19 +138,23 @@ func runBuild(packages []string, format, outputFile string) error {
 }
 
 func outputResult(result wetwire.BuildResult, format, outputFile string) error {
+	// Handle build failures - output errors to stderr
+	if !result.Success {
+		for _, e := range result.Errors {
+			fmt.Fprintln(os.Stderr, e)
+		}
+		return fmt.Errorf("build failed")
+	}
+
+	// Output raw CloudFormation template (matching Python wetwire-aws behavior)
 	var data []byte
 	var err error
 
 	switch format {
 	case "json":
-		data, err = json.MarshalIndent(result, "", "  ")
+		data, err = template.ToJSON(&result.Template)
 	case "yaml":
-		// For YAML, just output the template directly
-		if result.Success {
-			data, err = template.ToYAML(&result.Template)
-		} else {
-			data, err = json.MarshalIndent(result, "", "  ")
-		}
+		data, err = template.ToYAML(&result.Template)
 	default:
 		return fmt.Errorf("unknown format: %s", format)
 	}
