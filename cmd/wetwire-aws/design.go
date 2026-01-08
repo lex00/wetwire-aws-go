@@ -10,6 +10,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/lex00/wetwire-aws-go/internal/kiro"
 	"github.com/lex00/wetwire-core-go/agent/agents"
 	"github.com/lex00/wetwire-core-go/agent/orchestrator"
 	"github.com/lex00/wetwire-core-go/agent/results"
@@ -20,6 +21,7 @@ func newDesignCmd() *cobra.Command {
 	var outputDir string
 	var maxLintCycles int
 	var stream bool
+	var provider string
 
 	cmd := &cobra.Command{
 		Use:   "design [prompt]",
@@ -32,23 +34,63 @@ The AI agent will:
 3. Run the linter and fix any issues
 4. Build the CloudFormation template
 
+Providers:
+    anthropic (default) - Uses Anthropic API directly
+    kiro                - Uses Kiro CLI with wetwire-runner agent
+
 Example:
-    wetwire-aws design "Create a serverless API with Lambda and API Gateway"`,
+    wetwire-aws design "Create a serverless API with Lambda and API Gateway"
+    wetwire-aws design --provider kiro "Create an S3 bucket with versioning"`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			prompt := strings.Join(args, " ")
-			return runDesign(prompt, outputDir, maxLintCycles, stream)
+			return runDesign(prompt, outputDir, maxLintCycles, stream, provider)
 		},
 	}
 
 	cmd.Flags().StringVarP(&outputDir, "output", "o", ".", "Output directory for generated files")
 	cmd.Flags().IntVarP(&maxLintCycles, "max-lint-cycles", "l", 3, "Maximum lint/fix cycles")
 	cmd.Flags().BoolVarP(&stream, "stream", "s", true, "Stream AI responses")
+	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
 
 	return cmd
 }
 
-func runDesign(prompt, outputDir string, maxLintCycles int, stream bool) error {
+func runDesign(prompt, outputDir string, maxLintCycles int, stream bool, provider string) error {
+	switch provider {
+	case "kiro":
+		return runDesignKiro(prompt, outputDir)
+	case "anthropic":
+		return runDesignAnthropic(prompt, outputDir, maxLintCycles, stream)
+	default:
+		return fmt.Errorf("unknown provider: %s (use 'anthropic' or 'kiro')", provider)
+	}
+}
+
+func runDesignKiro(prompt, outputDir string) error {
+	// Change to output directory if specified
+	if outputDir != "." {
+		if err := os.MkdirAll(outputDir, 0755); err != nil {
+			return fmt.Errorf("creating output directory: %w", err)
+		}
+		if err := os.Chdir(outputDir); err != nil {
+			return fmt.Errorf("changing to output directory: %w", err)
+		}
+	}
+
+	// Install Kiro configs if needed
+	if err := kiro.EnsureInstalled(); err != nil {
+		return fmt.Errorf("installing kiro config: %w", err)
+	}
+
+	fmt.Println("Starting Kiro CLI design session...")
+	fmt.Println()
+
+	// Launch Kiro CLI chat
+	return kiro.LaunchChat("wetwire-runner", prompt)
+}
+
+func runDesignAnthropic(prompt, outputDir string, maxLintCycles int, stream bool) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
