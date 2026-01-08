@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/lex00/wetwire-aws-go/internal/kiro"
 	"github.com/lex00/wetwire-core-go/agent/agents"
 	"github.com/lex00/wetwire-core-go/agent/orchestrator"
 	"github.com/lex00/wetwire-core-go/agent/personas"
@@ -21,6 +22,7 @@ func newTestCmd() *cobra.Command {
 	var scenario string
 	var maxLintCycles int
 	var stream bool
+	var provider string
 
 	cmd := &cobra.Command{
 		Use:   "test [prompt]",
@@ -34,12 +36,17 @@ Available personas:
   - terse: Gives minimal responses
   - verbose: Provides detailed context
 
+Providers:
+  - anthropic (default): Uses Anthropic API with wetwire-core-go
+  - kiro: Uses Kiro CLI (set SKIP_KIRO_TESTS=1 to skip in CI)
+
 Example:
-    wetwire-aws test --persona beginner "Create an S3 bucket with versioning"`,
+    wetwire-aws test --persona beginner "Create an S3 bucket with versioning"
+    wetwire-aws test --provider kiro "Create an S3 bucket"`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			prompt := args[0]
-			return runTest(prompt, outputDir, personaName, scenario, maxLintCycles, stream)
+			return runTest(prompt, outputDir, personaName, scenario, maxLintCycles, stream, provider)
 		},
 	}
 
@@ -48,11 +55,92 @@ Example:
 	cmd.Flags().StringVarP(&scenario, "scenario", "S", "default", "Scenario name for tracking")
 	cmd.Flags().IntVarP(&maxLintCycles, "max-lint-cycles", "l", 3, "Maximum lint/fix cycles")
 	cmd.Flags().BoolVarP(&stream, "stream", "s", false, "Stream AI responses")
+	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
 
 	return cmd
 }
 
-func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool) error {
+func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool, provider string) error {
+	switch provider {
+	case "kiro":
+		return runTestKiro(prompt, outputDir, scenario, stream)
+	case "anthropic":
+		return runTestAnthropic(prompt, outputDir, personaName, scenario, maxLintCycles, stream)
+	default:
+		return fmt.Errorf("unknown provider: %s (use 'anthropic' or 'kiro')", provider)
+	}
+}
+
+func runTestKiro(prompt, outputDir, scenario string, stream bool) error {
+	// Check if Kiro tests are disabled
+	if os.Getenv("SKIP_KIRO_TESTS") == "1" {
+		fmt.Println("Skipping Kiro test (SKIP_KIRO_TESTS=1)")
+		return nil
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Handle interrupt
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigCh
+		fmt.Println("\nInterrupted, cleaning up...")
+		cancel()
+	}()
+
+	// Create test runner
+	runner := kiro.NewTestRunner(outputDir)
+
+	// Set up streaming if enabled
+	if stream {
+		runner.StreamHandler = func(text string) {
+			fmt.Print(text)
+		}
+	}
+
+	// Ensure test environment is ready
+	if err := runner.EnsureTestEnvironment(); err != nil {
+		return fmt.Errorf("preparing test environment: %w", err)
+	}
+
+	fmt.Printf("Running Kiro test with scenario '%s'\n", scenario)
+	fmt.Printf("Prompt: %s\n\n", prompt)
+
+	// Run the test
+	result, err := runner.Run(ctx, prompt)
+	if err != nil {
+		return fmt.Errorf("test failed: %w", err)
+	}
+
+	// Print summary
+	fmt.Println("\n--- Test Summary ---")
+	fmt.Printf("Provider: kiro\n")
+	fmt.Printf("Scenario: %s\n", scenario)
+	fmt.Printf("Duration: %s\n", result.Duration)
+	fmt.Printf("Success: %v\n", result.Success)
+	fmt.Printf("Lint passed: %v\n", result.LintPassed)
+	fmt.Printf("Build passed: %v\n", result.BuildPassed)
+	fmt.Printf("Files created: %d\n", len(result.FilesCreated))
+	for _, f := range result.FilesCreated {
+		fmt.Printf("  - %s\n", f)
+	}
+	if len(result.ErrorMessages) > 0 {
+		fmt.Println("Errors:")
+		for _, e := range result.ErrorMessages {
+			fmt.Printf("  - %s\n", e)
+		}
+	}
+
+	if !result.Success {
+		return fmt.Errorf("test failed")
+	}
+
+	return nil
+}
+
+func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
