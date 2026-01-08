@@ -8,14 +8,24 @@ package kiro
 
 import (
 	"embed"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 )
 
 //go:embed configs/wetwire-runner.json
-//go:embed configs/mcp.json
 var configFS embed.FS
+
+// mcpConfig represents the MCP configuration structure.
+type mcpConfig struct {
+	MCPServers map[string]mcpServer `json:"mcpServers"`
+}
+
+type mcpServer struct {
+	Command string   `json:"command"`
+	Args    []string `json:"args"`
+}
 
 // EnsureInstalled checks if Kiro configs are installed and installs them if needed.
 // It installs:
@@ -42,6 +52,16 @@ func EnsureInstalled() error {
 	}
 
 	return nil
+}
+
+// agentConfig represents the Kiro agent configuration structure.
+type agentConfig struct {
+	Name        string                  `json:"name"`
+	Description string                  `json:"description"`
+	Prompt      string                  `json:"prompt"`
+	Model       string                  `json:"model"`
+	MCPServers  map[string]mcpServer    `json:"mcpServers"`
+	Tools       []string                `json:"tools"`
 }
 
 // ensureAgentConfig installs the wetwire-runner agent to ~/.kiro/agents/
@@ -71,8 +91,30 @@ func ensureAgentConfig() (bool, error) {
 		return false, fmt.Errorf("reading embedded config: %w", err)
 	}
 
+	// Parse and update with full MCP binary path
+	var config agentConfig
+	if err := json.Unmarshal(data, &config); err != nil {
+		return false, fmt.Errorf("parsing embedded config: %w", err)
+	}
+
+	// Update MCP server command with full path
+	mcpBinaryPath := findMCPBinaryPath()
+	if config.MCPServers == nil {
+		config.MCPServers = make(map[string]mcpServer)
+	}
+	config.MCPServers["wetwire"] = mcpServer{
+		Command: mcpBinaryPath,
+		Args:    []string{},
+	}
+
+	// Marshal back to JSON
+	updatedData, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return false, fmt.Errorf("marshaling config: %w", err)
+	}
+
 	// Write config
-	if err := os.WriteFile(agentPath, data, 0644); err != nil {
+	if err := os.WriteFile(agentPath, updatedData, 0644); err != nil {
 		return false, fmt.Errorf("writing config: %w", err)
 	}
 
@@ -95,10 +137,22 @@ func ensureProjectMCPConfig() (bool, error) {
 		return false, fmt.Errorf("creating .kiro directory: %w", err)
 	}
 
-	// Read embedded config
-	data, err := configFS.ReadFile("configs/mcp.json")
+	// Find wetwire-aws-mcp binary path
+	mcpBinaryPath := findMCPBinaryPath()
+
+	// Generate config with full path
+	config := mcpConfig{
+		MCPServers: map[string]mcpServer{
+			"wetwire": {
+				Command: mcpBinaryPath,
+				Args:    []string{},
+			},
+		},
+	}
+
+	data, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
-		return false, fmt.Errorf("reading embedded config: %w", err)
+		return false, fmt.Errorf("marshaling config: %w", err)
 	}
 
 	// Write config
@@ -107,4 +161,22 @@ func ensureProjectMCPConfig() (bool, error) {
 	}
 
 	return true, nil
+}
+
+// findMCPBinaryPath returns the path to wetwire-aws-mcp.
+// It looks in the same directory as the current executable first,
+// then falls back to just the binary name (requiring PATH).
+func findMCPBinaryPath() string {
+	// Try to find it next to the current executable
+	exe, err := os.Executable()
+	if err == nil {
+		exeDir := filepath.Dir(exe)
+		mcpPath := filepath.Join(exeDir, "wetwire-aws-mcp")
+		if _, err := os.Stat(mcpPath); err == nil {
+			return mcpPath
+		}
+	}
+
+	// Fall back to requiring PATH
+	return "wetwire-aws-mcp"
 }

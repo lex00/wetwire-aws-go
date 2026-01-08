@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "wetwire": {
-      "command": "wetwire-aws-mcp",
-      "args": []
-    }
-  }
-}

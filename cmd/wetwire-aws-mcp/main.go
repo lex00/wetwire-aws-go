@@ -47,8 +47,8 @@ func main() {
 
 // InitArgs are the arguments for the wetwire_init tool.
 type InitArgs struct {
-	Path       string `json:"path" jsonschema:"description=Path to create the project at"`
-	ModuleName string `json:"module_name,omitempty" jsonschema:"description=Go module name (defaults to path basename)"`
+	Path       string `json:"path" jsonschema:"Path to create the project at"`
+	ModuleName string `json:"module_name,omitempty" jsonschema:"Go module name (defaults to path basename)"`
 }
 
 // InitResult is the result of the wetwire_init tool.
@@ -196,7 +196,7 @@ Thumbs.db
 
 // LintArgs are the arguments for the wetwire_lint tool.
 type LintArgs struct {
-	Path string `json:"path" jsonschema:"description=Path to the Go package(s) to lint (e.g. ./infra/...)"`
+	Path string `json:"path" jsonschema:"Path to the Go package(s) to lint (e.g. ./infra/...)"`
 }
 
 func registerLintTool(server *mcp.Server) {
@@ -272,8 +272,8 @@ func handleLint(_ context.Context, _ *mcp.CallToolRequest, args LintArgs) (*mcp.
 
 // BuildArgs are the arguments for the wetwire_build tool.
 type BuildArgs struct {
-	Path   string `json:"path" jsonschema:"description=Path to the Go package(s) to build (e.g. ./infra/...)"`
-	Format string `json:"format,omitempty" jsonschema:"description=Output format: json or yaml (default: json)"`
+	Path   string `json:"path" jsonschema:"Path to the Go package(s) to build (e.g. ./infra/...)"`
+	Format string `json:"format,omitempty" jsonschema:"Output format: json or yaml (default: json)"`
 }
 
 // BuildResult is the result of the wetwire_build tool.
