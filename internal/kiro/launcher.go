@@ -14,7 +14,7 @@ func LaunchChat(agentName, initialPrompt string) error {
 		return fmt.Errorf("kiro-cli not found in PATH\n\nInstall Kiro CLI: https://kiro.dev/cli")
 	}
 
-	args := []string{"chat", "--agent", agentName}
+	args := []string{"chat", "--agent", agentName, "--model", "claude-sonnet-4"}
 	if initialPrompt != "" {
 		args = append(args, initialPrompt)
 	}

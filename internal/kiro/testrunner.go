@@ -54,7 +54,7 @@ func (r *TestRunner) Run(ctx context.Context, prompt string) (*TestResult, error
 	// Build kiro-cli command
 	// --no-interactive: Don't wait for user input
 	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
-	args := []string{"chat", "--agent", r.AgentName, "--no-interactive", "--trust-all-tools"}
+	args := []string{"chat", "--agent", r.AgentName, "--model", "claude-sonnet-4", "--no-interactive", "--trust-all-tools"}
 	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
 	cmd.Dir = r.WorkDir
 
@@ -192,7 +192,7 @@ func (r *TestRunner) runWithResponses(ctx context.Context, prompt string, person
 	// Build kiro-cli command
 	// --no-interactive: Don't wait for user input
 	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
-	args := []string{"chat", "--agent", r.AgentName, "--no-interactive", "--trust-all-tools"}
+	args := []string{"chat", "--agent", r.AgentName, "--model", "claude-sonnet-4", "--no-interactive", "--trust-all-tools"}
 	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
 	cmd.Dir = r.WorkDir
 
