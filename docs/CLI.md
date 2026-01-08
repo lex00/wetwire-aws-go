@@ -303,7 +303,9 @@ var MyBucket = s3.Bucket{
 
 AI-assisted infrastructure design. Starts an interactive session where you describe infrastructure in natural language and the AI generates wetwire-aws Go code.
 
-**Requires:** `wetwire-core-go` (AI orchestration) and an Anthropic API key in `ANTHROPIC_API_KEY`.
+**Providers:**
+- `anthropic` (default) - Uses Anthropic API directly. Requires `ANTHROPIC_API_KEY`.
+- `kiro` - Uses Kiro CLI with wetwire-runner agent. See [Kiro CLI Integration](AWS-KIRO-CLI.md).
 
 ```bash
 # Start design session with a prompt
@@ -321,6 +323,7 @@ wetwire-aws design -s=false "Create a VPC with public and private subnets"
 | Option | Description |
 |--------|-------------|
 | `prompt` | Natural language description of infrastructure (required) |
+| `--provider` | AI provider: `anthropic` or `kiro` (default: `anthropic`) |
 | `-o, --output` | Output directory (default: `.`) |
 | `-l, --max-lint-cycles` | Maximum lint/fix cycles before giving up (default: 3) |
 | `-s, --stream` | Stream AI responses to terminal (default: true) |
@@ -490,3 +493,4 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 
 - [Quick Start](QUICK_START.md) - Create your first project
 - [SAM Guide](SAM.md) - Serverless Application Model resources
+- [Kiro CLI Integration](AWS-KIRO-CLI.md) - Use Kiro CLI for AI-assisted design
