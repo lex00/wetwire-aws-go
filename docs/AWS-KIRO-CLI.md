@@ -26,24 +26,24 @@ Download from [GitHub Releases](https://github.com/lex00/wetwire-aws-go/releases
 ```bash
 # macOS (Apple Silicon)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-arm64
-chmod +x wetwire-aws-darwin-arm64
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-arm64
+chmod +x wetwire-aws-darwin-arm64 wetwire-aws-mcp-darwin-arm64
 sudo mv wetwire-aws-darwin-arm64 /usr/local/bin/wetwire-aws
+sudo mv wetwire-aws-mcp-darwin-arm64 /usr/local/bin/wetwire-aws-mcp
 
 # macOS (Intel)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-amd64
-chmod +x wetwire-aws-darwin-amd64
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-amd64
+chmod +x wetwire-aws-darwin-amd64 wetwire-aws-mcp-darwin-amd64
 sudo mv wetwire-aws-darwin-amd64 /usr/local/bin/wetwire-aws
+sudo mv wetwire-aws-mcp-darwin-amd64 /usr/local/bin/wetwire-aws-mcp
 
 # Linux (x86-64)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-linux-amd64
-chmod +x wetwire-aws-linux-amd64
+curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-linux-amd64
+chmod +x wetwire-aws-linux-amd64 wetwire-aws-mcp-linux-amd64
 sudo mv wetwire-aws-linux-amd64 /usr/local/bin/wetwire-aws
-```
-
-**Note:** Pre-built binaries only include `wetwire-aws`. For Kiro integration, you must also build `wetwire-aws-mcp` from source:
-
-```bash
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
+sudo mv wetwire-aws-mcp-linux-amd64 /usr/local/bin/wetwire-aws-mcp
 ```
 
 ### Verify installation
