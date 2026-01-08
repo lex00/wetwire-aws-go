@@ -85,15 +85,10 @@ func runDesignKiro(prompt, outputDir string) error {
 		}
 	}
 
-	// Install Kiro configs if needed
-	if err := kiro.EnsureInstalled(); err != nil {
-		return fmt.Errorf("installing kiro config: %w", err)
-	}
-
 	fmt.Println("Starting Kiro CLI design session...")
 	fmt.Println()
 
-	// Launch Kiro CLI chat
+	// Launch Kiro CLI chat (handles config installation internally)
 	return kiro.LaunchChat("wetwire-runner", prompt)
 }
 

@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -32,14 +33,20 @@ type mcpServer struct {
 //   - ~/.kiro/agents/wetwire-runner.json (user-level agent config)
 //   - .kiro/mcp.json (project-level MCP config)
 //
-// Existing files are not overwritten.
+// Existing files are not overwritten unless force is true.
 func EnsureInstalled() error {
-	agentInstalled, err := ensureAgentConfig()
+	return EnsureInstalledWithForce(false)
+}
+
+// EnsureInstalledWithForce installs Kiro configs, optionally overwriting existing ones.
+// When force is true, configs are always reinstalled to ensure latest prompt is used.
+func EnsureInstalledWithForce(force bool) error {
+	agentInstalled, err := ensureAgentConfig(force)
 	if err != nil {
 		return fmt.Errorf("installing agent config: %w", err)
 	}
 
-	mcpInstalled, err := ensureProjectMCPConfig()
+	mcpInstalled, err := ensureProjectMCPConfig(force)
 	if err != nil {
 		return fmt.Errorf("installing project MCP config: %w", err)
 	}
@@ -65,8 +72,8 @@ type agentConfig struct {
 }
 
 // ensureAgentConfig installs the wetwire-runner agent to ~/.kiro/agents/
-// Returns true if the file was installed (didn't exist before).
-func ensureAgentConfig() (bool, error) {
+// Returns true if the file was installed.
+func ensureAgentConfig(force bool) (bool, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return false, fmt.Errorf("getting home directory: %w", err)
@@ -75,8 +82,8 @@ func ensureAgentConfig() (bool, error) {
 	agentDir := filepath.Join(homeDir, ".kiro", "agents")
 	agentPath := filepath.Join(agentDir, "wetwire-runner.json")
 
-	// Check if already exists
-	if _, err := os.Stat(agentPath); err == nil {
+	// Check if already exists (skip if not forcing)
+	if _, err := os.Stat(agentPath); err == nil && !force {
 		return false, nil // Already exists, don't overwrite
 	}
 
@@ -97,15 +104,11 @@ func ensureAgentConfig() (bool, error) {
 		return false, fmt.Errorf("parsing embedded config: %w", err)
 	}
 
-	// Update MCP server command with full path
-	mcpBinaryPath := findMCPBinaryPath()
+	// Update MCP server with correct command
 	if config.MCPServers == nil {
 		config.MCPServers = make(map[string]mcpServer)
 	}
-	config.MCPServers["wetwire"] = mcpServer{
-		Command: mcpBinaryPath,
-		Args:    []string{},
-	}
+	config.MCPServers["wetwire"] = getMCPServerConfig()
 
 	// Marshal back to JSON
 	updatedData, err := json.MarshalIndent(config, "", "  ")
@@ -122,13 +125,13 @@ func ensureAgentConfig() (bool, error) {
 }
 
 // ensureProjectMCPConfig installs the MCP config to .kiro/mcp.json in the current directory.
-// Returns true if the file was installed (didn't exist before).
-func ensureProjectMCPConfig() (bool, error) {
+// Returns true if the file was installed.
+func ensureProjectMCPConfig(force bool) (bool, error) {
 	mcpDir := ".kiro"
 	mcpPath := filepath.Join(mcpDir, "mcp.json")
 
-	// Check if already exists
-	if _, err := os.Stat(mcpPath); err == nil {
+	// Check if already exists (skip if not forcing)
+	if _, err := os.Stat(mcpPath); err == nil && !force {
 		return false, nil // Already exists, don't overwrite
 	}
 
@@ -137,16 +140,10 @@ func ensureProjectMCPConfig() (bool, error) {
 		return false, fmt.Errorf("creating .kiro directory: %w", err)
 	}
 
-	// Find wetwire-aws-mcp binary path
-	mcpBinaryPath := findMCPBinaryPath()
-
-	// Generate config with full path
+	// Generate config with MCP server
 	config := mcpConfig{
 		MCPServers: map[string]mcpServer{
-			"wetwire": {
-				Command: mcpBinaryPath,
-				Args:    []string{},
-			},
+			"wetwire": getMCPServerConfig(),
 		},
 	}
 
@@ -165,7 +162,7 @@ func ensureProjectMCPConfig() (bool, error) {
 
 // findMCPBinaryPath returns the path to wetwire-aws-mcp.
 // It looks in the same directory as the current executable first,
-// then falls back to just the binary name (requiring PATH).
+// then checks PATH, then returns empty string for go run fallback.
 func findMCPBinaryPath() string {
 	// Try to find it next to the current executable
 	exe, err := os.Executable()
@@ -177,6 +174,29 @@ func findMCPBinaryPath() string {
 		}
 	}
 
-	// Fall back to requiring PATH
-	return "wetwire-aws-mcp"
+	// Check if it's in PATH
+	if path, err := exec.LookPath("wetwire-aws-mcp"); err == nil {
+		return path
+	}
+
+	// Return empty to trigger go run fallback
+	return ""
+}
+
+// getMCPServerConfig returns the mcpServer config for wetwire-aws-mcp.
+// Uses absolute path if found, otherwise falls back to go run.
+func getMCPServerConfig() mcpServer {
+	mcpPath := findMCPBinaryPath()
+	if mcpPath != "" {
+		return mcpServer{
+			Command: mcpPath,
+			Args:    []string{},
+		}
+	}
+
+	// Fallback to go run
+	return mcpServer{
+		Command: "go",
+		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest"},
+	}
 }
