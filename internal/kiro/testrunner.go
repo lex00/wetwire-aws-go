@@ -52,7 +52,9 @@ func (r *TestRunner) Run(ctx context.Context, prompt string) (*TestResult, error
 	defer cancel()
 
 	// Build kiro-cli command
-	args := []string{"chat", "--agent", r.AgentName, "--no-interactive"}
+	// --no-interactive: Don't wait for user input
+	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
+	args := []string{"chat", "--agent", r.AgentName, "--no-interactive", "--trust-all-tools"}
 	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
 	cmd.Dir = r.WorkDir
 
@@ -180,7 +182,9 @@ func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, personaR
 	defer cancel()
 
 	// Build kiro-cli command
-	args := []string{"chat", "--agent", r.AgentName, "--no-interactive"}
+	// --no-interactive: Don't wait for user input
+	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
+	args := []string{"chat", "--agent", r.AgentName, "--no-interactive", "--trust-all-tools"}
 	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
 	cmd.Dir = r.WorkDir
 
