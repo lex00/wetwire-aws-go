@@ -35,15 +35,22 @@ The AI agent will:
 4. Build the CloudFormation template
 
 Providers:
-    anthropic (default) - Uses Anthropic API directly
+    anthropic (default) - Uses Anthropic API directly (requires prompt)
     kiro                - Uses Kiro CLI with wetwire-runner agent
+
+With the Kiro provider, you can omit the prompt and the agent will ask what
+you'd like to create. The Anthropic provider requires an initial prompt.
 
 Example:
     wetwire-aws design "Create a serverless API with Lambda and API Gateway"
-    wetwire-aws design --provider kiro "Create an S3 bucket with versioning"`,
-		Args: cobra.MinimumNArgs(1),
+    wetwire-aws design --provider kiro "Create an S3 bucket with versioning"
+    wetwire-aws design --provider kiro`,
+		Args: cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			prompt := strings.Join(args, " ")
+			if prompt == "" && provider != "kiro" {
+				return fmt.Errorf("prompt is required for the %s provider", provider)
+			}
 			return runDesign(prompt, outputDir, maxLintCycles, stream, provider)
 		},
 	}
