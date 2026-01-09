@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-01-08
+
+### Added
+
+- Kiro TestRunner: PTY handling via `script` command (#104)
+  - kiro-cli requires TTY even with `--no-interactive`
+  - Supports both macOS and Linux `script` syntax
+  - Enables reliable automated testing
+- Kiro agent prompt: ASCII state machine diagram for lint-fix loop
+  - Visual workflow enforcement matching Python implementation
+
 ## [1.6.0] - 2026-01-08
 
 ### Added
