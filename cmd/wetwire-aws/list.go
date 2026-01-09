@@ -11,6 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 )
 
+// newListCmd creates the "list" subcommand for showing discovered resources.
 func newListCmd() *cobra.Command {
 	var outputFormat string
 
@@ -33,6 +34,7 @@ Examples:
 	return cmd
 }
 
+// runList discovers and displays resources in the given packages.
 func runList(packages []string, format string) error {
 	// Discover resources
 	result, err := discover.Discover(discover.Options{

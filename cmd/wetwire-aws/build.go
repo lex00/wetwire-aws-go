@@ -12,6 +12,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/template"
 )
 
+// newBuildCmd creates the "build" subcommand for generating CloudFormation templates.
 func newBuildCmd() *cobra.Command {
 	var (
 		outputFormat string
@@ -39,6 +40,8 @@ Examples:
 	return cmd
 }
 
+// runBuild discovers resources in the given packages and generates a CloudFormation template.
+// It uses AST-based discovery to find resources, then builds and serializes the template.
 func runBuild(packages []string, format, outputFile string) error {
 	// Discover resources and other template components
 	result, err := discover.Discover(discover.Options{

@@ -10,6 +10,9 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/graph"
 )
 
+// newGraphCmd creates the "graph" subcommand for visualizing resource dependencies.
+// It generates DOT or Mermaid format output that can be rendered with Graphviz
+// or embedded in GitHub markdown.
 func newGraphCmd() *cobra.Command {
 	var (
 		outputFormat      string
@@ -46,6 +49,9 @@ Examples:
 	return cmd
 }
 
+// runGraph discovers resources in the given packages and generates a dependency graph.
+// The format parameter controls output format (dot or mermaid), includeParams adds
+// parameter nodes, and cluster groups resources by AWS service type.
 func runGraph(packages []string, format string, includeParams bool, cluster bool) error {
 	// Discover resources
 	result, err := discover.Discover(discover.Options{

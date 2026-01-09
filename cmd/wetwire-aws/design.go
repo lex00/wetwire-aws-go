@@ -17,6 +17,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// newDesignCmd creates the "design" subcommand for AI-assisted infrastructure design.
+// It supports both Anthropic API and Kiro CLI providers for interactive code generation.
 func newDesignCmd() *cobra.Command {
 	var outputDir string
 	var maxLintCycles int
@@ -71,6 +73,8 @@ Example:
 	return cmd
 }
 
+// runDesign starts an AI-assisted design session with the specified provider.
+// It dispatches to either Kiro CLI or Anthropic API based on the provider parameter.
 func runDesign(prompt, outputDir string, maxLintCycles int, stream bool, provider string) error {
 	switch provider {
 	case "kiro":
@@ -82,6 +86,7 @@ func runDesign(prompt, outputDir string, maxLintCycles int, stream bool, provide
 	}
 }
 
+// runDesignKiro launches an interactive Kiro CLI session with the wetwire-runner agent.
 func runDesignKiro(prompt, outputDir string) error {
 	// Change to output directory if specified
 	if outputDir != "." {
@@ -100,6 +105,8 @@ func runDesignKiro(prompt, outputDir string) error {
 	return kiro.LaunchChat("wetwire-runner", prompt)
 }
 
+// runDesignAnthropic runs an interactive design session using the Anthropic API directly.
+// It creates a runner agent that generates code, runs the linter, and fixes issues.
 func runDesignAnthropic(prompt, outputDir string, maxLintCycles int, stream bool) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

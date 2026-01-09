@@ -12,6 +12,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/linter"
 )
 
+// newLintCmd creates the "lint" subcommand for checking Go code style.
 func newLintCmd() *cobra.Command {
 	var (
 		outputFormat string
@@ -46,6 +47,7 @@ Examples:
 	return cmd
 }
 
+// runLint checks packages for style violations using the linter rules.
 func runLint(packages []string, format string, fix bool) error {
 	var issues []wetwire.LintIssue
 

@@ -11,6 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/importer"
 )
 
+// newImportCmd creates the "import" subcommand for converting YAML templates to Go.
 func newImportCmd() *cobra.Command {
 	var (
 		outputDir   string
