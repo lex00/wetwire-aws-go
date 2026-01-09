@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
@@ -39,8 +40,8 @@ func runMCPServer() error {
 
 // InitArgs are the arguments for the wetwire_init tool.
 type InitArgs struct {
-	Path       string `json:"path" jsonschema:"Path to create the project at"`
-	ModuleName string `json:"module_name,omitempty" jsonschema:"Go module name (defaults to path basename)"`
+	Name string `json:"name" jsonschema:"required,Project name (e.g. data-bucket, api-gateway)"`
+	Path string `json:"path,omitempty" jsonschema:"Workspace directory to create project in (defaults to current directory)"`
 }
 
 // InitResult is the result of the wetwire_init tool.
@@ -51,39 +52,61 @@ type InitResult struct {
 	Error   string   `json:"error,omitempty"`
 }
 
+// validProjectName matches valid Go module/project names
+var validMCPProjectName = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_-]*$`)
+
 func registerInitTool(server *mcp.Server) {
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "wetwire_init",
-		Description: "Initialize a new wetwire-aws project with Go module and example resources",
+		Description: "Initialize a new wetwire-aws project in a subdirectory. Creates {path}/{name}/ with go.mod and infra/ directory.",
 	}, handleInit)
 }
 
 func handleInit(_ context.Context, _ *mcp.CallToolRequest, args InitArgs) (*mcp.CallToolResult, any, error) {
-	result := InitResult{Path: args.Path}
+	result := InitResult{}
 
-	if args.Path == "" {
-		result.Error = "path is required"
+	if args.Name == "" {
+		result.Error = "name is required"
+		return toolResult(result)
+	}
+
+	// Validate project name
+	if !validMCPProjectName.MatchString(args.Name) {
+		result.Error = fmt.Sprintf("invalid project name %q: must start with a letter and contain only letters, numbers, hyphens, or underscores", args.Name)
+		return toolResult(result)
+	}
+
+	// Default path to current directory
+	workspaceDir := args.Path
+	if workspaceDir == "" {
+		workspaceDir = "."
+	}
+
+	// Create project as subdirectory of workspace
+	projectPath := filepath.Join(workspaceDir, args.Name)
+	result.Path = projectPath
+
+	// Check if project already exists
+	if _, err := os.Stat(projectPath); err == nil {
+		result.Error = fmt.Sprintf("project already exists: %s", projectPath)
 		return toolResult(result)
 	}
 
 	// Create project directory
-	if err := os.MkdirAll(args.Path, 0755); err != nil {
+	if err := os.MkdirAll(projectPath, 0755); err != nil {
 		result.Error = fmt.Sprintf("creating project directory: %v", err)
 		return toolResult(result)
 	}
 
 	// Create infra subdirectory
-	infraDir := filepath.Join(args.Path, "infra")
+	infraDir := filepath.Join(projectPath, "infra")
 	if err := os.MkdirAll(infraDir, 0755); err != nil {
 		result.Error = fmt.Sprintf("creating infra directory: %v", err)
 		return toolResult(result)
 	}
 
-	// Get the module name
-	moduleName := args.ModuleName
-	if moduleName == "" {
-		moduleName = filepath.Base(args.Path)
-	}
+	// Use project name as module name
+	moduleName := args.Name
 
 	// Write go.mod
 	goMod := fmt.Sprintf(`module %s
@@ -93,32 +116,12 @@ go 1.23
 require github.com/lex00/wetwire-aws-go v1.2.3
 `, moduleName)
 
-	goModPath := filepath.Join(args.Path, "go.mod")
+	goModPath := filepath.Join(projectPath, "go.mod")
 	if err := os.WriteFile(goModPath, []byte(goMod), 0644); err != nil {
 		result.Error = fmt.Sprintf("writing go.mod: %v", err)
 		return toolResult(result)
 	}
 	result.Files = append(result.Files, "go.mod")
-
-	// Write main.go
-	mainGo := `package main
-
-import (
-	"fmt"
-
-	_ "` + moduleName + `/infra" // Register resources
-)
-
-func main() {
-	fmt.Println("Run: wetwire-aws build ./infra/...")
-}
-`
-	mainGoPath := filepath.Join(args.Path, "main.go")
-	if err := os.WriteFile(mainGoPath, []byte(mainGo), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing main.go: %v", err)
-		return toolResult(result)
-	}
-	result.Files = append(result.Files, "main.go")
 
 	// Write infra/resources.go
 	resourcesGo := `package infra
@@ -239,7 +242,7 @@ template.yaml
 .DS_Store
 Thumbs.db
 `
-	gitignorePath := filepath.Join(args.Path, ".gitignore")
+	gitignorePath := filepath.Join(projectPath, ".gitignore")
 	if err := os.WriteFile(gitignorePath, []byte(gitignore), 0644); err != nil {
 		result.Error = fmt.Sprintf("writing .gitignore: %v", err)
 		return toolResult(result)
