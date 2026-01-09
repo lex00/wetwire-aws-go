@@ -437,122 +437,52 @@ func getVar(name string) any {
 `))
 
 // ExtractValues runs a generated Go program to extract resource values.
+// Deprecated: Use ExtractAll instead which supports Parameters, Outputs, etc.
 func ExtractValues(pkgPath string, resources map[string]wetwire.DiscoveredResource) (map[string]map[string]any, error) {
 	if len(resources) == 0 {
 		return nil, nil
 	}
 
-	// Get absolute package path
-	absPath, err := filepath.Abs(pkgPath)
-	if err != nil {
-		return nil, fmt.Errorf("getting absolute path: %w", err)
-	}
-
-	// Read go.mod to find the module path and replace directives
-	modInfo, err := findGoModInfo(absPath)
-	if err != nil {
-		return nil, fmt.Errorf("finding module info: %w", err)
-	}
-
-	// Calculate import path
-	importPath := modInfo.ModulePath
-
-	// Get the first var name (needed to force the import)
-	var firstVar string
+	// Collect var names from resources
 	varNames := make([]string, 0, len(resources))
 	for name := range resources {
 		varNames = append(varNames, name)
-		if firstVar == "" {
-			firstVar = name
-		}
 	}
 
-	// Create temp directory for runner
-	tmpDir, err := os.MkdirTemp("", "wetwire-runner-*")
-	if err != nil {
-		return nil, fmt.Errorf("creating temp dir: %w", err)
-	}
-	defer func() { _ = os.RemoveAll(tmpDir) }()
+	// Delegate to the common extraction function
+	return extractVarValues(pkgPath, varNames)
+}
 
-	// Generate runner main.go
-	runnerPath := filepath.Join(tmpDir, "main.go")
-	f, err := os.Create(runnerPath)
-	if err != nil {
-		return nil, fmt.Errorf("creating runner file: %w", err)
-	}
+// hasVendorDir checks if the given directory has a vendor subdirectory.
+func hasVendorDir(dir string) bool {
+	vendorPath := filepath.Join(dir, "vendor")
+	info, err := os.Stat(vendorPath)
+	return err == nil && info.IsDir()
+}
 
-	data := struct {
-		ImportPath string
-		FirstVar   string
-		VarNames   []string
-	}{
-		ImportPath: importPath,
-		FirstVar:   firstVar,
-		VarNames:   varNames,
-	}
+// shouldUseSubdirRunner returns true if we should use the in-module runner approach.
+// This is preferred when vendor/ exists as it allows offline builds.
+func shouldUseSubdirRunner(dir string) bool {
+	return hasVendorDir(dir)
+}
 
-	if err := runnerTemplate.Execute(f, data); err != nil {
-		_ = f.Close()
-		return nil, fmt.Errorf("executing template: %w", err)
-	}
-	_ = f.Close()
+// createRunnerSubdir creates a _wetwire_runner subdirectory in the given module directory.
+// Returns the path to the runner directory and a cleanup function.
+func createRunnerSubdir(moduleDir string) (string, func(), error) {
+	runnerDir := filepath.Join(moduleDir, "_wetwire_runner")
 
-	// Create go.mod for the runner
-	goModPath := filepath.Join(tmpDir, "go.mod")
+	// Remove any existing runner directory
+	_ = os.RemoveAll(runnerDir)
 
-	// Build replace directives - start with the user's package
-	var replaceDirectives strings.Builder
-	replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, absPath))
-
-	// Add any replace directives from the target package's go.mod
-	// (e.g., for local development dependencies like github.com/lex00/wetwire-aws-go)
-	for _, repl := range modInfo.Replaces {
-		// Resolve relative paths to absolute
-		resolved := resolveReplacePath(repl, modInfo.GoModDir)
-		replaceDirectives.WriteString(resolved + "\n")
+	if err := os.MkdirAll(runnerDir, 0755); err != nil {
+		return "", nil, fmt.Errorf("creating runner directory: %w", err)
 	}
 
-	goModContent := fmt.Sprintf(`module runner
-
-go 1.23.0
-
-require %s v0.0.0
-
-%s`, modInfo.ModulePath, replaceDirectives.String())
-	if err := os.WriteFile(goModPath, []byte(goModContent), 0644); err != nil {
-		return nil, fmt.Errorf("writing go.mod: %w", err)
+	cleanup := func() {
+		_ = os.RemoveAll(runnerDir)
 	}
 
-	// Find Go executable - check common paths if not in PATH
-	goBin := findGoBinary()
-
-	// Run go mod tidy
-	tidyCmd := exec.Command(goBin, "mod", "tidy")
-	tidyCmd.Dir = tmpDir
-	if output, err := tidyCmd.CombinedOutput(); err != nil {
-		return nil, fmt.Errorf("go mod tidy failed: %w\n%s", err, output)
-	}
-
-	// Run the program with var names as arguments
-	args := append([]string{"run", "main.go"}, varNames...)
-	runCmd := exec.Command(goBin, args...)
-	runCmd.Dir = tmpDir
-
-	var stdout, stderr bytes.Buffer
-	runCmd.Stdout = &stdout
-	runCmd.Stderr = &stderr
-
-	if err := runCmd.Run(); err != nil {
-		return nil, fmt.Errorf("running extractor: %w\n%s", err, stderr.String())
-	}
-
-	// Parse the output
-	var result map[string]map[string]any
-	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
-		return nil, fmt.Errorf("parsing output: %w\noutput: %s\nstderr: %s", err, stdout.String(), stderr.String())
-	}
-
-	return result, nil
+	return runnerDir, cleanup, nil
 }
 
 // findGoBinary locates the Go executable.
@@ -780,15 +710,39 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 	// Get the first var name (needed to force the import)
 	firstVar := varNames[0]
 
-	// Create temp directory for runner
-	tmpDir, err := os.MkdirTemp("", "wetwire-runner-*")
-	if err != nil {
-		return nil, fmt.Errorf("creating temp dir: %w", err)
+	// Find Go executable
+	goBin := findGoBinary()
+
+	// Decide which mode to use based on vendor directory presence
+	useVendorMode := shouldUseSubdirRunner(modInfo.GoModDir)
+
+	var runnerDir string
+	var cleanup func()
+	var goRunArgs []string
+
+	if useVendorMode {
+		// Vendor mode: create _wetwire_runner subdir in module directory
+		runnerDir, cleanup, err = createRunnerSubdir(modInfo.GoModDir)
+		if err != nil {
+			return nil, err
+		}
+		defer cleanup()
+
+		// Use -mod=vendor for offline builds
+		goRunArgs = []string{"run", "-mod=vendor", "./_wetwire_runner"}
+	} else {
+		// Normal mode: create temp directory
+		runnerDir, err = os.MkdirTemp("", "wetwire-runner-*")
+		if err != nil {
+			return nil, fmt.Errorf("creating temp dir: %w", err)
+		}
+		defer func() { _ = os.RemoveAll(runnerDir) }()
+
+		goRunArgs = []string{"run", "main.go"}
 	}
-	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Generate runner main.go
-	runnerPath := filepath.Join(tmpDir, "main.go")
+	runnerPath := filepath.Join(runnerDir, "main.go")
 	f, err := os.Create(runnerPath)
 	if err != nil {
 		return nil, fmt.Errorf("creating runner file: %w", err)
@@ -810,44 +764,52 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 	}
 	_ = f.Close()
 
-	// Create go.mod for the runner
-	goModPath := filepath.Join(tmpDir, "go.mod")
+	var workDir string
 
-	// Build replace directives - start with the user's package
-	var replaceDirectives strings.Builder
-	replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, absPath))
+	if useVendorMode {
+		// In vendor mode, we run from the module directory
+		// The runner is a subdirectory that imports the parent module
+		workDir = modInfo.GoModDir
+	} else {
+		// In normal mode, we need go.mod in the temp directory
+		workDir = runnerDir
 
-	// Add any replace directives from the target package's go.mod
-	for _, repl := range modInfo.Replaces {
-		resolved := resolveReplacePath(repl, modInfo.GoModDir)
-		replaceDirectives.WriteString(resolved + "\n")
-	}
+		// Create go.mod for the runner
+		goModPath := filepath.Join(runnerDir, "go.mod")
 
-	goModContent := fmt.Sprintf(`module runner
+		// Build replace directives - start with the user's package
+		var replaceDirectives strings.Builder
+		replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, absPath))
+
+		// Add any replace directives from the target package's go.mod
+		for _, repl := range modInfo.Replaces {
+			resolved := resolveReplacePath(repl, modInfo.GoModDir)
+			replaceDirectives.WriteString(resolved + "\n")
+		}
+
+		goModContent := fmt.Sprintf(`module runner
 
 go 1.23.0
 
 require %s v0.0.0
 
 %s`, modInfo.ModulePath, replaceDirectives.String())
-	if err := os.WriteFile(goModPath, []byte(goModContent), 0644); err != nil {
-		return nil, fmt.Errorf("writing go.mod: %w", err)
-	}
+		if err := os.WriteFile(goModPath, []byte(goModContent), 0644); err != nil {
+			return nil, fmt.Errorf("writing go.mod: %w", err)
+		}
 
-	// Find Go executable
-	goBin := findGoBinary()
-
-	// Run go mod tidy
-	tidyCmd := exec.Command(goBin, "mod", "tidy")
-	tidyCmd.Dir = tmpDir
-	if output, err := tidyCmd.CombinedOutput(); err != nil {
-		return nil, fmt.Errorf("go mod tidy failed: %w\n%s", err, output)
+		// Run go mod tidy (only needed in normal mode)
+		tidyCmd := exec.Command(goBin, "mod", "tidy")
+		tidyCmd.Dir = runnerDir
+		if output, err := tidyCmd.CombinedOutput(); err != nil {
+			return nil, fmt.Errorf("go mod tidy failed: %w\n%s", err, output)
+		}
 	}
 
 	// Run the program with var names as arguments
-	args := append([]string{"run", "main.go"}, varNames...)
+	args := append(goRunArgs, varNames...)
 	runCmd := exec.Command(goBin, args...)
-	runCmd.Dir = tmpDir
+	runCmd.Dir = workDir
 
 	var stdout, stderr bytes.Buffer
 	runCmd.Stdout = &stdout

@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Auto-installs project MCP config to `.kiro/mcp.json`
 - Init command now creates `infra/params.go` for Parameters, Mappings, Conditions
 - Init command now creates `infra/outputs.go` for Outputs
+- Offline builds support (#100)
+  - Detects `vendor/` directory and uses in-module `_wetwire_runner` subdirectory
+  - Runs with `-mod=vendor` flag for fully offline builds
+  - No network access required when dependencies are vendored
 
 ## [1.4.2] - 2026-01-07
 
