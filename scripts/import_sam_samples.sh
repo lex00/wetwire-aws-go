@@ -205,6 +205,11 @@ while IFS= read -r -d '' template; do
         continue
     fi
 
+    # Skip unrendered cookiecutter templates
+    if grep -q '{{cookiecutter' "$template" 2>/dev/null; then
+        continue
+    fi
+
     # Check if file contains AWS::Serverless (SAM template indicator)
     if grep -q "AWS::Serverless" "$template" 2>/dev/null || \
        grep -q "Transform.*AWS::Serverless" "$template" 2>/dev/null; then
@@ -286,8 +291,8 @@ if [ "$SKIP_VALIDATION" = false ]; then
 
         pkg_name=$(basename "$pkg_dir")
 
-        # Try to build the package
-        if "$GO_BIN" build "$pkg_dir..." 2>/dev/null; then
+        # Try to build the package (must cd into it since each has its own go.mod)
+        if (cd "$pkg_dir" && "$GO_BIN" build ./... 2>/dev/null); then
             if [ "$VERBOSE" = "true" ]; then
                 success "$pkg_name"
             fi
