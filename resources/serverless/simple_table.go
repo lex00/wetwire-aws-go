@@ -4,10 +4,16 @@
 
 package serverless
 
+import (
+	wetwire "github.com/lex00/wetwire-aws-go"
+)
+
 // SimpleTable represents AWS::Serverless::SimpleTable.
 // Creates a DynamoDB table with a single primary key.
 
 type SimpleTable struct {
+	// Attributes for Fn::GetAtt
+	Arn wetwire.AttrRef `json:"-"`
 
 	// Properties
 	// Primary key configuration.

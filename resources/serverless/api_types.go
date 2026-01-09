@@ -13,6 +13,8 @@ type Api_Auth struct {
 	Authorizers map[string]any `json:"Authorizers,omitempty"`
 	// Default authorizer name.
 	DefaultAuthorizer any `json:"DefaultAuthorizer,omitempty"`
+	// IAM role for API Gateway to invoke functions.
+	InvokeRole any `json:"InvokeRole,omitempty"`
 	// Usage plan configuration.
 	UsagePlan any `json:"UsagePlan,omitempty"`
 }

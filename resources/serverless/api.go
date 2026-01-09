@@ -34,6 +34,10 @@ type Api struct {
 	DefinitionBody any `json:"DefinitionBody,omitempty"`
 	// S3 URI or local path to OpenAPI spec.
 	DefinitionUri any `json:"DefinitionUri,omitempty"`
+	// Description of the API.
+	Description any `json:"Description,omitempty"`
+	// Custom domain configuration.
+	Domain any `json:"Domain,omitempty"`
 	// Endpoint type (REGIONAL, EDGE, PRIVATE).
 	EndpointConfiguration any `json:"EndpointConfiguration,omitempty"`
 	// Gateway response configurations.

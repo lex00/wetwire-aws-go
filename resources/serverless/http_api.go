@@ -28,8 +28,12 @@ type HttpApi struct {
 	DefinitionBody any `json:"DefinitionBody,omitempty"`
 	// S3 URI or local path to OpenAPI spec.
 	DefinitionUri any `json:"DefinitionUri,omitempty"`
+	// Description of the HTTP API.
+	Description any `json:"Description,omitempty"`
 	// Disable default execute-api endpoint.
 	DisableExecuteApiEndpoint any `json:"DisableExecuteApiEndpoint,omitempty"`
+	// Custom domain configuration.
+	Domain any `json:"Domain,omitempty"`
 	// Fail if warnings during import.
 	FailOnWarnings any `json:"FailOnWarnings,omitempty"`
 	// Name of the HTTP API.
