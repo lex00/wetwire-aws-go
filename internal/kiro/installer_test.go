@@ -8,30 +8,19 @@ import (
 )
 
 func TestEmbeddedConfigs_ValidJSON(t *testing.T) {
-	tests := []struct {
-		name string
-		path string
-	}{
-		{"wetwire-runner.json", "configs/wetwire-runner.json"},
-		{"mcp.json", "configs/mcp.json"},
+	// Only wetwire-runner.json is embedded; mcp.json is generated dynamically
+	data, err := configFS.ReadFile("configs/wetwire-runner.json")
+	if err != nil {
+		t.Fatalf("failed to read embedded config: %v", err)
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := configFS.ReadFile(tt.path)
-			if err != nil {
-				t.Fatalf("failed to read embedded config %s: %v", tt.path, err)
-			}
+	if len(data) == 0 {
+		t.Fatal("embedded config is empty")
+	}
 
-			if len(data) == 0 {
-				t.Fatalf("embedded config %s is empty", tt.path)
-			}
-
-			var parsed map[string]any
-			if err := json.Unmarshal(data, &parsed); err != nil {
-				t.Fatalf("embedded config %s is not valid JSON: %v", tt.path, err)
-			}
-		})
+	var parsed map[string]any
+	if err := json.Unmarshal(data, &parsed); err != nil {
+		t.Fatalf("embedded config is not valid JSON: %v", err)
 	}
 }
 
@@ -68,31 +57,22 @@ func TestEmbeddedAgentConfig_HasRequiredFields(t *testing.T) {
 	}
 }
 
-func TestEmbeddedMCPConfig_HasRequiredFields(t *testing.T) {
-	data, err := configFS.ReadFile("configs/mcp.json")
-	if err != nil {
-		t.Fatalf("failed to read MCP config: %v", err)
+func TestGetMCPServerConfig_ReturnsValidConfig(t *testing.T) {
+	// Test that getMCPServerConfig returns a valid MCP server config
+	config := getMCPServerConfig()
+
+	// Command should not be empty
+	if config.Command == "" {
+		t.Error("getMCPServerConfig should return non-empty command")
 	}
 
-	var config map[string]any
-	if err := json.Unmarshal(data, &config); err != nil {
-		t.Fatalf("failed to parse MCP config: %v", err)
-	}
-
-	// Check mcpServers exists and has wetwire entry
-	mcpServers, ok := config["mcpServers"].(map[string]any)
-	if !ok {
-		t.Fatal("mcpServers should be an object")
-	}
-
-	wetwire, ok := mcpServers["wetwire"].(map[string]any)
-	if !ok {
-		t.Fatal("mcpServers should have 'wetwire' entry as object")
-	}
-
-	// Check command is set
-	if cmd, ok := wetwire["command"].(string); !ok || cmd != "wetwire-aws-mcp" {
-		t.Errorf("wetwire.command should be 'wetwire-aws-mcp', got %v", wetwire["command"])
+	// Args should be initialized (may be empty but not nil after JSON roundtrip)
+	// Just verify the struct is usable
+	if config.Command == "go" {
+		// Fallback mode - should have args for "go run"
+		if len(config.Args) < 2 {
+			t.Error("go run fallback should have args")
+		}
 	}
 }
 
@@ -116,7 +96,7 @@ func TestEnsureProjectMCPConfig_CreatesFile(t *testing.T) {
 	}
 
 	// Install config
-	installed, err := ensureProjectMCPConfig()
+	installed, err := ensureProjectMCPConfig(false)
 	if err != nil {
 		t.Fatalf("ensureProjectMCPConfig failed: %v", err)
 	}
@@ -167,8 +147,8 @@ func TestEnsureProjectMCPConfig_SkipsExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Try to install config
-	installed, err := ensureProjectMCPConfig()
+	// Try to install config (force=false should skip existing)
+	installed, err := ensureProjectMCPConfig(false)
 	if err != nil {
 		t.Fatalf("ensureProjectMCPConfig failed: %v", err)
 	}
@@ -207,7 +187,7 @@ func TestEnsureProjectMCPConfig_CreatesDirectory(t *testing.T) {
 	}
 
 	// Install config
-	_, err = ensureProjectMCPConfig()
+	_, err = ensureProjectMCPConfig(false)
 	if err != nil {
 		t.Fatalf("ensureProjectMCPConfig failed: %v", err)
 	}

@@ -105,6 +105,64 @@ var _ = apigateway.RestApi{}
 		return fmt.Errorf("writing resources.go: %w", err)
 	}
 
+	// Write infra/params.go for Parameters, Mappings, and Conditions
+	paramsGo := `package infra
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+)
+
+// Parameters - define CloudFormation parameters here
+// Example:
+// var Environment = Parameter{
+//     Type:          "String",
+//     Description:   "Environment name",
+//     Default:       "dev",
+//     AllowedValues: []any{"dev", "staging", "prod"},
+// }
+
+// Mappings - define CloudFormation mappings here
+// Example:
+// var RegionConfig = Mapping{
+//     "us-east-1": {"AMI": "ami-12345678"},
+//     "us-west-2": {"AMI": "ami-87654321"},
+// }
+
+// Conditions - define CloudFormation conditions here
+// Example:
+// var IsProd = Equals{Ref{"Environment"}, "prod"}
+
+// Placeholder to prevent unused import error
+var _ = Parameter{}
+`
+	if err := os.WriteFile(filepath.Join(infraDir, "params.go"), []byte(paramsGo), 0644); err != nil {
+		return fmt.Errorf("writing params.go: %w", err)
+	}
+
+	// Write infra/outputs.go for CloudFormation Outputs
+	outputsGo := `package infra
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+)
+
+// Outputs - define CloudFormation outputs here
+// Example:
+// var BucketNameOutput = Output{
+//     Description: "Name of the S3 bucket",
+//     Value:       MyBucket,  // Direct reference to resource
+//     Export: &struct{ Name string }{
+//         Name: Sub("${AWS::StackName}-BucketName"),
+//     },
+// }
+
+// Placeholder to prevent unused import error
+var _ = Output{}
+`
+	if err := os.WriteFile(filepath.Join(infraDir, "outputs.go"), []byte(outputsGo), 0644); err != nil {
+		return fmt.Errorf("writing outputs.go: %w", err)
+	}
+
 	// Write .gitignore
 	gitignore := `# Build output
 template.json
