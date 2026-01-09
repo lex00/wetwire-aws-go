@@ -972,7 +972,34 @@ func newCodegenContext(template *IRTemplate, packageName string) *codegenContext
 		}
 	}
 
+	// Pre-scan for SAM implicit resources
+	// SAM auto-generates resources that aren't in the template but may be referenced
+	detectSAMImplicitResources(ctx)
+
 	return ctx
+}
+
+// detectSAMImplicitResources identifies resources that SAM auto-generates
+// (like IAM roles for Lambda functions) and adds them to unknownResources.
+// This allows the importer to generate valid code for outputs that reference
+// these implicit resources using explicit Ref{}/GetAtt{} forms.
+func detectSAMImplicitResources(ctx *codegenContext) {
+	for _, res := range ctx.template.Resources {
+		switch res.ResourceType {
+		case "AWS::Serverless::Function":
+			// SAM auto-generates {FunctionName}Role for Lambda functions
+			// unless AutoPublishAlias or Role property is explicitly set
+			roleLogicalID := res.LogicalID + "Role"
+			ctx.unknownResources[roleLogicalID] = true
+		case "AWS::Serverless::Api":
+			// SAM may create implicit deployment and stages
+			ctx.unknownResources[res.LogicalID+"Deployment"] = true
+			ctx.unknownResources[res.LogicalID+"Stage"] = true
+		case "AWS::Serverless::HttpApi":
+			// Similar implicit resources for HTTP API
+			ctx.unknownResources[res.LogicalID+"ApiGatewayDefaultStage"] = true
+		}
+	}
 }
 
 func generateParameter(ctx *codegenContext, param *IRParameter) string {
@@ -2148,9 +2175,15 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 			ctx.usedParameters[target] = true
 			return sanitizeVarName(target)
 		}
-		// Unknown reference - use sanitized variable name (let Go compiler catch undefined)
-		// This avoids generating Ref{} which violates style guidelines
-		return sanitizeVarName(target)
+		// Check if it's a known SAM implicit resource - use explicit Ref{}
+		if ctx.unknownResources[target] {
+			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+			return fmt.Sprintf("Ref{%q}", target)
+		}
+		// Unknown reference - use explicit Ref{} form to avoid undefined variable errors
+		// This ensures the code compiles even if the reference target doesn't exist
+		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+		return fmt.Sprintf("Ref{%q}", target)
 
 	case IntrinsicGetAtt:
 		var logicalID, attr string
@@ -2166,11 +2199,14 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 				attr = fmt.Sprintf("%v", args[1])
 			}
 		}
-		// Check for nested attributes (e.g., "Endpoint.Address") or unknown resources
+		// Check for nested attributes (e.g., "Endpoint.Address"), unknown resources,
+		// or resources not in the template (SAM implicit resources, etc.)
 		// These can't use field access pattern:
 		// - Nested attributes: AttrRef doesn't have sub-fields
 		// - Unknown resources: placeholder is `any` type with no fields
-		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] {
+		// - Missing resources: would cause undefined variable error
+		_, isKnownResource := ctx.template.Resources[logicalID]
+		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] || !isKnownResource {
 			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 			// Use string literal for logical ID since GetAtt.LogicalName expects string
 			return fmt.Sprintf("GetAtt{%q, %q}", logicalID, attr)

@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Cluster by service: `wetwire-aws graph ./infra -c`
   - Blue edges for GetAtt, solid for Ref dependencies
 
+### Fixed
+
+- Import: SAM implicit resources (like auto-generated IAM roles) now use explicit `GetAtt{}` (#115)
+  - Detects `AWS::Serverless::Function` and adds `{Name}Role` to known implicit resources
+  - Unknown Ref/GetAtt targets now use explicit intrinsic forms to avoid undefined variables
+
 ## [1.7.0] - 2026-01-09
 
 ### Added
