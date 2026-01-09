@@ -113,7 +113,7 @@ func handleInit(_ context.Context, _ *mcp.CallToolRequest, args InitArgs) (*mcp.
 
 go 1.23
 
-require github.com/lex00/wetwire-aws-go v1.2.3
+require github.com/lex00/wetwire-aws-go v1.8.0
 `, moduleName)
 
 	goModPath := filepath.Join(projectPath, "go.mod")

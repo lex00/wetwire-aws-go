@@ -63,7 +63,7 @@ func runInit(workspaceDir, projectName string) error {
 
 go 1.23
 
-require github.com/lex00/wetwire-aws-go v1.2.3
+require github.com/lex00/wetwire-aws-go v1.8.0
 `, moduleName)
 
 	if err := os.WriteFile(filepath.Join(projectPath, "go.mod"), []byte(goMod), 0644); err != nil {
