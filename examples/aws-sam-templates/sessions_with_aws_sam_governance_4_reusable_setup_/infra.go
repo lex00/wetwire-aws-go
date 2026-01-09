@@ -15,7 +15,7 @@ var AggragateAccountAuth = config.AggregationAuthorization{
 }
 
 var AggregateCollectionAccountAggregationSource1 = config.ConfigurationAggregator_AccountAggregationSource{
-	AccountIds: SubAccountList,
+	AccountIds: []any{SubAccountList},
 	AllAwsRegions: true,
 }
 

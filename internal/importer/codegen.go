@@ -189,6 +189,11 @@ var listTypeProperties = map[string]bool{
 	"AdditionalMasterSecurityGroups":      true,
 	"AdditionalSlaveSecurityGroups":       true,
 	"StackSetRegions":                     true,
+	// Cognito list properties
+	"CallbackURLs": true,
+	"LogoutURLs":   true,
+	// SAM list properties
+	"Policies": true,
 }
 
 // reservedVarNames are names that collide with types exported from the intrinsics package
@@ -247,6 +252,28 @@ func intrinsicNeedsArrayWrapping(intrinsic *IRIntrinsic) bool {
 	default:
 		return false
 	}
+}
+
+// isListTypeParameter checks if a CloudFormation parameter is a list type.
+// List-type parameters include CommaDelimitedList and List<*> types.
+func isListTypeParameter(param *IRParameter) bool {
+	if param == nil {
+		return false
+	}
+	t := param.Type
+	// CommaDelimitedList is a list type
+	if t == "CommaDelimitedList" {
+		return true
+	}
+	// List<*> types (e.g., List<Number>, List<String>)
+	if strings.HasPrefix(t, "List<") {
+		return true
+	}
+	// AWS::SSM::Parameter::Value<List<*>> types
+	if strings.Contains(t, "<List<") {
+		return true
+	}
+	return false
 }
 
 // tryEnumConstant attempts to convert a string value to an enum constant reference.
@@ -1190,6 +1217,16 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 	switch v := value.(type) {
 	case *IRIntrinsic:
 		goCode := intrinsicToGo(ctx, v)
+		// Check if this is a Ref to a list-type Parameter - always wrap these
+		// because Parameter struct type can't be directly assigned to []any
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if param, ok := ctx.template.Parameters[target]; ok {
+				if isListTypeParameter(param) {
+					return fmt.Sprintf("[]any{%s}", goCode)
+				}
+			}
+		}
 		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
 		if isListTypeProperty(propName) && intrinsicNeedsArrayWrapping(v) {
@@ -1299,10 +1336,18 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			items = append(items, fmt.Sprintf("\t%q: %s,", k, valueToBlockStyleProperty(ctx, val, k, parentVarName)))
 		}
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+		var jsonLiteral string
 		if len(items) == 0 {
-			return "Json{}"
+			jsonLiteral = "Json{}"
+		} else {
+			jsonLiteral = fmt.Sprintf("Json{\n%s\n}", strings.Join(items, "\n"))
 		}
-		return fmt.Sprintf("Json{\n%s\n}", strings.Join(items, "\n"))
+		// If this property expects a list type, wrap the map in []any{}
+		// This handles cases like SAM Policies where a map can be used instead of a list
+		if isListTypeProperty(propName) {
+			return fmt.Sprintf("[]any{%s}", jsonLiteral)
+		}
+		return jsonLiteral
 	}
 
 	return fmt.Sprintf("%#v", value)
@@ -1403,6 +1448,16 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			}
 		} else {
 			goCode = intrinsicToGo(ctx, v)
+		}
+		// Check if this is a Ref to a list-type Parameter - always wrap these
+		// because Parameter struct type can't be directly assigned to []any
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if param, ok := ctx.template.Parameters[target]; ok {
+				if isListTypeParameter(param) {
+					return fmt.Sprintf("[]any{%s}", goCode)
+				}
+			}
 		}
 		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system

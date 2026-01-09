@@ -34,7 +34,7 @@ var CreateActivityFunctionOutput = Output{
 
 // CreateActivityFunctionIamRoleOutput - Implicit IAM Role created for Create Activity function
 var CreateActivityFunctionIamRoleOutput = Output{
-	Value:       CreateActivityFunctionRole.Arn,
+	Value:       GetAtt{"CreateActivityFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for Create Activity function",
 }
 
@@ -46,7 +46,7 @@ var DeleteActivityFunctionOutput = Output{
 
 // DeleteActivityFunctionIamRoleOutput - Implicit IAM Role created for Delete Activity function
 var DeleteActivityFunctionIamRoleOutput = Output{
-	Value:       DeleteActivityFunctionRole.Arn,
+	Value:       GetAtt{"DeleteActivityFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for Delete Activity function",
 }
 
@@ -58,7 +58,7 @@ var GetActivityFunctionOutput = Output{
 
 // GetActivityFunctionIamRoleOutput - Implicit IAM Role created for Get Activity function
 var GetActivityFunctionIamRoleOutput = Output{
-	Value:       GetActivityFunctionRole.Arn,
+	Value:       GetAtt{"GetActivityFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for Get Activity function",
 }
 
@@ -70,7 +70,7 @@ var ListActivitiesFunctionOutput = Output{
 
 // ListActivitiesFunctionIamRoleOutput - Implicit IAM Role created for List Activities function
 var ListActivitiesFunctionIamRoleOutput = Output{
-	Value:       ListActivitiesFunctionRole.Arn,
+	Value:       GetAtt{"ListActivitiesFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for List Activities function",
 }
 
@@ -82,6 +82,6 @@ var UpdateActivityFunctionOutput = Output{
 
 // UpdateActivityFunctionIamRoleOutput - Implicit IAM Role created for Update Activity function
 var UpdateActivityFunctionIamRoleOutput = Output{
-	Value:       UpdateActivityFunctionRole.Arn,
+	Value:       GetAtt{"UpdateActivityFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for Update Activity function",
 }

@@ -9,6 +9,56 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/serverless"
 )
 
+var UpdateActivityFunctionEnvironment = serverless.Function_Environment{
+	Variables: Json{"AWSENV": AWSEnv, "REGION": Region, "TABLE": Table},
+}
+
+var UpdateActivityFunction = serverless.Function{
+	CodeUri: "src/update_activity/",
+	Environment: UpdateActivityFunctionEnvironment,
+	Events: Json{
+	"CreateActivities": Json{
+	"Properties": Json{
+	"Method": "put",
+	"Path": "/activities/{id}",
+},
+	"Type": "Api",
+},
+},
+	Handler: "app.lambda_handler",
+	Policies: []any{Json{
+	"DynamoDBCrudPolicy": Json{
+	"TableName": ActivitiesTable,
+},
+}},
+	Runtime: "python3.8",
+}
+
+var DeleteActivityFunctionEnvironment = serverless.Function_Environment{
+	Variables: Json{"AWSENV": AWSEnv, "REGION": Region, "TABLE": Table},
+}
+
+var DeleteActivityFunction = serverless.Function{
+	CodeUri: "src/delete_activity/",
+	Environment: DeleteActivityFunctionEnvironment,
+	Events: Json{
+	"CreateActivities": Json{
+	"Properties": Json{
+	"Method": "delete",
+	"Path": "/activities/{id}/{date}",
+},
+	"Type": "Api",
+},
+},
+	Handler: "app.lambda_handler",
+	Policies: []any{Json{
+	"DynamoDBCrudPolicy": Json{
+	"TableName": ActivitiesTable,
+},
+}},
+	Runtime: "python3.8",
+}
+
 var CreateActivityFunctionEnvironment = serverless.Function_Environment{
 	Variables: Json{"AWSENV": AWSEnv, "REGION": Region, "TABLE": Table},
 }
@@ -71,56 +121,6 @@ var ListActivitiesFunction = serverless.Function{
 	"Properties": Json{
 	"Method": "get",
 	"Path": "/activities/",
-},
-	"Type": "Api",
-},
-},
-	Handler: "app.lambda_handler",
-	Policies: []any{Json{
-	"DynamoDBCrudPolicy": Json{
-	"TableName": ActivitiesTable,
-},
-}},
-	Runtime: "python3.8",
-}
-
-var UpdateActivityFunctionEnvironment = serverless.Function_Environment{
-	Variables: Json{"AWSENV": AWSEnv, "REGION": Region, "TABLE": Table},
-}
-
-var UpdateActivityFunction = serverless.Function{
-	CodeUri: "src/update_activity/",
-	Environment: UpdateActivityFunctionEnvironment,
-	Events: Json{
-	"CreateActivities": Json{
-	"Properties": Json{
-	"Method": "put",
-	"Path": "/activities/{id}",
-},
-	"Type": "Api",
-},
-},
-	Handler: "app.lambda_handler",
-	Policies: []any{Json{
-	"DynamoDBCrudPolicy": Json{
-	"TableName": ActivitiesTable,
-},
-}},
-	Runtime: "python3.8",
-}
-
-var DeleteActivityFunctionEnvironment = serverless.Function_Environment{
-	Variables: Json{"AWSENV": AWSEnv, "REGION": Region, "TABLE": Table},
-}
-
-var DeleteActivityFunction = serverless.Function{
-	CodeUri: "src/delete_activity/",
-	Environment: DeleteActivityFunctionEnvironment,
-	Events: Json{
-	"CreateActivities": Json{
-	"Properties": Json{
-	"Method": "delete",
-	"Path": "/activities/{id}/{date}",
 },
 	"Type": "Api",
 },

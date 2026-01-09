@@ -11,7 +11,7 @@ import (
 
 var BaseAPICorsConfiguration = serverless.HttpApi_CorsConfiguration{
 	AllowMethods: []any{"GET"},
-	AllowOrigins: ClientDomains,
+	AllowOrigins: []any{ClientDomains},
 }
 
 var BaseAPI = serverless.HttpApi{
@@ -68,7 +68,7 @@ var BaseFunction = serverless.Function{
 }
 
 var BasePreFunctionEnvironment = serverless.Function_Environment{
-	Variables: Json{"FUNCTION_VERSION": BaseFunction.Version},
+	Variables: Json{"FUNCTION_VERSION": Ref{"BaseFunction.Version"}},
 }
 
 var BasePreFunctionDeploymentPreference = serverless.Function_DeploymentPreference{

@@ -28,14 +28,14 @@ var HttpApiMapping = apigatewayv2.ApiMapping{
 	ApiId: HttpApiGateway,
 	ApiMappingKey: "http",
 	DomainName: CustomDomainName,
-	Stage: HttpApiGatewayApiGatewayDefaultStage,
+	Stage: Ref{"HttpApiGatewayApiGatewayDefaultStage"},
 }
 
 var RestApiMapping = apigatewayv2.ApiMapping{
 	ApiId: RestApiGateway,
 	ApiMappingKey: "rest",
 	DomainName: CustomDomainName,
-	Stage: RestApiGatewayProdStage,
+	Stage: Ref{"RestApiGatewayProdStage"},
 }
 
 var RecordSetAliasTarget = route53.RecordSet_AliasTarget{

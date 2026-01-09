@@ -5,6 +5,7 @@
 package template
 
 import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
 	"github.com/lex00/wetwire-aws-go/resources/apigatewayv2"
 	"github.com/lex00/wetwire-aws-go/resources/route53"
 )
@@ -17,5 +18,5 @@ var RestApiMapping = apigatewayv2.ApiMapping{
 	ApiId: RestApiGateway,
 	ApiMappingKey: "rest",
 	DomainName: DomainName,
-	Stage: RestApiGatewayProdStage,
+	Stage: Ref{"RestApiGatewayProdStage"},
 }

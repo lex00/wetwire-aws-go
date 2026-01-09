@@ -22,6 +22,6 @@ var HelloWorldFunctionOutput = Output{
 
 // HelloWorldFunctionIamRoleOutput - Implicit IAM Role created for Hello World function
 var HelloWorldFunctionIamRoleOutput = Output{
-	Value:       HelloWorldFunctionRole.Arn,
+	Value:       GetAtt{"HelloWorldFunctionRole", "Arn"},
 	Description: "Implicit IAM Role created for Hello World function",
 }

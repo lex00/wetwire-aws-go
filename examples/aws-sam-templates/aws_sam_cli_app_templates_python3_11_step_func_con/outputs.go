@@ -16,6 +16,6 @@ var StockTradingStateMachineArnOutput = Output{
 
 // StockTradingStateMachineRoleArnOutput - IAM Role created for Stock Trading State machine based on the specified SAM Policy Templates
 var StockTradingStateMachineRoleArnOutput = Output{
-	Value:       StockTradingStateMachineRole.Arn,
+	Value:       GetAtt{"StockTradingStateMachineRole", "Arn"},
 	Description: "IAM Role created for Stock Trading State machine based on the specified SAM Policy Templates",
 }
