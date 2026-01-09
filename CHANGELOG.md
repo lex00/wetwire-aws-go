@@ -13,12 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `wetwire-aws build .` now works in directories without `go.mod`
   - User's Go files are copied to a temp directory with synthetic module
   - No files created in user's directory
-- SAM: Added missing resource fields (#125)
+- SAM: Added missing resource fields (#125, #127)
   - `serverless.SimpleTable.Arn` attribute accessor
   - `serverless.HttpApi.Domain`, `serverless.HttpApi.Description`
   - `serverless.Api.Domain`, `serverless.Api.Description`
   - `serverless.Api_Auth.InvokeRole`
-  - SAM import build success rate: 72% → 86%
+  - `serverless.Function_DeploymentPreference.TriggerConfigurations`
+
+### Fixed
+
+- Import: List-type parameters now wrapped in `[]any{}` (#128)
+  - `CommaDelimitedList` and `List<*>` parameters wrapped when used in struct fields
+  - Fixes "cannot use Parameter as []any" build errors
+- Import: Maps wrapped in `[]any{}` for array fields (#128)
+  - SAM `Policies` field and similar now accept inline policy maps
+- Import: Initialization cycles detected and broken (#128)
+  - Circular variable references now use explicit `GetAtt{}` to break cycles
+  - SAM import build success rate: 72% → 84% (48/57 templates)
 
 ## [1.9.0] - 2026-01-09
 
