@@ -15,25 +15,11 @@ var AnalyticsTablePrimaryKey = serverless.SimpleTable_PrimaryKey{
 }
 
 var AnalyticsTable = serverless.SimpleTable{
-	PrimaryKey: &AnalyticsTablePrimaryKey,
+	PrimaryKey: AnalyticsTablePrimaryKey,
 	ProvisionedThroughput: Json{
 	"ReadCapacityUnits": 1,
 	"WriteCapacityUnits": 1,
 },
-}
-
-var GatherTwitchMetrics = serverless.StateMachine{
-	DefinitionSubstitutions: Json{
-	"DDBPutItem": Sub{String: "arn:${AWS::Partition}:states:::dynamodb:putItem"},
-	"DDBTable": AnalyticsTable,
-},
-	DefinitionUri: "statemachine/twitch.asl.json",
-	Policies: []any{Json{
-	"DynamoDBWritePolicy": Json{
-	"TableName": AnalyticsTable,
-},
-}},
-	Type_: "EXPRESS",
 }
 
 var AnalyticsStateMachine = serverless.StateMachine{
@@ -62,6 +48,20 @@ var GatherStackOverflowMetrics = serverless.StateMachine{
 	"DDBTable": AnalyticsTable,
 },
 	DefinitionUri: "statemachine/stackoverflow.asl.json",
+	Policies: []any{Json{
+	"DynamoDBWritePolicy": Json{
+	"TableName": AnalyticsTable,
+},
+}},
+	Type_: "EXPRESS",
+}
+
+var GatherTwitchMetrics = serverless.StateMachine{
+	DefinitionSubstitutions: Json{
+	"DDBPutItem": Sub{String: "arn:${AWS::Partition}:states:::dynamodb:putItem"},
+	"DDBTable": AnalyticsTable,
+},
+	DefinitionUri: "statemachine/twitch.asl.json",
 	Policies: []any{Json{
 	"DynamoDBWritePolicy": Json{
 	"TableName": AnalyticsTable,

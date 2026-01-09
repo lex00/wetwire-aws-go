@@ -25,7 +25,7 @@ var FirehoseExtendedS3DestinationConfigurationProcessingConfigurationProcessorLa
 
 var FirehoseExtendedS3DestinationConfigurationS3BackupConfiguration = kinesisfirehose.DeliveryStream_S3DestinationConfiguration{
 	BucketARN: RawDataBucket.Arn,
-	BufferingHints: &FirehoseExtendedS3DestinationConfigurationS3BackupConfigurationBufferingHints,
+	BufferingHints: FirehoseExtendedS3DestinationConfigurationS3BackupConfigurationBufferingHints,
 	CompressionFormat: "GZIP",
 	RoleARN: FirehoseAccessRole.Arn,
 }
@@ -42,15 +42,15 @@ var FirehoseExtendedS3DestinationConfigurationBufferingHints = kinesisfirehose.D
 
 var FirehoseExtendedS3DestinationConfiguration = kinesisfirehose.DeliveryStream_ExtendedS3DestinationConfiguration{
 	BucketARN: ProcessedDataBucket.Arn,
-	BufferingHints: &FirehoseExtendedS3DestinationConfigurationBufferingHints,
+	BufferingHints: FirehoseExtendedS3DestinationConfigurationBufferingHints,
 	CompressionFormat: "GZIP",
-	ProcessingConfiguration: &FirehoseExtendedS3DestinationConfigurationProcessingConfiguration,
+	ProcessingConfiguration: FirehoseExtendedS3DestinationConfigurationProcessingConfiguration,
 	RoleARN: FirehoseAccessRole.Arn,
-	S3BackupConfiguration: &FirehoseExtendedS3DestinationConfigurationS3BackupConfiguration,
+	S3BackupConfiguration: FirehoseExtendedS3DestinationConfigurationS3BackupConfiguration,
 	S3BackupMode: "Enabled",
 }
 
 var Firehose = kinesisfirehose.DeliveryStream{
 	DeliveryStreamType: "DirectPut",
-	ExtendedS3DestinationConfiguration: &FirehoseExtendedS3DestinationConfiguration,
+	ExtendedS3DestinationConfiguration: FirehoseExtendedS3DestinationConfiguration,
 }

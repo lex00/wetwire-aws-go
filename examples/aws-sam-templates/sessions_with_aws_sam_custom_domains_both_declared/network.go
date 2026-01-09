@@ -44,7 +44,7 @@ var RecordSetAliasTarget = route53.RecordSet_AliasTarget{
 }
 
 var RecordSet = route53.RecordSet{
-	AliasTarget: &RecordSetAliasTarget,
+	AliasTarget: RecordSetAliasTarget,
 	HostedZoneId: If{"CreateZone", GeneratedZone, ZoneId},
 	Name: DomainName,
 	Type_: "A",

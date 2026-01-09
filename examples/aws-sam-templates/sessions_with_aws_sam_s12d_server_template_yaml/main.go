@@ -15,11 +15,8 @@ var LoggingStream = kinesis.Stream{
 }
 
 var SiteAPI = serverless.Api{
-	DefinitionBody: Transform{Json{
-	"Name": "AWS::Include",
-	"Parameters": Json{
-		"Location": "./api.yaml",
-	},
+	DefinitionBody: Transform{Name: "AWS::Include", Parameters: Json{
+	"Location": "./api.yaml",
 }},
 	EndpointConfiguration: "REGIONAL",
 	MethodSettings: []any{Json{
@@ -46,7 +43,7 @@ var LoggingProcessorEnvironment = serverless.Function_Environment{
 
 var LoggingProcessor = serverless.Function{
 	CodeUri: "src/analytics/",
-	Environment: &LoggingProcessorEnvironment,
+	Environment: LoggingProcessorEnvironment,
 	Events: Json{
 	"KinesisTrigger": Json{
 	"Properties": Json{

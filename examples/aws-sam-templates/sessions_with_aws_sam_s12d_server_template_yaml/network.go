@@ -137,13 +137,13 @@ var CloudFrontDistroDistributionConfigViewerCertificate = cloudfront.Distributio
 }
 
 var CloudFrontDistroDistributionConfigOriginAmplifyClient = cloudfront.Distribution_Origin{
-	CustomOriginConfig: &CloudFrontDistroDistributionConfigOriginAmplifyClientCustomOriginConfig,
+	CustomOriginConfig: CloudFrontDistroDistributionConfigOriginAmplifyClientCustomOriginConfig,
 	DomainName: ClientAddress,
 	Id: "AmplifyClient",
 }
 
 var CloudFrontDistroDistributionConfigOriginURLShortenerAPIGW = cloudfront.Distribution_Origin{
-	CustomOriginConfig: &CloudFrontDistroDistributionConfigOriginURLShortenerAPIGWCustomOriginConfig,
+	CustomOriginConfig: CloudFrontDistroDistributionConfigOriginURLShortenerAPIGWCustomOriginConfig,
 	DomainName: Sub{String: "${SiteAPI}.execute-api.${AWS::Region}.amazonaws.com"},
 	Id: "URLShortenerAPIGW",
 	OriginPath: "/Prod",
@@ -245,9 +245,9 @@ var CloudFrontDistroDistributionConfig = cloudfront.Distribution_DistributionCon
 	CustomErrorResponses: []any{CloudFrontDistroDistributionConfigCustomErrorResponse1, CloudFrontDistroDistributionConfigCustomErrorResponse2, CloudFrontDistroDistributionConfigCustomErrorResponse3},
 	DefaultCacheBehavior: CloudFrontDistroDistributionConfigDefaultCacheBehavior,
 	Enabled: true,
-	Logging: &CloudFrontDistroDistributionConfigLogging,
+	Logging: CloudFrontDistroDistributionConfigLogging,
 	Origins: []any{CloudFrontDistroDistributionConfigOriginURLShortenerAPIGW, CloudFrontDistroDistributionConfigOriginAmplifyClient},
-	ViewerCertificate: &CloudFrontDistroDistributionConfigViewerCertificate,
+	ViewerCertificate: CloudFrontDistroDistributionConfigViewerCertificate,
 }
 
 var CloudFrontDistro = cloudfront.Distribution{

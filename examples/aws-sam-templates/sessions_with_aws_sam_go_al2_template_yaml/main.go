@@ -15,7 +15,7 @@ var HelloWorldFunctionEnvironment = serverless.Function_Environment{
 
 var HelloWorldFunction = serverless.Function{
 	CodeUri: "hello-world/",
-	Environment: &HelloWorldFunctionEnvironment,
+	Environment: HelloWorldFunctionEnvironment,
 	Events: Json{
 	"CatchAll": Json{
 	"Properties": Json{

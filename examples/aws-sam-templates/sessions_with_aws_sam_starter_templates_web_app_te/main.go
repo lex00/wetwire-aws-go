@@ -12,7 +12,7 @@ import (
 var SampleTable = serverless.SimpleTable{
 }
 
-var getAllItemsFunction = serverless.Function{
+var GetAllItemsFunction = serverless.Function{
 	Description: "get all items",
 	Events: Json{
 	"Api": Json{
@@ -31,7 +31,7 @@ var getAllItemsFunction = serverless.Function{
 }},
 }
 
-var getByIdFunction = serverless.Function{
+var GetByIdFunction = serverless.Function{
 	Description: "get item by id",
 	Events: Json{
 	"Api": Json{
@@ -50,7 +50,7 @@ var getByIdFunction = serverless.Function{
 }},
 }
 
-var putItemFunction = serverless.Function{
+var PutItemFunction = serverless.Function{
 	Description: "put item in ddb table",
 	Events: Json{
 	"Api": Json{

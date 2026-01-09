@@ -15,7 +15,7 @@ var TablePrimaryKey = serverless.SimpleTable_PrimaryKey{
 }
 
 var Table = serverless.SimpleTable{
-	PrimaryKey: &TablePrimaryKey,
+	PrimaryKey: TablePrimaryKey,
 }
 
 var PutFunctionEnvironment = serverless.Function_Environment{
@@ -27,7 +27,7 @@ var PutFunction = serverless.Function{
 	"": nil,
 }},
 	CodeUri: "./rust_app",
-	Environment: &PutFunctionEnvironment,
+	Environment: PutFunctionEnvironment,
 	Events: Json{
 	"HelloWorld": Json{
 	"Properties": Json{

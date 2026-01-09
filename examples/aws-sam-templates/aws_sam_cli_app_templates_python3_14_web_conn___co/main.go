@@ -15,7 +15,7 @@ var SampleTablePrimaryKey = serverless.SimpleTable_PrimaryKey{
 }
 
 var SampleTable = serverless.SimpleTable{
-	PrimaryKey: &SampleTablePrimaryKey,
+	PrimaryKey: SampleTablePrimaryKey,
 	ProvisionedThroughput: Json{
 	"ReadCapacityUnits": 2,
 	"WriteCapacityUnits": 2,
@@ -26,9 +26,9 @@ var getAllItemsFunctionEnvironment = serverless.Function_Environment{
 	Variables: Json{"SAMPLE_TABLE": SampleTable},
 }
 
-var getAllItemsFunction = serverless.Function{
+var GetAllItemsFunction = serverless.Function{
 	Description: "A simple example includes a HTTP get method to get all items from a DynamoDB table.",
-	Environment: &getAllItemsFunctionEnvironment,
+	Environment: getAllItemsFunctionEnvironment,
 	Events: Json{
 	"Api": Json{
 	"Properties": Json{
@@ -46,7 +46,7 @@ var getAllItemsFunction = serverless.Function{
 	Timeout: 100,
 }
 
-var getAllItemsFunctionToTableConnector = serverless.Connector{
+var GetAllItemsFunctionToTableConnector = serverless.Connector{
 	Destination: Json{
 	"Id": "SampleTable",
 },
@@ -60,9 +60,9 @@ var getByIdFunctionEnvironment = serverless.Function_Environment{
 	Variables: Json{"SAMPLE_TABLE": SampleTable},
 }
 
-var getByIdFunction = serverless.Function{
+var GetByIdFunction = serverless.Function{
 	Description: "A simple example includes a HTTP get method to get one item by id from a DynamoDB table.",
-	Environment: &getByIdFunctionEnvironment,
+	Environment: getByIdFunctionEnvironment,
 	Events: Json{
 	"Api": Json{
 	"Properties": Json{
@@ -80,7 +80,7 @@ var getByIdFunction = serverless.Function{
 	Timeout: 100,
 }
 
-var getByIdFunctionToTableConnector = serverless.Connector{
+var GetByIdFunctionToTableConnector = serverless.Connector{
 	Destination: Json{
 	"Id": "SampleTable",
 },
@@ -94,9 +94,9 @@ var putItemFunctionEnvironment = serverless.Function_Environment{
 	Variables: Json{"SAMPLE_TABLE": SampleTable},
 }
 
-var putItemFunction = serverless.Function{
+var PutItemFunction = serverless.Function{
 	Description: "A simple example includes a HTTP post method to add one item to a DynamoDB table.",
-	Environment: &putItemFunctionEnvironment,
+	Environment: putItemFunctionEnvironment,
 	Events: Json{
 	"Api": Json{
 	"Properties": Json{
@@ -114,7 +114,7 @@ var putItemFunction = serverless.Function{
 	Timeout: 100,
 }
 
-var putItemFunctionToTableConnector = serverless.Connector{
+var PutItemFunctionToTableConnector = serverless.Connector{
 	Destination: Json{
 	"Id": "SampleTable",
 },

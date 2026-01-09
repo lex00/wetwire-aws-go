@@ -19,7 +19,7 @@ var ApiGWLoggingRuleScope = config.ConfigRule_Scope{
 
 var ApiGWLoggingRule = config.ConfigRule{
 	Description: "Require API GW Logging",
-	Scope: &ApiGWLoggingRuleScope,
+	Scope: ApiGWLoggingRuleScope,
 	Source: ApiGWLoggingRuleSource,
 }
 
@@ -34,7 +34,7 @@ var S3NoPublicReadRuleScope = config.ConfigRule_Scope{
 
 var S3NoPublicReadRule = config.ConfigRule{
 	Description: "S3 block public read",
-	Scope: &S3NoPublicReadRuleScope,
+	Scope: S3NoPublicReadRuleScope,
 	Source: S3NoPublicReadRuleSource,
 }
 
@@ -49,6 +49,6 @@ var S3NoPublicWriteRuleScope = config.ConfigRule_Scope{
 
 var S3NoPublicWriteRule = config.ConfigRule{
 	Description: "S3 block public write",
-	Scope: &S3NoPublicWriteRuleScope,
+	Scope: S3NoPublicWriteRuleScope,
 	Source: S3NoPublicWriteRuleSource,
 }

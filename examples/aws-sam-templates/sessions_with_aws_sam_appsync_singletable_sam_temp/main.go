@@ -66,7 +66,7 @@ var DDBDataSourceDynamoDBConfig = appsync.DataSource_DynamoDBConfig{
 var DDBDataSource = appsync.DataSource{
 	ApiId: AppSyncApi.ApiId,
 	Description: "The Single Table AppSync Data Source",
-	DynamoDBConfig: &DDBDataSourceDynamoDBConfig,
+	DynamoDBConfig: DDBDataSourceDynamoDBConfig,
 	Name: "SingleTableDataSource",
 	ServiceRoleArn: DDBRole.Arn,
 	Type_: "AMAZON_DYNAMODB",

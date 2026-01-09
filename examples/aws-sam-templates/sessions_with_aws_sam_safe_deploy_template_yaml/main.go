@@ -23,7 +23,7 @@ var BasePostFunctionDeploymentPreference = serverless.Function_DeploymentPrefere
 }
 
 var BasePostFunction = serverless.Function{
-	DeploymentPreference: &BasePostFunctionDeploymentPreference,
+	DeploymentPreference: BasePostFunctionDeploymentPreference,
 	FunctionName: "CodeDeployHook_postTrafficHook1",
 	Handler: "src/hooks/basepost.lambdaHandler",
 	Policies: []any{Json{
@@ -52,7 +52,7 @@ var BaseFunctionDeploymentPreference = serverless.Function_DeploymentPreference{
 
 var BaseFunction = serverless.Function{
 	AutoPublishAlias: "live",
-	DeploymentPreference: &BaseFunctionDeploymentPreference,
+	DeploymentPreference: BaseFunctionDeploymentPreference,
 	Description: "Base lambda function",
 	Events: Json{
 	"ApiEvent": Json{
@@ -76,8 +76,8 @@ var BasePreFunctionDeploymentPreference = serverless.Function_DeploymentPreferen
 }
 
 var BasePreFunction = serverless.Function{
-	DeploymentPreference: &BasePreFunctionDeploymentPreference,
-	Environment: &BasePreFunctionEnvironment,
+	DeploymentPreference: BasePreFunctionDeploymentPreference,
+	Environment: BasePreFunctionEnvironment,
 	FunctionName: "CodeDeployHook_preTrafficHook1",
 	Handler: "src/hooks/basepre.lambdaHandler",
 	Policies: []any{Json{

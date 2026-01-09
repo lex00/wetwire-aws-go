@@ -20,12 +20,12 @@ var UserPoolSchemaEmail = cognito.UserPool_SchemaAttribute{
 }
 
 var UserPoolPolicies = cognito.UserPool_Policies{
-	PasswordPolicy: &UserPoolPoliciesPasswordPolicy,
+	PasswordPolicy: UserPoolPoliciesPasswordPolicy,
 }
 
 var UserPool = cognito.UserPool{
 	AutoVerifiedAttributes: []any{"email"},
-	Policies: &UserPoolPolicies,
+	Policies: UserPoolPolicies,
 	Schema: []any{UserPoolSchemaEmail},
 	UserPoolName: Sub{String: "${AppName}-UserPool"},
 	UsernameAttributes: []any{"email"},

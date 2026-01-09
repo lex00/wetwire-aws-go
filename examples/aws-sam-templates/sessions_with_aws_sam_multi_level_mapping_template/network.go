@@ -25,7 +25,7 @@ var DomainRecordSetAliasTarget = route53.RecordSet_AliasTarget{
 }
 
 var DomainRecordSet = route53.RecordSet{
-	AliasTarget: &DomainRecordSetAliasTarget,
+	AliasTarget: DomainRecordSetAliasTarget,
 	HostedZoneId: ZoneId,
 	Name: DomainName,
 	Type_: "A",

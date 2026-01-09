@@ -9,30 +9,30 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/serverless"
 )
 
-var downloadSignerLambda = serverless.Function{
+var DownloadSignerLambda = serverless.Function{
 	CodeUri: "lambda/downloadSigner/",
 	Policies: []any{Json{
 	"S3ReadPolicy": Json{
-	"BucketName": storageBucket,
+	"BucketName": StorageBucket,
 },
 }},
 }
 
-var uploadSignerLambda = serverless.Function{
+var UploadSignerLambda = serverless.Function{
 	CodeUri: "lambda/uploadSigner/",
 	Policies: []any{Json{
 	"S3WritePolicy": Json{
-	"BucketName": storageBucket,
+	"BucketName": StorageBucket,
 },
 }},
 }
 
-var fetchedShortUrlLambda = serverless.Function{
+var FetchedShortUrlLambda = serverless.Function{
 	CodeUri: "lambda/fetchShortUrl/",
 	Events: Json{
 	"ApiEvent": Json{
 	"Properties": Json{
-	"ApiId": httpApi,
+	"ApiId": HttpApi,
 	"Method": "GET",
 	"Path": "/{id}",
 },
@@ -41,12 +41,12 @@ var fetchedShortUrlLambda = serverless.Function{
 },
 	Policies: Json{
 	"DynamoDBReadPolicy": Json{
-	"TableName": urlTable,
+	"TableName": UrlTable,
 },
 },
 }
 
-var urlStateMachine = serverless.StateMachine{
+var UrlStateMachine = serverless.StateMachine{
 	Definition: Json{
 	"StartAt": "Generate Signed URLs",
 	"States": Json{
@@ -132,21 +132,21 @@ var urlStateMachine = serverless.StateMachine{
 },
 	DefinitionSubstitutions: Json{
 	"DDBPutItem": Sub{String: "arn:${AWS::Partition}:states:::dynamodb:putItem"},
-	"DDBTable": urlTable,
-	"GetDownloadSignerFunction": downloadSignerLambda.Arn,
-	"GetUploadSignerFunction": uploadSignerLambda.Arn,
+	"DDBTable": UrlTable,
+	"GetDownloadSignerFunction": DownloadSignerLambda.Arn,
+	"GetUploadSignerFunction": UploadSignerLambda.Arn,
 },
 	Policies: []any{Json{
 	"DynamoDBWritePolicy": Json{
-	"TableName": urlTable,
+	"TableName": UrlTable,
 },
 }, Json{
 	"LambdaInvokePolicy": Json{
-	"FunctionName": uploadSignerLambda,
+	"FunctionName": UploadSignerLambda,
 },
 }, Json{
 	"LambdaInvokePolicy": Json{
-	"FunctionName": downloadSignerLambda,
+	"FunctionName": DownloadSignerLambda,
 },
 }},
 	Tracing: Json{
@@ -155,7 +155,7 @@ var urlStateMachine = serverless.StateMachine{
 	Type_: "EXPRESS",
 }
 
-var httpApi = serverless.HttpApi{
+var HttpApi = serverless.HttpApi{
 	DefinitionBody: Json{
 	"info": Json{
 	"title": "Signed URL Generator - Built with AWS SAM",
@@ -171,12 +171,12 @@ var httpApi = serverless.HttpApi{
 },
 	"x-amazon-apigateway-integration": Json{
 	"connectionType": "INTERNET",
-	"credentials": httpApiRole.Arn,
+	"credentials": HttpApiRole.Arn,
 	"integrationSubtype": "StepFunctions-StartSyncExecution",
 	"payloadFormatVersion": "1.0",
 	"requestParameters": Json{
 	"Input": "$request.body",
-	"StateMachineArn": urlStateMachine.Arn,
+	"StateMachineArn": UrlStateMachine.Arn,
 },
 	"type": "aws_proxy",
 },

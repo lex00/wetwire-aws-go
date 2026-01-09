@@ -24,9 +24,9 @@ var urlTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 	AttributeType: "S",
 }
 
-var urlTable = dynamodb.Table{
+var UrlTable = dynamodb.Table{
 	AttributeDefinitions: []any{urlTableAttributeDefinition1},
 	BillingMode: enums.DynamodbBillingModePayPerRequest,
 	KeySchema: []any{urlTableKeySchema1},
-	TimeToLiveSpecification: &urlTableTimeToLiveSpecification,
+	TimeToLiveSpecification: urlTableTimeToLiveSpecification,
 }

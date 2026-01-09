@@ -28,5 +28,5 @@ var ProcessedDataTable = dynamodb.Table{
 	AttributeDefinitions: []any{ProcessedDataTableAttributeDefinition1},
 	BillingMode: enums.DynamodbBillingModePayPerRequest,
 	KeySchema: []any{ProcessedDataTableKeySchema1},
-	TimeToLiveSpecification: &ProcessedDataTableTimeToLiveSpecification,
+	TimeToLiveSpecification: ProcessedDataTableTimeToLiveSpecification,
 }

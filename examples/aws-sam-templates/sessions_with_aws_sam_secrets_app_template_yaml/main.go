@@ -15,7 +15,7 @@ var LambdaFunctionEnvironment = serverless.Function_Environment{
 
 var LambdaFunction = serverless.Function{
 	CodeUri: "src/",
-	Environment: &LambdaFunctionEnvironment,
+	Environment: LambdaFunctionEnvironment,
 	Handler: "app.lambdaHandler",
 	Runtime: "nodejs16.x",
 }

@@ -36,7 +36,7 @@ var SaveUser = serverless.Function{
 	Description: SubWithMap{String: "Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}", Variables: Json{
 	"ResourceName": "SaveUser",
 }},
-	Environment: &SaveUserEnvironment,
+	Environment: SaveUserEnvironment,
 	Events: Json{
 	"HttpApiPOSTusersid": Json{
 	"Properties": Json{

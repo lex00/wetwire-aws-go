@@ -21,7 +21,7 @@ var AppBucketBucketEncryption = s3.Bucket_BucketEncryption{
 }
 
 var AppBucket = s3.Bucket{
-	BucketEncryption: &AppBucketBucketEncryption,
+	BucketEncryption: AppBucketBucketEncryption,
 	BucketName: AppBucketName,
-	VersioningConfiguration: &AppBucketVersioningConfiguration,
+	VersioningConfiguration: AppBucketVersioningConfiguration,
 }

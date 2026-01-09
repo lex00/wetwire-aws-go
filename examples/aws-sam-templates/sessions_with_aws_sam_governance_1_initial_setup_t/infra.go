@@ -21,6 +21,6 @@ var ConfigRecorderRecordingGroup = config.ConfigurationRecorder_RecordingGroup{
 
 var ConfigRecorder = config.ConfigurationRecorder{
 	Name: Sub{String: "${AWS::Region}-Config-Recorder"},
-	RecordingGroup: &ConfigRecorderRecordingGroup,
+	RecordingGroup: ConfigRecorderRecordingGroup,
 	RoleARN: ConfigRole.Arn,
 }

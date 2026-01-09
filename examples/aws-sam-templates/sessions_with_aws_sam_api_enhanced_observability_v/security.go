@@ -23,12 +23,12 @@ var MyWAFACLRuleRateLimitVisibilityConfig = wafv2.RuleGroup_VisibilityConfig{
 	SampledRequestsEnabled: true,
 }
 
-var MyWAFACLRuleRateLimitStatement = wafv2.RuleGroup_Statement{
-	RateBasedStatement: &MyWAFACLRuleRateLimitStatementRateBasedStatement,
+var MyWAFACLRuleRateLimitStatement = wafv2.WebACL_Statement{
+	RateBasedStatement: MyWAFACLRuleRateLimitStatementRateBasedStatement,
 }
 
 var MyWAFACLRuleRateLimitAction = wafv2.RuleGroup_RuleAction{
-	Block: &MyWAFACLRuleRateLimitActionBlock,
+	Block: MyWAFACLRuleRateLimitActionBlock,
 }
 
 var MyWAFACLDefaultActionAllow = wafv2.RuleGroup_AllowAction{
@@ -41,7 +41,7 @@ var MyWAFACLVisibilityConfig = wafv2.WebACL_VisibilityConfig{
 }
 
 var MyWAFACLRuleRateLimit = wafv2.WebACL_Rule{
-	Action: &MyWAFACLRuleRateLimitAction,
+	Action: MyWAFACLRuleRateLimitAction,
 	Name: "RateLimit",
 	Priority: 0,
 	Statement: MyWAFACLRuleRateLimitStatement,
@@ -49,7 +49,7 @@ var MyWAFACLRuleRateLimit = wafv2.WebACL_Rule{
 }
 
 var MyWAFACLDefaultAction = wafv2.WebACL_DefaultAction{
-	Allow: &MyWAFACLDefaultActionAllow,
+	Allow: MyWAFACLDefaultActionAllow,
 }
 
 var MyWAFACL = wafv2.WebACL{

@@ -39,7 +39,7 @@ var StateMachine = serverless.StateMachine{
 	"FnCheck": FnCheck.Arn,
 	"FnFailure": FnFailure.Arn,
 	"FnSuccess": FnSuccess.Arn,
-	"GlueJobName": pGlueJobName,
+	"GlueJobName": PGlueJobName,
 },
 	DefinitionUri: "statemachine/asl.json",
 	Role: StateMachineRole.Arn,

@@ -36,6 +36,6 @@ var ActivitiesTableAttributeDefinition1 = dynamodb.Table_AttributeDefinition{
 var ActivitiesTable = dynamodb.Table{
 	AttributeDefinitions: []any{ActivitiesTableAttributeDefinition1, ActivitiesTableAttributeDefinition2},
 	KeySchema: []any{ActivitiesTableKeySchema1, ActivitiesTableKeySchema2},
-	ProvisionedThroughput: &ActivitiesTableProvisionedThroughput,
+	ProvisionedThroughput: ActivitiesTableProvisionedThroughput,
 	TableName: "Activities",
 }

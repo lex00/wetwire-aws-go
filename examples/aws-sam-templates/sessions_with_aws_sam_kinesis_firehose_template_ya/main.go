@@ -19,7 +19,7 @@ var ProcessFunctionEnvironment = serverless.Function_Environment{
 
 var ProcessFunction = serverless.Function{
 	CodeUri: "src/",
-	Environment: &ProcessFunctionEnvironment,
+	Environment: ProcessFunctionEnvironment,
 	Handler: "process.handler",
 	Policies: []any{Json{
 	"DynamoDBCrudPolicy": Json{
@@ -36,7 +36,7 @@ var CountFunctionEnvironment = serverless.Function_Environment{
 
 var CountFunction = serverless.Function{
 	CodeUri: "src/",
-	Environment: &CountFunctionEnvironment,
+	Environment: CountFunctionEnvironment,
 	Handler: "count.handler",
 	Policies: []any{Json{
 	"DynamoDBCrudPolicy": Json{
@@ -45,26 +45,6 @@ var CountFunction = serverless.Function{
 }},
 	Runtime: "nodejs16.x",
 	Timeout: 180,
-}
-
-var KinesisAnalyticsOutputOutputLambdaOutput = kinesisanalytics.ApplicationOutput_LambdaOutput{
-	ResourceARN: CountFunction.Arn,
-	RoleARN: KinesisAnalyticsAccessRole.Arn,
-}
-
-var KinesisAnalyticsOutputOutputDestinationSchema = kinesisanalytics.ApplicationOutput_DestinationSchema{
-	RecordFormatType: "JSON",
-}
-
-var KinesisAnalyticsOutputOutput = kinesisanalytics.ApplicationOutput_Output{
-	DestinationSchema: KinesisAnalyticsOutputOutputDestinationSchema,
-	LambdaOutput: &KinesisAnalyticsOutputOutputLambdaOutput,
-	Name: "LINK_STREAM",
-}
-
-var KinesisAnalyticsOutput = kinesisanalytics.ApplicationOutput{
-	ApplicationName: KinesisAnalyticsApp,
-	Output: KinesisAnalyticsOutputOutput,
 }
 
 var KinesisAnalyticsAppInput1InputSchemaRecordFormat = kinesisanalytics.ApplicationReferenceDataSource_RecordFormat{
@@ -107,7 +87,7 @@ var KinesisAnalyticsAppInput1InputSchema = kinesisanalytics.Application_InputSch
 
 var KinesisAnalyticsAppInput1 = kinesisanalytics.Application_Input{
 	InputSchema: KinesisAnalyticsAppInput1InputSchema,
-	KinesisFirehoseInput: &KinesisAnalyticsAppInput1KinesisFirehoseInput,
+	KinesisFirehoseInput: KinesisAnalyticsAppInput1KinesisFirehoseInput,
 	NamePrefix: "SESSIONS_STREAM",
 }
 
@@ -117,4 +97,24 @@ var KinesisAnalyticsApp = kinesisanalytics.Application{
     GROUP BY "resourcePath", STEP("SESSIONS_STREAM_001".ROWTIME BY INTERVAL '10' SECOND);
 `,
 	Inputs: []any{KinesisAnalyticsAppInput1},
+}
+
+var KinesisAnalyticsOutputOutputLambdaOutput = kinesisanalytics.ApplicationOutput_LambdaOutput{
+	ResourceARN: CountFunction.Arn,
+	RoleARN: KinesisAnalyticsAccessRole.Arn,
+}
+
+var KinesisAnalyticsOutputOutputDestinationSchema = kinesisanalytics.ApplicationOutput_DestinationSchema{
+	RecordFormatType: "JSON",
+}
+
+var KinesisAnalyticsOutputOutput = kinesisanalytics.ApplicationOutput_Output{
+	DestinationSchema: KinesisAnalyticsOutputOutputDestinationSchema,
+	LambdaOutput: KinesisAnalyticsOutputOutputLambdaOutput,
+	Name: "LINK_STREAM",
+}
+
+var KinesisAnalyticsOutput = kinesisanalytics.ApplicationOutput{
+	ApplicationName: KinesisAnalyticsApp,
+	Output: KinesisAnalyticsOutputOutput,
 }

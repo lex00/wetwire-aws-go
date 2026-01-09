@@ -8,5 +8,5 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/s3"
 )
 
-var storageBucket = s3.Bucket{
+var StorageBucket = s3.Bucket{
 }

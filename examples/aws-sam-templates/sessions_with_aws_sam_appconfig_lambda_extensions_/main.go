@@ -67,7 +67,7 @@ var AppConfigLambdaFunctionEnvironment = serverless.Function_Environment{
 
 var AppConfigLambdaFunction = serverless.Function{
 	CodeUri: "src/",
-	Environment: &AppConfigLambdaFunctionEnvironment,
+	Environment: AppConfigLambdaFunctionEnvironment,
 	Events: Json{
 	"AppConfigLambda": Json{
 	"Properties": Json{

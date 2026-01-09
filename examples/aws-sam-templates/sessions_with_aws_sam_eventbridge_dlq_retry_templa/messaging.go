@@ -24,9 +24,9 @@ var EBRuleTargetLambdaTargetDeadLetterConfig = events.EventBus_DeadLetterConfig{
 
 var EBRuleTargetLambdaTarget = events.Rule_Target{
 	Arn: TriggeredFunction.Arn,
-	DeadLetterConfig: &EBRuleTargetLambdaTargetDeadLetterConfig,
+	DeadLetterConfig: EBRuleTargetLambdaTargetDeadLetterConfig,
 	Id: "lambdaTarget",
-	RetryPolicy: &EBRuleTargetLambdaTargetRetryPolicy,
+	RetryPolicy: EBRuleTargetLambdaTargetRetryPolicy,
 }
 
 var EBRule = events.Rule{

@@ -59,7 +59,7 @@ var EndpointFunctionEnvironment = serverless.Function_Environment{
 }
 
 var EndpointFunction = serverless.Function{
-	Environment: &EndpointFunctionEnvironment,
+	Environment: EndpointFunctionEnvironment,
 	Events: Json{
 	"API": Json{
 	"Properties": Json{

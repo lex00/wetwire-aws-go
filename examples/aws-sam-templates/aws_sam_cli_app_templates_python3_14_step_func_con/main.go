@@ -79,7 +79,7 @@ var TransactionTablePrimaryKey = serverless.SimpleTable_PrimaryKey{
 }
 
 var TransactionTable = serverless.SimpleTable{
-	PrimaryKey: &TransactionTablePrimaryKey,
+	PrimaryKey: TransactionTablePrimaryKey,
 	ProvisionedThroughput: Json{
 	"ReadCapacityUnits": 1,
 	"WriteCapacityUnits": 1,

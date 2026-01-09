@@ -36,7 +36,7 @@ var ApiGWTracingRule = config.ConfigRule{
 	"keyPath": "tracingEnabled",
 	"resourceTypesArray": []any{"AWS::ApiGateway::Stage"},
 },
-	Scope: &ApiGWTracingRuleScope,
+	Scope: ApiGWTracingRuleScope,
 	Source: ApiGWTracingRuleSource,
 }
 
@@ -67,6 +67,6 @@ var LambdaTracingRule = config.ConfigRule{
 	"keyPath": "tracingConfig.mode",
 	"resourceTypesArray": []any{"AWS::Lambda::Function"},
 },
-	Scope: &LambdaTracingRuleScope,
+	Scope: LambdaTracingRuleScope,
 	Source: LambdaTracingRuleSource,
 }

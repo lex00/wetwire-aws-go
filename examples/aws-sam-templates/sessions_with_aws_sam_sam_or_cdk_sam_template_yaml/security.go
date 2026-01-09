@@ -30,7 +30,7 @@ var httpApiRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 	Principal: ServicePrincipal{"apigateway.amazonaws.com"},
 }
 
-var httpApiRole = iam.Role{
+var HttpApiRole = iam.Role{
 	AssumeRolePolicyDocument: httpApiRoleAssumeRolePolicyDocument,
 	Policies: []any{httpApiRolePolicyApiDirectWriteToSQS},
 }

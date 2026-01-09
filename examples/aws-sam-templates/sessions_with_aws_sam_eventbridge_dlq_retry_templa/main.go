@@ -10,11 +10,8 @@ import (
 )
 
 var MyHttpApi = serverless.HttpApi{
-	DefinitionBody: Transform{Json{
-	"Name": "AWS::Include",
-	"Parameters": Json{
-		"Location": "./api.yaml",
-	},
+	DefinitionBody: Transform{Name: "AWS::Include", Parameters: Json{
+	"Location": "./api.yaml",
 }},
 }
 

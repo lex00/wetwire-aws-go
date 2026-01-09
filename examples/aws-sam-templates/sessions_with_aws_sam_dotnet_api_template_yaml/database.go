@@ -27,5 +27,5 @@ var Users = dynamodb.Table{
 	AttributeDefinitions: []any{UsersAttributeDefinition1},
 	BillingMode: enums.DynamodbBillingModePayPerRequest,
 	KeySchema: []any{UsersKeySchema1},
-	StreamSpecification: &UsersStreamSpecification,
+	StreamSpecification: UsersStreamSpecification,
 }
