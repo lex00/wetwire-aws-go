@@ -414,3 +414,40 @@ func TestAllRules(t *testing.T) {
 	assert.Contains(t, ruleIDs, "WAW011")
 	assert.Contains(t, ruleIDs, "WAW017")
 }
+
+func TestUndefinedReference_CrossFileInPackage(t *testing.T) {
+	// Test that cross-file references within the same package are not flagged
+	// when using CheckWithContext with PackageContext
+
+	// Simulate outputs.go referencing DataBucket from storage.go
+	src := `package infra
+
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
+
+var BucketNameOutput = Output{
+	Description: "Name of the S3 data bucket",
+	Value:       DataBucket,
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "outputs.go", src, 0)
+	require.NoError(t, err)
+
+	rule := UndefinedReference{}
+
+	// Without context, should flag DataBucket as undefined
+	issuesNoCtx := rule.Check(file, fset)
+	assert.Len(t, issuesNoCtx, 1)
+	if len(issuesNoCtx) > 0 {
+		assert.Contains(t, issuesNoCtx[0].Message, "DataBucket")
+	}
+
+	// With context that includes DataBucket, should NOT flag it
+	ctx := &PackageContext{
+		AllDefinedVars: map[string]bool{
+			"DataBucket": true,
+		},
+	}
+	issuesWithCtx := rule.CheckWithContext(file, fset, ctx)
+	assert.Len(t, issuesWithCtx, 0, "Should not flag cross-file reference when defined in package context")
+}

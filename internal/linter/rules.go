@@ -49,6 +49,20 @@ type Rule interface {
 	Check(file *ast.File, fset *token.FileSet) []Issue
 }
 
+// PackageContext holds information about all files in a package.
+// This is used by package-aware rules that need cross-file visibility.
+type PackageContext struct {
+	// AllDefinedVars contains all package-level variable names across all files
+	AllDefinedVars map[string]bool
+}
+
+// PackageAwareRule is an optional interface for rules that need package-level context.
+// Rules implementing this interface will receive cross-file information.
+type PackageAwareRule interface {
+	Rule
+	CheckWithContext(file *ast.File, fset *token.FileSet, ctx *PackageContext) []Issue
+}
+
 // HardcodedPseudoParameter detects hardcoded AWS pseudo-parameter strings.
 //
 // Detects: "AWS::Region", "AWS::AccountId", "AWS::StackName"
@@ -1410,6 +1424,16 @@ var knownIdentifiers = map[string]bool{
 }
 
 func (r UndefinedReference) Check(file *ast.File, fset *token.FileSet) []Issue {
+	// When called without package context, only check against current file definitions
+	return r.checkWithDefined(file, fset, nil)
+}
+
+// CheckWithContext implements PackageAwareRule for cross-file reference checking.
+func (r UndefinedReference) CheckWithContext(file *ast.File, fset *token.FileSet, ctx *PackageContext) []Issue {
+	return r.checkWithDefined(file, fset, ctx)
+}
+
+func (r UndefinedReference) checkWithDefined(file *ast.File, fset *token.FileSet, ctx *PackageContext) []Issue {
 	var issues []Issue
 
 	// Collect all defined identifiers in this file
@@ -1448,6 +1472,11 @@ func (r UndefinedReference) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 		// Skip if defined in this file
 		if defined[name] {
+			return true
+		}
+
+		// Skip if defined in another file in the same package (cross-file reference)
+		if ctx != nil && ctx.AllDefinedVars[name] {
 			return true
 		}
 
