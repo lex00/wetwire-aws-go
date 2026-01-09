@@ -16,7 +16,6 @@ Use Kiro CLI with wetwire-aws for AI-assisted infrastructure design in corporate
 
 ```bash
 go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
 ```
 
 ### Option B: Pre-built binaries
@@ -26,31 +25,24 @@ Download from [GitHub Releases](https://github.com/lex00/wetwire-aws-go/releases
 ```bash
 # macOS (Apple Silicon)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-arm64
-curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-arm64
-chmod +x wetwire-aws-darwin-arm64 wetwire-aws-mcp-darwin-arm64
+chmod +x wetwire-aws-darwin-arm64
 sudo mv wetwire-aws-darwin-arm64 /usr/local/bin/wetwire-aws
-sudo mv wetwire-aws-mcp-darwin-arm64 /usr/local/bin/wetwire-aws-mcp
 
 # macOS (Intel)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-darwin-amd64
-curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-darwin-amd64
-chmod +x wetwire-aws-darwin-amd64 wetwire-aws-mcp-darwin-amd64
+chmod +x wetwire-aws-darwin-amd64
 sudo mv wetwire-aws-darwin-amd64 /usr/local/bin/wetwire-aws
-sudo mv wetwire-aws-mcp-darwin-amd64 /usr/local/bin/wetwire-aws-mcp
 
 # Linux (x86-64)
 curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-linux-amd64
-curl -LO https://github.com/lex00/wetwire-aws-go/releases/latest/download/wetwire-aws-mcp-linux-amd64
-chmod +x wetwire-aws-linux-amd64 wetwire-aws-mcp-linux-amd64
+chmod +x wetwire-aws-linux-amd64
 sudo mv wetwire-aws-linux-amd64 /usr/local/bin/wetwire-aws
-sudo mv wetwire-aws-mcp-linux-amd64 /usr/local/bin/wetwire-aws-mcp
 ```
 
 ### Verify installation
 
 ```bash
 wetwire-aws --version
-wetwire-aws-mcp  # Should start MCP server (Ctrl+C to exit)
 ```
 
 ---
@@ -94,7 +86,7 @@ This automatically installs:
 
 ### Manual configuration (optional)
 
-If you prefer to configure manually:
+The MCP server is embedded in the main `wetwire-aws` binary. If you prefer to configure manually:
 
 **~/.kiro/agents/wetwire-runner.json:**
 ```json
@@ -105,8 +97,9 @@ If you prefer to configure manually:
   "model": "claude-sonnet-4",
   "mcpServers": {
     "wetwire": {
-      "command": "wetwire-aws-mcp",
-      "args": []
+      "command": "/path/to/wetwire-aws",
+      "args": ["design", "--mcp-server"],
+      "cwd": "/path/to/your/project"
     }
   },
   "tools": ["*"]
@@ -118,12 +111,15 @@ If you prefer to configure manually:
 {
   "mcpServers": {
     "wetwire": {
-      "command": "wetwire-aws-mcp",
-      "args": []
+      "command": "/path/to/wetwire-aws",
+      "args": ["design", "--mcp-server"],
+      "cwd": "/path/to/your/project"
     }
   }
 }
 ```
+
+> **Note:** The `cwd` field ensures MCP tools resolve paths correctly in your project directory. When using `wetwire-aws design --provider kiro`, this is configured automatically.
 
 ---
 
@@ -232,13 +228,13 @@ sam deploy --template-file template.json --stack-name my-stack --guided
 Mcp error: -32002: No such file or directory
 ```
 
-**Solution:** Ensure `wetwire-aws-mcp` is in your PATH:
+**Solution:** Ensure `wetwire-aws` is in your PATH:
 
 ```bash
-which wetwire-aws-mcp
+which wetwire-aws
 
 # If not found, add to PATH or reinstall
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 ```
 
 ### Kiro CLI not found
