@@ -704,8 +704,11 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 		return nil, fmt.Errorf("finding module info: %w", err)
 	}
 
-	// Calculate import path
+	// Calculate import path - includes subpackage path if not at module root
 	importPath := modInfo.ModulePath
+	if relPath, err := filepath.Rel(modInfo.GoModDir, absPath); err == nil && relPath != "." {
+		importPath = modInfo.ModulePath + "/" + filepath.ToSlash(relPath)
+	}
 
 	// Get the first var name (needed to force the import)
 	firstVar := varNames[0]

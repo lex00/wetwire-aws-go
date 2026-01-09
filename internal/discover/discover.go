@@ -450,6 +450,11 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 			name := valueSpec.Names[0].Name
 			value := valueSpec.Values[0]
 
+			// Skip blank identifier
+			if name == "_" {
+				continue
+			}
+
 			// Track ALL var declarations to avoid false positive undefined references
 			result.AllVars[name] = true
 
