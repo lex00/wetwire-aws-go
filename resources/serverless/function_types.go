@@ -22,6 +22,8 @@ type Function_DeploymentPreference struct {
 	Enabled any `json:"Enabled,omitempty"`
 	// Pre/post traffic hooks.
 	Hooks any `json:"Hooks,omitempty"`
+	// CodeDeploy trigger configurations.
+	TriggerConfigurations []any `json:"TriggerConfigurations,omitempty"`
 	// Deployment type (Canary10Percent5Minutes, Linear10PercentEvery1Minute, AllAtOnce).
 	Type_ any `json:"Type,omitempty"`
 }
