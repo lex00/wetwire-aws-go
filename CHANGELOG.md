@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-01-09
+
 ### Added
 
 - `graph` command for DOT/Mermaid dependency visualization (#121)
@@ -298,7 +300,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Block-style code generation with typed property types
 - 254/254 AWS sample templates import successfully (100% success rate)
 
-[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.7.0...HEAD
+[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.8.2...v1.9.0
 [1.7.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.6.2...v1.7.0
 [1.6.2]: https://github.com/lex00/wetwire-aws-go/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/lex00/wetwire-aws-go/compare/v1.6.0...v1.6.1
