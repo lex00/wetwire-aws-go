@@ -2,6 +2,7 @@
 package linter
 
 import (
+	"go/ast"
 	"go/parser"
 	"go/token"
 	"os"
@@ -69,9 +70,18 @@ func LintPackage(pkgPath string, opts Options) (Result, error) {
 	var allIssues []Issue
 
 	for _, pkg := range pkgs {
+		// Build package context with all defined variables across files
+		ctx := buildPackageContext(pkg)
+
 		for _, file := range pkg.Files {
 			for _, rule := range rules {
-				issues := rule.Check(file, fset)
+				var issues []Issue
+				// Use CheckWithContext for package-aware rules
+				if par, ok := rule.(PackageAwareRule); ok {
+					issues = par.CheckWithContext(file, fset, ctx)
+				} else {
+					issues = rule.Check(file, fset)
+				}
 				allIssues = append(allIssues, issues...)
 			}
 		}
@@ -81,6 +91,29 @@ func LintPackage(pkgPath string, opts Options) (Result, error) {
 		Success: len(allIssues) == 0,
 		Issues:  allIssues,
 	}, nil
+}
+
+// buildPackageContext collects all package-level variable definitions across all files.
+func buildPackageContext(pkg *ast.Package) *PackageContext {
+	ctx := &PackageContext{
+		AllDefinedVars: make(map[string]bool),
+	}
+
+	for _, file := range pkg.Files {
+		for _, decl := range file.Decls {
+			if genDecl, ok := decl.(*ast.GenDecl); ok && genDecl.Tok == token.VAR {
+				for _, spec := range genDecl.Specs {
+					if valueSpec, ok := spec.(*ast.ValueSpec); ok {
+						for _, name := range valueSpec.Names {
+							ctx.AllDefinedVars[name.Name] = true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ctx
 }
 
 // lintRecursive lints all Go packages recursively.
