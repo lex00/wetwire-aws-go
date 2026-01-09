@@ -1,12 +1,11 @@
 package kiro
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -40,97 +39,131 @@ func NewTestRunner(workDir string) *TestRunner {
 }
 
 // Run executes a test scenario through kiro-cli.
-// It pipes the prompt to kiro-cli and captures the output.
+// It uses PTY handling via the 'script' command because kiro-cli requires
+// a TTY even with --no-interactive mode.
 func (r *TestRunner) Run(ctx context.Context, prompt string) (*TestResult, error) {
 	// Check if kiro-cli is installed
 	if _, err := exec.LookPath("kiro-cli"); err != nil {
 		return nil, fmt.Errorf("kiro-cli not found in PATH\n\nInstall Kiro CLI: https://kiro.dev/cli")
 	}
 
+	// Use PTY-based execution for reliable kiro-cli interaction
+	return r.runWithPTY(ctx, prompt)
+}
+
+// runWithPTY executes kiro-cli with a pseudo-terminal using the 'script' command.
+// kiro-cli requires a TTY even with --no-interactive, so we use the 'script'
+// utility to provide one. This is more robust than using Go's pty module directly.
+func (r *TestRunner) runWithPTY(ctx context.Context, prompt string) (*TestResult, error) {
 	// Create timeout context
 	ctx, cancel := context.WithTimeout(ctx, r.Timeout)
 	defer cancel()
 
-	// Build kiro-cli command
-	// --no-interactive: Don't wait for user input
-	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
-	args := []string{"chat", "--agent", r.AgentName, "--model", "claude-sonnet-4", "--no-interactive", "--trust-all-tools"}
-	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
-	cmd.Dir = r.WorkDir
-
-	// Set up pipes
-	stdin, err := cmd.StdinPipe()
+	// Create temp file for output
+	outputFile, err := os.CreateTemp("", "kiro-output-*.txt")
 	if err != nil {
-		return nil, fmt.Errorf("creating stdin pipe: %w", err)
+		return nil, fmt.Errorf("creating temp file: %w", err)
+	}
+	outputPath := outputFile.Name()
+	outputFile.Close()
+	defer os.Remove(outputPath)
+
+	// Build kiro-cli command string
+	kiroArgs := []string{
+		"chat",
+		"--agent", r.AgentName,
+		"--model", "claude-sonnet-4",
+		"--no-interactive",
+		"--trust-all-tools",
+		prompt,
 	}
 
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, fmt.Errorf("creating stdout pipe: %w", err)
-	}
-
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, fmt.Errorf("creating stderr pipe: %w", err)
-	}
-
-	// Start command
-	startTime := time.Now()
-	if err := cmd.Start(); err != nil {
-		return nil, fmt.Errorf("starting kiro-cli: %w", err)
-	}
-
-	// Write prompt to stdin
-	go func() {
-		defer stdin.Close()
-		fmt.Fprintln(stdin, prompt)
-		// Send /exit to end the session
-		fmt.Fprintln(stdin, "/exit")
-	}()
-
-	// Capture output
-	result := &TestResult{}
-	var outputBuilder strings.Builder
-
-	// Read stdout in goroutine
-	go func() {
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			line := scanner.Text()
-			outputBuilder.WriteString(line)
-			outputBuilder.WriteString("\n")
-
-			if r.StreamHandler != nil {
-				r.StreamHandler(line + "\n")
-			}
-
-			// Parse output for results
-			r.parseOutputLine(line, result)
+	// Build script command - differs between macOS and Linux
+	var scriptCmd *exec.Cmd
+	if runtime.GOOS == "darwin" {
+		// macOS: script -q output_file command args...
+		args := append([]string{"-q", outputPath, "kiro-cli"}, kiroArgs...)
+		scriptCmd = exec.CommandContext(ctx, "script", args...)
+	} else {
+		// Linux: script -q -c "command args..." output_file
+		cmdStr := "kiro-cli"
+		for _, arg := range kiroArgs {
+			cmdStr += " " + shellescape(arg)
 		}
-	}()
+		scriptCmd = exec.CommandContext(ctx, "script", "-q", "-c", cmdStr, outputPath)
+	}
 
-	// Read stderr
-	stderrOutput, _ := io.ReadAll(stderr)
+	scriptCmd.Dir = r.WorkDir
 
-	// Wait for command to complete
-	err = cmd.Wait()
-	result.Duration = time.Since(startTime)
-	result.Output = outputBuilder.String()
+	// Connect stdin to /dev/null to prevent blocking
+	devNull, err := os.Open(os.DevNull)
+	if err != nil {
+		return nil, fmt.Errorf("opening /dev/null: %w", err)
+	}
+	defer devNull.Close()
+	scriptCmd.Stdin = devNull
+
+	// Capture stderr
+	var stderrBuf strings.Builder
+	scriptCmd.Stderr = &stderrBuf
+
+	// Run command
+	startTime := time.Now()
+	err = scriptCmd.Run()
+	duration := time.Since(startTime)
+
+	// Read output from file
+	output, readErr := os.ReadFile(outputPath)
+	if readErr != nil {
+		output = []byte{}
+	}
+
+	// Parse results
+	result := &TestResult{
+		Duration: duration,
+		Output:   string(output),
+	}
+
+	// Parse output lines for results
+	for _, line := range strings.Split(string(output), "\n") {
+		r.parseOutputLine(line, result)
+		if r.StreamHandler != nil {
+			r.StreamHandler(line + "\n")
+		}
+	}
 
 	if err != nil {
 		if ctx.Err() == context.DeadlineExceeded {
-			result.ErrorMessages = append(result.ErrorMessages, "test timed out")
+			result.ErrorMessages = append(result.ErrorMessages, fmt.Sprintf("test timed out after %v", r.Timeout))
 		} else {
 			result.ErrorMessages = append(result.ErrorMessages, fmt.Sprintf("kiro-cli error: %v", err))
 		}
-		if len(stderrOutput) > 0 {
-			result.ErrorMessages = append(result.ErrorMessages, string(stderrOutput))
+		if stderrBuf.Len() > 0 {
+			result.ErrorMessages = append(result.ErrorMessages, stderrBuf.String())
 		}
 		return result, nil
 	}
 
 	result.Success = true
 	return result, nil
+}
+
+// shellescape escapes a string for safe use in a shell command.
+func shellescape(s string) string {
+	// If string contains no special characters, return as-is
+	safe := true
+	for _, c := range s {
+		if !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+			(c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '/') {
+			safe = false
+			break
+		}
+	}
+	if safe {
+		return s
+	}
+	// Otherwise, single-quote it and escape any single quotes
+	return "'" + strings.ReplaceAll(s, "'", "'\"'\"'") + "'"
 }
 
 // parseOutputLine extracts test results from kiro-cli output.
@@ -186,104 +219,17 @@ func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, persona 
 }
 
 // runWithResponses runs a test with the given responses to clarifying questions.
+// Note: With PTY-based execution and --no-interactive mode, persona responses
+// are included in the initial prompt since kiro-cli runs autonomously.
 func (r *TestRunner) runWithResponses(ctx context.Context, prompt string, personaResponses []string) (*TestResult, error) {
-	// Check if kiro-cli is installed
-	if _, err := exec.LookPath("kiro-cli"); err != nil {
-		return nil, fmt.Errorf("kiro-cli not found in PATH\n\nInstall Kiro CLI: https://kiro.dev/cli")
+	// Build a combined prompt that includes context about expected responses
+	combinedPrompt := prompt
+	if len(personaResponses) > 0 {
+		combinedPrompt += "\n\nWhen making decisions, assume the user would respond with preferences like: " +
+			strings.Join(personaResponses[:min(3, len(personaResponses))], "; ")
 	}
 
-	// Create timeout context
-	ctx, cancel := context.WithTimeout(ctx, r.Timeout)
-	defer cancel()
-
-	// Build kiro-cli command
-	// --no-interactive: Don't wait for user input
-	// --trust-all-tools: Auto-approve tool calls (required for non-interactive)
-	args := []string{"chat", "--agent", r.AgentName, "--model", "claude-sonnet-4", "--no-interactive", "--trust-all-tools"}
-	cmd := exec.CommandContext(ctx, "kiro-cli", args...)
-	cmd.Dir = r.WorkDir
-
-	// Set up pipes
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return nil, fmt.Errorf("creating stdin pipe: %w", err)
-	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, fmt.Errorf("creating stdout pipe: %w", err)
-	}
-
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, fmt.Errorf("creating stderr pipe: %w", err)
-	}
-
-	// Start command
-	startTime := time.Now()
-	if err := cmd.Start(); err != nil {
-		return nil, fmt.Errorf("starting kiro-cli: %w", err)
-	}
-
-	// Write inputs to stdin
-	go func() {
-		defer stdin.Close()
-		// Send initial prompt
-		fmt.Fprintln(stdin, prompt)
-
-		// Send persona responses
-		for _, response := range personaResponses {
-			time.Sleep(500 * time.Millisecond) // Give kiro-cli time to process
-			fmt.Fprintln(stdin, response)
-		}
-
-		// Send /exit to end the session
-		time.Sleep(500 * time.Millisecond)
-		fmt.Fprintln(stdin, "/exit")
-	}()
-
-	// Capture output
-	result := &TestResult{}
-	var outputBuilder strings.Builder
-
-	// Read stdout in goroutine
-	go func() {
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			line := scanner.Text()
-			outputBuilder.WriteString(line)
-			outputBuilder.WriteString("\n")
-
-			if r.StreamHandler != nil {
-				r.StreamHandler(line + "\n")
-			}
-
-			r.parseOutputLine(line, result)
-		}
-	}()
-
-	// Read stderr
-	stderrOutput, _ := io.ReadAll(stderr)
-
-	// Wait for command to complete
-	err = cmd.Wait()
-	result.Duration = time.Since(startTime)
-	result.Output = outputBuilder.String()
-
-	if err != nil {
-		if ctx.Err() == context.DeadlineExceeded {
-			result.ErrorMessages = append(result.ErrorMessages, "test timed out")
-		} else {
-			result.ErrorMessages = append(result.ErrorMessages, fmt.Sprintf("kiro-cli error: %v", err))
-		}
-		if len(stderrOutput) > 0 {
-			result.ErrorMessages = append(result.ErrorMessages, string(stderrOutput))
-		}
-		return result, nil
-	}
-
-	result.Success = true
-	return result, nil
+	return r.runWithPTY(ctx, combinedPrompt)
 }
 
 // EnsureTestEnvironment prepares the test environment.
