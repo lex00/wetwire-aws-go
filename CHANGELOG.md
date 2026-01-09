@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Kiro CLI provider for design mode (#101)
+  - New MCP server (`wetwire-aws-mcp`) exposes `wetwire_init`, `wetwire_lint`, `wetwire_build` tools
+  - `wetwire-aws design --provider kiro` launches Kiro CLI with wetwire-runner agent
+  - Auto-installs agent config to `~/.kiro/agents/wetwire-runner.json`
+  - Auto-installs project MCP config to `.kiro/mcp.json`
+- Init command now creates `infra/params.go` for Parameters, Mappings, Conditions
+- Init command now creates `infra/outputs.go` for Outputs
+
 ## [1.4.2] - 2026-01-07
 
 ### Fixed

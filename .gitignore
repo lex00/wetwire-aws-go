@@ -32,6 +32,8 @@ Thumbs.db
 # Build output
 /bin/
 /dist/
+/wetwire-aws
+/wetwire-aws-mcp
 
 # Local environment files
 .env

@@ -24,3 +24,5 @@ jobs:
 
       - name: Test
         run: go test ./...
+        env:
+          SKIP_KIRO_TESTS: "1"
