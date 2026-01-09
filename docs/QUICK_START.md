@@ -14,9 +14,30 @@ Or add to your project:
 go get github.com/lex00/wetwire-aws-go
 ```
 
+## Quick Test (No Setup Required)
+
+You can test `wetwire-aws` without creating a Go module:
+
+```bash
+mkdir test && cd test
+cat > main.go << 'EOF'
+package infra
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var Bucket = s3.Bucket{BucketName: "my-bucket"}
+EOF
+
+wetwire-aws build .
+```
+
+This works because `wetwire-aws` auto-generates a synthetic module when no `go.mod` is found.
+
+---
+
 ## Your First Project
 
-Create a package for your infrastructure:
+For real projects, create a proper Go module:
 
 ```
 myapp/
