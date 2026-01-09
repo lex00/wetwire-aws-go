@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Embedded MCP server in main binary for simplified design mode (#106)
+  - `wetwire-aws design --mcp-server` hidden flag runs embedded MCP server
+  - MCP config now includes `cwd` field for correct path resolution
+  - No longer requires separate `wetwire-aws-mcp` binary
+  - Kiro tools now work correctly with `./infra/...` paths
+
 ## [1.6.2] - 2026-01-08
 
 ### Fixed
