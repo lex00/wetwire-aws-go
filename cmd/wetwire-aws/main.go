@@ -35,6 +35,7 @@ Define your infrastructure using native Go syntax:
 Then generate CloudFormation JSON:
 
     wetwire-aws build ./infra/...`,
+		Version: getVersion(),
 	}
 
 	rootCmd.AddCommand(
