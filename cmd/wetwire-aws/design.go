@@ -22,6 +22,7 @@ func newDesignCmd() *cobra.Command {
 	var maxLintCycles int
 	var stream bool
 	var provider string
+	var mcpServerMode bool
 
 	cmd := &cobra.Command{
 		Use:   "design [prompt]",
@@ -47,6 +48,11 @@ Example:
     wetwire-aws design --provider kiro`,
 		Args: cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Hidden mode: run as MCP server (used by Kiro internally)
+			if mcpServerMode {
+				return runMCPServer()
+			}
+
 			prompt := strings.Join(args, " ")
 			if prompt == "" && provider != "kiro" {
 				return fmt.Errorf("prompt is required for the %s provider", provider)
@@ -59,6 +65,8 @@ Example:
 	cmd.Flags().IntVarP(&maxLintCycles, "max-lint-cycles", "l", 3, "Maximum lint/fix cycles")
 	cmd.Flags().BoolVarP(&stream, "stream", "s", true, "Stream AI responses")
 	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
+	cmd.Flags().BoolVar(&mcpServerMode, "mcp-server", false, "Run as MCP server (internal use)")
+	cmd.Flags().MarkHidden("mcp-server")
 
 	return cmd
 }

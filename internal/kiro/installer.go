@@ -26,6 +26,7 @@ type mcpConfig struct {
 type mcpServer struct {
 	Command string   `json:"command"`
 	Args    []string `json:"args"`
+	Cwd     string   `json:"cwd,omitempty"`
 }
 
 // EnsureInstalled checks if Kiro configs are installed and installs them if needed.
@@ -160,22 +161,22 @@ func ensureProjectMCPConfig(force bool) (bool, error) {
 	return true, nil
 }
 
-// findMCPBinaryPath returns the path to wetwire-aws-mcp.
-// It looks in the same directory as the current executable first,
-// then checks PATH, then returns empty string for go run fallback.
-func findMCPBinaryPath() string {
-	// Try to find it next to the current executable
+// findWetwireBinaryPath returns the path to wetwire-aws.
+// It looks for the current executable first, then checks PATH,
+// then returns empty string for go run fallback.
+func findWetwireBinaryPath() string {
+	// Try to use the current executable
 	exe, err := os.Executable()
 	if err == nil {
-		exeDir := filepath.Dir(exe)
-		mcpPath := filepath.Join(exeDir, "wetwire-aws-mcp")
-		if _, err := os.Stat(mcpPath); err == nil {
-			return mcpPath
+		// Resolve symlinks to get the actual path
+		if resolved, err := filepath.EvalSymlinks(exe); err == nil {
+			exe = resolved
 		}
+		return exe
 	}
 
-	// Check if it's in PATH
-	if path, err := exec.LookPath("wetwire-aws-mcp"); err == nil {
+	// Check if wetwire-aws is in PATH
+	if path, err := exec.LookPath("wetwire-aws"); err == nil {
 		return path
 	}
 
@@ -183,20 +184,25 @@ func findMCPBinaryPath() string {
 	return ""
 }
 
-// getMCPServerConfig returns the mcpServer config for wetwire-aws-mcp.
-// Uses absolute path if found, otherwise falls back to go run.
+// getMCPServerConfig returns the mcpServer config for the embedded MCP server.
+// Uses the current wetwire-aws binary with "design --mcp-server" flag.
+// Sets cwd to ensure paths resolve correctly in the project directory.
 func getMCPServerConfig() mcpServer {
-	mcpPath := findMCPBinaryPath()
-	if mcpPath != "" {
+	cwd, _ := os.Getwd()
+
+	wetwirePath := findWetwireBinaryPath()
+	if wetwirePath != "" {
 		return mcpServer{
-			Command: mcpPath,
-			Args:    []string{},
+			Command: wetwirePath,
+			Args:    []string{"design", "--mcp-server"},
+			Cwd:     cwd,
 		}
 	}
 
 	// Fallback to go run
 	return mcpServer{
 		Command: "go",
-		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest"},
+		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest", "design", "--mcp-server"},
+		Cwd:     cwd,
 	}
 }

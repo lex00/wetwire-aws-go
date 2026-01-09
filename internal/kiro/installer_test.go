@@ -66,12 +66,32 @@ func TestGetMCPServerConfig_ReturnsValidConfig(t *testing.T) {
 		t.Error("getMCPServerConfig should return non-empty command")
 	}
 
-	// Args should be initialized (may be empty but not nil after JSON roundtrip)
-	// Just verify the struct is usable
+	// Cwd should be set to current working directory
+	if config.Cwd == "" {
+		t.Error("getMCPServerConfig should set cwd field")
+	}
+
+	// Args should include "design --mcp-server"
+	hasDesignArg := false
+	hasMCPServerArg := false
+	for _, arg := range config.Args {
+		if arg == "design" {
+			hasDesignArg = true
+		}
+		if arg == "--mcp-server" {
+			hasMCPServerArg = true
+		}
+	}
+
 	if config.Command == "go" {
-		// Fallback mode - should have args for "go run"
-		if len(config.Args) < 2 {
-			t.Error("go run fallback should have args")
+		// Fallback mode - should have args for "go run ... design --mcp-server"
+		if len(config.Args) < 4 {
+			t.Error("go run fallback should have args including design --mcp-server")
+		}
+	} else {
+		// Binary mode - should have design and --mcp-server args
+		if !hasDesignArg || !hasMCPServerArg {
+			t.Errorf("binary config should have design --mcp-server args, got %v", config.Args)
 		}
 	}
 }
@@ -110,15 +130,44 @@ func TestEnsureProjectMCPConfig_CreatesFile(t *testing.T) {
 		t.Fatalf("mcp.json should exist after installation: %v", err)
 	}
 
-	// Verify content is valid JSON
+	// Verify content is valid JSON with correct structure
 	data, err := os.ReadFile(mcpPath)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var config map[string]any
+	var config mcpConfig
 	if err := json.Unmarshal(data, &config); err != nil {
 		t.Fatalf("installed mcp.json is not valid JSON: %v", err)
+	}
+
+	// Verify wetwire server config has required fields
+	wetwire, ok := config.MCPServers["wetwire"]
+	if !ok {
+		t.Fatal("mcp.json should have wetwire server")
+	}
+
+	if wetwire.Command == "" {
+		t.Error("wetwire server should have command")
+	}
+
+	if wetwire.Cwd == "" {
+		t.Error("wetwire server should have cwd")
+	}
+
+	// Verify args include design --mcp-server
+	hasDesign := false
+	hasMCPServer := false
+	for _, arg := range wetwire.Args {
+		if arg == "design" {
+			hasDesign = true
+		}
+		if arg == "--mcp-server" {
+			hasMCPServer = true
+		}
+	}
+	if !hasDesign || !hasMCPServer {
+		t.Errorf("wetwire server args should include design --mcp-server, got %v", wetwire.Args)
 	}
 }
 
