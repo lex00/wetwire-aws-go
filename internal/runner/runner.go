@@ -780,9 +780,9 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 		// Create go.mod for the runner
 		goModPath := filepath.Join(runnerDir, "go.mod")
 
-		// Build replace directives - start with the user's package
+		// Build replace directives - point to module root (where go.mod is), not package path
 		var replaceDirectives strings.Builder
-		replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, absPath))
+		replaceDirectives.WriteString(fmt.Sprintf("replace %s => %s\n", modInfo.ModulePath, modInfo.GoModDir))
 
 		// Add any replace directives from the target package's go.mod
 		for _, repl := range modInfo.Replaces {
