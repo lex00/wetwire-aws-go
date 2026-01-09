@@ -1612,3 +1612,47 @@ Resources:
 	assert.Contains(t, code, "Policies: []any{Json{",
 		"Map value should be wrapped in []any{} when field expects array")
 }
+
+func TestGenerateCode_InitializationCycleBreaking(t *testing.T) {
+	// Test that circular references between resources and property blocks
+	// are broken by using explicit GetAtt{} instead of direct attribute access
+	content := []byte(`
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  # BaseFunction has DeploymentPreference that references PreHook
+  BaseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: base.handler
+      Runtime: nodejs16.x
+      DeploymentPreference:
+        Type: AllAtOnce
+        Hooks:
+          PreTraffic: !Ref PreHook
+  # PreHook references BaseFunction.Arn - this creates a cycle
+  PreHook:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: prehook.handler
+      Runtime: nodejs16.x
+      Environment:
+        Variables:
+          FUNCTION_ARN: !GetAtt BaseFunction.Arn
+`)
+
+	ir, err := ParseTemplateContent(content, "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "template")
+	code := files["main.go"]
+
+	// The code should compile - cycles should be broken
+	// Either by using GetAtt{} instead of BaseFunction.Arn
+	// or by inlining the DeploymentPreference
+
+	// Check that the cycle is broken - we expect GetAtt{} for the cyclic reference
+	// instead of direct attribute access like BaseFunction.Arn
+	assert.Contains(t, code, `GetAtt{"BaseFunction", "Arn"}`,
+		"Cyclic reference should use explicit GetAtt{} to break initialization cycle")
+}

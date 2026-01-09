@@ -9,42 +9,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/resources/iam"
 )
 
-var KinesisAnalyticsAccessRolePolicyLambdaAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{},
-	Version: "2012-10-17",
-}
-
-var KinesisAnalyticsAccessRolePolicyKinesisAccessPolicyPolicyDocument = PolicyDocument{
-	Statement: []any{},
-	Version: "2012-10-17",
-}
-
-var KinesisAnalyticsAccessRolePolicyLambdaAccessPolicy = iam.Role_Policy{
-	PolicyDocument: KinesisAnalyticsAccessRolePolicyLambdaAccessPolicyPolicyDocument,
-	PolicyName: "LambdaAccessPolicy",
-}
-
-var KinesisAnalyticsAccessRolePolicyKinesisAccessPolicy = iam.Role_Policy{
-	PolicyDocument: KinesisAnalyticsAccessRolePolicyKinesisAccessPolicyPolicyDocument,
-	PolicyName: "KinesisAccessPolicy",
-}
-
-var KinesisAnalyticsAccessRoleAssumeRolePolicyDocument = PolicyDocument{
-	Statement: []any{KinesisAnalyticsAccessRoleAssumeRolePolicyDocumentStatement0},
-	Version: "2012-10-17",
-}
-
-var KinesisAnalyticsAccessRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
-	Action: []any{"sts:AssumeRole"},
-	Effect: "Allow",
-	Principal: ServicePrincipal{"kinesisanalytics.amazonaws.com"},
-}
-
-var KinesisAnalyticsAccessRole = iam.Role{
-	AssumeRolePolicyDocument: KinesisAnalyticsAccessRoleAssumeRolePolicyDocument,
-	Policies: []any{KinesisAnalyticsAccessRolePolicyKinesisAccessPolicy, KinesisAnalyticsAccessRolePolicyLambdaAccessPolicy},
-}
-
 var FirehoseAccessRolePolicyLambdaInvokePolicyPolicyDocument = PolicyDocument{
 	Statement: []any{},
 	Version: "2012-10-17",
@@ -79,4 +43,40 @@ var FirehoseAccessRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
 var FirehoseAccessRole = iam.Role{
 	AssumeRolePolicyDocument: FirehoseAccessRoleAssumeRolePolicyDocument,
 	Policies: []any{FirehoseAccessRolePolicyS3WritePolicy, FirehoseAccessRolePolicyLambdaInvokePolicy},
+}
+
+var KinesisAnalyticsAccessRolePolicyLambdaAccessPolicyPolicyDocument = PolicyDocument{
+	Statement: []any{},
+	Version: "2012-10-17",
+}
+
+var KinesisAnalyticsAccessRolePolicyKinesisAccessPolicyPolicyDocument = PolicyDocument{
+	Statement: []any{},
+	Version: "2012-10-17",
+}
+
+var KinesisAnalyticsAccessRolePolicyLambdaAccessPolicy = iam.Role_Policy{
+	PolicyDocument: KinesisAnalyticsAccessRolePolicyLambdaAccessPolicyPolicyDocument,
+	PolicyName: "LambdaAccessPolicy",
+}
+
+var KinesisAnalyticsAccessRolePolicyKinesisAccessPolicy = iam.Role_Policy{
+	PolicyDocument: KinesisAnalyticsAccessRolePolicyKinesisAccessPolicyPolicyDocument,
+	PolicyName: "KinesisAccessPolicy",
+}
+
+var KinesisAnalyticsAccessRoleAssumeRolePolicyDocument = PolicyDocument{
+	Statement: []any{KinesisAnalyticsAccessRoleAssumeRolePolicyDocumentStatement0},
+	Version: "2012-10-17",
+}
+
+var KinesisAnalyticsAccessRoleAssumeRolePolicyDocumentStatement0 = PolicyStatement{
+	Action: []any{"sts:AssumeRole"},
+	Effect: "Allow",
+	Principal: ServicePrincipal{"kinesisanalytics.amazonaws.com"},
+}
+
+var KinesisAnalyticsAccessRole = iam.Role{
+	AssumeRolePolicyDocument: KinesisAnalyticsAccessRoleAssumeRolePolicyDocument,
+	Policies: []any{KinesisAnalyticsAccessRolePolicyKinesisAccessPolicy, KinesisAnalyticsAccessRolePolicyLambdaAccessPolicy},
 }

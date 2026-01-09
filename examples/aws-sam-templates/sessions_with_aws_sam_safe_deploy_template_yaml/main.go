@@ -92,7 +92,7 @@ var BasePreFunction = serverless.Function{
 	"Action": []any{"lambda:InvokeFunction"},
 	"Effect": "Allow",
 	"Resource": SubWithMap{String: "${FunctionArn}:*", Variables: Json{
-	"FunctionArn": BaseFunction.Arn,
+	"FunctionArn": GetAtt{"BaseFunction", "Arn"},
 }},
 }},
 	"Version": "2012-10-17",

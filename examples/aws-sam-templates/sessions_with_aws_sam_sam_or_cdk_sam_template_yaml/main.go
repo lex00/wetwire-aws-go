@@ -27,6 +27,25 @@ var UploadSignerLambda = serverless.Function{
 }},
 }
 
+var FetchedShortUrlLambda = serverless.Function{
+	CodeUri: "lambda/fetchShortUrl/",
+	Events: Json{
+	"ApiEvent": Json{
+	"Properties": Json{
+	"ApiId": HttpApi,
+	"Method": "GET",
+	"Path": "/{id}",
+},
+	"Type": "HttpApi",
+},
+},
+	Policies: []any{Json{
+	"DynamoDBReadPolicy": Json{
+	"TableName": UrlTable,
+},
+}},
+}
+
 var UrlStateMachine = serverless.StateMachine{
 	Definition: Json{
 	"StartAt": "Generate Signed URLs",
@@ -165,23 +184,4 @@ var HttpApi = serverless.HttpApi{
 },
 },
 },
-}
-
-var FetchedShortUrlLambda = serverless.Function{
-	CodeUri: "lambda/fetchShortUrl/",
-	Events: Json{
-	"ApiEvent": Json{
-	"Properties": Json{
-	"ApiId": HttpApi,
-	"Method": "GET",
-	"Path": "/{id}",
-},
-	"Type": "HttpApi",
-},
-},
-	Policies: []any{Json{
-	"DynamoDBReadPolicy": Json{
-	"TableName": UrlTable,
-},
-}},
 }
