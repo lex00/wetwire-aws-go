@@ -98,7 +98,7 @@ var ProcessorFunction = serverless.Function{
     Handler:     "bootstrap",
     Runtime:     "provided.al2",
     CodeUri:     "./processor/",
-    Environment: &ProcessorEnv,
+    Environment: ProcessorEnv,
 }
 ```
 
@@ -114,7 +114,7 @@ var VpcFunction = serverless.Function{
     Handler:   "bootstrap",
     Runtime:   "provided.al2",
     CodeUri:   "./handler/",
-    VpcConfig: &VpcConfig,
+    VpcConfig: VpcConfig,
 }
 ```
 
@@ -151,8 +151,8 @@ def handler(event, context):
 | `Description` | string | Function description |
 | `MemorySize` | int | Memory in MB (128-10240) |
 | `Timeout` | int | Timeout in seconds (1-900) |
-| `Environment` | *Function_Environment | Environment variables |
-| `VpcConfig` | *Function_VpcConfig | VPC configuration |
+| `Environment` | any | Environment variables |
+| `VpcConfig` | any | VPC configuration |
 | `Role` | any | IAM role ARN (auto-created if omitted) |
 | `Policies` | any | SAM policy templates or managed policy ARNs |
 | `Events` | map[string]any | Event sources (API, S3, SQS, etc.) |
@@ -185,7 +185,7 @@ var CorsConfig = serverless.Api_CorsConfiguration{
 
 var MyApi = serverless.Api{
     StageName: "v1",
-    Cors:      &CorsConfig,
+    Cors:      CorsConfig,
 }
 ```
 
@@ -215,7 +215,7 @@ var PrimaryKey = serverless.SimpleTable_PrimaryKey{
 
 var UsersTable = serverless.SimpleTable{
     TableName:  "users",
-    PrimaryKey: &PrimaryKey,
+    PrimaryKey: PrimaryKey,
 }
 ```
 
@@ -312,7 +312,7 @@ var DataTable = dynamodb.Table{
     // ... full DynamoDB configuration
 }
 
-// SAM Function referencing CloudFormation resources
+// SAM Function environment referencing CloudFormation resources
 var ProcessorEnv = serverless.Function_Environment{
     Variables: map[string]any{
         "BUCKET_NAME": DataBucket.BucketName,
@@ -320,11 +320,12 @@ var ProcessorEnv = serverless.Function_Environment{
     },
 }
 
+// SAM Function referencing CloudFormation resources
 var ProcessorFunction = serverless.Function{
     Handler:     "bootstrap",
     Runtime:     "provided.al2",
     CodeUri:     "./processor/",
-    Environment: &ProcessorEnv,
+    Environment: ProcessorEnv,
 }
 ```
 

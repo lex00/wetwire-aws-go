@@ -10,10 +10,10 @@ Generate CloudFormation templates from Go resource declarations using a declarat
 
 ## Status
 
-**v1.4.0 - Full Template Support**
+**v1.10.0 - Full Template Support**
 
 - All CLI commands implemented (build, validate, list, lint, init, import, design, test)
-- **263 services** (262 AWS + Alexa::ASK) with typed enum constants
+- **264 services** (263 AWS + Alexa::ASK) with typed enum constants
 - **9 SAM resource types** (Function, Api, HttpApi, SimpleTable, LayerVersion, StateMachine, Application, Connector, GraphQLApi)
 - **Full template sections**: Parameters, Outputs, Mappings, Conditions with complete round-trip support
 - 254/254 AWS sample templates import successfully (100% success rate)
@@ -71,18 +71,21 @@ import (
     "github.com/lex00/wetwire-aws-go/resources/dynamodb"
 )
 
+// SAM Function environment extracted to flat variable
+var HelloEnv = serverless.Function_Environment{
+    Variables: map[string]any{
+        "TABLE_NAME": DataTable.TableName,
+    },
+}
+
 // SAM Function with environment variables
 var HelloFunction = serverless.Function{
-    Handler:    "bootstrap",
-    Runtime:    "provided.al2",
-    CodeUri:    "./hello/",
-    MemorySize: 128,
-    Timeout:    30,
-    Environment: &serverless.Function_Environment{
-        Variables: map[string]any{
-            "TABLE_NAME": DataTable.TableName,
-        },
-    },
+    Handler:     "bootstrap",
+    Runtime:     "provided.al2",
+    CodeUri:     "./hello/",
+    MemorySize:  128,
+    Timeout:     30,
+    Environment: HelloEnv,
 }
 
 // DynamoDB table
@@ -136,7 +139,7 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 | `build` | Generate CloudFormation template from Go source |
 | `validate` | Validate resources and references |
 | `list` | List discovered resources |
-| `lint` | Check for issues (16 rules, --fix support) |
+| `lint` | Check for issues (18 rules, --fix support) |
 | `init` | Initialize new project |
 | `import` | Import CloudFormation template to Go code |
 | `design` | AI-assisted infrastructure design (requires wetwire-core-go) |
@@ -153,7 +156,7 @@ go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 - **Template Builder**: Build CF template with topological ordering
 - **Cycle Detection**: Detect circular dependencies
 - **JSON/YAML Output**: Serialize to CF template format
-- **Linter**: 16 rules (WAW001-WAW016) with auto-fix support
+- **Linter**: 18 rules (WAW001-WAW018) with auto-fix support
 - **Code Generator**: Generate Go types from CloudFormation spec
 - **SAM Support**: AWS Serverless Application Model (9 resource types)
 
@@ -185,7 +188,7 @@ wetwire-aws/
 │   │   ├── ir.go          # Intermediate representation types
 │   │   ├── parser.go      # YAML/JSON template parser
 │   │   └── codegen.go     # Go code generator
-│   ├── linter/            # Lint rules (WAW001-WAW016)
+│   ├── linter/            # Lint rules (WAW001-WAW018)
 │   ├── serialize/         # JSON/YAML serialization
 │   ├── template/          # Template builder with topo sort
 │   └── validation/        # cfn-lint-go integration

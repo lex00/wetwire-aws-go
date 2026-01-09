@@ -9,7 +9,7 @@ This FAQ covers questions specific to the Go implementation of wetwire for AWS C
 ### How do I install wetwire-aws-go?
 
 ```bash
-go get github.com/lex00/wetwire-aws-go
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
 ```
 
 ### How do I create a new project?
@@ -101,6 +101,8 @@ Role: MyRole.Arn,
 | WAW010 | Flatten inline typed struct literals |
 | WAW011 | Validate enum property values |
 | WAW012 | Use typed enum constants |
+| WAW013 | Undefined reference |
+| WAW014 | Unused intrinsics import |
 | WAW015 | Avoid explicit `Ref{}` — use direct references |
 | WAW016 | Avoid explicit `GetAtt{}` — use `.Attr` field access |
 | WAW017 | Avoid pointer assignments |

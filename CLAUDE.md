@@ -63,7 +63,7 @@ var MyBucket = s3.Bucket{
 
 ```
 wetwire-aws-go/
-├── resources/         # Generated resource types (263 services)
+├── resources/         # Generated resource types (264 services)
 │   ├── s3/           # S3 resources (Bucket, AccessPoint, etc.)
 │   ├── lambda/       # Lambda resources (Function, etc.)
 │   ├── iam/          # IAM resources (Role, Policy, etc.)
@@ -72,7 +72,7 @@ wetwire-aws-go/
 ├── internal/
 │   ├── discover/     # AST-based resource discovery
 │   ├── template/     # CF template builder with topo sort
-│   ├── linter/       # 16 lint rules (WAW001-WAW018)
+│   ├── linter/       # 18 lint rules (WAW001-WAW018)
 │   └── importer/     # YAML to Go conversion
 └── cmd/wetwire-aws/  # CLI application
 ```
