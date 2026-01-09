@@ -14,6 +14,7 @@ The `wetwire-aws` command provides tools for generating and validating CloudForm
 | `wetwire-aws test` | Run automated persona-based testing |
 | `wetwire-aws validate` | Validate resources and references |
 | `wetwire-aws list` | List discovered resources |
+| `wetwire-aws graph` | Generate DOT/Mermaid dependency graph |
 
 ```bash
 wetwire-aws --help     # Show help
@@ -441,6 +442,63 @@ List discovered resources in a package.
 ```bash
 wetwire-aws list ./infra/...
 ```
+
+---
+
+## graph
+
+Generate a DOT or Mermaid format graph showing resource dependencies.
+
+```bash
+# Generate DOT format (default)
+wetwire-aws graph ./infra
+
+# Render with Graphviz
+wetwire-aws graph ./infra | dot -Tpng -o deps.png
+
+# Generate Mermaid format for GitHub markdown
+wetwire-aws graph ./infra -f mermaid
+```
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `PATH` | Directory containing Go source files |
+| `--format, -f {dot,mermaid}` | Output format (default: dot) |
+| `--include-parameters, -p` | Include parameter nodes in the graph |
+| `--cluster, -c` | Cluster resources by AWS service type |
+
+### Output Formats
+
+**DOT (default):**
+
+Graphviz DOT format for rendering with `dot`, `neato`, etc.
+
+```dot
+digraph {
+  rankdir=TB;
+  MyBucket [label="MyBucket\n[AWS::S3::Bucket]"];
+  MyFunction [label="MyFunction\n[AWS::Lambda::Function]"];
+  MyFunction -> MyBucket [color="blue"];
+}
+```
+
+**Mermaid:**
+
+GitHub-compatible format for embedding in markdown.
+
+```mermaid
+graph TD;
+  MyBucket("MyBucket\n[AWS::S3::Bucket]");
+  MyFunction("MyFunction\n[AWS::Lambda::Function]");
+  MyFunction --> MyBucket;
+```
+
+### Edge Styles
+
+- **Solid black**: `Ref` dependencies
+- **Blue**: `GetAtt` dependencies (attribute references)
 
 ---
 

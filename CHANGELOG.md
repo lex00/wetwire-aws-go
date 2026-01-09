@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `graph` command for DOT/Mermaid dependency visualization (#121)
+  - Generate Graphviz DOT format: `wetwire-aws graph ./infra`
+  - Generate Mermaid format: `wetwire-aws graph ./infra -f mermaid`
+  - Include parameters: `wetwire-aws graph ./infra -p`
+  - Cluster by service: `wetwire-aws graph ./infra -c`
+  - Blue edges for GetAtt, solid for Ref dependencies
+
 ## [1.7.0] - 2026-01-09
 
 ### Added
