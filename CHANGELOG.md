@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `wetwire-aws build .` now works in directories without `go.mod`
   - User's Go files are copied to a temp directory with synthetic module
   - No files created in user's directory
+- SAM: Added missing resource fields (#125)
+  - `serverless.SimpleTable.Arn` attribute accessor
+  - `serverless.HttpApi.Domain`, `serverless.HttpApi.Description`
+  - `serverless.Api.Domain`, `serverless.Api.Description`
+  - `serverless.Api_Auth.InvokeRole`
+  - SAM import build success rate: 72% → 86%
 
 ## [1.9.0] - 2026-01-09
 
