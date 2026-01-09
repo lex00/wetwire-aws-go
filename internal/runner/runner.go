@@ -515,10 +515,14 @@ type goModInfo struct {
 	ModulePath string
 	GoModDir   string
 	Replaces   []string // replace directive lines
+	Synthetic  bool     // true if auto-generated (no go.mod found)
 }
 
 // findGoModInfo reads go.mod to find the module path and replace directives.
+// If no go.mod is found, it returns synthetic module info based on the directory name.
 func findGoModInfo(dir string) (*goModInfo, error) {
+	originalDir := dir
+
 	// Walk up to find go.mod
 	for {
 		goModPath := filepath.Join(dir, "go.mod")
@@ -570,10 +574,27 @@ func findGoModInfo(dir string) (*goModInfo, error) {
 		// Move up one directory
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			return nil, fmt.Errorf("no go.mod found")
+			// No go.mod found - create synthetic module info
+			return createSyntheticGoModInfo(originalDir)
 		}
 		dir = parent
 	}
+}
+
+// createSyntheticGoModInfo generates module info when no go.mod exists.
+// Uses the directory name as the module path.
+func createSyntheticGoModInfo(dir string) (*goModInfo, error) {
+	// Use directory name as module path
+	modulePath := filepath.Base(dir)
+	if modulePath == "" || modulePath == "." || modulePath == "/" {
+		modulePath = "template"
+	}
+
+	return &goModInfo{
+		ModulePath: modulePath,
+		GoModDir:   dir,
+		Synthetic:  true,
+	}, nil
 }
 
 // resolveReplacePath converts a relative replace path to absolute.
@@ -704,12 +725,6 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 		return nil, fmt.Errorf("finding module info: %w", err)
 	}
 
-	// Calculate import path - includes subpackage path if not at module root
-	importPath := modInfo.ModulePath
-	if relPath, err := filepath.Rel(modInfo.GoModDir, absPath); err == nil && relPath != "." {
-		importPath = modInfo.ModulePath + "/" + filepath.ToSlash(relPath)
-	}
-
 	// Get the first var name (needed to force the import)
 	firstVar := varNames[0]
 
@@ -722,6 +737,10 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 	var runnerDir string
 	var cleanup func()
 	var goRunArgs []string
+	var workDir string
+
+	// Calculate import path - depends on mode
+	var importPath string
 
 	if useVendorMode {
 		// Vendor mode: create _wetwire_runner subdir in module directory
@@ -733,6 +752,78 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 
 		// Use -mod=vendor for offline builds
 		goRunArgs = []string{"run", "-mod=vendor", "./_wetwire_runner"}
+		workDir = modInfo.GoModDir
+
+		// Calculate import path - includes subpackage path if not at module root
+		importPath = modInfo.ModulePath
+		if relPath, err := filepath.Rel(modInfo.GoModDir, absPath); err == nil && relPath != "." {
+			importPath = modInfo.ModulePath + "/" + filepath.ToSlash(relPath)
+		}
+	} else if modInfo.Synthetic {
+		// Synthetic mode: no go.mod found, create self-contained runner
+		runnerDir, err = os.MkdirTemp("", "wetwire-runner-*")
+		if err != nil {
+			return nil, fmt.Errorf("creating temp dir: %w", err)
+		}
+		defer func() { _ = os.RemoveAll(runnerDir) }()
+
+		// Use -mod=mod to allow automatic dependency resolution
+		goRunArgs = []string{"run", "-mod=mod", "main.go"}
+		workDir = runnerDir
+
+		// Copy user's Go files to a subdirectory
+		userPkgDir := filepath.Join(runnerDir, "userpkg")
+		if err := os.MkdirAll(userPkgDir, 0755); err != nil {
+			return nil, fmt.Errorf("creating userpkg dir: %w", err)
+		}
+
+		files, err := os.ReadDir(absPath)
+		if err != nil {
+			return nil, fmt.Errorf("reading source dir: %w", err)
+		}
+		for _, f := range files {
+			if f.IsDir() || !strings.HasSuffix(f.Name(), ".go") {
+				continue
+			}
+			srcPath := filepath.Join(absPath, f.Name())
+			dstPath := filepath.Join(userPkgDir, f.Name())
+			content, err := os.ReadFile(srcPath)
+			if err != nil {
+				return nil, fmt.Errorf("reading %s: %w", f.Name(), err)
+			}
+			if err := os.WriteFile(dstPath, content, 0644); err != nil {
+				return nil, fmt.Errorf("writing %s: %w", f.Name(), err)
+			}
+		}
+
+		// Import path is within the runner module
+		importPath = "runner/userpkg"
+
+		// Create go.mod that directly includes the user's package
+		goModPath := filepath.Join(runnerDir, "go.mod")
+		goModContent := `module runner
+
+go 1.23.0
+
+require github.com/lex00/wetwire-aws-go v1.9.0
+`
+		if err := os.WriteFile(goModPath, []byte(goModContent), 0644); err != nil {
+			return nil, fmt.Errorf("writing go.mod: %w", err)
+		}
+
+		// Run go mod tidy to resolve dependencies
+		tidyCmd := exec.Command(goBin, "mod", "tidy")
+		tidyCmd.Dir = runnerDir
+		if output, err := tidyCmd.CombinedOutput(); err != nil {
+			return nil, fmt.Errorf("go mod tidy failed: %w\n%s", err, output)
+		}
+
+		// Download all dependencies to populate go.sum
+		downloadCmd := exec.Command(goBin, "mod", "download")
+		downloadCmd.Dir = runnerDir
+		if output, err := downloadCmd.CombinedOutput(); err != nil {
+			return nil, fmt.Errorf("go mod download failed: %w\n%s", err, output)
+		}
 	} else {
 		// Normal mode: create temp directory
 		runnerDir, err = os.MkdirTemp("", "wetwire-runner-*")
@@ -742,6 +833,13 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 		defer func() { _ = os.RemoveAll(runnerDir) }()
 
 		goRunArgs = []string{"run", "main.go"}
+		workDir = runnerDir
+
+		// Calculate import path - includes subpackage path if not at module root
+		importPath = modInfo.ModulePath
+		if relPath, err := filepath.Rel(modInfo.GoModDir, absPath); err == nil && relPath != "." {
+			importPath = modInfo.ModulePath + "/" + filepath.ToSlash(relPath)
+		}
 	}
 
 	// Generate runner main.go
@@ -767,13 +865,8 @@ func extractVarValues(pkgPath string, varNames []string) (map[string]map[string]
 	}
 	_ = f.Close()
 
-	var workDir string
-
-	if useVendorMode {
-		// In vendor mode, we run from the module directory
-		// The runner is a subdirectory that imports the parent module
-		workDir = modInfo.GoModDir
-	} else {
+	// Create go.mod for normal mode (not vendor, not synthetic)
+	if !useVendorMode && !modInfo.Synthetic {
 		// In normal mode, we need go.mod in the temp directory
 		workDir = runnerDir
 

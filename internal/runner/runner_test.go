@@ -71,6 +71,38 @@ go 1.23
 	}
 }
 
+func TestFindGoModInfo_NoGoMod(t *testing.T) {
+	// Create temp directory without go.mod
+	tmpDir := t.TempDir()
+
+	// Create a simple Go file
+	goFile := `package infra
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var Bucket = s3.Bucket{BucketName: "test"}
+`
+	if err := os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(goFile), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	// findGoModInfo should auto-generate module info when no go.mod found
+	info, err := findGoModInfo(tmpDir)
+	if err != nil {
+		t.Fatalf("findGoModInfo should succeed without go.mod: %v", err)
+	}
+
+	// Should have a synthetic module path
+	if info.ModulePath == "" {
+		t.Error("ModulePath should not be empty")
+	}
+
+	// Should indicate this is synthetic
+	if !info.Synthetic {
+		t.Error("Synthetic flag should be true for auto-generated module info")
+	}
+}
+
 func TestRunnerModeSelection(t *testing.T) {
 	tests := []struct {
 		name       string

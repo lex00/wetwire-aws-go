@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Build: Auto-generate `go.mod` when not found (#124)
+  - `wetwire-aws build .` now works in directories without `go.mod`
+  - User's Go files are copied to a temp directory with synthetic module
+  - No files created in user's directory
+
 ## [1.9.0] - 2026-01-09
 
 ### Added
