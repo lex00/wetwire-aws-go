@@ -3,6 +3,7 @@ package importer
 import (
 	"fmt"
 	"regexp"
+	"runtime/debug"
 	"sort"
 	"strings"
 	"unicode"
@@ -11,6 +12,26 @@ import (
 
 	"github.com/lex00/wetwire-aws-go/resources"
 )
+
+// getModuleVersion returns the version of wetwire-aws-go.
+// Uses build info if available, otherwise returns "latest".
+func getModuleVersion() string {
+	if info, ok := debug.ReadBuildInfo(); ok {
+		// When running as part of wetwire-aws-go, check main module
+		if info.Main.Version != "" && info.Main.Version != "(devel)" {
+			return info.Main.Version
+		}
+		// Also check dependencies in case this is embedded
+		for _, dep := range info.Deps {
+			if dep.Path == "github.com/lex00/wetwire-aws-go" {
+				if dep.Version != "" && dep.Version != "(devel)" {
+					return dep.Version
+				}
+			}
+		}
+	}
+	return "latest"
+}
 
 // serviceCategories maps AWS service names to file categories.
 // This matches the Python implementation in linter/splitting.py.
@@ -426,9 +447,9 @@ go 1.23.0
 
 require (
 	github.com/lex00/cloudformation-schema-go v1.0.0
-	github.com/lex00/wetwire-aws-go v1.4.2
+	github.com/lex00/wetwire-aws-go %s
 )
-`, modulePath)
+`, modulePath, getModuleVersion())
 
 	// cmd/main.go - Entry point placeholder
 	// Note: The actual synthesis is done via `wetwire-aws build`
