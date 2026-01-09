@@ -30,10 +30,10 @@ var S3JsonLoggerFunction = serverless.Function{
 },
 	Handler: "S3EventSource::S3EventSource.Function::FunctionHandler",
 	MemorySize: 512,
-	Policies: Json{
+	Policies: []any{Json{
 	"S3ReadPolicy": Json{
 	"BucketName": AppBucketName,
 },
-},
+}},
 	Runtime: "dotnet8",
 }

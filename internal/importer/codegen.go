@@ -189,6 +189,11 @@ var listTypeProperties = map[string]bool{
 	"AdditionalMasterSecurityGroups":      true,
 	"AdditionalSlaveSecurityGroups":       true,
 	"StackSetRegions":                     true,
+	// Cognito list properties
+	"CallbackURLs": true,
+	"LogoutURLs":   true,
+	// SAM list properties
+	"Policies": true,
 }
 
 // reservedVarNames are names that collide with types exported from the intrinsics package
@@ -247,6 +252,28 @@ func intrinsicNeedsArrayWrapping(intrinsic *IRIntrinsic) bool {
 	default:
 		return false
 	}
+}
+
+// isListTypeParameter checks if a CloudFormation parameter is a list type.
+// List-type parameters include CommaDelimitedList and List<*> types.
+func isListTypeParameter(param *IRParameter) bool {
+	if param == nil {
+		return false
+	}
+	t := param.Type
+	// CommaDelimitedList is a list type
+	if t == "CommaDelimitedList" {
+		return true
+	}
+	// List<*> types (e.g., List<Number>, List<String>)
+	if strings.HasPrefix(t, "List<") {
+		return true
+	}
+	// AWS::SSM::Parameter::Value<List<*>> types
+	if strings.Contains(t, "<List<") {
+		return true
+	}
+	return false
 }
 
 // tryEnumConstant attempts to convert a string value to an enum constant reference.
@@ -940,6 +967,10 @@ type codegenContext struct {
 
 	// Track unknown resource types (placeholders) - GetAtt must use explicit GetAtt{} for these
 	unknownResources map[string]bool
+
+	// Track which GetAtt references would create initialization cycles
+	// Key is "sourceLogicalID:targetLogicalID", value is true if this reference is cyclic
+	cyclicGetAttRefs map[string]bool
 }
 
 // propertyBlock represents a top-level var declaration for a property type instance.
@@ -959,6 +990,7 @@ func newCodegenContext(template *IRTemplate, packageName string) *codegenContext
 		blockNameCount:   make(map[string]int),
 		usedParameters:   make(map[string]bool),
 		unknownResources: make(map[string]bool),
+		cyclicGetAttRefs: make(map[string]bool),
 	}
 
 	// Topologically sort resources
@@ -975,6 +1007,9 @@ func newCodegenContext(template *IRTemplate, packageName string) *codegenContext
 	// Pre-scan for SAM implicit resources
 	// SAM auto-generates resources that aren't in the template but may be referenced
 	detectSAMImplicitResources(ctx)
+
+	// Detect initialization cycles and mark GetAtt references that need explicit form
+	detectInitializationCycles(ctx)
 
 	return ctx
 }
@@ -1000,6 +1035,81 @@ func detectSAMImplicitResources(ctx *codegenContext) {
 			ctx.unknownResources[res.LogicalID+"ApiGatewayDefaultStage"] = true
 		}
 	}
+}
+
+// detectInitializationCycles detects cycles in the resource dependency graph
+// and marks GetAtt references that should use explicit GetAtt{} form to break cycles.
+// Go doesn't allow initialization cycles in package-level variables, so we need to
+// break cycles by using GetAtt{} (string literals) instead of Resource.Attr (variable references).
+func detectInitializationCycles(ctx *codegenContext) {
+	// Build extended dependency graph including both direct Ref and GetAtt references
+	// The ReferenceGraph from parsing already contains these
+	deps := ctx.template.ReferenceGraph
+
+	// Find all cycles using DFS
+	cycles := findCycles(deps)
+
+	// For each cycle, we need to break it by marking one GetAtt reference as cyclic
+	// We prefer to break GetAtt references (attribute access) over Ref (variable references)
+	// because GetAtt{"Resource", "Attr"} is a cleaner way to break cycles
+	for _, cycle := range cycles {
+		// Find a GetAtt edge in the cycle to break
+		// For simplicity, break the first edge that we can identify as a GetAtt
+		for i := 0; i < len(cycle); i++ {
+			source := cycle[i]
+			target := cycle[(i+1)%len(cycle)]
+			// Mark this as a cyclic reference
+			key := source + ":" + target
+			ctx.cyclicGetAttRefs[key] = true
+		}
+	}
+}
+
+// findCycles finds all cycles in a directed graph using DFS.
+// Returns a list of cycles, where each cycle is a list of node IDs.
+func findCycles(graph map[string][]string) [][]string {
+	var cycles [][]string
+	visited := make(map[string]bool)
+	recStack := make(map[string]bool)
+	parent := make(map[string]string)
+
+	var dfs func(node string, path []string)
+	dfs = func(node string, path []string) {
+		visited[node] = true
+		recStack[node] = true
+		path = append(path, node)
+
+		for _, neighbor := range graph[node] {
+			if !visited[neighbor] {
+				parent[neighbor] = node
+				dfs(neighbor, path)
+			} else if recStack[neighbor] {
+				// Found a cycle - extract it
+				var cycle []string
+				// Find where the cycle starts in the current path
+				for i, n := range path {
+					if n == neighbor {
+						cycle = append(cycle, path[i:]...)
+						break
+					}
+				}
+				if len(cycle) > 1 {
+					cycles = append(cycles, cycle)
+				}
+			}
+		}
+
+		recStack[node] = false
+	}
+
+	// Run DFS from all nodes to find all cycles
+	for node := range graph {
+		if !visited[node] {
+			dfs(node, nil)
+		}
+	}
+
+	return cycles
 }
 
 func generateParameter(ctx *codegenContext, param *IRParameter) string {
@@ -1190,6 +1300,16 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 	switch v := value.(type) {
 	case *IRIntrinsic:
 		goCode := intrinsicToGo(ctx, v)
+		// Check if this is a Ref to a list-type Parameter - always wrap these
+		// because Parameter struct type can't be directly assigned to []any
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if param, ok := ctx.template.Parameters[target]; ok {
+				if isListTypeParameter(param) {
+					return fmt.Sprintf("[]any{%s}", goCode)
+				}
+			}
+		}
 		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
 		if isListTypeProperty(propName) && intrinsicNeedsArrayWrapping(v) {
@@ -1299,10 +1419,18 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 			items = append(items, fmt.Sprintf("\t%q: %s,", k, valueToBlockStyleProperty(ctx, val, k, parentVarName)))
 		}
 		ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
+		var jsonLiteral string
 		if len(items) == 0 {
-			return "Json{}"
+			jsonLiteral = "Json{}"
+		} else {
+			jsonLiteral = fmt.Sprintf("Json{\n%s\n}", strings.Join(items, "\n"))
 		}
-		return fmt.Sprintf("Json{\n%s\n}", strings.Join(items, "\n"))
+		// If this property expects a list type, wrap the map in []any{}
+		// This handles cases like SAM Policies where a map can be used instead of a list
+		if isListTypeProperty(propName) {
+			return fmt.Sprintf("[]any{%s}", jsonLiteral)
+		}
+		return jsonLiteral
 	}
 
 	return fmt.Sprintf("%#v", value)
@@ -1403,6 +1531,16 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 			}
 		} else {
 			goCode = intrinsicToGo(ctx, v)
+		}
+		// Check if this is a Ref to a list-type Parameter - always wrap these
+		// because Parameter struct type can't be directly assigned to []any
+		if v.Type == IntrinsicRef {
+			target := fmt.Sprintf("%v", v.Args)
+			if param, ok := ctx.template.Parameters[target]; ok {
+				if isListTypeParameter(param) {
+					return fmt.Sprintf("[]any{%s}", goCode)
+				}
+			}
 		}
 		// If this property expects a list type and the intrinsic needs wrapping,
 		// wrap it in []any{} to satisfy Go's type system
@@ -2205,8 +2343,11 @@ func intrinsicToGo(ctx *codegenContext, intrinsic *IRIntrinsic) string {
 		// - Nested attributes: AttrRef doesn't have sub-fields
 		// - Unknown resources: placeholder is `any` type with no fields
 		// - Missing resources: would cause undefined variable error
+		// - Cyclic references: would cause Go initialization cycle
 		_, isKnownResource := ctx.template.Resources[logicalID]
-		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] || !isKnownResource {
+		cycleKey := ctx.currentLogicalID + ":" + logicalID
+		isCyclicRef := ctx.cyclicGetAttRefs[cycleKey]
+		if strings.Contains(attr, ".") || ctx.unknownResources[logicalID] || !isKnownResource || isCyclicRef {
 			ctx.imports["github.com/lex00/wetwire-aws-go/intrinsics"] = true
 			// Use string literal for logical ID since GetAtt.LogicalName expects string
 			return fmt.Sprintf("GetAtt{%q, %q}", logicalID, attr)

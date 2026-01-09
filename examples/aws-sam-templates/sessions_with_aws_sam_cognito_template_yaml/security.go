@@ -61,10 +61,10 @@ var UserPoolClient = cognito.UserPoolClient{
 	AllowedOAuthFlows: []any{"code", "implicit"},
 	AllowedOAuthFlowsUserPoolClient: true,
 	AllowedOAuthScopes: []any{"email", "openid", "profile"},
-	CallbackURLs: ClientDomains,
+	CallbackURLs: []any{ClientDomains},
 	ClientName: Sub{String: "${AppName}-UserPoolClient"},
 	GenerateSecret: false,
-	LogoutURLs: ClientDomains,
+	LogoutURLs: []any{ClientDomains},
 	SupportedIdentityProviders: []any{"COGNITO"},
 	UserPoolId: UserPool,
 }

@@ -11,7 +11,7 @@ import (
 // ApiEndpointOutput - API endpoint URL
 var ApiEndpointOutput = Output{
 	Value:       SubWithMap{String: "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiStage}", Variables: Json{
-	"ApiStage": MyApiProdStage,
+	"ApiStage": Ref{"MyApiProdStage"},
 }},
 	Description: "API endpoint URL",
 }

@@ -63,7 +63,7 @@ var MyWAFACL = wafv2.WebACL{
 var MyWAFAssociation = wafv2.WebACLAssociation{
 	ResourceArn: SubWithMap{String: "arn:aws:apigateway:${AWS::Region}::/restapis/${ApiId}/stages/${ApiStage}", Variables: Json{
 	"ApiId": MyApi,
-	"ApiStage": MyApiProdStage,
+	"ApiStage": Ref{"MyApiProdStage"},
 }},
 	WebACLArn: MyWAFACL.Arn,
 }

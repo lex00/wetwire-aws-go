@@ -39,11 +39,11 @@ var FetchedShortUrlLambda = serverless.Function{
 	"Type": "HttpApi",
 },
 },
-	Policies: Json{
+	Policies: []any{Json{
 	"DynamoDBReadPolicy": Json{
 	"TableName": UrlTable,
 },
-},
+}},
 }
 
 var UrlStateMachine = serverless.StateMachine{
