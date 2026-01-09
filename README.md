@@ -227,9 +227,11 @@ go build -o wetwire-aws ./cmd/wetwire-aws
 - [SAM Guide](docs/SAM.md) - Serverless Application Model
 - [CLI Reference](docs/CLI.md)
 - [Import Workflow](docs/IMPORT_WORKFLOW.md)
+- [Examples](docs/EXAMPLES.md) - Imported template catalog
 - [FAQ](docs/FAQ.md)
 - [Adoption Guide](docs/ADOPTION.md) - Migration strategies and team onboarding
-- [Developer Guide](docs/DEVELOPERS.md) - Contributing and development setup
+- [Developer Guide](docs/DEVELOPERS.md) - Development setup
+- [Contributing](CONTRIBUTING.md) - How to contribute
 - [Internals](docs/INTERNALS.md) - Architecture and implementation details
 - [Code Generation](docs/CODEGEN.md) - Resource type generation
 - [Versioning](docs/VERSIONING.md) - Version management

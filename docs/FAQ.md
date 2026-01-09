@@ -176,6 +176,14 @@ Ensure your `go.mod` has the correct module path and dependencies:
 go mod tidy
 ```
 
+### "undefined: s3" or similar import errors
+
+Add the missing import statement:
+
+```go
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+```
+
 ### Build produces empty template
 
 Check that:
@@ -188,6 +196,79 @@ Check that:
 Resources cannot have circular references. Review the dependency graph and break the cycle by:
 1. Using parameters instead of direct references
 2. Restructuring resources
+
+Use the graph command to visualize dependencies:
+
+```bash
+wetwire-aws graph ./infra | dot -Tpng -o deps.png
+```
+
+### "unknown resource type" error
+
+The resource type may be misspelled or not supported. Check:
+1. Correct package import (e.g., `elasticloadbalancingv2` not `elbv2`)
+2. Correct type name (e.g., `Listener` not `LoadBalancerListener`)
+
+### Import generates code that doesn't compile
+
+This is expected for complex templates. Fix with:
+
+```bash
+# Apply automatic fixes
+wetwire-aws lint --fix ./...
+
+# Then manually fix remaining issues
+```
+
+Common import issues:
+- Forward references (resource used before declaration)
+- Complex nested intrinsics
+- Custom resource types
+
+### "ANTHROPIC_API_KEY not set" error
+
+Design and test commands require an API key:
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+wetwire-aws design "Create an S3 bucket"
+```
+
+### Lint reports issues but --fix doesn't help
+
+Some lint rules are advisory and don't have auto-fixes:
+- WAW004 (file too large) - manually split the file
+- WAW011 (invalid enum) - use correct enum constant
+- WAW013 (undefined reference) - fix the reference manually
+
+### Build succeeds but CloudFormation deployment fails
+
+The template is syntactically valid but may have semantic issues:
+1. Check IAM permissions
+2. Verify resource names are unique in the region
+3. Review AWS CloudFormation error messages
+
+### SAM template missing Transform header
+
+The Transform header is added automatically when SAM resources are detected. Ensure you're using `serverless` package types:
+
+```go
+import "github.com/lex00/wetwire-aws-go/resources/serverless"
+
+var MyFunc = serverless.Function{...}  // Triggers SAM Transform
+```
+
+### MCP server connection errors (Kiro)
+
+If using `--provider kiro`:
+
+```bash
+# Ensure wetwire-aws is in PATH
+which wetwire-aws
+
+# Re-authenticate with Kiro
+kiro-cli login
+```
 
 ---
 
