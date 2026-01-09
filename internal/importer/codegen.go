@@ -1,3 +1,40 @@
+// Package importer converts CloudFormation YAML/JSON templates to Go source code.
+//
+// The importer parses CloudFormation templates into an intermediate representation (IR),
+// then generates idiomatic Go code that uses the wetwire-aws resource types.
+//
+// # Usage
+//
+// Import a template and generate Go code:
+//
+//	template, err := importer.ParseTemplate("template.yaml")
+//	if err != nil {
+//	    log.Fatal(err)
+//	}
+//	files := importer.GenerateCode(template, "mystack")
+//	for name, content := range files {
+//	    os.WriteFile(name, []byte(content), 0644)
+//	}
+//
+// # Generated Code Structure
+//
+// The importer generates multiple Go files organized by AWS service category:
+//   - params.go: CloudFormation parameters
+//   - outputs.go: Stack outputs
+//   - security.go: IAM roles, policies, KMS keys
+//   - network.go: VPC, subnets, security groups
+//   - compute.go: EC2, Lambda functions
+//   - storage.go: S3 buckets, EFS
+//   - database.go: RDS, DynamoDB
+//   - main.go: Other resources
+//
+// # Code Style
+//
+// Generated code follows the wetwire-aws declarative patterns:
+//   - Package-level var declarations for resources
+//   - Direct variable references instead of explicit Ref{}/GetAtt{}
+//   - Extracted nested types as separate variables
+//   - Typed intrinsics using the intrinsics package
 package importer
 
 import (

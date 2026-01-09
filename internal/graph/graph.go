@@ -1,4 +1,32 @@
-// Package graph generates DOT and Mermaid format dependency graphs from discovered resources.
+// Package graph generates dependency graphs from discovered CloudFormation resources.
+//
+// The graph package analyzes resource dependencies (via Ref and GetAtt references)
+// and generates visualizations in DOT (Graphviz) or Mermaid format.
+//
+// # Supported Formats
+//
+//   - DOT: Standard Graphviz format, viewable with graphviz tools or online viewers
+//   - Mermaid: Markdown-compatible diagrams, rendered by GitHub and other tools
+//
+// # Example
+//
+// Generate a DOT graph from discovered resources:
+//
+//	gen := &graph.Generator{
+//	    IncludeParameters: true,
+//	    Format:            graph.FormatDOT,
+//	}
+//	gen.Generate(os.Stdout, discoveredResources)
+//
+// The output can be rendered with Graphviz:
+//
+//	wetwire-aws graph ./infra | dot -Tpng -o graph.png
+//
+// # Graph Contents
+//
+// Nodes represent CloudFormation resources, colored by service type.
+// Edges represent dependencies (Ref or GetAtt references between resources).
+// Parameters can optionally be included as nodes.
 package graph
 
 import (

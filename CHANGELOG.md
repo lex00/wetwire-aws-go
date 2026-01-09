@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Refactor: Split `codegen.go` (2993 lines) into 5 files (#130)
+  - `codegen.go` (910 lines) - main entry points
+  - `codegen_values.go` (1090 lines) - value conversion
+  - `codegen_intrinsics.go` (394 lines) - intrinsic handling
+  - `codegen_helpers.go` (408 lines) - constants and utilities
+  - `codegen_policy.go` (222 lines) - policy document handling
+- Refactor: Split `rules.go` (1892 lines) into 2 files (#130)
+  - `rules.go` (1010 lines) - core types + WAW001-WAW010
+  - `rules_extra.go` (891 lines) - WAW011-WAW018
+- Docs: Added package documentation to importer, runner, graph packages
+- Docs: Added function documentation to cmd/ handlers
+
 ## [1.10.0] - 2026-01-09
 
 ### Added

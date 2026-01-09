@@ -12,6 +12,8 @@ import (
 // validProjectName matches valid Go module/project names (alphanumeric, hyphens, underscores)
 var validProjectName = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_-]*$`)
 
+// newInitCmd creates the "init" subcommand for bootstrapping new wetwire-aws projects.
+// It creates a project directory with go.mod and starter infrastructure files.
 func newInitCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "init [project-name]",

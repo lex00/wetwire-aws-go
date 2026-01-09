@@ -1,4 +1,34 @@
 // Package runner provides runtime execution of Go packages to extract resource values.
+//
+// The runner generates a temporary Go program that imports the user's infrastructure
+// package, executes it, and serializes the discovered resources to JSON. This allows
+// wetwire-aws to extract the actual values of CloudFormation resources at build time.
+//
+// # How It Works
+//
+// 1. Generate a temporary main.go that imports the target package
+// 2. The generated code uses reflection to find all package-level variables
+// 3. Variables that implement resource interfaces are serialized to JSON
+// 4. The runner executes "go run" on the generated program and captures output
+// 5. The JSON output is parsed back into Go structs for template generation
+//
+// # Template-Based Approach
+//
+// The runner uses text/template to generate the extraction program. This approach
+// allows the extraction logic to run in the user's module context with access to
+// their go.mod dependencies, ensuring type compatibility.
+//
+// # Example
+//
+//	result, err := runner.Run(runner.Options{
+//	    Packages: []string{"./infra"},
+//	})
+//	if err != nil {
+//	    log.Fatal(err)
+//	}
+//	for name, resource := range result.Resources {
+//	    fmt.Printf("%s: %s\n", name, resource.Type)
+//	}
 package runner
 
 import (

@@ -16,6 +16,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// newTestCmd creates the "test" subcommand for automated persona-based testing.
+// It runs AI agents with different personas to evaluate code generation quality.
 func newTestCmd() *cobra.Command {
 	var outputDir string
 	var personaName string
@@ -70,6 +72,8 @@ Example:
 	return cmd
 }
 
+// runTest executes a single persona test with the specified provider.
+// It dispatches to either Kiro CLI or Anthropic API based on the provider parameter.
 func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool, provider string) error {
 	switch provider {
 	case "kiro":
@@ -81,6 +85,8 @@ func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int,
 	}
 }
 
+// runTestAllPersonas runs the test with all available personas sequentially.
+// It aggregates results and reports which personas passed or failed.
 func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, stream bool, provider string) error {
 	personaNames := kiro.AllPersonaNames()
 	results := make(map[string]*kiro.TestResult)
@@ -126,6 +132,8 @@ func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, s
 	return nil
 }
 
+// runTestKiro runs a persona test using the Kiro CLI in non-interactive mode.
+// The test can be skipped by setting SKIP_KIRO_TESTS=1.
 func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) error {
 	// Check if Kiro tests are disabled
 	if os.Getenv("SKIP_KIRO_TESTS") == "1" {
@@ -199,6 +207,8 @@ func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) e
 	return nil
 }
 
+// runTestAnthropic runs a persona test using the Anthropic API with multi-turn conversation.
+// It creates an AI developer with the specified persona that responds to the runner agent.
 func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

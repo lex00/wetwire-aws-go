@@ -11,6 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 )
 
+// newValidateCmd creates the "validate" subcommand for checking resource validity.
 func newValidateCmd() *cobra.Command {
 	var outputFormat string
 
@@ -37,6 +38,7 @@ Examples:
 	return cmd
 }
 
+// runValidate validates resources and checks for undefined references.
 func runValidate(packages []string, format string) error {
 	// Discover resources (this also validates references)
 	result, err := discover.Discover(discover.Options{
