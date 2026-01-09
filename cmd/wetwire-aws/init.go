@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
+
+// validProjectName matches valid Go module/project names (alphanumeric, hyphens, underscores)
+var validProjectName = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_-]*$`)
 
 func newInitCmd() *cobra.Command {
 	return &cobra.Command{
@@ -14,18 +18,33 @@ func newInitCmd() *cobra.Command {
 		Short: "Create a new wetwire-aws project",
 		Long: `Init creates a new Go project with wetwire-aws configured.
 
+The project is created in a subdirectory with the given name.
+Multiple projects can coexist in the same workspace.
+
 Examples:
-    wetwire-aws init myinfra
-    wetwire-aws init ./projects/myinfra`,
+    wetwire-aws init data-bucket     # Creates ./data-bucket/
+    wetwire-aws init api-gateway     # Creates ./api-gateway/
+    wetwire-aws init user-service    # Creates ./user-service/`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runInit(args[0])
+			return runInit(".", args[0])
 		},
 	}
 }
 
-func runInit(projectPath string) error {
-	// Create project directory
+// runInit creates a new project in {workspaceDir}/{projectName}/
+func runInit(workspaceDir, projectName string) error {
+	// Validate project name
+	if !validProjectName.MatchString(projectName) {
+		return fmt.Errorf("invalid project name %q: must start with a letter and contain only letters, numbers, hyphens, or underscores", projectName)
+	}
+
+	// Create project directory as subdirectory of workspace
+	projectPath := filepath.Join(workspaceDir, projectName)
+	if _, err := os.Stat(projectPath); err == nil {
+		return fmt.Errorf("project already exists: %s", projectPath)
+	}
+
 	if err := os.MkdirAll(projectPath, 0755); err != nil {
 		return fmt.Errorf("creating project directory: %w", err)
 	}
@@ -36,8 +55,8 @@ func runInit(projectPath string) error {
 		return fmt.Errorf("creating infra directory: %w", err)
 	}
 
-	// Get the module name from the project path
-	moduleName := filepath.Base(projectPath)
+	// Use project name as module name
+	moduleName := projectName
 
 	// Write go.mod
 	goMod := fmt.Sprintf(`module %s
@@ -49,23 +68,6 @@ require github.com/lex00/wetwire-aws-go v1.2.3
 
 	if err := os.WriteFile(filepath.Join(projectPath, "go.mod"), []byte(goMod), 0644); err != nil {
 		return fmt.Errorf("writing go.mod: %w", err)
-	}
-
-	// Write main.go
-	mainGo := `package main
-
-import (
-	"fmt"
-
-	_ "` + moduleName + `/infra" // Register resources
-)
-
-func main() {
-	fmt.Println("Run: wetwire-aws build ./infra/...")
-}
-`
-	if err := os.WriteFile(filepath.Join(projectPath, "main.go"), []byte(mainGo), 0644); err != nil {
-		return fmt.Errorf("writing main.go: %w", err)
 	}
 
 	// Write infra/resources.go with common imports
@@ -182,11 +184,15 @@ Thumbs.db
 		return fmt.Errorf("writing .gitignore: %w", err)
 	}
 
-	fmt.Printf("Created project at %s\n\n", projectPath)
+	fmt.Printf("Created project: %s/\n", projectPath)
+	fmt.Printf("  ├── go.mod\n")
+	fmt.Printf("  └── infra/\n")
+	fmt.Printf("      ├── resources.go\n")
+	fmt.Printf("      ├── params.go\n")
+	fmt.Printf("      └── outputs.go\n")
+	fmt.Println()
 	fmt.Println("Next steps:")
-	fmt.Printf("  cd %s\n", projectPath)
-	fmt.Println("  # Edit infra/resources.go to define your infrastructure")
-	fmt.Println("  wetwire-aws build ./infra/...")
+	fmt.Printf("  wetwire-aws build ./%s/infra\n", projectName)
 	fmt.Println()
 
 	return nil
