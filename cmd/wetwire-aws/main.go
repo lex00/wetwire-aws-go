@@ -6,6 +6,7 @@
 //	wetwire-aws lint ./infra/...      Check for issues
 //	wetwire-aws validate ./infra/...  Validate resources and references
 //	wetwire-aws list ./infra/...      List discovered resources
+//	wetwire-aws graph ./infra/...     Generate DOT dependency graph
 //	wetwire-aws init myproject        Create new project
 //	wetwire-aws import template.yaml  Import CloudFormation template to Go
 //	wetwire-aws design "prompt"       AI-assisted infrastructure design
@@ -42,6 +43,7 @@ Then generate CloudFormation JSON:
 		newBuildCmd(),
 		newValidateCmd(),
 		newListCmd(),
+		newGraphCmd(),
 		newLintCmd(),
 		newInitCmd(),
 		newImportCmd(),
