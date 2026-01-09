@@ -487,6 +487,40 @@ Outputs:
 	assert.Contains(t, outputsCode, `GetAtt{"ADConnectorResource"`, "Output should use GetAtt with quoted logical ID for custom resource")
 }
 
+// TestGenerateCode_SAMImplicitResources tests that outputs referencing SAM implicit
+// resources (like auto-generated IAM roles) use explicit GetAtt{} instead of undefined variables.
+func TestGenerateCode_SAMImplicitResources(t *testing.T) {
+	content := []byte(`
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: bootstrap
+      Runtime: go1.x
+Outputs:
+  FunctionArn:
+    Value: !GetAtt HelloWorldFunction.Arn
+  FunctionRoleArn:
+    Description: Implicit IAM Role created by SAM
+    Value: !GetAtt HelloWorldFunctionRole.Arn
+`)
+
+	ir, err := ParseTemplateContent(content, "sam-test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "samtest")
+
+	outputsCode := files["outputs.go"]
+
+	// Reference to existing function should use direct field access
+	assert.Contains(t, outputsCode, "HelloWorldFunction.Arn", "Output should use direct field access for existing resource")
+
+	// Reference to SAM implicit role should use explicit GetAtt{}
+	assert.Contains(t, outputsCode, `GetAtt{"HelloWorldFunctionRole", "Arn"}`, "Output should use explicit GetAtt for SAM implicit role")
+}
+
 // TestGenerateCode_NoUnusedImports tests that intrinsics import is only added when used.
 // Bug: Intrinsics imported even when no intrinsic types are used.
 func TestGenerateCode_NoUnusedImports(t *testing.T) {
