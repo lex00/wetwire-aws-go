@@ -6,6 +6,7 @@ package ecs_schedule_example
 
 import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
+	"github.com/lex00/wetwire-aws-go/resources/applicationautoscaling"
 	"github.com/lex00/wetwire-aws-go/resources/autoscaling"
 	"github.com/lex00/wetwire-aws-go/resources/ecs"
 )
@@ -89,6 +90,25 @@ var TaskDefinition = ecs.TaskDefinition{
 	Volumes: []any{TaskDefinitionVolumeMyNegvol},
 }
 
+var ServiceScalingPolicyStepScalingPolicyConfigurationStepAdjustment1 = applicationautoscaling.ScalingPolicy_StepAdjustment{
+	MetricIntervalLowerBound: 0,
+	ScalingAdjustment: 200,
+}
+
+var ServiceScalingPolicyStepScalingPolicyConfiguration = applicationautoscaling.ScalingPolicy_StepScalingPolicyConfiguration{
+	AdjustmentType: "PercentChangeInCapacity",
+	Cooldown: 60,
+	MetricAggregationType: "Average",
+	StepAdjustments: []any{ServiceScalingPolicyStepScalingPolicyConfigurationStepAdjustment1},
+}
+
+var ServiceScalingPolicy = applicationautoscaling.ScalingPolicy{
+	PolicyName: "AStepPolicy",
+	PolicyType: "StepScaling",
+	ScalingTargetId: ServiceScalingTarget,
+	StepScalingPolicyConfiguration: ServiceScalingPolicyStepScalingPolicyConfiguration,
+}
+
 var ServiceLoadBalancer1 = ecs.Service_LoadBalancer{
 	ContainerName: "simple-app",
 	ContainerPort: "80",
@@ -101,4 +121,18 @@ var Service = ecs.Service{
 	LoadBalancers: []any{ServiceLoadBalancer1},
 	Role: ECSServiceRole,
 	TaskDefinition: TaskDefinition,
+}
+
+var ServiceScalingTarget = applicationautoscaling.ScalableTarget{
+	MaxCapacity: 2,
+	MinCapacity: 1,
+	ResourceId: Join{Delimiter: "", Values: []any{
+	"service/",
+	ECSCluster,
+	"/",
+	Service.Name,
+}},
+	RoleARN: AutoscalingRole.Arn,
+	ScalableDimension: "ecs:service:DesiredCount",
+	ServiceNamespace: "ecs",
 }

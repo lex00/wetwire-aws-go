@@ -46,13 +46,6 @@ var WebServerScaleDownPolicy = autoscaling.ScalingPolicy{
 	ScalingAdjustment: -1,
 }
 
-var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
-	AdjustmentType: "ChangeInCapacity",
-	AutoScalingGroupName: WebServerGroup,
-	Cooldown: "60",
-	ScalingAdjustment: 1,
-}
-
 var WebServerGroupNotificationConfiguration1 = autoscaling.AutoScalingGroup_NotificationConfiguration{
 	NotificationTypes: []any{"autoscaling:EC2_INSTANCE_LAUNCH", "autoscaling:EC2_INSTANCE_LAUNCH_ERROR", "autoscaling:EC2_INSTANCE_TERMINATE", "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"},
 	TopicARN: []any{NotificationTopic},
@@ -72,4 +65,11 @@ var WebServerGroup = autoscaling.AutoScalingGroup{
 	NotificationConfigurations: []any{WebServerGroupNotificationConfiguration1},
 	TargetGroupARNs: []any{TargetGroup},
 	VPCZoneIdentifier: []any{Subnets},
+}
+
+var WebServerScaleUpPolicy = autoscaling.ScalingPolicy{
+	AdjustmentType: "ChangeInCapacity",
+	AutoScalingGroupName: WebServerGroup,
+	Cooldown: "60",
+	ScalingAdjustment: 1,
 }
