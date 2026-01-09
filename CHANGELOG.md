@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-01-08
+
 ### Added
 
 - Kiro CLI provider for design mode (#101)
@@ -20,6 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detects `vendor/` directory and uses in-module `_wetwire_runner` subdirectory
   - Runs with `-mod=vendor` flag for fully offline builds
   - No network access required when dependencies are vendored
+
+### Fixed
+
+- Runner: Import path calculation for subpackages in vendor mode
+  - Now correctly calculates full import path (e.g., `mymodule/infra`) instead of just module path
+- Discovery: Skip blank identifier (`_`) variables
+  - Prevents errors when packages use `var _ = Type{}` placeholders
 
 ## [1.4.2] - 2026-01-07
 
