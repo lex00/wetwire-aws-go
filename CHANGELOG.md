@@ -20,6 +20,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `rules_extra.go` (891 lines) - WAW011-WAW018
 - Docs: Added package documentation to importer, runner, graph packages
 - Docs: Added function documentation to cmd/ handlers
+- Docs: Streamlined README.md (255 → 105 lines) to match Python version
+  - Added prominent AI-Assisted Design section
+  - Moved detailed sections to dedicated docs
+
+### Added
+
+- Docs: New documentation files ported from Python implementation
+  - `CONTRIBUTING.md` - Contributing guidelines (root level)
+  - `docs/ADOPTION.md` - Migration strategies, escape hatches, team onboarding
+  - `docs/CODEGEN.md` - Resource type generation pipeline
+  - `docs/DEVELOPERS.md` - Development setup and workflow
+  - `docs/EXAMPLES.md` - Imported template catalog (126 CF + 56 SAM)
+  - `docs/INTERNALS.md` - AST discovery, template generation, linter architecture
+  - `docs/VERSIONING.md` - Version management and release process
+- Docs: Expanded FAQ.md troubleshooting section with 9 additional common errors
+
+### Fixed
+
+- Docs: Fixed code examples to use flat variables instead of pointers (SAM.md, README.md)
+- Docs: Updated outdated counts (264 services, 18 lint rules, v1.10.0)
+- Docs: Removed broken links to non-existent central wetwire repo (FAQ.md)
 
 ## [1.10.0] - 2026-01-09
 
