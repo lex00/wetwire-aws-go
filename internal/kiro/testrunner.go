@@ -65,8 +65,8 @@ func (r *TestRunner) runWithPTY(ctx context.Context, prompt string) (*TestResult
 		return nil, fmt.Errorf("creating temp file: %w", err)
 	}
 	outputPath := outputFile.Name()
-	outputFile.Close()
-	defer os.Remove(outputPath)
+	_ = outputFile.Close()
+	defer func() { _ = os.Remove(outputPath) }()
 
 	// Build kiro-cli command string
 	kiroArgs := []string{
@@ -100,7 +100,7 @@ func (r *TestRunner) runWithPTY(ctx context.Context, prompt string) (*TestResult
 	if err != nil {
 		return nil, fmt.Errorf("opening /dev/null: %w", err)
 	}
-	defer devNull.Close()
+	defer func() { _ = devNull.Close() }()
 	scriptCmd.Stdin = devNull
 
 	// Capture stderr
@@ -153,8 +153,8 @@ func shellescape(s string) string {
 	// If string contains no special characters, return as-is
 	safe := true
 	for _, c := range s {
-		if !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-			(c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '/') {
+		if (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') &&
+			(c < '0' || c > '9') && c != '-' && c != '_' && c != '.' && c != '/' {
 			safe = false
 			break
 		}
@@ -253,7 +253,7 @@ func (r *TestRunner) EnsureTestEnvironment() error {
 		if err := os.Chdir(r.WorkDir); err != nil {
 			return err
 		}
-		defer os.Chdir(origDir)
+		defer func() { _ = os.Chdir(origDir) }()
 	}
 
 	// Ensure Kiro configs are installed

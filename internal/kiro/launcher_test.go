@@ -9,10 +9,10 @@ import (
 func TestLaunchChat_KiroNotInstalled(t *testing.T) {
 	// Save original PATH and restore after test
 	origPath := os.Getenv("PATH")
-	defer os.Setenv("PATH", origPath)
+	defer func() { _ = os.Setenv("PATH", origPath) }()
 
 	// Set PATH to empty to simulate kiro-cli not being installed
-	os.Setenv("PATH", "")
+	_ = os.Setenv("PATH", "")
 
 	err := LaunchChat("wetwire-runner", "test prompt")
 	if err == nil {

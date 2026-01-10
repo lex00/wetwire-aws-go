@@ -27,10 +27,10 @@ func TestNewTestRunner(t *testing.T) {
 func TestTestRunner_Run_KiroNotInstalled(t *testing.T) {
 	// Save original PATH and restore after test
 	origPath := os.Getenv("PATH")
-	defer os.Setenv("PATH", origPath)
+	defer func() { _ = os.Setenv("PATH", origPath) }()
 
 	// Set PATH to empty to simulate kiro-cli not being installed
-	os.Setenv("PATH", "")
+	_ = os.Setenv("PATH", "")
 
 	runner := NewTestRunner(".")
 	_, err := runner.Run(context.Background(), "test prompt")
@@ -91,7 +91,7 @@ func TestTestRunner_EnsureTestEnvironment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	err = runner.EnsureTestEnvironment()
 	if err != nil {

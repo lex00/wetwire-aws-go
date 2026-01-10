@@ -68,7 +68,7 @@ Example:
 	cmd.Flags().BoolVarP(&stream, "stream", "s", true, "Stream AI responses")
 	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
 	cmd.Flags().BoolVar(&mcpServerMode, "mcp-server", false, "Run as MCP server (internal use)")
-	cmd.Flags().MarkHidden("mcp-server")
+	_ = cmd.Flags().MarkHidden("mcp-server")
 
 	return cmd
 }
