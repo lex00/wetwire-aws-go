@@ -94,7 +94,8 @@ func LintPackage(pkgPath string, opts Options) (Result, error) {
 }
 
 // buildPackageContext collects all package-level variable definitions across all files.
-func buildPackageContext(pkg *ast.Package) *PackageContext {
+// Uses ast.Package which is returned by parser.ParseDir - no replacement exists for this use case.
+func buildPackageContext(pkg *ast.Package) *PackageContext { //nolint:staticcheck
 	ctx := &PackageContext{
 		AllDefinedVars: make(map[string]bool),
 	}

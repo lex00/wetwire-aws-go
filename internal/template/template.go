@@ -67,61 +67,6 @@ func (b *Builder) SetVarAttrRefs(varAttrRefs map[string]VarAttrRefInfo) {
 	b.varAttrRefs = varAttrRefs
 }
 
-// resolveAttrRefs recursively collects all AttrRefUsages for a variable.
-func (b *Builder) resolveAttrRefs(varName string) []wetwire.AttrRefUsage {
-	visited := make(map[string]bool)
-	return b.resolveAttrRefsRecursive(varName, "", visited)
-}
-
-func (b *Builder) resolveAttrRefsRecursive(varName, pathPrefix string, visited map[string]bool) []wetwire.AttrRefUsage {
-	if visited[varName] {
-		return nil
-	}
-	visited[varName] = true
-
-	info, ok := b.varAttrRefs[varName]
-	if !ok {
-		return nil
-	}
-
-	var result []wetwire.AttrRefUsage
-
-	// Add direct AttrRefs with path prefix
-	for _, ref := range info.AttrRefs {
-		fullPath := ref.FieldPath
-		if pathPrefix != "" {
-			fullPath = pathPrefix + "." + ref.FieldPath
-		}
-		result = append(result, wetwire.AttrRefUsage{
-			ResourceName: ref.ResourceName,
-			Attribute:    ref.Attribute,
-			FieldPath:    fullPath,
-		})
-	}
-
-	// Recursively resolve variable references (via VarRefs)
-	for fieldPath, refVarName := range info.VarRefs {
-		fullPath := fieldPath
-		if pathPrefix != "" {
-			fullPath = pathPrefix + "." + fieldPath
-		}
-		nested := b.resolveAttrRefsRecursive(refVarName, fullPath, visited)
-		result = append(result, nested...)
-	}
-
-	// Also resolve AttrRefs from dependencies (for array elements that overwrite VarRefs)
-	// Get the resource's dependencies if it's a tracked resource
-	if res, ok := b.resources[varName]; ok {
-		for _, depName := range res.Dependencies {
-			// Recursively resolve all deps
-			nested := b.resolveAttrRefsRecursive(depName, "", visited)
-			result = append(result, nested...)
-		}
-	}
-
-	return result
-}
-
 // resolveAllAttrRefs collects all AttrRefUsages reachable from a variable
 // by following all dependencies transitively.
 func (b *Builder) resolveAllAttrRefs(varName string) []wetwire.AttrRefUsage {

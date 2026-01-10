@@ -619,11 +619,6 @@ func extractDependenciesWithVarRefs(lit *ast.CompositeLit, imports map[string]st
 	return deps, attrRefs, varRefs
 }
 
-func findDeps(expr ast.Expr, deps *[]string, attrRefs *[]wetwire.AttrRefUsage, seen map[string]bool, imports map[string]string, fieldPath string) {
-	// Delegate to findDepsWithVarRefs with a nil varRefs map
-	findDepsWithVarRefs(expr, deps, attrRefs, nil, seen, imports, fieldPath)
-}
-
 func findDepsWithVarRefs(expr ast.Expr, deps *[]string, attrRefs *[]wetwire.AttrRefUsage, varRefs map[string]string, seen map[string]bool, imports map[string]string, fieldPath string) {
 	switch v := expr.(type) {
 	case *ast.Ident:
