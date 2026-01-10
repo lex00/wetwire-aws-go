@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EventBridge rule
+
+Resources:
+  ScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: DailyTask
+      Description: Run daily at midnight
+      ScheduleExpression: cron(0 0 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: arn:aws:lambda:us-east-1:123456789012:function:myfunction
+          Id: TargetFunction
