@@ -6,21 +6,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Release](https://img.shields.io/github/v/release/lex00/wetwire-aws-go.svg)](https://github.com/lex00/wetwire-aws-go/releases)
 
-Generate CloudFormation templates from Go resource declarations using a declarative, type-safe syntax.
+AWS CloudFormation synthesis using Go struct literals.
 
-## Status
+## Installation
 
-**v1.10.0 - Full Template Support**
+```bash
+go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
+```
 
-- All CLI commands implemented (build, validate, list, lint, init, import, design, test)
-- **264 services** (263 AWS + Alexa::ASK) with typed enum constants
-- **9 SAM resource types** (Function, Api, HttpApi, SimpleTable, LayerVersion, StateMachine, Application, Connector, GraphQLApi)
-- **Full template sections**: Parameters, Outputs, Mappings, Conditions with complete round-trip support
-- 254/254 AWS sample templates import successfully (100% success rate)
-
-See [CHANGELOG.md](CHANGELOG.md) for release details.
-
-## Quick Start
+## Quick Example
 
 ```go
 package infra
@@ -32,223 +26,80 @@ import (
     . "github.com/lex00/wetwire-aws-go/intrinsics"
 )
 
-// Direct type declaration - no wrappers, no registration
-var DataBucket = s3.Bucket{
-    BucketName: "my-data-bucket",
+var MyBucket = s3.Bucket{
+    BucketName: "my-data",
 }
 
-var ProcessorRole = iam.Role{
+var MyRole = iam.Role{
     RoleName: "processor-role",
 }
 
-// Environment extracted to flat variable
-var ProcessorEnv = lambda.Environment{
-    Variables: Json{
-        "BUCKET": DataBucket,  // Direct resource reference
-    },
-}
-
-var ProcessorFunction = lambda.Function{
+var MyFunction = lambda.Function{
     FunctionName: "processor",
-    Role:         ProcessorRole.Arn,  // GetAtt via field access
-    Environment:  ProcessorEnv,
+    Runtime:      lambda.RuntimePython312,
+    Role:         MyRole.Arn,  // Type-safe GetAtt reference
 }
 ```
-
-Generate template:
 
 ```bash
 wetwire-aws build ./infra > template.json
 ```
 
-### SAM (Serverless) Resources
+## Serverless (SAM) Support
+
+Build serverless applications with type-safe SAM resources:
 
 ```go
 package infra
 
-import (
-    "github.com/lex00/wetwire-aws-go/resources/serverless"
-    "github.com/lex00/wetwire-aws-go/resources/dynamodb"
-)
+import "github.com/lex00/wetwire-aws-go/resources/serverless"
 
-// SAM Function environment extracted to flat variable
-var HelloEnv = serverless.Function_Environment{
-    Variables: map[string]any{
-        "TABLE_NAME": DataTable.TableName,
-    },
-}
-
-// SAM Function with environment variables
-var HelloFunction = serverless.Function{
-    Handler:     "bootstrap",
-    Runtime:     "provided.al2",
-    CodeUri:     "./hello/",
-    MemorySize:  128,
-    Timeout:     30,
-    Environment: HelloEnv,
-}
-
-// DynamoDB table
-var DataTable = dynamodb.Table{
-    TableName: "my-data-table",
+var ProcessorFunction = serverless.Function{
+    Handler:    "bootstrap",
+    Runtime:    "provided.al2",
+    CodeUri:    "./src",
+    MemorySize: 128,
+    Timeout:    30,
 }
 ```
 
-SAM templates automatically include the `Transform: AWS::Serverless-2016-10-31` header.
+All 9 SAM resource types supported: `Function`, `Api`, `HttpApi`, `SimpleTable`, `LayerVersion`, `StateMachine`, `Application`, `Connector`, `GraphQLApi`.
 
-### Parameters and Outputs
+## AI-Assisted Design
 
-```go
-package infra
-
-import (
-    "github.com/lex00/wetwire-aws-go/resources/s3"
-    . "github.com/lex00/wetwire-aws-go/intrinsics"
-)
-
-// Parameter with full CloudFormation metadata
-var Environment = Parameter{
-    Type:          "String",
-    Description:   "Deployment environment",
-    Default:       "dev",
-    AllowedValues: []any{"dev", "staging", "prod"},
-}
-
-// Use parameter directly in resources
-var DataBucket = s3.Bucket{
-    BucketName: Sub("${AWS::StackName}-data-${Environment}"),
-}
-
-// Stack output
-var BucketArnOutput = Output{
-    Description: "The ARN of the data bucket",
-    Value:       DataBucket.Arn,
-}
-```
-
-## Installation
+Create infrastructure interactively with AI:
 
 ```bash
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
+# Interactive design session
+wetwire-aws design "Create an encrypted S3 bucket"
+
+# Automated testing with personas
+wetwire-aws test --persona beginner "Create a Lambda function"
 ```
 
-## CLI Commands
+Requires `ANTHROPIC_API_KEY`. See [CLI Reference](docs/CLI.md#design) for details.
 
-| Command | Description |
-|---------|-------------|
-| `build` | Generate CloudFormation template from Go source |
-| `validate` | Validate resources and references |
-| `list` | List discovered resources |
-| `lint` | Check for issues (18 rules, --fix support) |
-| `init` | Initialize new project |
-| `import` | Import CloudFormation template to Go code |
-| `design` | AI-assisted infrastructure design (requires wetwire-core-go) |
-| `test` | Automated persona-based testing (requires wetwire-core-go) |
+## Documentation
 
-## Implementation Status
-
-### What's Working
-
-- **Intrinsic Functions**: All CloudFormation intrinsics (Ref, GetAtt, Sub, Join, etc.)
-- **Pseudo-Parameters**: AWS_REGION, AWS_ACCOUNT_ID, AWS_STACK_NAME, etc.
-- **AST Discovery**: Parse Go source to find resource declarations
-- **Value Extraction**: Extract property values from compiled Go code
-- **Template Builder**: Build CF template with topological ordering
-- **Cycle Detection**: Detect circular dependencies
-- **JSON/YAML Output**: Serialize to CF template format
-- **Linter**: 18 rules (WAW001-WAW018) with auto-fix support
-- **Code Generator**: Generate Go types from CloudFormation spec
-- **SAM Support**: AWS Serverless Application Model (9 resource types)
-
-### What's Missing
-
-All core CLI commands are now implemented. Potential future enhancements:
-
-| Feature | Priority | Description |
-|---------|----------|-------------|
-| Additional lint rules | P3 | Port more Python lint rules to Go |
-
-## Package Structure
-
-```
-wetwire-aws/
-├── cmd/wetwire-aws/       # CLI application
-│   ├── main.go            # Entry point
-│   ├── build.go           # build command
-│   ├── validate.go        # validate command
-│   ├── list.go            # list command
-│   ├── lint.go            # lint command
-│   ├── init.go            # init command
-│   ├── import.go          # import command
-│   ├── design.go          # design command (AI-assisted)
-│   └── test.go            # test command (persona testing)
-├── internal/
-│   ├── discover/          # AST-based resource discovery
-│   ├── importer/          # CloudFormation template importer
-│   │   ├── ir.go          # Intermediate representation types
-│   │   ├── parser.go      # YAML/JSON template parser
-│   │   └── codegen.go     # Go code generator
-│   ├── linter/            # Lint rules (WAW001-WAW018)
-│   ├── serialize/         # JSON/YAML serialization
-│   ├── template/          # Template builder with topo sort
-│   └── validation/        # cfn-lint-go integration
-├── intrinsics/
-│   ├── intrinsics.go      # Ref, GetAtt, Sub, Join, etc.
-│   └── pseudo.go          # AWS pseudo-parameters
-├── codegen/               # Generate Go types from CF spec
-│   ├── fetch.go           # Download CF spec
-│   ├── parse.go           # Parse spec JSON
-│   └── generate.go        # Generate Go files
-├── contracts.go           # Core types (Resource, AttrRef, Template)
-├── docs/
-│   ├── QUICK_START.md
-│   └── CLI.md
-└── scripts/
-    ├── ci.sh              # Local CI script
-    └── import_aws_samples.sh  # Test against AWS samples
-```
+- [Quick Start](docs/QUICK_START.md) - Full tutorial
+- [CLI Reference](docs/CLI.md) - All commands
+- [SAM Guide](docs/SAM.md) - Serverless resources
+- [FAQ](docs/FAQ.md) - Common questions
+- [Adoption Guide](docs/ADOPTION.md) - Migration and onboarding
+- [Examples](docs/EXAMPLES.md) - Imported template catalog
 
 ## Development
 
 ```bash
-# Run tests
-go test -v ./...
-
-# Run CI checks
-./scripts/ci.sh
-
-# Build CLI
-go build -o wetwire-aws ./cmd/wetwire-aws
+git clone https://github.com/lex00/wetwire-aws-go.git
+cd wetwire-aws-go
+go mod download
+go test ./...           # Run tests
+./scripts/ci.sh         # Full CI checks
 ```
 
-## Documentation
-
-- [Quick Start](docs/QUICK_START.md)
-- [SAM Guide](docs/SAM.md) - Serverless Application Model
-- [CLI Reference](docs/CLI.md)
-- [Import Workflow](docs/IMPORT_WORKFLOW.md)
-- [Examples](docs/EXAMPLES.md) - Imported template catalog
-- [FAQ](docs/FAQ.md)
-- [Adoption Guide](docs/ADOPTION.md) - Migration strategies and team onboarding
-- [Developer Guide](docs/DEVELOPERS.md) - Development setup
-- [Contributing](CONTRIBUTING.md) - How to contribute
-- [Internals](docs/INTERNALS.md) - Architecture and implementation details
-- [Code Generation](docs/CODEGEN.md) - Resource type generation
-- [Versioning](docs/VERSIONING.md) - Version management
-
-## Dependencies
-
-The `design` and `test` commands require:
-- [wetwire-core-go](https://github.com/lex00/wetwire-core-go) - AI orchestration and personas
-- [cfn-lint-go](https://github.com/lex00/cfn-lint-go) - CloudFormation template validation
-- `ANTHROPIC_API_KEY` environment variable
-
-## Related Packages
-
-- [wetwire-core-go](https://github.com/lex00/wetwire-core-go) - AI agent orchestration
-- [cfn-lint-go](https://github.com/lex00/cfn-lint-go) - CloudFormation linter (Go port)
-- [cloudformation-schema-go](https://github.com/lex00/cloudformation-schema-go) - CF resource types
+See [Developer Guide](docs/DEVELOPERS.md) and [Contributing](CONTRIBUTING.md) for details.
 
 ## License
 
-MIT - See [LICENSE](LICENSE) for details. See [NOTICE](NOTICE) for Apache 2.0 acknowledgements covering AWS contributions.
+MIT - See [LICENSE](LICENSE) for details. Third-party attributions in [NOTICE](NOTICE).
