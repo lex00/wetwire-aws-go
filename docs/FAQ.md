@@ -1,6 +1,6 @@
 # wetwire-aws-go FAQ
 
-This FAQ covers questions specific to the Go implementation of wetwire for AWS CloudFormation. For general wetwire questions, see the [central FAQ](https://github.com/lex00/wetwire/blob/main/docs/FAQ.md).
+This FAQ covers common questions about wetwire-aws-go.
 
 ---
 
@@ -272,9 +272,8 @@ kiro-cli login
 
 ---
 
-## Resources
+## See Also
 
-- [Wetwire Specification](https://github.com/lex00/wetwire/blob/main/docs/WETWIRE_SPEC.md)
-- [CLI Documentation](CLI.md)
+- [CLI Reference](CLI.md)
 - [Quick Start](QUICK_START.md)
 - [Import Workflow](IMPORT_WORKFLOW.md)
