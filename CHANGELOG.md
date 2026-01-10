@@ -31,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Semantic comparison for CloudFormation templates
   - Tests flow: YAML -> import -> Go code -> build -> compare
   - CI job for round-trip test visibility
+- Feature: 5-dimension scoring system per spec 6.4 (#138)
+  - `TestScore` struct with Completeness, LintQuality, CodeQuality, OutputValidity, QuestionEfficiency
+  - Grade scale: Failure (0-5), Partial (6-9), Success (10-12), Excellent (13-15)
+  - `internal/scoring` package with scoring calculation logic
+  - `TestResult` and `TestSummary` types in contracts.go
 - Docs: New documentation files ported from Python implementation
   - `CONTRIBUTING.md` - Contributing guidelines (root level)
   - `docs/ADOPTION.md` - Migration strategies, escape hatches, team onboarding
