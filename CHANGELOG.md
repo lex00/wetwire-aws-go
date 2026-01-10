@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Test: Round-trip testing per spec 11.2 (#139)
+  - 20 reference YAML templates in `internal/importer/testdata/reference/`
+  - Semantic comparison for CloudFormation templates
+  - Tests flow: YAML -> import -> Go code -> build -> compare
+  - CI job for round-trip test visibility
 - Docs: New documentation files ported from Python implementation
   - `CONTRIBUTING.md` - Contributing guidelines (root level)
   - `docs/ADOPTION.md` - Migration strategies, escape hatches, team onboarding
