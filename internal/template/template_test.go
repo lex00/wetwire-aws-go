@@ -462,3 +462,415 @@ func TestBuilder_TransformValueWithPath_IntrinsicFieldMapping(t *testing.T) {
 	assert.Equal(t, "MyResource", getAtt[0])
 	assert.Equal(t, "Arn", getAtt[1])
 }
+
+func TestSetVarAttrRefs(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	refs := map[string]VarAttrRefInfo{
+		"MyResource": {
+			AttrRefs: []wetwire.AttrRefUsage{
+				{ResourceName: "OtherResource", Attribute: "Arn", FieldPath: "Role"},
+			},
+		},
+	}
+
+	builder.SetVarAttrRefs(refs)
+
+	// The internal map should be set
+	assert.Len(t, builder.varAttrRefs, 1)
+	assert.Contains(t, builder.varAttrRefs, "MyResource")
+}
+
+func TestResolveAllAttrRefs(t *testing.T) {
+	builder := NewBuilder(map[string]wetwire.DiscoveredResource{
+		"Function": {Name: "Function", Dependencies: []string{"Role"}},
+		"Role":     {Name: "Role"},
+	})
+
+	builder.SetVarAttrRefs(map[string]VarAttrRefInfo{
+		"Function": {
+			AttrRefs: []wetwire.AttrRefUsage{
+				{ResourceName: "Role", Attribute: "Arn", FieldPath: "Role"},
+			},
+		},
+		"Role": {
+			AttrRefs: []wetwire.AttrRefUsage{
+				{ResourceName: "Policy", Attribute: "PolicyArn", FieldPath: "Policies"},
+			},
+		},
+	})
+
+	refs := builder.resolveAllAttrRefs("Function")
+
+	// Should find AttrRefs from Function and from its dependency Role
+	assert.Len(t, refs, 2)
+}
+
+func TestResolveAllAttrRefs_VarRefs(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	builder.SetVarAttrRefs(map[string]VarAttrRefInfo{
+		"Output": {
+			VarRefs: map[string]string{"Value": "Helper"},
+		},
+		"Helper": {
+			AttrRefs: []wetwire.AttrRefUsage{
+				{ResourceName: "Bucket", Attribute: "Arn", FieldPath: "Arn"},
+			},
+		},
+	})
+
+	refs := builder.resolveAllAttrRefs("Output")
+
+	// Should follow VarRefs and find the nested AttrRef
+	assert.Len(t, refs, 1)
+	assert.Equal(t, "Bucket", refs[0].ResourceName)
+}
+
+func TestResolveAllAttrRefs_CircularDeps(t *testing.T) {
+	builder := NewBuilder(map[string]wetwire.DiscoveredResource{
+		"A": {Name: "A", Dependencies: []string{"B"}},
+		"B": {Name: "B", Dependencies: []string{"A"}},
+	})
+
+	// Should not infinite loop
+	refs := builder.resolveAllAttrRefs("A")
+	assert.Empty(t, refs)
+}
+
+func TestBuilder_Build_WithParameters(t *testing.T) {
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyBucket": {Name: "MyBucket", Type: "s3.Bucket"},
+	}
+	parameters := map[string]wetwire.DiscoveredParameter{
+		"Environment": {Name: "Environment"},
+	}
+
+	builder := NewBuilderFull(resources, parameters, nil, nil, nil)
+	builder.SetValue("MyBucket", map[string]any{"BucketName": "test"})
+	builder.SetValue("Environment", map[string]any{
+		"Type":        "String",
+		"Default":     "dev",
+		"Description": "Deployment environment",
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	assert.Len(t, tmpl.Parameters, 1)
+	param := tmpl.Parameters["Environment"]
+	assert.Equal(t, "String", param.Type)
+	assert.Equal(t, "dev", param.Default)
+	assert.Equal(t, "Deployment environment", param.Description)
+}
+
+func TestBuilder_Build_WithParameterConstraints(t *testing.T) {
+	parameters := map[string]wetwire.DiscoveredParameter{
+		"Port": {Name: "Port"},
+	}
+
+	builder := NewBuilderFull(nil, parameters, nil, nil, nil)
+	builder.SetValue("Port", map[string]any{
+		"Type":                  "Number",
+		"MinValue":              float64(1),
+		"MaxValue":              float64(65535),
+		"AllowedValues":         []any{80, 443, 8080},
+		"AllowedPattern":        "\\d+",
+		"ConstraintDescription": "Must be a valid port number",
+		"NoEcho":                true,
+		"MinLength":             float64(1),
+		"MaxLength":             float64(5),
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	param := tmpl.Parameters["Port"]
+	assert.Equal(t, "Number", param.Type)
+	assert.NotNil(t, param.MinValue)
+	assert.NotNil(t, param.MaxValue)
+	assert.Len(t, param.AllowedValues, 3)
+	assert.Equal(t, "\\d+", param.AllowedPattern)
+	assert.Equal(t, "Must be a valid port number", param.ConstraintDescription)
+	assert.True(t, param.NoEcho)
+	assert.NotNil(t, param.MinLength)
+	assert.NotNil(t, param.MaxLength)
+}
+
+func TestBuilder_Build_ParameterNotMap(t *testing.T) {
+	parameters := map[string]wetwire.DiscoveredParameter{
+		"BadParam": {Name: "BadParam"},
+	}
+
+	builder := NewBuilderFull(nil, parameters, nil, nil, nil)
+	builder.SetValue("BadParam", "not a map")
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	// Should get default String type
+	param := tmpl.Parameters["BadParam"]
+	assert.Equal(t, "String", param.Type)
+}
+
+func TestBuilder_Build_WithMappings(t *testing.T) {
+	mappings := map[string]wetwire.DiscoveredMapping{
+		"RegionMap": {Name: "RegionMap"},
+	}
+
+	builder := NewBuilderFull(nil, nil, nil, mappings, nil)
+	builder.SetValue("RegionMap", map[string]any{
+		"us-east-1": map[string]any{"AMI": "ami-12345678"},
+		"us-west-2": map[string]any{"AMI": "ami-87654321"},
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	assert.Len(t, tmpl.Mappings, 1)
+	regionMap := tmpl.Mappings["RegionMap"].(map[string]any)
+	assert.Contains(t, regionMap, "us-east-1")
+}
+
+func TestBuilder_Build_WithConditions(t *testing.T) {
+	conditions := map[string]wetwire.DiscoveredCondition{
+		"IsProd": {Name: "IsProd"},
+	}
+
+	builder := NewBuilderFull(nil, nil, nil, nil, conditions)
+	builder.SetValue("IsProd", map[string]any{
+		"Fn::Equals": []any{"${Environment}", "prod"},
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	assert.Len(t, tmpl.Conditions, 1)
+	assert.Contains(t, tmpl.Conditions, "IsProd")
+}
+
+func TestBuilder_Build_WithOutputExport(t *testing.T) {
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyBucket": {Name: "MyBucket", Type: "s3.Bucket"},
+	}
+	outputs := map[string]wetwire.DiscoveredOutput{
+		"BucketName": {Name: "BucketName"},
+	}
+
+	builder := NewBuilderFull(resources, nil, outputs, nil, nil)
+	builder.SetValue("MyBucket", map[string]any{"BucketName": "test"})
+	builder.SetValue("BucketName", map[string]any{
+		"Value":       map[string]any{"Ref": "MyBucket"},
+		"Description": "The bucket name",
+		"Export":      map[string]any{"Name": "MyStack-BucketName"},
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	output := tmpl.Outputs["BucketName"]
+	assert.Equal(t, "The bucket name", output.Description)
+	assert.NotNil(t, output.Export)
+	assert.Equal(t, "MyStack-BucketName", output.Export.Name)
+}
+
+func TestBuilder_Build_WithOutputExportName(t *testing.T) {
+	outputs := map[string]wetwire.DiscoveredOutput{
+		"BucketArn": {Name: "BucketArn"},
+	}
+
+	builder := NewBuilderFull(nil, nil, outputs, nil, nil)
+	builder.SetValue("BucketArn", map[string]any{
+		"Value":      "arn:aws:s3:::my-bucket",
+		"ExportName": "MyStack-BucketArn",
+	})
+
+	tmpl, err := builder.Build()
+	require.NoError(t, err)
+
+	output := tmpl.Outputs["BucketArn"]
+	assert.NotNil(t, output.Export)
+	assert.Equal(t, "MyStack-BucketArn", output.Export.Name)
+}
+
+func TestStripArrayIndices(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"Simple", "Simple"},
+		{"Policies[0]", "Policies"},
+		{"Policies[0].PolicyDocument", "Policies.PolicyDocument"},
+		{"Statement[0].Resource[1]", "Statement.Resource"},
+		{"Tags[0].Key", "Tags.Key"},
+		{"[0]", ""},
+		{"Nested[0][1]", "Nested"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := stripArrayIndices(tt.input)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestTransformValueWithPath_PreservesRef(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	input := map[string]any{
+		"Ref": "MyParameter",
+	}
+
+	result := builder.transformValueWithPath(input, "Value", nil)
+
+	resultMap := result.(map[string]any)
+	assert.Equal(t, "MyParameter", resultMap["Ref"])
+}
+
+func TestTransformValueWithPath_PreservesSub(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	input := map[string]any{
+		"Fn::Sub": "${AWS::StackName}-bucket",
+	}
+
+	result := builder.transformValueWithPath(input, "Value", nil)
+
+	resultMap := result.(map[string]any)
+	assert.Equal(t, "${AWS::StackName}-bucket", resultMap["Fn::Sub"])
+}
+
+func TestTransformValueWithPath_StrippedPathMatch(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	attrRefsByPath := map[string]wetwire.AttrRefUsage{
+		"Policies.PolicyDocument.Statement.Resource": {
+			ResourceName: "MyBucket",
+			Attribute:    "Arn",
+			FieldPath:    "Policies.PolicyDocument.Statement.Resource",
+		},
+	}
+
+	input := map[string]any{
+		"Fn::GetAtt": []any{"", ""},
+	}
+
+	// Path with array indices that should match after stripping
+	result := builder.transformValueWithPath(input, "Policies[0].PolicyDocument.Statement[0].Resource", attrRefsByPath)
+
+	resultMap := result.(map[string]any)
+	getAtt := resultMap["Fn::GetAtt"].([]string)
+	assert.Equal(t, "MyBucket", getAtt[0])
+	assert.Equal(t, "Arn", getAtt[1])
+}
+
+func TestTransformValueWithPath_SuffixMatch(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	attrRefsByPath := map[string]wetwire.AttrRefUsage{
+		"Role": {
+			ResourceName: "MyRole",
+			Attribute:    "Arn",
+			FieldPath:    "Role",
+		},
+	}
+
+	input := map[string]any{
+		"Fn::GetAtt": []any{"", ""},
+	}
+
+	// Path that has Role as a suffix
+	result := builder.transformValueWithPath(input, "Properties.Role", attrRefsByPath)
+
+	resultMap := result.(map[string]any)
+	getAtt := resultMap["Fn::GetAtt"].([]string)
+	assert.Equal(t, "MyRole", getAtt[0])
+	assert.Equal(t, "Arn", getAtt[1])
+}
+
+func TestTransformValueWithPath_RecursiveSlice(t *testing.T) {
+	builder := NewBuilder(nil)
+
+	attrRefsByPath := map[string]wetwire.AttrRefUsage{
+		"Items.Value": {
+			ResourceName: "MyResource",
+			Attribute:    "Id",
+			FieldPath:    "Items.Value",
+		},
+	}
+
+	input := []any{
+		map[string]any{
+			"Name": "first",
+			"Value": map[string]any{
+				"Fn::GetAtt": []any{"", ""},
+			},
+		},
+	}
+
+	result := builder.transformValueWithPath(input, "Items", attrRefsByPath)
+
+	resultSlice := result.([]any)
+	firstItem := resultSlice[0].(map[string]any)
+	valueMap := firstItem["Value"].(map[string]any)
+	getAtt := valueMap["Fn::GetAtt"].([]string)
+	assert.Equal(t, "MyResource", getAtt[0])
+	assert.Equal(t, "Id", getAtt[1])
+}
+
+func TestBuilder_Build_UnknownResourceType(t *testing.T) {
+	resources := map[string]wetwire.DiscoveredResource{
+		"MyResource": {Name: "MyResource", Type: "unknown.ResourceType"},
+	}
+
+	builder := NewBuilder(resources)
+	builder.SetValue("MyResource", map[string]any{})
+
+	_, err := builder.Build()
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "unknown resource type")
+}
+
+func TestCfResourceType_Standard(t *testing.T) {
+	tests := []struct {
+		goType  string
+		cfnType string
+	}{
+		{"s3.Bucket", "AWS::S3::Bucket"},
+		{"lambda.Function", "AWS::Lambda::Function"},
+		{"iam.Role", "AWS::IAM::Role"},
+		{"dynamodb.Table", "AWS::DynamoDB::Table"},
+		{"sns.Topic", "AWS::SNS::Topic"},
+		{"sqs.Queue", "AWS::SQS::Queue"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.goType, func(t *testing.T) {
+			result := cfResourceType(tt.goType)
+			assert.Equal(t, tt.cfnType, result)
+		})
+	}
+}
+
+func TestGoPackageToCFService(t *testing.T) {
+	tests := []struct {
+		pkg     string
+		service string
+	}{
+		{"ec2", "EC2"},
+		{"s3", "S3"},
+		{"lambda", "Lambda"},
+		{"dynamodb", "DynamoDB"},
+		{"apigateway", "ApiGateway"},
+		{"cloudwatch", "CloudWatch"},
+		{"elasticloadbalancingv2", "ElasticLoadBalancingV2"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.pkg, func(t *testing.T) {
+			result := goPackageToCFService(tt.pkg)
+			assert.Equal(t, tt.service, result)
+		})
+	}
+}
