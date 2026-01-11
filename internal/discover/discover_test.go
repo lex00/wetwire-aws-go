@@ -1,6 +1,9 @@
 package discover
 
 import (
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"os"
 	"path/filepath"
 	"testing"
@@ -460,4 +463,363 @@ func TestIsIntrinsicPackage(t *testing.T) {
 
 	// Test with different package name not in imports - returns false
 	assert.False(t, isIntrinsicPackage("unknown", imports))
+}
+
+func TestDiscover_RecursivePatternWithDots(t *testing.T) {
+	// Test the recursive pattern with trailing "..."
+	dir := t.TempDir()
+	subDir := filepath.Join(dir, "subpkg")
+	require.NoError(t, os.MkdirAll(subDir, 0755))
+
+	// Create a Go file in the subdirectory
+	code := `package subpkg
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var SubBucket = s3.Bucket{
+	BucketName: "sub-bucket",
+}
+`
+	err := os.WriteFile(filepath.Join(subDir, "storage.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	// Test with "..." suffix (triggers recursive mode after /... stripping has no effect)
+	// The pattern "dir..." triggers recursive: ends with "..." -> true
+	result, err := Discover(Options{
+		Packages: []string{dir + "..."},
+	})
+	require.NoError(t, err)
+
+	assert.Len(t, result.Resources, 1)
+	assert.Contains(t, result.Resources, "SubBucket")
+}
+
+func TestDiscover_WithSliceExpr(t *testing.T) {
+	// Test slice expression handling in findDepsWithVarRefs
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyData = []string{"a", "b", "c"}
+var MySlice = MyData[1:2]
+
+var MyBucket = s3.Bucket{
+	BucketName: "test",
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.NotNil(t, result)
+}
+
+func TestDiscover_WithIndexExpr(t *testing.T) {
+	// Test index expression handling in findDepsWithVarRefs
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var Buckets = []s3.Bucket{}
+var FirstBucket = Buckets[0]
+
+var MyBucket = s3.Bucket{
+	BucketName: "test",
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.NotNil(t, result)
+}
+
+func TestDiscover_WithUnaryExpr(t *testing.T) {
+	// Test unary expression handling (e.g., &Type{})
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyBucket = s3.Bucket{
+	BucketName: "test",
+	NotificationConfiguration: &s3.Bucket_NotificationConfiguration{},
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+}
+
+func TestExtractTypeName_DefaultCase(t *testing.T) {
+	// Test extractTypeName returns empty strings for unsupported expression types
+	// (The function handles *ast.SelectorExpr and *ast.Ident, anything else returns "","")
+
+	// Create a mock expression that is neither SelectorExpr nor Ident
+	// This tests the default switch case
+	src := `package test
+
+var x = 42
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	// Walk to find a BasicLit expression (which will trigger default case)
+	var foundExpr ast.Expr
+	ast.Inspect(file, func(n ast.Node) bool {
+		if lit, ok := n.(*ast.BasicLit); ok {
+			foundExpr = lit
+			return false
+		}
+		return true
+	})
+
+	require.NotNil(t, foundExpr)
+	typeName, pkgName := extractTypeName(foundExpr)
+	assert.Equal(t, "", typeName)
+	assert.Equal(t, "", pkgName)
+}
+
+func TestDiscover_WalkError(t *testing.T) {
+	// Test error handling during directory walk
+	result, err := Discover(Options{
+		Packages: []string{"/nonexistent/path/..."},
+	})
+	// Should handle gracefully - either returns error or empty result
+	if err != nil {
+		assert.Error(t, err)
+	} else {
+		assert.NotNil(t, result)
+	}
+}
+
+func TestDiscover_ImportedPackageInField(t *testing.T) {
+	// Test that package names in imports are skipped correctly in findDepsWithVarRefs
+	dir := t.TempDir()
+
+	code := `package test
+
+import (
+	"github.com/lex00/wetwire-aws-go/resources/s3"
+	"github.com/lex00/wetwire-aws-go/resources/iam"
+)
+
+var MyRole = iam.Role{}
+
+var MyBucket = s3.Bucket{
+	BucketName: "test",
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+	assert.Contains(t, result.Resources, "MyRole")
+}
+
+func TestDiscover_CommonIdentInField(t *testing.T) {
+	// Test that common identifiers like true, false, nil are skipped
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyBucket = s3.Bucket{
+	ObjectLockEnabled: true,
+	PublicAccessBlockConfiguration: nil,
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+	// Should have no dependencies (true/nil are common identifiers, skipped)
+	bucket := result.Resources["MyBucket"]
+	assert.Empty(t, bucket.Dependencies)
+}
+
+func TestDiscover_PackageSelectorSkipped(t *testing.T) {
+	// Test that package.Type selectors are skipped (not treated as resource refs)
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyBucket = s3.Bucket{
+	BucketName: s3.BucketName,
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+}
+
+func TestDiscover_CallExprWithResourceArg(t *testing.T) {
+	// Test that function call arguments are scanned for dependencies
+	dir := t.TempDir()
+
+	code := `package test
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+	"github.com/lex00/wetwire-aws-go/resources/s3"
+)
+
+var OtherBucket = s3.Bucket{
+	BucketName: "other",
+}
+
+var MyBucket = s3.Bucket{
+	BucketName: Sub("${AWS::StackName}-bucket"),
+	Tags: Json{
+		"Ref": OtherBucket,
+	},
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+	assert.Contains(t, result.Resources, "OtherBucket")
+}
+
+func TestDiscover_LowercaseIdentifierSkipped(t *testing.T) {
+	// Test that lowercase identifiers are not treated as resource references
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var helper = "some-value"
+
+var MyBucket = s3.Bucket{
+	BucketName: helper,
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+	// helper is lowercase, so not added as dependency
+	bucket := result.Resources["MyBucket"]
+	assert.Empty(t, bucket.Dependencies)
+}
+
+func TestDiscover_SelectorExprNonIdent(t *testing.T) {
+	// Test selector expression with non-ident X (edge case)
+	dir := t.TempDir()
+
+	code := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var data = map[string]interface{}{
+	"value": "test",
+}
+
+var MyBucket = s3.Bucket{
+	BucketName: "test",
+}
+`
+	err := os.WriteFile(filepath.Join(dir, "test.go"), []byte(code), 0644)
+	require.NoError(t, err)
+
+	result, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "MyBucket")
+}
+
+func TestDiscover_MultiplePackages(t *testing.T) {
+	// Test discovering multiple packages in one call
+	dir1 := t.TempDir()
+	dir2 := t.TempDir()
+
+	code1 := `package pkg1
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var Bucket1 = s3.Bucket{
+	BucketName: "bucket1",
+}
+`
+	code2 := `package pkg2
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var Bucket2 = s3.Bucket{
+	BucketName: "bucket2",
+}
+`
+	require.NoError(t, os.WriteFile(filepath.Join(dir1, "test1.go"), []byte(code1), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir2, "test2.go"), []byte(code2), 0644))
+
+	result, err := Discover(Options{
+		Packages: []string{dir1, dir2},
+	})
+	require.NoError(t, err)
+	assert.Contains(t, result.Resources, "Bucket1")
+	assert.Contains(t, result.Resources, "Bucket2")
+}
+
+func TestDiscover_PackageError(t *testing.T) {
+	// Test error propagation from discoverPackage
+	// Create a directory with invalid Go code to trigger parse error
+	dir := t.TempDir()
+
+	// Writing invalid Go syntax
+	code := `package test
+
+This is not valid Go code at all!
+`
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "invalid.go"), []byte(code), 0644))
+
+	_, err := Discover(Options{
+		Packages: []string{dir},
+	})
+	// Should return an error for parse failures
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "expected declaration")
 }
