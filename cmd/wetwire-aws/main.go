@@ -11,6 +11,8 @@
 //	wetwire-aws import template.yaml  Import CloudFormation template to Go
 //	wetwire-aws design "prompt"       AI-assisted infrastructure design
 //	wetwire-aws test "prompt"         Run persona-based testing
+//	wetwire-aws diff old.json new.json Compare two templates
+//	wetwire-aws watch ./infra/...     Auto-rebuild on file changes
 //	wetwire-aws version               Show version
 package main
 
@@ -49,6 +51,9 @@ Then generate CloudFormation JSON:
 		newImportCmd(),
 		newDesignCmd(),
 		newTestCmd(),
+		newOptimizeCmd(),
+		newDiffCmd(),
+		newWatchCmd(),
 		newVersionCmd(),
 	)
 

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CLI: `diff` command for semantic comparison of CloudFormation templates (#146)
+  - Compares two templates and shows added, removed, and modified resources
+  - Supports JSON and YAML input formats
+  - Text and JSON output formats
+  - `--ignore-order` flag for array element order-insensitive comparison
+- CLI: `watch` command for auto-rebuild on source file changes (#146)
+  - Monitors source directories for `.go` file changes
+  - Runs lint on each change, builds if lint passes
+  - `--lint-only` flag to skip build step
+  - `--debounce` flag to control rapid change handling (default: 500ms)
+  - Skips hidden directories, vendor, and generated `_wetwire_gen.go` files
+
 ### Changed
 
 - Refactor: Split `codegen.go` (2993 lines) into 5 files (#130)
