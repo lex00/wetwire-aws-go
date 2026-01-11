@@ -7,25 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Kiro: Renamed agent from `wetwire-runner` to `wetwire-aws-runner` for domain-specific naming (#157)
-- Kiro: MCP server now uses standalone `wetwire-aws-mcp` binary instead of embedded `--mcp-server` flag (#157)
-- CLI: Updated `design` and `test` commands help text to reference new agent name (#157)
-- Docs: Updated AWS-KIRO-CLI.md with new agent name and MCP configuration (#157)
-- Kiro: Removed local `internal/kiro/personas.go`, use core `personas` package for validation (#158)
-- CLI: `test` command now uses `personas.Names()` from wetwire-core-go for persona list (#158)
-- Deps: Updated wetwire-core-go from v1.0.1 to v1.2.0 (#159)
-
-### Removed
-
-- Internal: Removed unused `internal/serialize` package (#159)
-  - Serialization logic is domain-specific and handled in `internal/runner`
-  - Core `serialize` package available for future use
-
-### Added
-
-- Test: Provider flag tests for `design` and `test` commands (#157)
+## [1.11.0] - 2026-01-10
 
 ### Added
 
@@ -78,26 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - All intrinsic function types with examples
   - IAM policy types documentation
   - Best practices and CloudFormation mapping
-
-### Changed
-
-- Refactor: Split `codegen.go` (2993 lines) into 5 files (#130)
-  - `codegen.go` (910 lines) - main entry points
-  - `codegen_values.go` (1090 lines) - value conversion
-  - `codegen_intrinsics.go` (394 lines) - intrinsic handling
-  - `codegen_helpers.go` (408 lines) - constants and utilities
-  - `codegen_policy.go` (222 lines) - policy document handling
-- Refactor: Split `rules.go` (1892 lines) into 2 files (#130)
-  - `rules.go` (1010 lines) - core types + WAW001-WAW010
-  - `rules_extra.go` (891 lines) - WAW011-WAW018
-- Docs: Added package documentation to importer, runner, graph packages
-- Docs: Added function documentation to cmd/ handlers
-- Docs: Streamlined README.md (255 → 105 lines) to match Python version
-  - Added prominent AI-Assisted Design section
-  - Moved detailed sections to dedicated docs
-
-### Added
-
 - Test: Round-trip testing per spec 11.2 (#139)
   - 20 reference YAML templates in `internal/importer/testdata/reference/`
   - Semantic comparison for CloudFormation templates
@@ -121,6 +83,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/INTERNALS.md` - AST discovery, template generation, linter architecture
   - `docs/VERSIONING.md` - Version management and release process
 - Docs: Expanded FAQ.md troubleshooting section with 9 additional common errors
+- Test: Provider flag tests for `design` and `test` commands (#157)
+
+### Changed
+
+- Kiro: Renamed agent from `wetwire-runner` to `wetwire-aws-runner` for domain-specific naming (#157)
+- Kiro: MCP server now uses standalone `wetwire-aws-mcp` binary instead of embedded `--mcp-server` flag (#157)
+- CLI: Updated `design` and `test` commands help text to reference new agent name (#157)
+- Docs: Updated AWS-KIRO-CLI.md with new agent name and MCP configuration (#157)
+- Kiro: Removed local `internal/kiro/personas.go`, use core `personas` package for validation (#158)
+- CLI: `test` command now uses `personas.Names()` from wetwire-core-go for persona list (#158)
+- Deps: Updated wetwire-core-go from v1.0.1 to v1.2.0 (#159)
+- Refactor: Split `codegen.go` (2993 lines) into 5 files (#130)
+  - `codegen.go` (910 lines) - main entry points
+  - `codegen_values.go` (1090 lines) - value conversion
+  - `codegen_intrinsics.go` (394 lines) - intrinsic handling
+  - `codegen_helpers.go` (408 lines) - constants and utilities
+  - `codegen_policy.go` (222 lines) - policy document handling
+- Refactor: Split `rules.go` (1892 lines) into 2 files (#130)
+  - `rules.go` (1010 lines) - core types + WAW001-WAW010
+  - `rules_extra.go` (891 lines) - WAW011-WAW018
+- Docs: Added package documentation to importer, runner, graph packages
+- Docs: Added function documentation to cmd/ handlers
+- Docs: Streamlined README.md (255 → 105 lines) to match Python version
+  - Added prominent AI-Assisted Design section
+  - Moved detailed sections to dedicated docs
+
+### Removed
+
+- Internal: Removed unused `internal/serialize` package (#159)
+  - Serialization logic is domain-specific and handled in `internal/runner`
+  - Core `serialize` package available for future use
 
 ### Fixed
 
@@ -446,7 +439,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Block-style code generation with typed property types
 - 254/254 AWS sample templates import successfully (100% success rate)
 
-[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.9.0...HEAD
+[unreleased]: https://github.com/lex00/wetwire-aws-go/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.10.0...v1.11.0
+[1.10.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.8.2...v1.9.0
 [1.7.0]: https://github.com/lex00/wetwire-aws-go/compare/v1.6.2...v1.7.0
 [1.6.2]: https://github.com/lex00/wetwire-aws-go/compare/v1.6.1...v1.6.2
