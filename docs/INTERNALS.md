@@ -6,6 +6,8 @@ This document covers the internal architecture of wetwire-aws-go for contributor
 - [AST Discovery](#ast-discovery) - How resource discovery works
 - [Template Generation](#template-generation) - How templates are built
 - [Reference Resolution](#reference-resolution) - Ref and GetAtt handling
+- [Value Runner](#value-runner) - How values are extracted
+- [Importer](#importer) - CloudFormation to Go conversion
 - [Linter Architecture](#linter-architecture) - How lint rules work
 
 ---
@@ -129,17 +131,142 @@ The `topologicalSort()` method:
 3. Repeats until all resources are placed
 4. Detects circular dependencies and reports them
 
-### Value Runner
+---
 
-To get actual property values, the runner compiles and executes user code:
+## Value Runner
+
+To get actual property values, the runner compiles and executes user code. This is necessary because AST-based discovery captures structure but not runtime values.
+
+### How It Works
+
+1. **Generate temporary Go program** - Creates `main.go` that imports user's package
+2. **Run `go mod tidy`** - Resolves dependencies
+3. **Execute and capture JSON** - Runs program, parses JSON output
 
 ```go
 import "github.com/lex00/wetwire-aws-go/internal/runner"
 
-values, err := runner.ExtractValues(packages, resources)
+// Extract values for all discovered components
+result, err := runner.ExtractAll(
+    pkgPath,
+    resources,   // map[string]DiscoveredResource
+    parameters,  // map[string]DiscoveredParameter
+    outputs,     // map[string]DiscoveredOutput
+    mappings,    // map[string]DiscoveredMapping
+    conditions,  // map[string]DiscoveredCondition
+)
+
+// Result contains organized values
+for name, props := range result.Resources {
+    fmt.Printf("%s: %v\n", name, props["BucketName"])
+}
 ```
 
-This creates a temporary Go program that imports the user's packages and serializes each resource to JSON.
+### Vendor Mode
+
+When a `vendor/` directory exists, the runner uses in-module execution for offline builds:
+
+```go
+// With vendor directory:
+// - Creates _wetwire_runner/ subdir in module
+// - Uses -mod=vendor flag
+// - No network access needed
+
+// Without vendor directory:
+// - Creates temp directory
+// - Runs go mod tidy to fetch deps
+// - Uses replace directive for local module
+```
+
+### Generated Runner Template
+
+The runner generates code like this:
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    pkg "user/module/path"
+)
+
+func main() {
+    result := make(map[string]map[string]any)
+
+    // For each discovered variable
+    value := serializeValue(pkg.MyBucket)
+    result["MyBucket"] = value
+
+    output, _ := json.Marshal(result)
+    fmt.Println(string(output))
+}
+```
+
+---
+
+## Importer
+
+The importer converts existing CloudFormation YAML/JSON to Go code.
+
+### Import Process
+
+```go
+import "github.com/lex00/wetwire-aws-go/internal/importer"
+
+// Parse CloudFormation template
+opts := importer.Options{
+    PackageName: "infra",
+    UsePointers: false,
+    WithComments: true,
+}
+
+generated, err := importer.Import("template.yaml", opts)
+```
+
+### Code Generation
+
+The generator creates idiomatic Go code:
+
+```yaml
+# Input: CloudFormation YAML
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-data"
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+```
+
+```go
+// Output: Go code
+package infra
+
+import (
+    . "github.com/lex00/wetwire-aws-go/intrinsics"
+    "github.com/lex00/wetwire-aws-go/resources/s3"
+)
+
+var MyBucket = s3.Bucket{
+    BucketName: Sub{"${AWS::StackName}-data"},
+    Tags: []Tag{
+        {Key: "Environment", Value: Environment},
+    },
+}
+```
+
+### Intrinsic Function Mapping
+
+| CloudFormation | Generated Go |
+|----------------|--------------|
+| `!Ref X` | `X` (direct reference) |
+| `!GetAtt X.Attr` | `X.Attr` (field access) |
+| `!Sub "..."` | `Sub{"..."}` |
+| `!Join [",", [...]]` | `Join{",", []any{...}}` |
+| `!If [cond, a, b]` | `If{"cond", a, b}` |
+| `Fn::Equals` | `Equals{a, b}` |
 
 ---
 
