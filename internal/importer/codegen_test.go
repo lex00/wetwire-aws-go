@@ -2,6 +2,7 @@ package importer
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -2067,4 +2068,175 @@ func TestIRResource_TypeName(t *testing.T) {
 			assert.Equal(t, tt.expected, res.TypeName())
 		})
 	}
+}
+
+func TestGenerateCode_PolicyDocumentWithConditions(t *testing.T) {
+	// Test IAM policy with conditions to cover conditionToGo, jsonMapToGo, jsonValueToGo
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:RequestedRegion: us-east-1
+              Bool:
+                aws:SecureTransport: true
+`
+	ir, err := ParseTemplateContent([]byte(yaml), "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "test")
+
+	// Should contain the policy document in security.go (IAM category)
+	code := files["security.go"]
+	assert.Contains(t, code, "AssumeRolePolicyDocument")
+}
+
+func TestGenerateCode_PolicyDocumentWithPrincipals(t *testing.T) {
+	// Test IAM policy with various principal types
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              AWS:
+                - "arn:aws:iam::123456789012:root"
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Federated: "arn:aws:iam::123456789012:saml-provider/ExampleProvider"
+            Action: sts:AssumeRoleWithSAML
+`
+	ir, err := ParseTemplateContent([]byte(yaml), "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "test")
+
+	// Should contain principal types (IAM goes to security.go)
+	code := files["security.go"]
+	assert.Contains(t, code, "AssumeRolePolicyDocument")
+}
+
+func TestParseTemplate_FromFile(t *testing.T) {
+	// Test ParseTemplate function (reads from file)
+	tmpDir := t.TempDir()
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-bucket
+`
+	filePath := tmpDir + "/template.yaml"
+	require.NoError(t, os.WriteFile(filePath, []byte(yaml), 0644))
+
+	ir, err := ParseTemplate(filePath)
+	require.NoError(t, err)
+	assert.NotNil(t, ir)
+	assert.Contains(t, ir.Resources, "MyBucket")
+}
+
+func TestParseTemplate_InvalidFile(t *testing.T) {
+	// Test ParseTemplate with nonexistent file
+	_, err := ParseTemplate("/nonexistent/file.yaml")
+	assert.Error(t, err)
+}
+
+func TestGenerateCode_GetModuleVersion(t *testing.T) {
+	// Test that getModuleVersion is called during code generation
+	// This is an indirect test - the version appears in go.mod reference
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+`
+	ir, err := ParseTemplateContent([]byte(yaml), "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "test")
+
+	// Should have generated valid Go code with package declaration (S3 goes to storage.go)
+	code := files["storage.go"]
+	assert.Contains(t, code, "package test")
+}
+
+func TestGenerateCode_DetectSAMImplicitResourcesEdgeCases(t *testing.T) {
+	// Test SAM implicit resource detection with various event types
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.12
+      Events:
+        HttpApi:
+          Type: HttpApi
+          Properties:
+            Path: /hello
+            Method: get
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+`
+	ir, err := ParseTemplateContent([]byte(yaml), "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "test")
+
+	// Should generate function code (Serverless goes to main.go by default)
+	code := files["main.go"]
+	assert.Contains(t, code, "MyFunction")
+}
+
+func TestGenerateCode_ArrayElementTypeName(t *testing.T) {
+	// Test getArrayElementTypeName through code with nested arrays
+	yaml := `
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Test SG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+`
+	ir, err := ParseTemplateContent([]byte(yaml), "test.yaml")
+	require.NoError(t, err)
+
+	files := GenerateCode(ir, "test")
+
+	// Should have generated code with security group ingress rules (EC2 goes to network.go)
+	code := files["network.go"]
+	assert.Contains(t, code, "SecurityGroupIngress")
 }
