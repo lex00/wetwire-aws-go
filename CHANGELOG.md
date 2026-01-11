@@ -43,6 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Integration tests with real Go packages for value extraction
   - Tests for ExtractAll with parameters, outputs, and mappings
   - Edge case tests for go.mod parsing
+- Test: Linter package tests (#136)
+  - Coverage improved from 46.2% to 83.1%
+  - Tests for LintFile, LintPackage, lintRecursive
+  - Tests for getRules with filtering and MaxResources options
+  - Tests for InlineMapInSlice, UnusedIntrinsicsImport, AvoidExplicitRef, AvoidExplicitGetAtt, PreferJsonType, PreferEnumConstant rules
 - Docs: `docs/INTRINSICS.md` - comprehensive guide to intrinsic functions (#136)
   - Pseudo-parameters reference table
   - All intrinsic function types with examples

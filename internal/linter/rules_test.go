@@ -535,3 +535,354 @@ var BucketNameOutput = Output{
 	issuesWithCtx := rule.CheckWithContext(file, fset, ctx)
 	assert.Len(t, issuesWithCtx, 0, "Should not flag cross-file reference when defined in package context")
 }
+
+// Tests for LintFile, LintPackage, and related functions
+
+func TestLintFile_CleanFile(t *testing.T) {
+	result, err := LintFile("testdata/simple/clean.go", Options{})
+	require.NoError(t, err)
+
+	assert.True(t, result.Success)
+	assert.Len(t, result.Issues, 0)
+}
+
+func TestLintFile_WithIssues(t *testing.T) {
+	result, err := LintFile("testdata/simple/with_issues.go", Options{})
+	require.NoError(t, err)
+
+	assert.False(t, result.Success)
+	assert.Greater(t, len(result.Issues), 0)
+
+	// Should detect hardcoded pseudo-parameter
+	foundPseudoParam := false
+	for _, issue := range result.Issues {
+		if issue.RuleID == "WAW001" {
+			foundPseudoParam = true
+			break
+		}
+	}
+	assert.True(t, foundPseudoParam, "Should detect hardcoded pseudo-parameter")
+}
+
+func TestLintFile_NonExistentFile(t *testing.T) {
+	_, err := LintFile("testdata/nonexistent.go", Options{})
+	assert.Error(t, err)
+}
+
+func TestLintPackage_Directory(t *testing.T) {
+	result, err := LintPackage("testdata/simple", Options{})
+	require.NoError(t, err)
+
+	// Should have issues from with_issues.go
+	assert.Greater(t, len(result.Issues), 0)
+}
+
+func TestLintPackage_NonExistentDir(t *testing.T) {
+	_, err := LintPackage("testdata/nonexistent", Options{})
+	assert.Error(t, err)
+}
+
+func TestLintPackage_RecursivePattern(t *testing.T) {
+	result, err := LintPackage("testdata/...", Options{})
+	require.NoError(t, err)
+
+	// Should find issues in simple directory
+	assert.Greater(t, len(result.Issues), 0)
+}
+
+func TestGetRules_AllRules(t *testing.T) {
+	rules := getRules(Options{})
+	assert.GreaterOrEqual(t, len(rules), 15)
+}
+
+func TestGetRules_FilteredRules(t *testing.T) {
+	rules := getRules(Options{
+		EnabledRules: []string{"WAW001", "WAW002"},
+	})
+	assert.Len(t, rules, 2)
+
+	ruleIDs := []string{}
+	for _, r := range rules {
+		ruleIDs = append(ruleIDs, r.ID())
+	}
+	assert.Contains(t, ruleIDs, "WAW001")
+	assert.Contains(t, ruleIDs, "WAW002")
+}
+
+func TestGetRules_WithMaxResources(t *testing.T) {
+	rules := getRules(Options{
+		MaxResources: 25,
+	})
+
+	// Find FileTooLarge rule
+	var ftl FileTooLarge
+	for _, r := range rules {
+		if f, ok := r.(FileTooLarge); ok {
+			ftl = f
+			break
+		}
+	}
+
+	assert.Equal(t, 25, ftl.MaxResources)
+}
+
+// Tests for individual rules at 0% coverage
+
+func TestInlineMapInSlice(t *testing.T) {
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/ec2"
+
+var MySecurityGroup = ec2.SecurityGroup{
+	GroupDescription: "My SG",
+	SecurityGroupIngress: []any{
+		map[string]any{
+			"IpProtocol": "tcp",
+			"FromPort":   443,
+			"CidrIp":     "0.0.0.0/0",
+		},
+	},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := InlineMapInSlice{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW007", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "SecurityGroupIngress")
+	}
+}
+
+func TestInlineMapInSlice_ValidInlineMapInSlice(t *testing.T) {
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/ec2"
+
+var HTTPSIngress = ec2.SecurityGroup_Ingress{
+	IpProtocol: "tcp",
+	FromPort:   443,
+	CidrIp:     "0.0.0.0/0",
+}
+
+var MySecurityGroup = ec2.SecurityGroup{
+	GroupDescription:     "My SG",
+	SecurityGroupIngress: []ec2.SecurityGroup_Ingress{HTTPSIngress},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := InlineMapInSlice{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
+func TestUnusedIntrinsicsImport(t *testing.T) {
+	src := `package test
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+	"github.com/lex00/wetwire-aws-go/resources/s3"
+)
+
+var MyBucket = s3.Bucket{
+	BucketName: "my-bucket",
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := UnusedIntrinsicsImport{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW014", issues[0].RuleID)
+	}
+}
+
+func TestUnusedIntrinsicsImport_UsedIntrinsic(t *testing.T) {
+	src := `package test
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+	"github.com/lex00/wetwire-aws-go/resources/s3"
+)
+
+var MyBucket = s3.Bucket{
+	BucketName: Sub{"${AWS::StackName}-bucket"},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := UnusedIntrinsicsImport{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
+func TestAvoidExplicitRef(t *testing.T) {
+	src := `package test
+
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
+
+var BucketRef = Ref{"MyBucket"}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidExplicitRef{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW015", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "Ref{}")
+	}
+}
+
+func TestAvoidExplicitRef_DirectReference(t *testing.T) {
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/s3"
+
+var MyBucket = s3.Bucket{BucketName: "bucket"}
+var OtherBucket = s3.Bucket{BucketName: MyBucket.Arn}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidExplicitRef{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
+func TestAvoidExplicitGetAtt(t *testing.T) {
+	src := `package test
+
+import . "github.com/lex00/wetwire-aws-go/intrinsics"
+
+var RoleArn = GetAtt{"MyRole", "Arn"}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidExplicitGetAtt{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW016", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "GetAtt{}")
+	}
+}
+
+func TestAvoidExplicitGetAtt_FieldAccess(t *testing.T) {
+	src := `package test
+
+import (
+	"github.com/lex00/wetwire-aws-go/resources/iam"
+	"github.com/lex00/wetwire-aws-go/resources/lambda_"
+)
+
+var MyRole = iam.Role{RoleName: "role"}
+var MyFunction = lambda_.Function{Role: MyRole.Arn}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := AvoidExplicitGetAtt{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
+func TestPreferJsonType(t *testing.T) {
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/lambda_"
+
+var MyFunction = lambda_.Function{
+	Environment: lambda_.Function_Environment{
+		Variables: map[string]any{
+			"TABLE_NAME": "my-table",
+		},
+	},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := PreferJsonType{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW018", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "Json{}")
+	}
+}
+
+func TestPreferJsonType_WithJson(t *testing.T) {
+	src := `package test
+
+import (
+	. "github.com/lex00/wetwire-aws-go/intrinsics"
+	"github.com/lex00/wetwire-aws-go/resources/lambda_"
+)
+
+var MyFunction = lambda_.Function{
+	Environment: lambda_.Function_Environment{
+		Variables: Json{
+			"TABLE_NAME": "my-table",
+		},
+	},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := PreferJsonType{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
+func TestPreferEnumConstant(t *testing.T) {
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/lambda_"
+
+var MyFunction = lambda_.Function{
+	Runtime: "python3.12",
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := PreferEnumConstant{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW012", issues[0].RuleID)
+	}
+}
