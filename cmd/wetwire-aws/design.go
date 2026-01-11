@@ -39,7 +39,7 @@ The AI agent will:
 
 Providers:
     anthropic (default) - Uses Anthropic API directly (requires prompt)
-    kiro                - Uses Kiro CLI with wetwire-runner agent
+    kiro                - Uses Kiro CLI with wetwire-aws-runner agent
 
 With the Kiro provider, you can omit the prompt and the agent will ask what
 you'd like to create. The Anthropic provider requires an initial prompt.
@@ -86,7 +86,7 @@ func runDesign(prompt, outputDir string, maxLintCycles int, stream bool, provide
 	}
 }
 
-// runDesignKiro launches an interactive Kiro CLI session with the wetwire-runner agent.
+// runDesignKiro launches an interactive Kiro CLI session with the wetwire-aws-runner agent.
 func runDesignKiro(prompt, outputDir string) error {
 	// Change to output directory if specified
 	if outputDir != "." {
@@ -102,7 +102,7 @@ func runDesignKiro(prompt, outputDir string) error {
 	fmt.Println()
 
 	// Launch Kiro CLI chat (handles config installation internally)
-	return kiro.LaunchChat("wetwire-runner", prompt)
+	return kiro.LaunchChat("wetwire-aws-runner", prompt)
 }
 
 // runDesignAnthropic runs an interactive design session using the Anthropic API directly.

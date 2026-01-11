@@ -15,7 +15,7 @@ import (
 	"path/filepath"
 )
 
-//go:embed configs/wetwire-runner.json
+//go:embed configs/wetwire-aws-runner.json
 var configFS embed.FS
 
 // mcpConfig represents the MCP configuration structure.
@@ -31,7 +31,7 @@ type mcpServer struct {
 
 // EnsureInstalled checks if Kiro configs are installed and installs them if needed.
 // It installs:
-//   - ~/.kiro/agents/wetwire-runner.json (user-level agent config)
+//   - ~/.kiro/agents/wetwire-aws-runner.json (user-level agent config)
 //   - .kiro/mcp.json (project-level MCP config)
 //
 // Existing files are not overwritten unless force is true.
@@ -53,7 +53,7 @@ func EnsureInstalledWithForce(force bool) error {
 	}
 
 	if agentInstalled {
-		fmt.Println("Installed Kiro agent config: ~/.kiro/agents/wetwire-runner.json")
+		fmt.Println("Installed Kiro agent config: ~/.kiro/agents/wetwire-aws-runner.json")
 	}
 	if mcpInstalled {
 		fmt.Println("Installed project MCP config: .kiro/mcp.json")
@@ -81,7 +81,7 @@ func ensureAgentConfig(force bool) (bool, error) {
 	}
 
 	agentDir := filepath.Join(homeDir, ".kiro", "agents")
-	agentPath := filepath.Join(agentDir, "wetwire-runner.json")
+	agentPath := filepath.Join(agentDir, "wetwire-aws-runner.json")
 
 	// Check if already exists (skip if not forcing)
 	if _, err := os.Stat(agentPath); err == nil && !force {
@@ -94,7 +94,7 @@ func ensureAgentConfig(force bool) (bool, error) {
 	}
 
 	// Read embedded config
-	data, err := configFS.ReadFile("configs/wetwire-runner.json")
+	data, err := configFS.ReadFile("configs/wetwire-aws-runner.json")
 	if err != nil {
 		return false, fmt.Errorf("reading embedded config: %w", err)
 	}
@@ -161,22 +161,24 @@ func ensureProjectMCPConfig(force bool) (bool, error) {
 	return true, nil
 }
 
-// findWetwireBinaryPath returns the path to wetwire-aws.
-// It looks for the current executable first, then checks PATH,
-// then returns empty string for go run fallback.
-func findWetwireBinaryPath() string {
-	// Try to use the current executable
+// findMCPBinaryPath returns the path to wetwire-aws-mcp binary.
+// It looks in the same directory as the current executable first,
+// then checks PATH, then returns empty string for go run fallback.
+func findMCPBinaryPath() string {
+	// Try to find wetwire-aws-mcp next to current executable
 	exe, err := os.Executable()
 	if err == nil {
-		// Resolve symlinks to get the actual path
 		if resolved, err := filepath.EvalSymlinks(exe); err == nil {
 			exe = resolved
 		}
-		return exe
+		mcpPath := filepath.Join(filepath.Dir(exe), "wetwire-aws-mcp")
+		if _, err := os.Stat(mcpPath); err == nil {
+			return mcpPath
+		}
 	}
 
-	// Check if wetwire-aws is in PATH
-	if path, err := exec.LookPath("wetwire-aws"); err == nil {
+	// Check if wetwire-aws-mcp is in PATH
+	if path, err := exec.LookPath("wetwire-aws-mcp"); err == nil {
 		return path
 	}
 
@@ -184,17 +186,17 @@ func findWetwireBinaryPath() string {
 	return ""
 }
 
-// getMCPServerConfig returns the mcpServer config for the embedded MCP server.
-// Uses the current wetwire-aws binary with "design --mcp-server" flag.
+// getMCPServerConfig returns the mcpServer config for the MCP server.
+// Uses the standalone wetwire-aws-mcp binary.
 // Sets cwd to ensure paths resolve correctly in the project directory.
 func getMCPServerConfig() mcpServer {
 	cwd, _ := os.Getwd()
 
-	wetwirePath := findWetwireBinaryPath()
-	if wetwirePath != "" {
+	mcpPath := findMCPBinaryPath()
+	if mcpPath != "" {
 		return mcpServer{
-			Command: wetwirePath,
-			Args:    []string{"design", "--mcp-server"},
+			Command: mcpPath,
+			Args:    []string{},
 			Cwd:     cwd,
 		}
 	}
@@ -202,7 +204,7 @@ func getMCPServerConfig() mcpServer {
 	// Fallback to go run
 	return mcpServer{
 		Command: "go",
-		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest", "design", "--mcp-server"},
+		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest"},
 		Cwd:     cwd,
 	}
 }

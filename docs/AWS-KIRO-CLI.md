@@ -81,24 +81,24 @@ This automatically installs:
 
 | File | Purpose |
 |------|---------|
-| `~/.kiro/agents/wetwire-runner.json` | Kiro agent configuration |
+| `~/.kiro/agents/wetwire-aws-runner.json` | Kiro agent configuration |
 | `.kiro/mcp.json` | Project MCP server configuration |
 
 ### Manual configuration (optional)
 
-The MCP server is embedded in the main `wetwire-aws` binary. If you prefer to configure manually:
+The MCP server is provided as a separate binary `wetwire-aws-mcp`. If you prefer to configure manually:
 
-**~/.kiro/agents/wetwire-runner.json:**
+**~/.kiro/agents/wetwire-aws-runner.json:**
 ```json
 {
-  "name": "wetwire-runner",
+  "name": "wetwire-aws-runner",
   "description": "Infrastructure code generator using wetwire-aws",
   "prompt": "You are an infrastructure design assistant...",
   "model": "claude-sonnet-4",
   "mcpServers": {
     "wetwire": {
-      "command": "/path/to/wetwire-aws",
-      "args": ["design", "--mcp-server"],
+      "command": "wetwire-aws-mcp",
+      "args": [],
       "cwd": "/path/to/your/project"
     }
   },
@@ -111,8 +111,8 @@ The MCP server is embedded in the main `wetwire-aws` binary. If you prefer to co
 {
   "mcpServers": {
     "wetwire": {
-      "command": "/path/to/wetwire-aws",
-      "args": ["design", "--mcp-server"],
+      "command": "wetwire-aws-mcp",
+      "args": [],
       "cwd": "/path/to/your/project"
     }
   }
@@ -132,16 +132,16 @@ The MCP server is embedded in the main `wetwire-aws` binary. If you prefer to co
 wetwire-aws design --provider kiro "Create a serverless API with Lambda and DynamoDB"
 ```
 
-This launches Kiro CLI with the wetwire-runner agent and your prompt.
+This launches Kiro CLI with the wetwire-aws-runner agent and your prompt.
 
 ### Using Kiro CLI directly
 
 ```bash
-# Start chat with wetwire-runner agent
-kiro-cli chat --agent wetwire-runner
+# Start chat with wetwire-aws-runner agent
+kiro-cli chat --agent wetwire-aws-runner
 
 # Or with an initial prompt
-kiro-cli chat --agent wetwire-runner "Create an S3 bucket with versioning"
+kiro-cli chat --agent wetwire-aws-runner "Create an S3 bucket with versioning"
 ```
 
 ---
@@ -163,7 +163,7 @@ The wetwire-aws MCP server exposes three tools to Kiro:
 ```
 $ wetwire-aws design --provider kiro "Create an S3 bucket with versioning and encryption"
 
-Installed Kiro agent config: ~/.kiro/agents/wetwire-runner.json
+Installed Kiro agent config: ~/.kiro/agents/wetwire-aws-runner.json
 Installed project MCP config: .kiro/mcp.json
 Starting Kiro CLI design session...
 
