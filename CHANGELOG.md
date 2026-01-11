@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Rule index table with descriptions, severities, and auto-fix support
   - Detailed examples (bad/good) for each rule
   - Contributing guide for new rules
+- Docs: `examples/README.md` - attribution for imported AWS example templates (#147)
+  - Attribution to aws-cloudformation-templates and aws-sam-cli-app-templates repos
+  - Apache 2.0 license notice
+  - Template counts and purpose documentation
 
 ### Changed
 
