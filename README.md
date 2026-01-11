@@ -1,6 +1,7 @@
 # wetwire-aws (Go)
 
 [![CI](https://github.com/lex00/wetwire-aws-go/actions/workflows/ci.yml/badge.svg)](https://github.com/lex00/wetwire-aws-go/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/lex00/wetwire-aws-go/branch/main/graph/badge.svg)](https://codecov.io/gh/lex00/wetwire-aws-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/lex00/wetwire-aws-go.svg)](https://pkg.go.dev/github.com/lex00/wetwire-aws-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lex00/wetwire-aws-go)](https://goreportcard.com/report/github.com/lex00/wetwire-aws-go)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

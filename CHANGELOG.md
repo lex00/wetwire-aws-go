@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CI: Codecov integration for coverage reporting (#163)
+  - Test step now generates coverage profile with `go test -coverprofile=coverage.out -covermode=atomic`
+  - Coverage uploaded to Codecov after tests
+  - Added codecov badge to README.md
+
 ## [1.11.0] - 2026-01-10
 
 ### Added
