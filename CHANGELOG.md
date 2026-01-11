@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `--lint-only` flag to skip build step
   - `--debounce` flag to control rapid change handling (default: 500ms)
   - Skips hidden directories, vendor, and generated `_wetwire_gen.go` files
-- Docs: `docs/LINT_RULES.md` - comprehensive documentation for all 18 WAW lint rules (#148)
+- Docs: `docs/LINT_RULES.md` - comprehensive documentation for all WAW lint rules (#148)
   - Rule index table with descriptions, severities, and auto-fix support
   - Detailed examples (bad/good) for each rule
   - Contributing guide for new rules
@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Attribution to aws-cloudformation-templates and aws-sam-cli-app-templates repos
   - Apache 2.0 license notice
   - Template counts and purpose documentation
+- Lint: WAW019 secret pattern detection rule (#142)
+  - Detects AWS access keys (AKIA..., ASIA...)
+  - Detects private key headers (-----BEGIN ... PRIVATE KEY-----)
+  - Detects Stripe, GitHub, Slack API tokens
+  - Flags hardcoded values in sensitive fields (password, secret, token, etc.)
+  - Skips placeholders and common safe patterns
 
 ### Changed
 
