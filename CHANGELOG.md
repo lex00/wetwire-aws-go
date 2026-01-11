@@ -48,6 +48,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Tests for LintFile, LintPackage, lintRecursive
   - Tests for getRules with filtering and MaxResources options
   - Tests for InlineMapInSlice, UnusedIntrinsicsImport, AvoidExplicitRef, AvoidExplicitGetAtt, PreferJsonType, PreferEnumConstant rules
+- Test: Discover package tests (#136)
+  - Coverage improved from 52.3% to 82.2%
+  - Tests for Parameters, Outputs, Mappings discovery
+  - Tests for ResolveAttrRefs with recursive resolution
+  - Tests for isCommonIdent and isIntrinsicPackage helpers
 - Docs: `docs/INTRINSICS.md` - comprehensive guide to intrinsic functions (#136)
   - Pseudo-parameters reference table
   - All intrinsic function types with examples
