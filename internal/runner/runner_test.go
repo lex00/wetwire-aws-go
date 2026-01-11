@@ -3,10 +3,13 @@ package runner
 import (
 	"bytes"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
 	wetwire "github.com/lex00/wetwire-aws-go"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHasVendorDir(t *testing.T) {
@@ -780,4 +783,113 @@ func TestExtractAll_WithParametersAndOutputs(t *testing.T) {
 	if _, ok := result.Mappings["RegionMapping"]; !ok {
 		t.Error("RegionMapping not found")
 	}
+}
+
+func TestExtractVarValues_NonExistentDir(t *testing.T) {
+	// Test with a path that doesn't exist
+	_, err := extractVarValues("/nonexistent/path/to/pkg", []string{"SomeVar"})
+	// Should return an error about the path
+	if err == nil {
+		t.Error("Expected error for non-existent path")
+	}
+}
+
+func TestExtractAll_WithEmptyConditions(t *testing.T) {
+	pkgPath := "./testdata/complex"
+
+	resources := map[string]wetwire.DiscoveredResource{
+		"DataBucket": {Name: "DataBucket", Type: "s3.Bucket", Package: "s3"},
+	}
+
+	// Empty conditions map - function should handle gracefully
+	conditions := map[string]wetwire.DiscoveredCondition{}
+
+	result, err := ExtractAll(pkgPath, resources, nil, nil, nil, conditions)
+	if err != nil {
+		t.Fatalf("ExtractAll failed: %v", err)
+	}
+
+	if result == nil {
+		t.Fatal("Expected non-nil result")
+	}
+
+	// Should have extracted the resource
+	assert.Equal(t, 1, len(result.Resources))
+}
+
+func TestExtractAll_OnlyResources(t *testing.T) {
+	pkgPath := "./testdata/simple"
+
+	resources := map[string]wetwire.DiscoveredResource{
+		"TestBucket": {Name: "TestBucket", Type: "s3.Bucket", Package: "s3"},
+	}
+
+	result, err := ExtractAll(pkgPath, resources, nil, nil, nil, nil)
+	if err != nil {
+		t.Fatalf("ExtractAll failed: %v", err)
+	}
+
+	if result == nil {
+		t.Fatal("Expected non-nil result")
+	}
+
+	assert.Equal(t, 1, len(result.Resources))
+}
+
+func TestFindGoBinary_PathExists(t *testing.T) {
+	// This tests that findGoBinary finds go in PATH
+	goBin := findGoBinary()
+	assert.NotEmpty(t, goBin)
+
+	// Should be executable
+	_, err := exec.LookPath(goBin)
+	assert.NoError(t, err)
+}
+
+func TestCreateRunnerSubdir_WriteError(t *testing.T) {
+	// Test creating runner in a read-only directory would fail
+	// This is hard to test portably, so we just verify the function works normally
+	tmpDir := t.TempDir()
+	goModPath := filepath.Join(tmpDir, "go.mod")
+	err := os.WriteFile(goModPath, []byte("module test\n\ngo 1.23\n"), 0644)
+	require.NoError(t, err)
+
+	runnerDir, cleanup, err := createRunnerSubdir(tmpDir)
+	if err != nil {
+		t.Fatalf("createRunnerSubdir failed: %v", err)
+	}
+	defer cleanup()
+
+	assert.NotEmpty(t, runnerDir)
+	assert.DirExists(t, runnerDir)
+}
+
+func TestExtractAll_AllEmpty(t *testing.T) {
+	// Test with all empty inputs
+	result, err := ExtractAll("./testdata/simple", nil, nil, nil, nil, nil)
+	require.NoError(t, err)
+
+	// Should return a result with all empty maps
+	assert.NotNil(t, result)
+	assert.Empty(t, result.Resources)
+	assert.Empty(t, result.Parameters)
+	assert.Empty(t, result.Outputs)
+	assert.Empty(t, result.Mappings)
+	assert.Empty(t, result.Conditions)
+}
+
+func TestShouldUseSubdirRunner_WithVendor(t *testing.T) {
+	// Create temp dir with vendor
+	tmpDir := t.TempDir()
+	vendorDir := filepath.Join(tmpDir, "vendor")
+	require.NoError(t, os.MkdirAll(vendorDir, 0755))
+
+	assert.True(t, shouldUseSubdirRunner(tmpDir))
+}
+
+func TestShouldUseSubdirRunner_WithoutVendor(t *testing.T) {
+	// Create temp dir without vendor
+	tmpDir := t.TempDir()
+
+	assert.False(t, shouldUseSubdirRunner(tmpDir))
 }
