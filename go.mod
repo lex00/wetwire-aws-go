@@ -16,6 +16,7 @@ require (
 	github.com/anthropics/anthropic-sdk-go v1.19.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/dot v1.10.0 // indirect
+	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/google/jsonschema-go v0.3.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/lex00/aws-sam-translator-go v1.1.0 // indirect
@@ -27,4 +28,5 @@ require (
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 )
