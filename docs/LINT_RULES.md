@@ -1,6 +1,6 @@
 # Lint Rules
 
-wetwire-aws-go includes 18 lint rules to enforce best practices and idiomatic patterns for declarative CloudFormation infrastructure-as-code.
+wetwire-aws-go includes 19 lint rules to enforce best practices and idiomatic patterns for declarative CloudFormation infrastructure-as-code.
 
 ## Quick Start
 
@@ -37,6 +37,7 @@ wetwire-aws lint ./infra/... -f json
 | WAW016 | Avoid explicit GetAtt{} | warning | - |
 | WAW017 | Avoid pointer assignments | error | - |
 | WAW018 | Use Json{} type alias | warning | - |
+| WAW019 | Detect hardcoded secrets | error | - |
 
 ## Rule Details
 
@@ -584,6 +585,62 @@ Environment: lambda.Function_Environment{
         "TABLE_NAME": TableName,
         "REGION":     AWS_REGION,
     },
+}
+```
+
+---
+
+### WAW019: Detect Hardcoded Secrets
+
+**Description:** Detect hardcoded secrets, API keys, and sensitive credentials.
+
+**Severity:** error
+
+Scans for patterns that indicate hardcoded secrets, preventing accidental credential exposure.
+
+**Detected patterns:**
+- AWS access keys (AKIA..., ASIA...)
+- AWS secret keys (40-character base64-like strings)
+- Private key headers (-----BEGIN ... PRIVATE KEY-----)
+- Stripe API keys (sk_live_..., pk_live_...)
+- GitHub tokens (ghp_..., github_pat_...)
+- Slack tokens (xox...)
+- Generic passwords and API keys in sensitive field names
+
+#### Bad
+
+```go
+var MyFunction = lambda.Function{
+    Environment: lambda.Function_Environment{
+        Variables: Json{
+            // These patterns will be detected by WAW019:
+            "AWS_ACCESS_KEY_ID":     "AKIAXXXXXXXXXXXXXXXX",  // AWS access key pattern
+            "AWS_SECRET_ACCESS_KEY": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",  // 40-char secret
+            "API_KEY":               "api_key_XXXXXXXXXXXXXXXXXXXXXXXX",  // Generic API key
+        },
+    },
+}
+```
+
+#### Good
+
+```go
+// Use AWS Secrets Manager
+var DbSecretArn = secretsmanager.Secret{...}
+
+var MyFunction = lambda.Function{
+    Environment: lambda.Function_Environment{
+        Variables: Json{
+            "DB_SECRET_ARN": DbSecretArn.Arn,
+            "REGION":        AWS_REGION,
+        },
+    },
+}
+
+// Or use Parameter Store
+var ApiKeyParam = Parameter{
+    Type:   "AWS::SSM::Parameter::Value<String>",
+    Default: "/myapp/api-key",
 }
 ```
 

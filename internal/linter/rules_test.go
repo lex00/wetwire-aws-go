@@ -415,6 +415,90 @@ func TestAllRules(t *testing.T) {
 	assert.Contains(t, ruleIDs, "WAW017")
 }
 
+func TestSecretPattern_AWSAccessKey(t *testing.T) {
+	// Test AWS access key detection
+	src := `package test
+
+import "github.com/lex00/wetwire-aws-go/resources/lambda_"
+
+var MyFunction = lambda_.Function{
+	Environment: map[string]any{
+		"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE",
+	},
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := SecretPattern{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Equal(t, "WAW019", issues[0].RuleID)
+		assert.Contains(t, issues[0].Message, "AWS access key")
+		assert.Equal(t, "error", issues[0].Severity)
+	}
+}
+
+func TestSecretPattern_PrivateKey(t *testing.T) {
+	// Test private key header detection
+	src := `package test
+
+var PrivateKey = "-----BEGIN RSA PRIVATE KEY-----"
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := SecretPattern{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 1)
+	if len(issues) > 0 {
+		assert.Contains(t, issues[0].Message, "private key")
+	}
+}
+
+func TestSecretPattern_GenericPassword(t *testing.T) {
+	// Test generic password/secret patterns
+	src := `package test
+
+var Config = map[string]any{
+	"Password": "mysecretpassword123",
+	"ApiKey": "sk_live_abcdef1234567890",
+}
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := SecretPattern{}
+	issues := rule.Check(file, fset)
+
+	// Should detect multiple secrets
+	assert.GreaterOrEqual(t, len(issues), 1)
+}
+
+func TestSecretPattern_NoFalsePositives(t *testing.T) {
+	// Test that common safe patterns don't trigger
+	src := `package test
+
+var BucketName = "my-bucket-name"
+var Region = "us-east-1"
+var StackName = "my-stack"
+`
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "test.go", src, 0)
+	require.NoError(t, err)
+
+	rule := SecretPattern{}
+	issues := rule.Check(file, fset)
+
+	assert.Len(t, issues, 0)
+}
+
 func TestUndefinedReference_CrossFileInPackage(t *testing.T) {
 	// Test that cross-file references within the same package are not flagged
 	// when using CheckWithContext with PackageContext
