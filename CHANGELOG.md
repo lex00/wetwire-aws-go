@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docs: Updated AWS-KIRO-CLI.md with new agent name and MCP configuration (#157)
 - Kiro: Removed local `internal/kiro/personas.go`, use core `personas` package for validation (#158)
 - CLI: `test` command now uses `personas.Names()` from wetwire-core-go for persona list (#158)
+- Deps: Updated wetwire-core-go from v1.0.1 to v1.2.0 (#159)
+
+### Removed
+
+- Internal: Removed unused `internal/serialize` package (#159)
+  - Serialization logic is domain-specific and handled in `internal/runner`
+  - Core `serialize` package available for future use
 
 ### Added
 
