@@ -32,7 +32,7 @@ type TestRunner struct {
 // NewTestRunner creates a new Kiro test runner.
 func NewTestRunner(workDir string) *TestRunner {
 	return &TestRunner{
-		AgentName: "wetwire-runner",
+		AgentName: "wetwire-aws-runner",
 		WorkDir:   workDir,
 		Timeout:   5 * time.Minute,
 	}
@@ -202,6 +202,39 @@ func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
 	}
 }
 
+// personaResponses maps persona names to sample response strings.
+// These are used to give Kiro CLI context about how a user might respond.
+//
+// Note: With --no-interactive mode, these are appended to the prompt rather
+// than sent as actual responses, since kiro-cli runs autonomously.
+var personaResponses = map[string][]string{
+	"beginner": {
+		"I'm not sure, what do you recommend?",
+		"Yes, that sounds good",
+		"I don't know what that means, can you explain?",
+	},
+	"intermediate": {
+		"Yes, use the defaults",
+		"That works for me",
+		"Go ahead with your recommendation",
+	},
+	"expert": {
+		"Use KMS encryption with a customer managed key",
+		"Enable cross-region replication",
+		"Add lifecycle policies for cost optimization",
+	},
+	"terse": {
+		"yes",
+		"ok",
+		"do it",
+	},
+	"verbose": {
+		"Yes, I'd like to proceed with that approach. We're building a data lake for our analytics team.",
+		"That sounds like a good solution. Our use case involves storing large JSON files processed daily.",
+		"I agree with your recommendation. We need to comply with security requirements.",
+	},
+}
+
 // RunWithPersona runs a test with simulated persona responses.
 //
 // LIMITATION: With --no-interactive mode, kiro-cli runs autonomously without
@@ -209,13 +242,12 @@ func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
 // This means Kiro tests don't truly simulate different personas - the agent
 // runs the same way regardless of persona. For true persona simulation, use
 // the Anthropic provider which has proper AI developer integration.
-//
-// The persona parameter is kept for API compatibility and future improvements.
-func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, persona *Persona) (*TestResult, error) {
-	if persona == nil {
+func (r *TestRunner) RunWithPersona(ctx context.Context, prompt, personaName string) (*TestResult, error) {
+	responses, ok := personaResponses[personaName]
+	if !ok {
 		return r.Run(ctx, prompt)
 	}
-	return r.runWithResponses(ctx, prompt, persona.Responses)
+	return r.runWithResponses(ctx, prompt, responses)
 }
 
 // runWithResponses runs a test with the given responses to clarifying questions.

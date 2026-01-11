@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Kiro: MCP server now uses standalone `wetwire-aws-mcp` binary instead of embedded `--mcp-server` flag (#157)
 - CLI: Updated `design` and `test` commands help text to reference new agent name (#157)
 - Docs: Updated AWS-KIRO-CLI.md with new agent name and MCP configuration (#157)
+- Kiro: Removed local `internal/kiro/personas.go`, use core `personas` package for validation (#158)
+- CLI: `test` command now uses `personas.Names()` from wetwire-core-go for persona list (#158)
 
 ### Added
 

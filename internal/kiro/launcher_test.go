@@ -14,7 +14,7 @@ func TestLaunchChat_KiroNotInstalled(t *testing.T) {
 	// Set PATH to empty to simulate kiro-cli not being installed
 	_ = os.Setenv("PATH", "")
 
-	err := LaunchChat("wetwire-runner", "test prompt")
+	err := LaunchChat("wetwire-aws-runner", "test prompt")
 	if err == nil {
 		t.Fatal("expected error when kiro-cli is not in PATH")
 	}
@@ -38,15 +38,15 @@ func TestLaunchChat_BuildsCorrectArgs(t *testing.T) {
 	}{
 		{
 			name:          "with prompt",
-			agentName:     "wetwire-runner",
+			agentName:     "wetwire-aws-runner",
 			initialPrompt: "Create S3 bucket",
-			wantArgs:      []string{"chat", "--agent", "wetwire-runner", "Create S3 bucket"},
+			wantArgs:      []string{"chat", "--agent", "wetwire-aws-runner", "Create S3 bucket"},
 		},
 		{
 			name:          "without prompt",
-			agentName:     "wetwire-runner",
+			agentName:     "wetwire-aws-runner",
 			initialPrompt: "",
-			wantArgs:      []string{"chat", "--agent", "wetwire-runner"},
+			wantArgs:      []string{"chat", "--agent", "wetwire-aws-runner"},
 		},
 		{
 			name:          "different agent",
