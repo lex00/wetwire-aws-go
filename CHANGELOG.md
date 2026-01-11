@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `--lint-only` flag to skip build step
   - `--debounce` flag to control rapid change handling (default: 500ms)
   - Skips hidden directories, vendor, and generated `_wetwire_gen.go` files
+- Docs: `docs/LINT_RULES.md` - comprehensive documentation for all 18 WAW lint rules (#148)
+  - Rule index table with descriptions, severities, and auto-fix support
+  - Detailed examples (bad/good) for each rule
+  - Contributing guide for new rules
 
 ### Changed
 
