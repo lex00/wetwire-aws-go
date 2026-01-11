@@ -38,6 +38,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Build benchmarks for 10-200 resources
   - JSON/YAML serialization benchmarks
   - Topological sort benchmarks with dependency chains
+- Test: Runner package integration tests (#136)
+  - Coverage improved from 10.4% to 68.7%
+  - Integration tests with real Go packages for value extraction
+  - Tests for ExtractAll with parameters, outputs, and mappings
+  - Edge case tests for go.mod parsing
 - Docs: `docs/INTRINSICS.md` - comprehensive guide to intrinsic functions (#136)
   - Pseudo-parameters reference table
   - All intrinsic function types with examples
