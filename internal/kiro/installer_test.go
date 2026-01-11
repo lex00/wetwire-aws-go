@@ -8,8 +8,8 @@ import (
 )
 
 func TestEmbeddedConfigs_ValidJSON(t *testing.T) {
-	// Only wetwire-runner.json is embedded; mcp.json is generated dynamically
-	data, err := configFS.ReadFile("configs/wetwire-runner.json")
+	// Only wetwire-aws-runner.json is embedded; mcp.json is generated dynamically
+	data, err := configFS.ReadFile("configs/wetwire-aws-runner.json")
 	if err != nil {
 		t.Fatalf("failed to read embedded config: %v", err)
 	}
@@ -25,7 +25,7 @@ func TestEmbeddedConfigs_ValidJSON(t *testing.T) {
 }
 
 func TestEmbeddedAgentConfig_HasRequiredFields(t *testing.T) {
-	data, err := configFS.ReadFile("configs/wetwire-runner.json")
+	data, err := configFS.ReadFile("configs/wetwire-aws-runner.json")
 	if err != nil {
 		t.Fatalf("failed to read agent config: %v", err)
 	}
@@ -43,8 +43,8 @@ func TestEmbeddedAgentConfig_HasRequiredFields(t *testing.T) {
 	}
 
 	// Check name is correct
-	if name, ok := config["name"].(string); !ok || name != "wetwire-runner" {
-		t.Errorf("agent config name should be 'wetwire-runner', got %v", config["name"])
+	if name, ok := config["name"].(string); !ok || name != "wetwire-aws-runner" {
+		t.Errorf("agent config name should be 'wetwire-aws-runner', got %v", config["name"])
 	}
 
 	// Check mcpServers has wetwire entry
@@ -71,29 +71,20 @@ func TestGetMCPServerConfig_ReturnsValidConfig(t *testing.T) {
 		t.Error("getMCPServerConfig should set cwd field")
 	}
 
-	// Args should include "design --mcp-server"
-	hasDesignArg := false
-	hasMCPServerArg := false
-	for _, arg := range config.Args {
-		if arg == "design" {
-			hasDesignArg = true
-		}
-		if arg == "--mcp-server" {
-			hasMCPServerArg = true
-		}
-	}
-
+	// Command should reference wetwire-aws-mcp
 	if config.Command == "go" {
-		// Fallback mode - should have args for "go run ... design --mcp-server"
-		if len(config.Args) < 4 {
-			t.Error("go run fallback should have args including design --mcp-server")
+		// Fallback mode - should have args for "go run ... wetwire-aws-mcp"
+		hasWetwireMCP := false
+		for _, arg := range config.Args {
+			if arg == "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest" {
+				hasWetwireMCP = true
+			}
 		}
-	} else {
-		// Binary mode - should have design and --mcp-server args
-		if !hasDesignArg || !hasMCPServerArg {
-			t.Errorf("binary config should have design --mcp-server args, got %v", config.Args)
+		if !hasWetwireMCP {
+			t.Errorf("go run fallback should reference wetwire-aws-mcp, got %v", config.Args)
 		}
 	}
+	// Binary mode - Args should be empty (standalone binary)
 }
 
 func TestEnsureProjectMCPConfig_CreatesFile(t *testing.T) {
@@ -155,20 +146,20 @@ func TestEnsureProjectMCPConfig_CreatesFile(t *testing.T) {
 		t.Error("wetwire server should have cwd")
 	}
 
-	// Verify args include design --mcp-server
-	hasDesign := false
-	hasMCPServer := false
-	for _, arg := range wetwire.Args {
-		if arg == "design" {
-			hasDesign = true
+	// Command should reference wetwire-aws-mcp (via go run fallback or binary)
+	if wetwire.Command == "go" {
+		// Fallback mode - should have args for "go run ... wetwire-aws-mcp"
+		hasWetwireMCP := false
+		for _, arg := range wetwire.Args {
+			if arg == "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest" {
+				hasWetwireMCP = true
+			}
 		}
-		if arg == "--mcp-server" {
-			hasMCPServer = true
+		if !hasWetwireMCP {
+			t.Errorf("go run fallback should reference wetwire-aws-mcp, got %v", wetwire.Args)
 		}
 	}
-	if !hasDesign || !hasMCPServer {
-		t.Errorf("wetwire server args should include design --mcp-server, got %v", wetwire.Args)
-	}
+	// Binary mode - Args should be empty (standalone binary)
 }
 
 func TestEnsureProjectMCPConfig_SkipsExisting(t *testing.T) {
