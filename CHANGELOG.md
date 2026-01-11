@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Grade scale: Failure (0-5), Partial (6-9), Success (10-12), Excellent (13-15)
   - `internal/scoring` package with scoring calculation logic
   - `TestResult` and `TestSummary` types in contracts.go
+- Feature: Add write_file and read_file tools to MCP server per spec 6.2 (#137)
+  - `wetwire_write_file` tool for writing source files with parent directory creation
+  - `wetwire_read_file` tool for reading file contents
+  - Both tools available in embedded and standalone MCP servers
 - Docs: New documentation files ported from Python implementation
   - `CONTRIBUTING.md` - Contributing guidelines (root level)
   - `docs/ADOPTION.md` - Migration strategies, escape hatches, team onboarding

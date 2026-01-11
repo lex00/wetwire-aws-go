@@ -3,6 +3,8 @@
 // This server implements the Model Context Protocol (MCP) and provides
 // the following tools:
 //   - wetwire_init: Initialize a new wetwire-aws project
+//   - wetwire_write_file: Write content to a source file
+//   - wetwire_read_file: Read file contents
 //   - wetwire_lint: Lint Go packages for wetwire-aws issues
 //   - wetwire_build: Generate CloudFormation template from Go packages
 //
@@ -36,6 +38,8 @@ func main() {
 
 	// Register tools
 	registerInitTool(server)
+	registerWriteFileTool(server)
+	registerReadFileTool(server)
 	registerLintTool(server)
 	registerBuildTool(server)
 
@@ -255,6 +259,102 @@ Thumbs.db
 	result.Files = append(result.Files, ".gitignore")
 
 	result.Success = true
+	return toolResult(result)
+}
+
+// WriteFileArgs are the arguments for the wetwire_write_file tool.
+type WriteFileArgs struct {
+	Path    string `json:"path" jsonschema:"required,Path to the file to write (e.g. infra/storage.go)"`
+	Content string `json:"content" jsonschema:"required,Content to write to the file"`
+}
+
+// WriteFileResult is the result of the wetwire_write_file tool.
+type WriteFileResult struct {
+	Success bool   `json:"success"`
+	Path    string `json:"path"`
+	Error   string `json:"error,omitempty"`
+}
+
+func registerWriteFileTool(server *mcp.Server) {
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "wetwire_write_file",
+		Description: "Write content to a source file. Creates parent directories if needed.",
+	}, handleWriteFile)
+}
+
+func handleWriteFile(_ context.Context, _ *mcp.CallToolRequest, args WriteFileArgs) (*mcp.CallToolResult, any, error) {
+	result := WriteFileResult{Path: args.Path}
+
+	if args.Path == "" {
+		result.Error = "path is required"
+		return toolResult(result)
+	}
+
+	if args.Content == "" {
+		result.Error = "content is required"
+		return toolResult(result)
+	}
+
+	// Ensure parent directory exists
+	dir := filepath.Dir(args.Path)
+	if dir != "" && dir != "." {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			result.Error = fmt.Sprintf("creating directory: %v", err)
+			return toolResult(result)
+		}
+	}
+
+	// Write file
+	if err := os.WriteFile(args.Path, []byte(args.Content), 0644); err != nil {
+		result.Error = fmt.Sprintf("writing file: %v", err)
+		return toolResult(result)
+	}
+
+	result.Success = true
+	return toolResult(result)
+}
+
+// ReadFileArgs are the arguments for the wetwire_read_file tool.
+type ReadFileArgs struct {
+	Path string `json:"path" jsonschema:"required,Path to the file to read"`
+}
+
+// ReadFileResult is the result of the wetwire_read_file tool.
+type ReadFileResult struct {
+	Success bool   `json:"success"`
+	Path    string `json:"path"`
+	Content string `json:"content,omitempty"`
+	Error   string `json:"error,omitempty"`
+}
+
+func registerReadFileTool(server *mcp.Server) {
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "wetwire_read_file",
+		Description: "Read the contents of a source file.",
+	}, handleReadFile)
+}
+
+func handleReadFile(_ context.Context, _ *mcp.CallToolRequest, args ReadFileArgs) (*mcp.CallToolResult, any, error) {
+	result := ReadFileResult{Path: args.Path}
+
+	if args.Path == "" {
+		result.Error = "path is required"
+		return toolResult(result)
+	}
+
+	// Read file
+	content, err := os.ReadFile(args.Path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			result.Error = fmt.Sprintf("file not found: %s", args.Path)
+		} else {
+			result.Error = fmt.Sprintf("reading file: %v", err)
+		}
+		return toolResult(result)
+	}
+
+	result.Success = true
+	result.Content = string(content)
 	return toolResult(result)
 }
 
