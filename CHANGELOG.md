@@ -34,6 +34,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detects Stripe, GitHub, Slack API tokens
   - Flags hardcoded values in sensitive fields (password, secret, token, etc.)
   - Skips placeholders and common safe patterns
+- Test: Benchmark tests for template builder (#136)
+  - Build benchmarks for 10-200 resources
+  - JSON/YAML serialization benchmarks
+  - Topological sort benchmarks with dependency chains
+- Docs: `docs/INTRINSICS.md` - comprehensive guide to intrinsic functions (#136)
+  - Pseudo-parameters reference table
+  - All intrinsic function types with examples
+  - IAM policy types documentation
+  - Best practices and CloudFormation mapping
 
 ### Changed
 
