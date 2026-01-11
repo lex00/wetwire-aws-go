@@ -11,8 +11,8 @@ import (
 func TestNewTestRunner(t *testing.T) {
 	runner := NewTestRunner("/tmp/test")
 
-	if runner.AgentName != "wetwire-runner" {
-		t.Errorf("AgentName = %q, want %q", runner.AgentName, "wetwire-runner")
+	if runner.AgentName != "wetwire-aws-runner" {
+		t.Errorf("AgentName = %q, want %q", runner.AgentName, "wetwire-aws-runner")
 	}
 
 	if runner.WorkDir != "/tmp/test" {

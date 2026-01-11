@@ -88,8 +88,8 @@ func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int,
 // runTestAllPersonas runs the test with all available personas sequentially.
 // It aggregates results and reports which personas passed or failed.
 func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, stream bool, provider string) error {
-	personaNames := kiro.AllPersonaNames()
-	results := make(map[string]*kiro.TestResult)
+	personaNames := personas.Names()
+	testResults := make(map[string]*kiro.TestResult)
 	var failed []string
 
 	fmt.Printf("Running tests with all %d personas\n\n", len(personaNames))
@@ -128,7 +128,7 @@ func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, s
 		return fmt.Errorf("%d personas failed", len(failed))
 	}
 
-	_ = results // For future detailed result tracking
+	_ = testResults // For future detailed result tracking
 	return nil
 }
 
@@ -153,8 +153,10 @@ func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) e
 		cancel()
 	}()
 
-	// Get persona
-	persona, _ := kiro.GetPersona(personaName)
+	// Validate persona name using core personas
+	if _, err := personas.Get(personaName); err != nil {
+		return fmt.Errorf("invalid persona: %w", err)
+	}
 
 	// Create test runner
 	runner := kiro.NewTestRunner(outputDir)
@@ -175,7 +177,7 @@ func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) e
 	fmt.Printf("Prompt: %s\n\n", prompt)
 
 	// Run the test with persona
-	result, err := runner.RunWithPersona(ctx, prompt, persona)
+	result, err := runner.RunWithPersona(ctx, prompt, personaName)
 	if err != nil {
 		return fmt.Errorf("test failed: %w", err)
 	}

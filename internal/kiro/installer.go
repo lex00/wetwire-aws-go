@@ -72,7 +72,7 @@ type agentConfig struct {
 	Tools       []string                `json:"tools"`
 }
 
-// ensureAgentConfig installs the wetwire-runner agent to ~/.kiro/agents/
+// ensureAgentConfig installs the wetwire-aws-runner agent to ~/.kiro/agents/
 // Returns true if the file was installed.
 func ensureAgentConfig(force bool) (bool, error) {
 	homeDir, err := os.UserHomeDir()
