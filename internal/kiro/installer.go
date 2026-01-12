@@ -1,16 +1,6 @@
-// Package kiro provides Kiro CLI integration for wetwire-aws.
-//
-// This package handles:
-//   - Auto-installation of Kiro agent configuration
-//   - Project-level MCP configuration
-//   - Launching Kiro CLI chat sessions
-//
-// It builds on the infrastructure from github.com/lex00/wetwire-core-go/kiro.
 package kiro
 
 import (
-	"embed"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,210 +9,57 @@ import (
 	corekiro "github.com/lex00/wetwire-core-go/kiro"
 )
 
-//go:embed configs/wetwire-aws-runner.json
-var configFS embed.FS
-
-// Config wraps corekiro.Config with AWS-specific defaults.
-type Config = corekiro.Config
-
-// mcpConfig represents the MCP configuration structure.
-type mcpConfig struct {
-	MCPServers map[string]mcpServer `json:"mcpServers"`
-}
-
-type mcpServer struct {
-	Command string   `json:"command"`
-	Args    []string `json:"args"`
-	Cwd     string   `json:"cwd,omitempty"`
-}
-
-// EnsureInstalled checks if Kiro configs are installed and installs them if needed.
-// It installs:
-//   - ~/.kiro/agents/wetwire-aws-runner.json (user-level agent config)
-//   - .kiro/mcp.json (project-level MCP config)
-//
-// Existing files are not overwritten unless force is true.
+// EnsureInstalled installs the Kiro agent configuration if not already present.
 func EnsureInstalled() error {
 	return EnsureInstalledWithForce(false)
 }
 
-// EnsureInstalledWithForce installs Kiro configs, optionally overwriting existing ones.
-// When force is true, configs are always reinstalled to ensure latest prompt is used.
+// EnsureInstalledWithForce installs the Kiro agent configuration.
+// If force is true, overwrites any existing configuration.
 func EnsureInstalledWithForce(force bool) error {
-	agentInstalled, err := ensureAgentConfig(force)
-	if err != nil {
-		return fmt.Errorf("installing agent config: %w", err)
+	// Use core kiro package to install
+	config := NewConfig()
+
+	// Override MCP command/args to use binary path detection
+	mcpPath := findMCPBinaryPath()
+	if mcpPath != "" {
+		// Found binary, use it directly with mcp subcommand
+		config.MCPCommand = mcpPath
+		config.MCPArgs = []string{"mcp"}
+	} else {
+		// Fallback to go run with mcp subcommand
+		config.MCPCommand = "go"
+		config.MCPArgs = []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest", "mcp"}
 	}
 
-	mcpInstalled, err := ensureProjectMCPConfig(force)
-	if err != nil {
-		return fmt.Errorf("installing project MCP config: %w", err)
-	}
-
-	if agentInstalled {
-		fmt.Println("Installed Kiro agent config: ~/.kiro/agents/wetwire-aws-runner.json")
-	}
-	if mcpInstalled {
-		fmt.Println("Installed project MCP config: .kiro/mcp.json")
+	if err := corekiro.Install(config); err != nil {
+		return fmt.Errorf("install kiro config: %w", err)
 	}
 
 	return nil
 }
 
-// agentConfig represents the Kiro agent configuration structure.
-type agentConfig struct {
-	Name       string               `json:"name"`
-	Description string              `json:"description"`
-	Prompt     string               `json:"prompt"`
-	Model      string               `json:"model"`
-	MCPServers map[string]mcpServer `json:"mcpServers"`
-	Tools      []string             `json:"tools"`
-}
-
-// ensureAgentConfig installs the wetwire-aws-runner agent to ~/.kiro/agents/
-// Returns true if the file was installed.
-func ensureAgentConfig(force bool) (bool, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return false, fmt.Errorf("getting home directory: %w", err)
-	}
-
-	agentDir := filepath.Join(homeDir, ".kiro", "agents")
-	agentPath := filepath.Join(agentDir, "wetwire-aws-runner.json")
-
-	// Check if already exists (skip if not forcing)
-	if _, err := os.Stat(agentPath); err == nil && !force {
-		return false, nil // Already exists, don't overwrite
-	}
-
-	// Create directory
-	if err := os.MkdirAll(agentDir, 0755); err != nil {
-		return false, fmt.Errorf("creating agents directory: %w", err)
-	}
-
-	// Read embedded config
-	data, err := configFS.ReadFile("configs/wetwire-aws-runner.json")
-	if err != nil {
-		return false, fmt.Errorf("reading embedded config: %w", err)
-	}
-
-	// Parse and update with full MCP binary path
-	var config agentConfig
-	if err := json.Unmarshal(data, &config); err != nil {
-		return false, fmt.Errorf("parsing embedded config: %w", err)
-	}
-
-	// Update MCP server with correct command
-	if config.MCPServers == nil {
-		config.MCPServers = make(map[string]mcpServer)
-	}
-	config.MCPServers["wetwire"] = getMCPServerConfig()
-
-	// Marshal back to JSON
-	updatedData, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-		return false, fmt.Errorf("marshaling config: %w", err)
-	}
-
-	// Write config
-	if err := os.WriteFile(agentPath, updatedData, 0644); err != nil {
-		return false, fmt.Errorf("writing config: %w", err)
-	}
-
-	return true, nil
-}
-
-// ensureProjectMCPConfig installs the MCP config to .kiro/mcp.json in the current directory.
-// Returns true if the file was installed.
-func ensureProjectMCPConfig(force bool) (bool, error) {
-	mcpDir := ".kiro"
-	mcpPath := filepath.Join(mcpDir, "mcp.json")
-
-	// Check if already exists (skip if not forcing)
-	if _, err := os.Stat(mcpPath); err == nil && !force {
-		return false, nil // Already exists, don't overwrite
-	}
-
-	// Create directory
-	if err := os.MkdirAll(mcpDir, 0755); err != nil {
-		return false, fmt.Errorf("creating .kiro directory: %w", err)
-	}
-
-	// Generate config with MCP server
-	config := mcpConfig{
-		MCPServers: map[string]mcpServer{
-			"wetwire": getMCPServerConfig(),
-		},
-	}
-
-	data, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-		return false, fmt.Errorf("marshaling config: %w", err)
-	}
-
-	// Write config
-	if err := os.WriteFile(mcpPath, data, 0644); err != nil {
-		return false, fmt.Errorf("writing config: %w", err)
-	}
-
-	return true, nil
-}
-
-// findMCPBinaryPath returns the path to wetwire-aws-mcp binary.
+// findMCPBinaryPath returns the path to wetwire-aws binary.
 // It looks in the same directory as the current executable first,
 // then checks PATH, then returns empty string for go run fallback.
 func findMCPBinaryPath() string {
-	// Try to find wetwire-aws-mcp next to current executable
+	// Try to find wetwire-aws next to current executable
 	exe, err := os.Executable()
 	if err == nil {
 		if resolved, err := filepath.EvalSymlinks(exe); err == nil {
 			exe = resolved
 		}
-		mcpPath := filepath.Join(filepath.Dir(exe), "wetwire-aws-mcp")
+		mcpPath := filepath.Join(filepath.Dir(exe), "wetwire-aws")
 		if _, err := os.Stat(mcpPath); err == nil {
 			return mcpPath
 		}
 	}
 
-	// Check if wetwire-aws-mcp is in PATH
-	if path, err := exec.LookPath("wetwire-aws-mcp"); err == nil {
+	// Check if wetwire-aws is in PATH
+	if path, err := exec.LookPath("wetwire-aws"); err == nil {
 		return path
 	}
 
 	// Return empty to trigger go run fallback
 	return ""
-}
-
-// getMCPServerConfig returns the mcpServer config for the MCP server.
-// Uses the standalone wetwire-aws-mcp binary.
-// Sets cwd to ensure paths resolve correctly in the project directory.
-func getMCPServerConfig() mcpServer {
-	cwd, _ := os.Getwd()
-
-	mcpPath := findMCPBinaryPath()
-	if mcpPath != "" {
-		return mcpServer{
-			Command: mcpPath,
-			Args:    []string{},
-			Cwd:     cwd,
-		}
-	}
-
-	// Fallback to go run
-	return mcpServer{
-		Command: "go",
-		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest"},
-		Cwd:     cwd,
-	}
-}
-
-// GetCoreConfig returns a corekiro.Config for the AWS domain.
-// This can be used with corekiro.Launch() for cross-domain compatibility.
-func GetCoreConfig() corekiro.Config {
-	return corekiro.Config{
-		AgentName:   "wetwire-aws-runner",
-		AgentPrompt: "You are an AWS infrastructure expert using wetwire-aws to create CloudFormation templates.",
-		MCPCommand:  "wetwire-aws-mcp",
-		WorkDir:     "",
-	}
 }

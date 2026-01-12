@@ -176,8 +176,14 @@ func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) e
 	fmt.Printf("Running Kiro test with persona '%s' and scenario '%s'\n", personaName, scenario)
 	fmt.Printf("Prompt: %s\n\n", prompt)
 
+	// Get the persona object
+	persona, err := personas.Get(personaName)
+	if err != nil {
+		return fmt.Errorf("invalid persona: %w", err)
+	}
+
 	// Run the test with persona
-	result, err := runner.RunWithPersona(ctx, prompt, personaName)
+	result, err := runner.RunWithPersona(ctx, prompt, persona)
 	if err != nil {
 		return fmt.Errorf("test failed: %w", err)
 	}

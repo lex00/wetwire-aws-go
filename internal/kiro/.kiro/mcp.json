@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "wetwire-aws": {
+      "command": "uvx",
+      "args": [
+        "wetwire-aws",
+        "mcp"
+      ]
+    }
+  }
+}

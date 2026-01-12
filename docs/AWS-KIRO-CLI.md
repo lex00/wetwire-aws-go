@@ -86,7 +86,7 @@ This automatically installs:
 
 ### Manual configuration (optional)
 
-The MCP server is provided as a separate binary `wetwire-aws-mcp`. If you prefer to configure manually:
+The MCP server is provided as a subcommand `wetwire-aws mcp`. If you prefer to configure manually:
 
 **~/.kiro/agents/wetwire-aws-runner.json:**
 ```json
@@ -97,8 +97,8 @@ The MCP server is provided as a separate binary `wetwire-aws-mcp`. If you prefer
   "model": "claude-sonnet-4",
   "mcpServers": {
     "wetwire": {
-      "command": "wetwire-aws-mcp",
-      "args": [],
+      "command": "wetwire-aws",
+      "args": ["mcp"],
       "cwd": "/path/to/your/project"
     }
   },
@@ -111,8 +111,8 @@ The MCP server is provided as a separate binary `wetwire-aws-mcp`. If you prefer
 {
   "mcpServers": {
     "wetwire": {
-      "command": "wetwire-aws-mcp",
-      "args": [],
+      "command": "wetwire-aws",
+      "args": ["mcp"],
       "cwd": "/path/to/your/project"
     }
   }
