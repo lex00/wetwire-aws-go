@@ -11,12 +11,8 @@ import (
 func TestNewTestRunner(t *testing.T) {
 	runner := NewTestRunner("/tmp/test")
 
-	if runner.AgentName != "wetwire-aws-runner" {
-		t.Errorf("AgentName = %q, want %q", runner.AgentName, "wetwire-aws-runner")
-	}
-
-	if runner.WorkDir != "/tmp/test" {
-		t.Errorf("WorkDir = %q, want %q", runner.WorkDir, "/tmp/test")
+	if runner.OutputDir != "/tmp/test" {
+		t.Errorf("OutputDir = %q, want %q", runner.OutputDir, "/tmp/test")
 	}
 
 	if runner.Timeout != 5*time.Minute {
@@ -32,8 +28,8 @@ func TestTestRunner_Run_KiroNotInstalled(t *testing.T) {
 	// Set PATH to empty to simulate kiro-cli not being installed
 	_ = os.Setenv("PATH", "")
 
-	runner := NewTestRunner(".")
-	_, err := runner.Run(context.Background(), "test prompt")
+	ctx := context.Background()
+	_, err := RunTest(ctx, "test prompt")
 
 	if err == nil {
 		t.Fatal("expected error when kiro-cli is not in PATH")
@@ -62,7 +58,7 @@ func TestTestRunner_ParseOutputLine(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.line, func(t *testing.T) {
 			result = &TestResult{} // Reset for each test
-			runner.parseOutputLine(tt.line, result)
+			runner.parseOutputLine(result, tt.line)
 
 			if result.LintPassed != tt.wantLint {
 				t.Errorf("LintPassed = %v, want %v", result.LintPassed, tt.wantLint)
@@ -86,22 +82,14 @@ func TestTestRunner_EnsureTestEnvironment(t *testing.T) {
 
 	runner := NewTestRunner(tmpDir)
 
-	// Save current directory
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = os.Chdir(origDir) }()
-
-	err = runner.EnsureTestEnvironment()
+	err := runner.EnsureTestEnvironment()
 	if err != nil {
 		t.Fatalf("EnsureTestEnvironment failed: %v", err)
 	}
 
-	// Verify .kiro/mcp.json was created in the work directory
-	mcpPath := tmpDir + "/.kiro/mcp.json"
-	if _, err := os.Stat(mcpPath); err != nil {
-		t.Errorf(".kiro/mcp.json should exist in work directory: %v", err)
+	// Verify the output directory exists
+	if _, err := os.Stat(runner.OutputDir); err != nil {
+		t.Errorf("OutputDir should exist after EnsureTestEnvironment: %v", err)
 	}
 }
 

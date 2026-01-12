@@ -55,6 +55,7 @@ Then generate CloudFormation JSON:
 		newDiffCmd(),
 		newWatchCmd(),
 		newVersionCmd(),
+		newMCPCmd(),
 	)
 
 	if err := rootCmd.Execute(); err != nil {

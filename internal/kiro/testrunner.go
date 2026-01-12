@@ -1,13 +1,16 @@
 package kiro
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
-	"runtime"
+	"path/filepath"
 	"strings"
 	"time"
+
+	corekiro "github.com/lex00/wetwire-core-go/kiro"
+	"github.com/lex00/wetwire-core-go/agent/personas"
 )
 
 // TestResult contains the results of a Kiro test run.
@@ -23,175 +26,103 @@ type TestResult struct {
 
 // TestRunner runs automated tests through kiro-cli.
 type TestRunner struct {
-	AgentName     string
-	WorkDir       string
+	OutputDir     string
 	Timeout       time.Duration
 	StreamHandler func(string)
 }
 
 // NewTestRunner creates a new Kiro test runner.
-func NewTestRunner(workDir string) *TestRunner {
+func NewTestRunner(outputDir string) *TestRunner {
 	return &TestRunner{
-		AgentName: "wetwire-aws-runner",
-		WorkDir:   workDir,
+		OutputDir: outputDir,
 		Timeout:   5 * time.Minute,
 	}
 }
 
-// Run executes a test scenario through kiro-cli.
-// It uses PTY handling via the 'script' command because kiro-cli requires
-// a TTY even with --no-interactive mode.
-func (r *TestRunner) Run(ctx context.Context, prompt string) (*TestResult, error) {
-	// Check if kiro-cli is installed
-	if _, err := exec.LookPath("kiro-cli"); err != nil {
-		return nil, fmt.Errorf("kiro-cli not found in PATH\n\nInstall Kiro CLI: https://kiro.dev/cli")
+// EnsureTestEnvironment prepares the output directory for testing.
+func (r *TestRunner) EnsureTestEnvironment() error {
+	if err := os.MkdirAll(r.OutputDir, 0755); err != nil {
+		return fmt.Errorf("create output directory: %w", err)
 	}
-
-	// Use PTY-based execution for reliable kiro-cli interaction
-	return r.runWithPTY(ctx, prompt)
+	return nil
 }
 
-// runWithPTY executes kiro-cli with a pseudo-terminal using the 'script' command.
-// kiro-cli requires a TTY even with --no-interactive, so we use the 'script'
-// utility to provide one. This is more robust than using Go's pty module directly.
-func (r *TestRunner) runWithPTY(ctx context.Context, prompt string) (*TestResult, error) {
-	// Create timeout context
+// RunWithPersona executes a test with the specified persona.
+func (r *TestRunner) RunWithPersona(ctx context.Context, prompt string, persona personas.Persona) (*TestResult, error) {
+	start := time.Now()
+	result := &TestResult{}
+
+	// Create context with timeout
 	ctx, cancel := context.WithTimeout(ctx, r.Timeout)
 	defer cancel()
 
-	// Create temp file for output
-	outputFile, err := os.CreateTemp("", "kiro-output-*.txt")
+	// Change to output directory for test
+	origDir, err := os.Getwd()
 	if err != nil {
-		return nil, fmt.Errorf("creating temp file: %w", err)
+		return nil, fmt.Errorf("get current directory: %w", err)
 	}
-	outputPath := outputFile.Name()
-	_ = outputFile.Close()
-	defer func() { _ = os.Remove(outputPath) }()
-
-	// Build kiro-cli command string
-	kiroArgs := []string{
-		"chat",
-		"--agent", r.AgentName,
-		"--model", "claude-sonnet-4",
-		"--no-interactive",
-		"--trust-all-tools",
-		prompt,
+	if err := os.Chdir(r.OutputDir); err != nil {
+		return nil, fmt.Errorf("change to output directory: %w", err)
 	}
+	defer func() { _ = os.Chdir(origDir) }()
 
-	// Build script command - differs between macOS and Linux
-	var scriptCmd *exec.Cmd
-	if runtime.GOOS == "darwin" {
-		// macOS: script -q output_file command args...
-		args := append([]string{"-q", outputPath, "kiro-cli"}, kiroArgs...)
-		scriptCmd = exec.CommandContext(ctx, "script", args...)
-	} else {
-		// Linux: script -q -c "command args..." output_file
-		cmdStr := "kiro-cli"
-		for _, arg := range kiroArgs {
-			cmdStr += " " + shellescape(arg)
-		}
-		scriptCmd = exec.CommandContext(ctx, "script", "-q", "-c", cmdStr, outputPath)
-	}
-
-	scriptCmd.Dir = r.WorkDir
-
-	// Connect stdin to /dev/null to prevent blocking
-	devNull, err := os.Open(os.DevNull)
+	// Run test using core kiro package
+	output, err := RunTest(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("opening /dev/null: %w", err)
-	}
-	defer func() { _ = devNull.Close() }()
-	scriptCmd.Stdin = devNull
-
-	// Capture stderr
-	var stderrBuf strings.Builder
-	scriptCmd.Stderr = &stderrBuf
-
-	// Run command
-	startTime := time.Now()
-	err = scriptCmd.Run()
-	duration := time.Since(startTime)
-
-	// Read output from file
-	output, readErr := os.ReadFile(outputPath)
-	if readErr != nil {
-		output = []byte{}
-	}
-
-	// Parse results
-	result := &TestResult{
-		Duration: duration,
-		Output:   string(output),
-	}
-
-	// Parse output lines for results
-	for _, line := range strings.Split(string(output), "\n") {
-		r.parseOutputLine(line, result)
-		if r.StreamHandler != nil {
-			r.StreamHandler(line + "\n")
-		}
-	}
-
-	if err != nil {
+		// Check if it's just a context timeout
 		if ctx.Err() == context.DeadlineExceeded {
-			result.ErrorMessages = append(result.ErrorMessages, fmt.Sprintf("test timed out after %v", r.Timeout))
+			result.ErrorMessages = append(result.ErrorMessages, "test timed out")
 		} else {
-			result.ErrorMessages = append(result.ErrorMessages, fmt.Sprintf("kiro-cli error: %v", err))
+			result.ErrorMessages = append(result.ErrorMessages, err.Error())
 		}
-		if stderrBuf.Len() > 0 {
-			result.ErrorMessages = append(result.ErrorMessages, stderrBuf.String())
-		}
-		return result, nil
 	}
+	result.Output = output
 
-	result.Success = true
+	// Parse output
+	r.parseOutput(result)
+
+	// Calculate duration
+	result.Duration = time.Since(start)
+
+	// Determine overall success
+	result.Success = result.LintPassed && result.BuildPassed && len(result.ErrorMessages) == 0
+
 	return result, nil
 }
 
-// shellescape escapes a string for safe use in a shell command.
-func shellescape(s string) string {
-	// If string contains no special characters, return as-is
-	safe := true
-	for _, c := range s {
-		if (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') &&
-			(c < '0' || c > '9') && c != '-' && c != '_' && c != '.' && c != '/' {
-			safe = false
-			break
-		}
+// parseOutput extracts test metrics from the command output.
+func (r *TestRunner) parseOutput(result *TestResult) {
+	scanner := bufio.NewScanner(strings.NewReader(result.Output))
+	for scanner.Scan() {
+		line := scanner.Text()
+		r.parseOutputLine(result, line)
 	}
-	if safe {
-		return s
-	}
-	// Otherwise, single-quote it and escape any single quotes
-	return "'" + strings.ReplaceAll(s, "'", "'\"'\"'") + "'"
 }
 
-// parseOutputLine extracts test results from kiro-cli output.
-func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
-	line = strings.TrimSpace(line)
+// parseOutputLine processes a single line of output for metrics.
+func (r *TestRunner) parseOutputLine(result *TestResult, line string) {
+	lineLower := strings.ToLower(line)
 
 	// Check for lint results
-	if strings.Contains(line, "wetwire_lint") {
-		if strings.Contains(line, "success") || strings.Contains(line, "passed") {
+	if strings.Contains(lineLower, "wetwire_lint") || strings.Contains(lineLower, "lint") {
+		if strings.Contains(lineLower, "success") || strings.Contains(lineLower, "passed") || strings.Contains(lineLower, "valid") {
 			result.LintPassed = true
 		}
 	}
 
 	// Check for build results
-	if strings.Contains(line, "wetwire_build") {
-		if strings.Contains(line, "success") {
+	if strings.Contains(lineLower, "wetwire_build") || strings.Contains(lineLower, "build") {
+		if strings.Contains(lineLower, "success") || strings.Contains(lineLower, "generated") {
 			result.BuildPassed = true
 		}
 	}
 
 	// Check for file creation
-	if strings.Contains(line, "Created") || strings.Contains(line, "created") {
-		if strings.HasSuffix(line, ".go") {
-			parts := strings.Fields(line)
-			for _, part := range parts {
-				if strings.HasSuffix(part, ".go") {
-					result.FilesCreated = append(result.FilesCreated, part)
-				}
+	if strings.Contains(lineLower, "created") || strings.Contains(lineLower, "wrote") {
+		parts := strings.Fields(line)
+		for _, part := range parts {
+			if strings.HasSuffix(part, ".go") || strings.HasSuffix(part, ".yml") {
+				result.FilesCreated = append(result.FilesCreated, filepath.Base(part))
 			}
 		}
 	}
@@ -202,92 +133,50 @@ func (r *TestRunner) parseOutputLine(line string, result *TestResult) {
 	}
 }
 
-// personaResponses maps persona names to sample response strings.
-// These are used to give Kiro CLI context about how a user might respond.
-//
-// Note: With --no-interactive mode, these are appended to the prompt rather
-// than sent as actual responses, since kiro-cli runs autonomously.
-var personaResponses = map[string][]string{
-	"beginner": {
-		"I'm not sure, what do you recommend?",
-		"Yes, that sounds good",
-		"I don't know what that means, can you explain?",
-	},
-	"intermediate": {
-		"Yes, use the defaults",
-		"That works for me",
-		"Go ahead with your recommendation",
-	},
-	"expert": {
-		"Use KMS encryption with a customer managed key",
-		"Enable cross-region replication",
-		"Add lifecycle policies for cost optimization",
-	},
-	"terse": {
-		"yes",
-		"ok",
-		"do it",
-	},
-	"verbose": {
-		"Yes, I'd like to proceed with that approach. We're building a data lake for our analytics team.",
-		"That sounds like a good solution. Our use case involves storing large JSON files processed daily.",
-		"I agree with your recommendation. We need to comply with security requirements.",
-	},
-}
+// RunAllPersonas runs the test with all available personas and returns aggregate results.
+func (r *TestRunner) RunAllPersonas(ctx context.Context, prompt string) (map[string]*TestResult, error) {
+	results := make(map[string]*TestResult)
 
-// RunWithPersona runs a test with simulated persona responses.
-//
-// LIMITATION: With --no-interactive mode, kiro-cli runs autonomously without
-// waiting for user input. The persona responses are sent but likely ignored.
-// This means Kiro tests don't truly simulate different personas - the agent
-// runs the same way regardless of persona. For true persona simulation, use
-// the Anthropic provider which has proper AI developer integration.
-func (r *TestRunner) RunWithPersona(ctx context.Context, prompt, personaName string) (*TestResult, error) {
-	responses, ok := personaResponses[personaName]
-	if !ok {
-		return r.Run(ctx, prompt)
-	}
-	return r.runWithResponses(ctx, prompt, responses)
-}
-
-// runWithResponses runs a test with the given responses to clarifying questions.
-// Note: With PTY-based execution and --no-interactive mode, persona responses
-// are included in the initial prompt since kiro-cli runs autonomously.
-func (r *TestRunner) runWithResponses(ctx context.Context, prompt string, personaResponses []string) (*TestResult, error) {
-	// Build a combined prompt that includes context about expected responses
-	combinedPrompt := prompt
-	if len(personaResponses) > 0 {
-		combinedPrompt += "\n\nWhen making decisions, assume the user would respond with preferences like: " +
-			strings.Join(personaResponses[:min(3, len(personaResponses))], "; ")
-	}
-
-	return r.runWithPTY(ctx, combinedPrompt)
-}
-
-// EnsureTestEnvironment prepares the test environment.
-// It ensures configs are installed and the working directory exists.
-func (r *TestRunner) EnsureTestEnvironment() error {
-	// Create work directory if needed
-	if r.WorkDir != "" && r.WorkDir != "." {
-		if err := os.MkdirAll(r.WorkDir, 0755); err != nil {
-			return fmt.Errorf("creating work directory: %w", err)
+	for _, name := range personas.Names() {
+		persona, err := personas.Get(name)
+		if err != nil {
+			return nil, fmt.Errorf("get persona %s: %w", name, err)
 		}
+
+		// Create persona-specific output directory
+		personaDir := filepath.Join(r.OutputDir, name)
+		personaRunner := &TestRunner{
+			OutputDir:     personaDir,
+			Timeout:       r.Timeout,
+			StreamHandler: r.StreamHandler,
+		}
+
+		if err := personaRunner.EnsureTestEnvironment(); err != nil {
+			return nil, fmt.Errorf("prepare %s environment: %w", name, err)
+		}
+
+		result, err := personaRunner.RunWithPersona(ctx, prompt, persona)
+		if err != nil {
+			return nil, fmt.Errorf("run %s persona: %w", name, err)
+		}
+		results[name] = result
 	}
 
-	// Save current directory
-	origDir, err := os.Getwd()
+	return results, nil
+}
+
+// RunTest runs the Kiro agent in non-interactive test mode.
+// Returns the output from the test session.
+func RunTest(ctx context.Context, prompt string) (string, error) {
+	// Ensure config is installed
+	if err := EnsureInstalledWithForce(true); err != nil {
+		return "", fmt.Errorf("installing kiro config: %w", err)
+	}
+
+	config := NewConfig()
+	result, err := corekiro.RunTest(ctx, config, prompt)
 	if err != nil {
-		return err
+		return "", err
 	}
-
-	// Change to work directory for config installation
-	if r.WorkDir != "" && r.WorkDir != "." {
-		if err := os.Chdir(r.WorkDir); err != nil {
-			return err
-		}
-		defer func() { _ = os.Chdir(origDir) }()
-	}
-
-	// Ensure Kiro configs are installed
-	return EnsureInstalled()
+	return result.Output, nil
 }
