@@ -144,6 +144,7 @@ func runDesignAnthropic(prompt, outputDir string, maxLintCycles int, stream bool
 		Session:       session,
 		Developer:     developer,
 		StreamHandler: streamHandler,
+		Domain:        agents.DefaultAWSDomain(),
 	})
 	if err != nil {
 		return fmt.Errorf("creating runner: %w", err)
