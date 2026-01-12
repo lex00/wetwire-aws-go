@@ -21,8 +21,8 @@ github.com/lex00/cfn-lint-go v1.0.0 h1:oShG7qv2GlQmc7ZnmRlhLKtYZC4qQ1OBbW7ZEKU9E
 github.com/lex00/cfn-lint-go v1.0.0/go.mod h1:T9gZgkqsarWGd47tBJ3vaKWrz2yxCeeihdpaKgRYB3s=
 github.com/lex00/cloudformation-schema-go v1.0.0 h1:WTwFPkFTiJHj7bfqh0ww4hzkTjN3KQccRZg8N6V8Ae8=
 github.com/lex00/cloudformation-schema-go v1.0.0/go.mod h1:y9p4ivYrQHUhB2bitHjhT1LthxJiAwSRAfipmr2wXMQ=
-github.com/lex00/wetwire-core-go v1.3.0 h1:fhJORed0DjWqxvjjZ9vBa6N91T5RtU9TZWJ8mxsPkvc=
-github.com/lex00/wetwire-core-go v1.3.0/go.mod h1:YQZAyTn0YyXFzgrHSogr7S3bZnt45xuEWjEV3TJKf3A=
+github.com/lex00/wetwire-core-go v1.4.0 h1:nux6m0Na8rdU8NP4YzupbhrrTwxorMeCzTZN4YMS2Go=
+github.com/lex00/wetwire-core-go v1.4.0/go.mod h1:YQZAyTn0YyXFzgrHSogr7S3bZnt45xuEWjEV3TJKf3A=
 github.com/modelcontextprotocol/go-sdk v1.2.0 h1:Y23co09300CEk8iZ/tMxIX1dVmKZkzoSBZOpJwUnc/s=
 github.com/modelcontextprotocol/go-sdk v1.2.0/go.mod h1:6fM3LCm3yV7pAs8isnKLn07oKtB0MP9LHd3DfAcKw10=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
