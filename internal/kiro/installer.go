@@ -4,6 +4,8 @@
 //   - Auto-installation of Kiro agent configuration
 //   - Project-level MCP configuration
 //   - Launching Kiro CLI chat sessions
+//
+// It builds on the infrastructure from github.com/lex00/wetwire-core-go/kiro.
 package kiro
 
 import (
@@ -13,10 +15,15 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	corekiro "github.com/lex00/wetwire-core-go/kiro"
 )
 
 //go:embed configs/wetwire-aws-runner.json
 var configFS embed.FS
+
+// Config wraps corekiro.Config with AWS-specific defaults.
+type Config = corekiro.Config
 
 // mcpConfig represents the MCP configuration structure.
 type mcpConfig struct {
@@ -64,12 +71,12 @@ func EnsureInstalledWithForce(force bool) error {
 
 // agentConfig represents the Kiro agent configuration structure.
 type agentConfig struct {
-	Name        string                  `json:"name"`
-	Description string                  `json:"description"`
-	Prompt      string                  `json:"prompt"`
-	Model       string                  `json:"model"`
-	MCPServers  map[string]mcpServer    `json:"mcpServers"`
-	Tools       []string                `json:"tools"`
+	Name       string               `json:"name"`
+	Description string              `json:"description"`
+	Prompt     string               `json:"prompt"`
+	Model      string               `json:"model"`
+	MCPServers map[string]mcpServer `json:"mcpServers"`
+	Tools      []string             `json:"tools"`
 }
 
 // ensureAgentConfig installs the wetwire-aws-runner agent to ~/.kiro/agents/
@@ -206,5 +213,16 @@ func getMCPServerConfig() mcpServer {
 		Command: "go",
 		Args:    []string{"run", "github.com/lex00/wetwire-aws-go/cmd/wetwire-aws-mcp@latest"},
 		Cwd:     cwd,
+	}
+}
+
+// GetCoreConfig returns a corekiro.Config for the AWS domain.
+// This can be used with corekiro.Launch() for cross-domain compatibility.
+func GetCoreConfig() corekiro.Config {
+	return corekiro.Config{
+		AgentName:   "wetwire-aws-runner",
+		AgentPrompt: "You are an AWS infrastructure expert using wetwire-aws to create CloudFormation templates.",
+		MCPCommand:  "wetwire-aws-mcp",
+		WorkDir:     "",
 	}
 }
