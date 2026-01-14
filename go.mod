@@ -7,7 +7,7 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/lex00/cfn-lint-go v1.0.0
 	github.com/lex00/cloudformation-schema-go v1.0.0
-	github.com/lex00/wetwire-core-go v1.5.2
+	github.com/lex00/wetwire-core-go v1.5.3
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	gopkg.in/yaml.v3 v3.0.1
