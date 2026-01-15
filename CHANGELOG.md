@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Deps: Updated wetwire-core-go to v1.5.4 for Kiro provider cwd fix (#181)
+  - Ensures Kiro agent runs in correct working directory
+  - Added test to verify WorkDir is set in NewConfig()
 ### Added
 
 - CI: Codecov integration for coverage reporting (#163)
