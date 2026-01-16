@@ -59,9 +59,9 @@ type Grapher interface {
 	Graph(packages []string, format string) error
 }
 
-// Run creates and executes a CLI for the given domain.
-// It automatically generates commands based on the domain's interface implementations.
-func Run(d Domain) error {
+// CreateRootCommand creates a root command with all standard domain commands.
+// This allows callers to add additional domain-specific commands before executing.
+func CreateRootCommand(d Domain) *cobra.Command {
 	description := "Infrastructure as Code for " + d.Name()
 	root := cmd.NewRootCommand("wetwire-"+d.Name(), description)
 
@@ -93,6 +93,13 @@ func Run(d Domain) error {
 		root.AddCommand(newGraphCommand(grapher.Grapher()))
 	}
 
+	return root
+}
+
+// Run creates and executes a CLI for the given domain.
+// It automatically generates commands based on the domain's interface implementations.
+func Run(d Domain) error {
+	root := CreateRootCommand(d)
 	return root.Execute()
 }
 

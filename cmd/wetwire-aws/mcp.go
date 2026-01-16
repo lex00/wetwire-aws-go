@@ -1,7 +1,10 @@
 // Command mcp runs an MCP server that exposes wetwire-aws tools.
 //
 // This server implements the Model Context Protocol (MCP) using infrastructure
-// from github.com/lex00/wetwire-core-go/mcp and provides the following tools:
+// from github.com/lex00/wetwire-core-go/mcp and automatically generates tools
+// from the domain.Domain interface implementation.
+//
+// Tools are automatically registered based on the domain interface:
 //   - wetwire_init: Initialize a new wetwire-aws project
 //   - wetwire_build: Generate CloudFormation template from Go packages
 //   - wetwire_lint: Lint Go packages for wetwire-aws issues
@@ -22,15 +25,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lex00/wetwire-core-go/mcp"
+	coremcp "github.com/lex00/wetwire-core-go/mcp"
 	"github.com/spf13/cobra"
 
-	wetwire "github.com/lex00/wetwire-aws-go"
+	"github.com/lex00/wetwire-aws-go/domain"
 	"github.com/lex00/wetwire-aws-go/internal/discover"
-	"github.com/lex00/wetwire-aws-go/internal/linter"
-	"github.com/lex00/wetwire-aws-go/internal/runner"
-	"github.com/lex00/wetwire-aws-go/internal/template"
 	"github.com/lex00/wetwire-aws-go/version"
+	awsdomain "github.com/lex00/wetwire-core-go/cmd"
 )
 
 func newMCPCmd() *cobra.Command {
@@ -39,7 +40,8 @@ func newMCPCmd() *cobra.Command {
 		Short: "Run MCP server for wetwire-aws tools",
 		Long: `Run an MCP (Model Context Protocol) server that exposes wetwire-aws tools.
 
-This command starts an MCP server on stdio transport, providing tools for:
+This command starts an MCP server on stdio transport, automatically providing tools
+generated from the domain interface for:
 - Initializing projects (wetwire_init)
 - Building CloudFormation templates (wetwire_build)
 - Linting code (wetwire_lint)
@@ -54,199 +56,83 @@ This command starts an MCP server on stdio transport, providing tools for:
 }
 
 func runMCPServer() error {
-	server := mcp.NewServer(mcp.Config{
+	server := coremcp.NewServer(coremcp.Config{
 		Name:    "wetwire-aws",
 		Version: version.Version(),
 	})
 
-	// Register standard wetwire tools using core infrastructure
-	server.RegisterToolWithSchema("wetwire_init", "Initialize a new wetwire-aws project with example code", handleInitMCP, initSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_build", "Generate CloudFormation output from wetwire declarations", handleBuildMCP, buildSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_lint", "Check code quality and style (domain lint rules)", handleLintMCP, lintSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_validate", "Validate generated output using external validator", handleValidateMCP, validateSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_import", "Convert existing CloudFormation configs to wetwire code", handleImportMCP, importSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_list", "List discovered resources", handleListMCP, listSchemaMCP)
-	server.RegisterToolWithSchema("wetwire_graph", "Visualize resource dependencies (DOT/Mermaid)", handleGraphMCP, graphSchemaMCP)
+	// Create domain instance
+	awsDomain := &domain.AwsDomain{}
+
+	// Register standard tools from domain interface
+	handlers := coremcp.StandardToolHandlers{
+		Init:     makeDomainInitHandler(awsDomain),
+		Build:    makeDomainBuildHandler(awsDomain),
+		Lint:     makeDomainLintHandler(awsDomain),
+		Validate: makeDomainValidateHandler(awsDomain),
+		Import:   makeDomainImportHandler(awsDomain),
+		List:     makeDomainListHandler(awsDomain),
+		Graph:    makeDomainGraphHandler(awsDomain),
+	}
+
+	// Register standard tools from domain interface
+	coremcp.RegisterStandardTools(server, awsDomain.Name(), handlers)
 
 	// Run on stdio transport
 	return server.Start(context.Background())
 }
 
-// Tool input schemas (aligned with wetwire-core-go/mcp standard schemas)
-var initSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"name": map[string]any{
-			"type":        "string",
-			"description": "Project name",
-		},
-		"path": map[string]any{
-			"type":        "string",
-			"description": "Output directory (default: current directory)",
-		},
-	},
-}
+// makeDomainInitHandler creates an MCP handler from the domain's Initializer
+func makeDomainInitHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(_ context.Context, args map[string]any) (string, error) {
+		name, _ := args["name"].(string)
+		path, _ := args["path"].(string)
 
-var buildSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"package": map[string]any{
-			"type":        "string",
-			"description": "Package path to discover resources from",
-		},
-		"output": map[string]any{
-			"type":        "string",
-			"description": "Output directory for generated files",
-		},
-		"format": map[string]any{
-			"type":        "string",
-			"enum":        []string{"yaml", "json"},
-			"description": "Output format (default: yaml)",
-		},
-		"dry_run": map[string]any{
-			"type":        "boolean",
-			"description": "Return content without writing files",
-		},
-	},
-}
-
-var lintSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"package": map[string]any{
-			"type":        "string",
-			"description": "Package path to lint",
-		},
-		"fix": map[string]any{
-			"type":        "boolean",
-			"description": "Automatically fix fixable issues",
-		},
-		"format": map[string]any{
-			"type":        "string",
-			"enum":        []string{"text", "json"},
-			"description": "Output format (default: text)",
-		},
-	},
-}
-
-var validateSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"path": map[string]any{
-			"type":        "string",
-			"description": "Path to file or directory to validate",
-		},
-		"format": map[string]any{
-			"type":        "string",
-			"enum":        []string{"text", "json"},
-			"description": "Output format (default: text)",
-		},
-	},
-}
-
-var importSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"files": map[string]any{
-			"type":        "array",
-			"items":       map[string]any{"type": "string"},
-			"description": "Files to import",
-		},
-		"output": map[string]any{
-			"type":        "string",
-			"description": "Output directory for generated code",
-		},
-		"single_file": map[string]any{
-			"type":        "boolean",
-			"description": "Generate all code in a single file",
-		},
-	},
-}
-
-var listSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"package": map[string]any{
-			"type":        "string",
-			"description": "Package path to discover from",
-		},
-		"format": map[string]any{
-			"type":        "string",
-			"enum":        []string{"table", "json"},
-			"description": "Output format (default: table)",
-		},
-	},
-}
-
-var graphSchemaMCP = map[string]any{
-	"type": "object",
-	"properties": map[string]any{
-		"package": map[string]any{
-			"type":        "string",
-			"description": "Package path to analyze",
-		},
-		"format": map[string]any{
-			"type":        "string",
-			"enum":        []string{"dot", "mermaid"},
-			"description": "Output format (default: mermaid)",
-		},
-		"output": map[string]any{
-			"type":        "string",
-			"description": "Output file path",
-		},
-	},
-}
-
-// handleInitMCP initializes a new wetwire-aws project.
-func handleInitMCP(_ context.Context, args map[string]any) (string, error) {
-	name, _ := args["name"].(string)
-	path, _ := args["path"].(string)
-
-	if path == "" {
-		path = "."
-	}
-	if name == "" {
-		name = filepath.Base(path)
-		if name == "." {
-			cwd, _ := os.Getwd()
-			name = filepath.Base(cwd)
+		if path == "" {
+			path = "."
 		}
-	}
-
-	result := InitResultMCP{Path: path}
-
-	// Create project directory
-	if path != "." {
-		if err := os.MkdirAll(path, 0755); err != nil {
-			result.Error = fmt.Sprintf("creating project directory: %v", err)
-			return toJSONMCP(result)
+		if name == "" {
+			name = filepath.Base(path)
+			if name == "." {
+				cwd, _ := os.Getwd()
+				name = filepath.Base(cwd)
+			}
 		}
-	}
 
-	// Create infra subdirectory
-	infraDir := filepath.Join(path, "infra")
-	if err := os.MkdirAll(infraDir, 0755); err != nil {
-		result.Error = fmt.Sprintf("creating infra directory: %v", err)
-		return toJSONMCP(result)
-	}
+		result := MCPInitResult{Path: path}
 
-	// Write go.mod
-	goMod := fmt.Sprintf(`module %s
+		// Create project directory
+		if path != "." {
+			if err := os.MkdirAll(path, 0755); err != nil {
+				result.Error = fmt.Sprintf("creating project directory: %v", err)
+				return toJSON(result)
+			}
+		}
+
+		// Create infra subdirectory
+		infraDir := filepath.Join(path, "infra")
+		if err := os.MkdirAll(infraDir, 0755); err != nil {
+			result.Error = fmt.Sprintf("creating infra directory: %v", err)
+			return toJSON(result)
+		}
+
+		// Write go.mod
+		goMod := fmt.Sprintf(`module %s
 
 go 1.23
 
 require github.com/lex00/wetwire-aws-go v1.2.3
 `, name)
 
-	goModPath := filepath.Join(path, "go.mod")
-	if err := os.WriteFile(goModPath, []byte(goMod), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing go.mod: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, "go.mod")
+		goModPath := filepath.Join(path, "go.mod")
+		if err := os.WriteFile(goModPath, []byte(goMod), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing go.mod: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, "go.mod")
 
-	// Write main.go
-	mainGo := `package main
+		// Write main.go
+		mainGo := `package main
 
 import (
 	"fmt"
@@ -258,15 +144,15 @@ func main() {
 	fmt.Println("Run: wetwire-aws build ./infra/...")
 }
 `
-	mainGoPath := filepath.Join(path, "main.go")
-	if err := os.WriteFile(mainGoPath, []byte(mainGo), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing main.go: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, "main.go")
+		mainGoPath := filepath.Join(path, "main.go")
+		if err := os.WriteFile(mainGoPath, []byte(mainGo), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing main.go: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, "main.go")
 
-	// Write infra/resources.go
-	resourcesGo := `package infra
+		// Write infra/resources.go
+		resourcesGo := `package infra
 
 import (
 	// Common AWS services - add/remove as needed
@@ -298,15 +184,15 @@ var _ = sqs.Queue{}
 var _ = sns.Topic{}
 var _ = apigateway.RestApi{}
 `
-	resourcesGoPath := filepath.Join(infraDir, "resources.go")
-	if err := os.WriteFile(resourcesGoPath, []byte(resourcesGo), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing resources.go: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, "infra/resources.go")
+		resourcesGoPath := filepath.Join(infraDir, "resources.go")
+		if err := os.WriteFile(resourcesGoPath, []byte(resourcesGo), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing resources.go: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, "infra/resources.go")
 
-	// Write infra/params.go for Parameters, Mappings, and Conditions
-	paramsGo := `package infra
+		// Write infra/params.go for Parameters, Mappings, and Conditions
+		paramsGo := `package infra
 
 import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
@@ -335,15 +221,15 @@ import (
 // Placeholder to prevent unused import error
 var _ = Parameter{}
 `
-	paramsGoPath := filepath.Join(infraDir, "params.go")
-	if err := os.WriteFile(paramsGoPath, []byte(paramsGo), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing params.go: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, "infra/params.go")
+		paramsGoPath := filepath.Join(infraDir, "params.go")
+		if err := os.WriteFile(paramsGoPath, []byte(paramsGo), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing params.go: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, "infra/params.go")
 
-	// Write infra/outputs.go for CloudFormation Outputs
-	outputsGo := `package infra
+		// Write infra/outputs.go for CloudFormation Outputs
+		outputsGo := `package infra
 
 import (
 	. "github.com/lex00/wetwire-aws-go/intrinsics"
@@ -362,15 +248,15 @@ import (
 // Placeholder to prevent unused import error
 var _ = Output{}
 `
-	outputsGoPath := filepath.Join(infraDir, "outputs.go")
-	if err := os.WriteFile(outputsGoPath, []byte(outputsGo), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing outputs.go: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, "infra/outputs.go")
+		outputsGoPath := filepath.Join(infraDir, "outputs.go")
+		if err := os.WriteFile(outputsGoPath, []byte(outputsGo), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing outputs.go: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, "infra/outputs.go")
 
-	// Write .gitignore
-	gitignore := `# Build output
+		// Write .gitignore
+		gitignore := `# Build output
 template.json
 template.yaml
 
@@ -384,364 +270,337 @@ template.yaml
 .DS_Store
 Thumbs.db
 `
-	gitignorePath := filepath.Join(path, ".gitignore")
-	if err := os.WriteFile(gitignorePath, []byte(gitignore), 0644); err != nil {
-		result.Error = fmt.Sprintf("writing .gitignore: %v", err)
-		return toJSONMCP(result)
-	}
-	result.Files = append(result.Files, ".gitignore")
+		gitignorePath := filepath.Join(path, ".gitignore")
+		if err := os.WriteFile(gitignorePath, []byte(gitignore), 0644); err != nil {
+			result.Error = fmt.Sprintf("writing .gitignore: %v", err)
+			return toJSON(result)
+		}
+		result.Files = append(result.Files, ".gitignore")
 
-	result.Success = true
-	return toJSONMCP(result)
+		result.Success = true
+		return toJSON(result)
+	}
 }
 
-// handleBuildMCP generates CloudFormation template from Go packages.
-func handleBuildMCP(_ context.Context, args map[string]any) (string, error) {
-	pkg, _ := args["package"].(string)
-	output, _ := args["output"].(string)
-	format, _ := args["format"].(string)
-	dryRun, _ := args["dry_run"].(bool)
+// makeDomainBuildHandler creates an MCP handler from the domain's Builder
+func makeDomainBuildHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(ctx context.Context, args map[string]any) (string, error) {
+		pkg, _ := args["package"].(string)
+		output, _ := args["output"].(string)
+		format, _ := args["format"].(string)
+		dryRun, _ := args["dry_run"].(bool)
 
-	result := BuildResultMCP{}
+		result := MCPBuildResult{}
 
-	if pkg == "" {
-		pkg = "./..."
-	}
-
-	if format == "" {
-		format = "yaml"
-	}
-	if format != "json" && format != "yaml" {
-		result.Errors = append(result.Errors, fmt.Sprintf("invalid format: %s (use json or yaml)", format))
-		return toJSONMCP(result)
-	}
-
-	packages := []string{pkg}
-
-	// Discover resources and other template components
-	discoverResult, err := discover.Discover(discover.Options{
-		Packages: packages,
-	})
-	if err != nil {
-		result.Errors = append(result.Errors, fmt.Sprintf("discovery failed: %v", err))
-		return toJSONMCP(result)
-	}
-
-	// Check for discovery errors
-	if len(discoverResult.Errors) > 0 {
-		for _, e := range discoverResult.Errors {
-			result.Errors = append(result.Errors, e.Error())
+		if pkg == "" {
+			pkg = "./..."
 		}
-		return toJSONMCP(result)
-	}
 
-	// Build template with all discovered components
-	builder := template.NewBuilderFull(
-		discoverResult.Resources,
-		discoverResult.Parameters,
-		discoverResult.Outputs,
-		discoverResult.Mappings,
-		discoverResult.Conditions,
-	)
-
-	// Set VarAttrRefs for recursive AttrRef resolution
-	varAttrRefs := make(map[string]template.VarAttrRefInfo)
-	for name, info := range discoverResult.VarAttrRefs {
-		varAttrRefs[name] = template.VarAttrRefInfo{
-			AttrRefs: info.AttrRefs,
-			VarRefs:  info.VarRefs,
+		if format == "" {
+			format = "yaml"
 		}
-	}
-	builder.SetVarAttrRefs(varAttrRefs)
-
-	// Extract all values by running a generated Go program
-	values, err := runner.ExtractAll(
-		packages[0],
-		discoverResult.Resources,
-		discoverResult.Parameters,
-		discoverResult.Outputs,
-		discoverResult.Mappings,
-		discoverResult.Conditions,
-	)
-	if err != nil {
-		result.Errors = append(result.Errors, fmt.Sprintf("extracting values: %v", err))
-		return toJSONMCP(result)
-	}
-
-	// Set all extracted values
-	for name, props := range values.Resources {
-		builder.SetValue(name, props)
-	}
-	for name, props := range values.Parameters {
-		builder.SetValue(name, props)
-	}
-	for name, props := range values.Outputs {
-		builder.SetValue(name, props)
-	}
-	for name, val := range values.Mappings {
-		builder.SetValue(name, val)
-	}
-	for name, val := range values.Conditions {
-		builder.SetValue(name, val)
-	}
-
-	tmpl, err := builder.Build()
-	if err != nil {
-		result.Errors = append(result.Errors, err.Error())
-		return toJSONMCP(result)
-	}
-
-	// Serialize template
-	var data []byte
-	switch format {
-	case "json":
-		data, err = template.ToJSON(tmpl)
-	case "yaml":
-		data, err = template.ToYAML(tmpl)
-	}
-	if err != nil {
-		result.Errors = append(result.Errors, fmt.Sprintf("serializing template: %v", err))
-		return toJSONMCP(result)
-	}
-
-	// Build success result
-	for name := range discoverResult.Resources {
-		result.Resources = append(result.Resources, name)
-	}
-
-	if dryRun {
-		result.Template = string(data)
-	} else if output != "" {
-		// Write to file
-		if err := os.WriteFile(output, data, 0644); err != nil {
-			result.Errors = append(result.Errors, fmt.Sprintf("writing output: %v", err))
-			return toJSONMCP(result)
+		if format != "json" && format != "yaml" {
+			result.Errors = append(result.Errors, fmt.Sprintf("invalid format: %s (use json or yaml)", format))
+			return toJSON(result)
 		}
-		result.Template = fmt.Sprintf("Written to %s", output)
-	} else {
-		result.Template = string(data)
-	}
 
-	result.Success = true
-	return toJSONMCP(result)
+		// Use the domain's Builder implementation
+		builder := d.Builder()
+		opts := awsdomain.BuildOptions{
+			Output: output,
+		}
+
+		// Create a temporary file if dry run or no output specified
+		needsTempFile := dryRun || output == ""
+		if needsTempFile {
+			tmpFile, err := os.CreateTemp("", "wetwire-aws-*."+format)
+			if err != nil {
+				result.Errors = append(result.Errors, fmt.Sprintf("creating temp file: %v", err))
+				return toJSON(result)
+			}
+			defer os.Remove(tmpFile.Name())
+			tmpFile.Close()
+			opts.Output = tmpFile.Name()
+		}
+
+		// Build the template
+		if err := builder.Build(ctx, pkg, opts); err != nil {
+			result.Errors = append(result.Errors, err.Error())
+			return toJSON(result)
+		}
+
+		// If dry run or no output, read the temp file
+		if needsTempFile {
+			data, err := os.ReadFile(opts.Output)
+			if err != nil {
+				result.Errors = append(result.Errors, fmt.Sprintf("reading output: %v", err))
+				return toJSON(result)
+			}
+			result.Template = string(data)
+		} else {
+			result.Template = fmt.Sprintf("Written to %s", output)
+		}
+
+		// Get resource list
+		discoverResult, err := discover.Discover(discover.Options{
+			Packages: []string{pkg},
+		})
+		if err == nil {
+			for name := range discoverResult.Resources {
+				result.Resources = append(result.Resources, name)
+			}
+		}
+
+		result.Success = true
+		return toJSON(result)
+	}
 }
 
-// handleLintMCP lints Go packages for wetwire-aws style issues.
-func handleLintMCP(_ context.Context, args map[string]any) (string, error) {
-	pkg, _ := args["package"].(string)
+// makeDomainLintHandler creates an MCP handler from the domain's Linter
+func makeDomainLintHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(ctx context.Context, args map[string]any) (string, error) {
+		pkg, _ := args["package"].(string)
 
-	result := wetwire.LintResult{}
+		result := MCPLintResult{}
 
-	if pkg == "" {
-		pkg = "./..."
-	}
+		if pkg == "" {
+			pkg = "./..."
+		}
 
-	packages := []string{pkg}
-
-	// Discover resources (validates references)
-	discoverResult, err := discover.Discover(discover.Options{
-		Packages: packages,
-	})
-	if err != nil {
-		result.Issues = append(result.Issues, wetwire.LintIssue{
-			Severity: "error",
-			Message:  fmt.Sprintf("discovery failed: %v", err),
-			Rule:     "internal",
-		})
-		return toJSONMCP(result)
-	}
-
-	// Convert discovery errors to lint issues
-	for _, e := range discoverResult.Errors {
-		result.Issues = append(result.Issues, wetwire.LintIssue{
-			Severity: "error",
-			Message:  e.Error(),
-			Rule:     "undefined-reference",
-		})
-	}
-
-	// Run lint rules on each package
-	for _, p := range packages {
-		lintResult, err := linter.LintPackage(p, linter.Options{})
+		// Use the domain's Linter implementation
+		linter := d.Linter()
+		issues, err := linter.Lint(ctx, pkg, awsdomain.LintOptions{})
 		if err != nil {
-			result.Issues = append(result.Issues, wetwire.LintIssue{
-				Severity: "warning",
-				Message:  fmt.Sprintf("failed to lint %s: %v", p, err),
-				Rule:     "internal",
+			result.Issues = append(result.Issues, MCPLintIssue{
+				Severity: "error",
+				Message:  fmt.Sprintf("lint failed: %v", err),
+				RuleID:   "internal",
 			})
-			continue
+			return toJSON(result)
 		}
 
-		for _, issue := range lintResult.Issues {
-			result.Issues = append(result.Issues, wetwire.LintIssue{
+		// Convert issues to MCP format
+		for _, issue := range issues {
+			result.Issues = append(result.Issues, MCPLintIssue{
 				Severity: issue.Severity,
 				Message:  issue.Message,
-				Rule:     issue.RuleID,
+				RuleID:   issue.Rule,
 				File:     issue.File,
 				Line:     issue.Line,
 				Column:   issue.Column,
 			})
 		}
-	}
 
-	result.Success = len(result.Issues) == 0
-	return toJSONMCP(result)
+		result.Success = len(result.Issues) == 0
+		return toJSON(result)
+	}
 }
 
-// handleValidateMCP validates generated CloudFormation templates.
-func handleValidateMCP(_ context.Context, args map[string]any) (string, error) {
-	path, _ := args["path"].(string)
+// makeDomainValidateHandler creates an MCP handler from the domain's Validator
+func makeDomainValidateHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(ctx context.Context, args map[string]any) (string, error) {
+		path, _ := args["path"].(string)
 
-	result := ValidateResultMCP{}
+		result := MCPValidateResult{}
 
-	if path == "" {
-		result.Error = "path is required"
-		return toJSONMCP(result)
+		if path == "" {
+			result.Error = "path is required"
+			return toJSON(result)
+		}
+
+		// Check if file exists
+		if _, err := os.Stat(path); err != nil {
+			result.Error = fmt.Sprintf("file not found: %s", path)
+			return toJSON(result)
+		}
+
+		// Use the domain's Validator implementation
+		validator := d.Validator()
+		errors, err := validator.Validate(ctx, path, awsdomain.ValidateOptions{})
+		if err != nil {
+			result.Error = fmt.Sprintf("validation failed: %v", err)
+			return toJSON(result)
+		}
+
+		result.Success = len(errors) == 0
+		if len(errors) > 0 {
+			result.Error = fmt.Sprintf("found %d validation errors", len(errors))
+		} else {
+			result.Message = "Template is valid"
+		}
+
+		return toJSON(result)
 	}
-
-	// Check if file exists
-	if _, err := os.Stat(path); err != nil {
-		result.Error = fmt.Sprintf("file not found: %s", path)
-		return toJSONMCP(result)
-	}
-
-	// TODO: Integrate with cfn-lint or AWS CloudFormation validation
-	result.Success = true
-	result.Message = "Validation not yet implemented - template file exists"
-	return toJSONMCP(result)
 }
 
-// handleImportMCP imports existing CloudFormation templates to Go code.
-func handleImportMCP(_ context.Context, args map[string]any) (string, error) {
-	files, _ := args["files"].([]any)
-	output, _ := args["output"].(string)
+// makeDomainImportHandler creates an MCP handler from the domain's Importer
+func makeDomainImportHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(_ context.Context, args map[string]any) (string, error) {
+		files, _ := args["files"].([]any)
+		output, _ := args["output"].(string)
 
-	result := ImportResultMCP{}
+		result := MCPImportResult{}
 
-	if len(files) == 0 {
-		result.Error = "files is required"
-		return toJSONMCP(result)
+		if len(files) == 0 {
+			result.Error = "files is required"
+			return toJSON(result)
+		}
+
+		if output == "" {
+			output = "."
+		}
+
+		// Use the domain's Importer implementation
+		importer := d.Importer()
+
+		for _, f := range files {
+			filePath, ok := f.(string)
+			if !ok {
+				continue
+			}
+
+			// Generate output file name
+			outFile := filepath.Join(output, filepath.Base(filePath)+".go")
+
+			if err := importer.Import(filePath, outFile); err != nil {
+				result.Error = fmt.Sprintf("importing %s: %v", filePath, err)
+				return toJSON(result)
+			}
+			result.Files = append(result.Files, outFile)
+		}
+
+		result.Success = true
+		return toJSON(result)
 	}
-
-	if output == "" {
-		output = "."
-	}
-
-	// TODO: Implement CloudFormation to Go import
-	result.Success = false
-	result.Error = "import not yet implemented"
-	return toJSONMCP(result)
 }
 
-// handleListMCP lists discovered resources.
-func handleListMCP(_ context.Context, args map[string]any) (string, error) {
-	pkg, _ := args["package"].(string)
+// makeDomainListHandler creates an MCP handler from the domain's Lister
+func makeDomainListHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(_ context.Context, args map[string]any) (string, error) {
+		pkg, _ := args["package"].(string)
 
-	result := ListResultMCP{}
+		result := MCPListResult{}
 
-	if pkg == "" {
-		pkg = "./..."
-	}
+		if pkg == "" {
+			pkg = "./..."
+		}
 
-	packages := []string{pkg}
-
-	// Discover resources
-	discoverResult, err := discover.Discover(discover.Options{
-		Packages: packages,
-	})
-	if err != nil {
-		result.Error = fmt.Sprintf("discovery failed: %v", err)
-		return toJSONMCP(result)
-	}
-
-	for name, info := range discoverResult.Resources {
-		result.Resources = append(result.Resources, ResourceInfoMCP{
-			Name: name,
-			Type: info.Type,
-			File: info.File,
+		// Discover resources directly (since Lister doesn't return data)
+		discoverResult, err := discover.Discover(discover.Options{
+			Packages: []string{pkg},
 		})
-	}
+		if err != nil {
+			result.Error = fmt.Sprintf("discovery failed: %v", err)
+			return toJSON(result)
+		}
 
-	result.Success = true
-	return toJSONMCP(result)
+		for name, info := range discoverResult.Resources {
+			result.Resources = append(result.Resources, MCPResourceInfo{
+				Name: name,
+				Type: info.Type,
+				File: info.File,
+			})
+		}
+
+		result.Success = true
+		return toJSON(result)
+	}
 }
 
-// handleGraphMCP visualizes resource dependencies.
-func handleGraphMCP(_ context.Context, args map[string]any) (string, error) {
-	pkg, _ := args["package"].(string)
-	format, _ := args["format"].(string)
+// makeDomainGraphHandler creates an MCP handler from the domain's Grapher
+func makeDomainGraphHandler(d *domain.AwsDomain) coremcp.ToolHandler {
+	return func(_ context.Context, args map[string]any) (string, error) {
+		pkg, _ := args["package"].(string)
+		format, _ := args["format"].(string)
 
-	result := GraphResultMCP{}
+		result := MCPGraphResult{}
 
-	if pkg == "" {
-		pkg = "./..."
+		if pkg == "" {
+			pkg = "./..."
+		}
+
+		if format == "" {
+			format = "mermaid"
+		}
+
+		// TODO: Implement graph generation from domain's Grapher
+		result.Success = false
+		result.Error = "graph generation not yet fully implemented"
+		return toJSON(result)
 	}
-
-	if format == "" {
-		format = "mermaid"
-	}
-
-	// TODO: Implement dependency graph generation
-	result.Success = false
-	result.Error = "graph not yet implemented"
-	return toJSONMCP(result)
 }
 
 // Result types
 
-// InitResultMCP is the result of the wetwire_init tool.
-type InitResultMCP struct {
+// MCPInitResult is the result of the wetwire_init tool.
+type MCPInitResult struct {
 	Success bool     `json:"success"`
 	Path    string   `json:"path"`
 	Files   []string `json:"files"`
 	Error   string   `json:"error,omitempty"`
 }
 
-// BuildResultMCP is the result of the wetwire_build tool.
-type BuildResultMCP struct {
+// MCPBuildResult is the result of the wetwire_build tool.
+type MCPBuildResult struct {
 	Success   bool     `json:"success"`
 	Template  string   `json:"template,omitempty"`
 	Resources []string `json:"resources,omitempty"`
 	Errors    []string `json:"errors,omitempty"`
 }
 
-// ValidateResultMCP is the result of the wetwire_validate tool.
-type ValidateResultMCP struct {
+// MCPLintResult is the result of the wetwire_lint tool.
+type MCPLintResult struct {
+	Success bool            `json:"success"`
+	Issues  []MCPLintIssue  `json:"issues,omitempty"`
+}
+
+// MCPLintIssue represents a single lint issue.
+type MCPLintIssue struct {
+	RuleID   string `json:"rule_id"`
+	Message  string `json:"message"`
+	File     string `json:"file,omitempty"`
+	Line     int    `json:"line,omitempty"`
+	Column   int    `json:"column,omitempty"`
+	Severity string `json:"severity"`
+}
+
+// MCPValidateResult is the result of the wetwire_validate tool.
+type MCPValidateResult struct {
 	Success bool   `json:"success"`
 	Message string `json:"message,omitempty"`
 	Error   string `json:"error,omitempty"`
 }
 
-// ImportResultMCP is the result of the wetwire_import tool.
-type ImportResultMCP struct {
+// MCPImportResult is the result of the wetwire_import tool.
+type MCPImportResult struct {
 	Success bool     `json:"success"`
 	Files   []string `json:"files,omitempty"`
 	Error   string   `json:"error,omitempty"`
 }
 
-// ListResultMCP is the result of the wetwire_list tool.
-type ListResultMCP struct {
+// MCPListResult is the result of the wetwire_list tool.
+type MCPListResult struct {
 	Success   bool              `json:"success"`
-	Resources []ResourceInfoMCP `json:"resources,omitempty"`
+	Resources []MCPResourceInfo `json:"resources,omitempty"`
 	Error     string            `json:"error,omitempty"`
 }
 
-// ResourceInfoMCP describes a discovered resource.
-type ResourceInfoMCP struct {
+// MCPResourceInfo describes a discovered resource.
+type MCPResourceInfo struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 	File string `json:"file"`
 }
 
-// GraphResultMCP is the result of the wetwire_graph tool.
-type GraphResultMCP struct {
+// MCPGraphResult is the result of the wetwire_graph tool.
+type MCPGraphResult struct {
 	Success bool   `json:"success"`
 	Graph   string `json:"graph,omitempty"`
 	Error   string `json:"error,omitempty"`
 }
 
-// toJSONMCP converts a value to a JSON string.
-func toJSONMCP(v any) (string, error) {
+// toJSON converts a value to a JSON string.
+func toJSON(v any) (string, error) {
 	data, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		return "", fmt.Errorf("marshaling result: %w", err)

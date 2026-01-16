@@ -9,6 +9,12 @@
 //	wetwire-aws graph ./infra/...     Generate DOT dependency graph
 //	wetwire-aws init myproject        Create new project
 //	wetwire-aws import template.yaml  Import CloudFormation template to Go
+//	wetwire-aws design "prompt"       AI-assisted infrastructure design
+//	wetwire-aws test "prompt"         Run persona-based testing
+//	wetwire-aws diff old.json new.json Compare two templates
+//	wetwire-aws watch ./infra/...     Auto-rebuild on file changes
+//	wetwire-aws optimize ./infra/...  Suggest CloudFormation optimizations
+//	wetwire-aws mcp                   Run MCP server
 //	wetwire-aws version               Show version
 package main
 
@@ -20,8 +26,24 @@ import (
 )
 
 func main() {
-	if err := domain.Run(&domain.AwsDomain{}); err != nil {
+	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+func run() error {
+	// Create the domain instance and get root command with standard tools
+	d := &domain.AwsDomain{}
+	root := domain.CreateRootCommand(d)
+
+	// Add AWS-specific commands
+	root.AddCommand(newDesignCmd())
+	root.AddCommand(newTestCmd())
+	root.AddCommand(newOptimizeCmd())
+	root.AddCommand(newDiffCmd())
+	root.AddCommand(newWatchCmd())
+	root.AddCommand(newMCPCmd())
+
+	return root.Execute()
 }

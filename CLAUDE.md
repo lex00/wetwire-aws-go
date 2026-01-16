@@ -69,13 +69,46 @@ wetwire-aws-go/
 │   ├── iam/          # IAM resources (Role, Policy, etc.)
 │   └── serverless/   # SAM resources (Function, Api, etc.)
 ├── intrinsics/       # Ref, GetAtt, Sub, Join, etc.
+├── domain/           # Domain interface implementation
+│   ├── domain.go     # Domain interface and CreateRootCommand
+│   └── aws_domain.go # AWS implementation (AwsDomain)
 ├── internal/
 │   ├── discover/     # AST-based resource discovery
 │   ├── template/     # CF template builder with topo sort
 │   ├── linter/       # 18 lint rules (WAW001-WAW018)
-│   └── importer/     # YAML to Go conversion
+│   ├── importer/     # YAML to Go conversion
+│   └── kiro/         # Kiro CLI integration
 └── cmd/wetwire-aws/  # CLI application
+    ├── main.go       # CLI entry point using domain.CreateRootCommand
+    ├── mcp.go        # MCP server for Claude integration
+    ├── design.go     # AI-assisted design command
+    ├── test.go       # Persona-based testing command
+    ├── optimize.go   # Optimization suggestions command
+    ├── diff.go       # Template diff command
+    └── watch.go      # File watching command
 ```
+
+## Architecture
+
+wetwire-aws implements the `domain.Domain` interface from wetwire-core-go, enabling automatic CLI command generation and MCP tool registration.
+
+### Domain Pattern
+
+The `domain` package provides:
+- **Domain interface**: Core methods (Builder, Linter, Initializer, Validator)
+- **Optional interfaces**: OptionalImporter, OptionalLister, OptionalGrapher
+- **CreateRootCommand**: Generates CLI with all standard commands
+- **Run**: Creates and executes CLI (for simple use cases)
+
+### AWS-Specific Commands
+
+Beyond the domain interface, wetwire-aws adds AWS-specific commands:
+- **design**: AI-assisted infrastructure design (Anthropic/Kiro)
+- **test**: Automated persona-based testing
+- **optimize**: CloudFormation optimization suggestions
+- **diff**: Semantic template comparison
+- **watch**: Auto-rebuild on file changes
+- **mcp**: MCP server for Claude Code integration
 
 ## Lint Rules (WAW001-WAW018)
 
