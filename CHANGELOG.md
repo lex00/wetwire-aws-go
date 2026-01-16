@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- MCP: Refactored MCP server to use domain interface for automatic tool generation (#185)
+  - Replaced ~750 lines of manual MCP handlers with domain-based approach
+  - MCP tools now automatically generated from `domain.Domain` interface
+  - Uses `RegisterStandardTools` from wetwire-core-go for consistent tool registration
+  - All 7 MCP tools (init, build, lint, validate, import, list, graph) now bridge directly to domain implementations
 - Deps: Updated wetwire-core-go to v1.5.4 for Kiro provider cwd fix (#181)
   - Ensures Kiro agent runs in correct working directory
   - Added test to verify WorkDir is set in NewConfig()
+
 ### Added
 
 - CI: Codecov integration for coverage reporting (#163)
