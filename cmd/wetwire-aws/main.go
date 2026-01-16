@@ -9,10 +9,6 @@
 //	wetwire-aws graph ./infra/...     Generate DOT dependency graph
 //	wetwire-aws init myproject        Create new project
 //	wetwire-aws import template.yaml  Import CloudFormation template to Go
-//	wetwire-aws design "prompt"       AI-assisted infrastructure design
-//	wetwire-aws test "prompt"         Run persona-based testing
-//	wetwire-aws diff old.json new.json Compare two templates
-//	wetwire-aws watch ./infra/...     Auto-rebuild on file changes
 //	wetwire-aws version               Show version
 package main
 
@@ -20,56 +16,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
+	"github.com/lex00/wetwire-aws-go/domain"
 )
 
 func main() {
-	rootCmd := &cobra.Command{
-		Use:   "wetwire-aws",
-		Short: "Generate CloudFormation templates from Go",
-		Long: `wetwire-aws generates CloudFormation templates from Go resource declarations.
-
-Define your infrastructure using native Go syntax:
-
-    var MyBucket = s3.Bucket{
-        BucketName: "my-bucket",
-    }
-
-Then generate CloudFormation JSON:
-
-    wetwire-aws build ./infra/...`,
-		Version: getVersion(),
-	}
-
-	rootCmd.AddCommand(
-		newBuildCmd(),
-		newValidateCmd(),
-		newListCmd(),
-		newGraphCmd(),
-		newLintCmd(),
-		newInitCmd(),
-		newImportCmd(),
-		newDesignCmd(),
-		newTestCmd(),
-		newOptimizeCmd(),
-		newDiffCmd(),
-		newWatchCmd(),
-		newVersionCmd(),
-		newMCPCmd(),
-	)
-
-	if err := rootCmd.Execute(); err != nil {
+	if err := domain.Run(&domain.AwsDomain{}); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
-	}
-}
-
-func newVersionCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "version",
-		Short: "Show version information",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("wetwire-aws %s\n", getVersion())
-		},
 	}
 }

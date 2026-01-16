@@ -30,6 +30,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/linter"
 	"github.com/lex00/wetwire-aws-go/internal/runner"
 	"github.com/lex00/wetwire-aws-go/internal/template"
+	"github.com/lex00/wetwire-aws-go/version"
 )
 
 func newMCPCmd() *cobra.Command {
@@ -55,7 +56,7 @@ This command starts an MCP server on stdio transport, providing tools for:
 func runMCPServer() error {
 	server := mcp.NewServer(mcp.Config{
 		Name:    "wetwire-aws",
-		Version: getVersion(),
+		Version: version.Version(),
 	})
 
 	// Register standard wetwire tools using core infrastructure

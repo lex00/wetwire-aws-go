@@ -3,27 +3,29 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/lex00/wetwire-aws-go/version"
 )
 
 func TestGetVersion(t *testing.T) {
-	version := getVersion()
+	v := version.Version()
 
 	// Version should not be empty
-	if version == "" {
-		t.Error("getVersion() returned empty string")
+	if v == "" {
+		t.Error("Version() returned empty string")
 	}
 
 	// When running tests (not via go install), version should be "dev"
 	// or a valid semver when installed via go install @version
-	if version != "dev" && !strings.HasPrefix(version, "v") {
-		t.Errorf("getVersion() = %q, want 'dev' or 'vX.Y.Z'", version)
+	if v != "dev" && !strings.HasPrefix(v, "v") {
+		t.Errorf("Version() = %q, want 'dev' or 'vX.Y.Z'", v)
 	}
 }
 
 func TestGetVersionNotEmpty(t *testing.T) {
 	// Ensure the version function always returns something useful
-	version := getVersion()
-	if len(version) == 0 {
+	v := version.Version()
+	if len(v) == 0 {
 		t.Error("version should not be empty")
 	}
 }
