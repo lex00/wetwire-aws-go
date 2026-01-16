@@ -14,7 +14,7 @@ func TestDesignCommand_ProviderFlag(t *testing.T) {
 	providerFlag := cmd.Flags().Lookup("provider")
 	require.NotNil(t, providerFlag, "provider flag should exist")
 	assert.Equal(t, "anthropic", providerFlag.DefValue, "default provider should be anthropic")
-	assert.Equal(t, "AI provider: 'anthropic' or 'kiro'", providerFlag.Usage)
+	assert.Equal(t, "AI provider: 'anthropic', 'openai', 'gemini', or 'kiro'", providerFlag.Usage)
 }
 
 func TestDesignCommand_KiroAgentName(t *testing.T) {

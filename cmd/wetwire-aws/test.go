@@ -9,10 +9,14 @@ import (
 	"syscall"
 
 	"github.com/lex00/wetwire-aws-go/internal/kiro"
+	"github.com/lex00/wetwire-aws-go/internal/providers/gemini"
+	"github.com/lex00/wetwire-aws-go/internal/providers/openai"
 	"github.com/lex00/wetwire-core-go/agent/agents"
 	"github.com/lex00/wetwire-core-go/agent/orchestrator"
 	"github.com/lex00/wetwire-core-go/agent/personas"
 	"github.com/lex00/wetwire-core-go/agent/results"
+	"github.com/lex00/wetwire-core-go/providers"
+	anthropicprovider "github.com/lex00/wetwire-core-go/providers/anthropic"
 	"github.com/spf13/cobra"
 )
 
@@ -41,6 +45,8 @@ Available personas:
 
 Providers:
   - anthropic (default): Uses Anthropic API with wetwire-core-go
+  - openai: Uses OpenAI API with wetwire-core-go
+  - gemini: Uses Google Gemini API with wetwire-core-go
   - kiro: Uses Kiro CLI (set SKIP_KIRO_TESTS=1 to skip in CI)
 
 NOTE: Kiro provider runs in non-interactive mode, so persona simulation is
@@ -49,6 +55,8 @@ persona simulation with multi-turn conversations, use the anthropic provider.
 
 Example:
     wetwire-aws test --persona beginner "Create an S3 bucket with versioning"
+    wetwire-aws test --provider openai "Create an S3 bucket"
+    wetwire-aws test --provider gemini "Create a Lambda function"
     wetwire-aws test --provider kiro "Create an S3 bucket"
     wetwire-aws test --provider kiro --all-personas "Create an S3 bucket"`,
 		Args: cobra.MinimumNArgs(1),
@@ -66,22 +74,22 @@ Example:
 	cmd.Flags().StringVarP(&scenario, "scenario", "S", "default", "Scenario name for tracking")
 	cmd.Flags().IntVarP(&maxLintCycles, "max-lint-cycles", "l", 3, "Maximum lint/fix cycles")
 	cmd.Flags().BoolVarP(&stream, "stream", "s", false, "Stream AI responses")
-	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic' or 'kiro'")
+	cmd.Flags().StringVar(&provider, "provider", "anthropic", "AI provider: 'anthropic', 'openai', 'gemini', or 'kiro'")
 	cmd.Flags().BoolVar(&allPersonas, "all-personas", false, "Run test with all personas")
 
 	return cmd
 }
 
 // runTest executes a single persona test with the specified provider.
-// It dispatches to either Kiro CLI or Anthropic API based on the provider parameter.
+// It dispatches to either Kiro CLI or one of the AI API providers.
 func runTest(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool, provider string) error {
 	switch provider {
 	case "kiro":
 		return runTestKiro(prompt, outputDir, personaName, scenario, stream)
-	case "anthropic":
-		return runTestAnthropic(prompt, outputDir, personaName, scenario, maxLintCycles, stream)
+	case "anthropic", "openai", "gemini":
+		return runTestWithProvider(prompt, outputDir, personaName, scenario, maxLintCycles, stream, provider)
 	default:
-		return fmt.Errorf("unknown provider: %s (use 'anthropic' or 'kiro')", provider)
+		return fmt.Errorf("unknown provider: %s (use 'anthropic', 'openai', 'gemini', or 'kiro')", provider)
 	}
 }
 
@@ -104,8 +112,8 @@ func runTestAllPersonas(prompt, outputDir, scenario string, maxLintCycles int, s
 		switch provider {
 		case "kiro":
 			err = runTestKiro(prompt, personaOutputDir, personaName, scenario, stream)
-		case "anthropic":
-			err = runTestAnthropic(prompt, personaOutputDir, personaName, scenario, maxLintCycles, stream)
+		case "anthropic", "openai", "gemini":
+			err = runTestWithProvider(prompt, personaOutputDir, personaName, scenario, maxLintCycles, stream, provider)
 		default:
 			return fmt.Errorf("unknown provider: %s", provider)
 		}
@@ -215,9 +223,9 @@ func runTestKiro(prompt, outputDir, personaName, scenario string, stream bool) e
 	return nil
 }
 
-// runTestAnthropic runs a persona test using the Anthropic API with multi-turn conversation.
+// runTestWithProvider runs a persona test using the specified AI provider with multi-turn conversation.
 // It creates an AI developer with the specified persona that responds to the runner agent.
-func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool) error {
+func runTestWithProvider(prompt, outputDir, personaName, scenario string, maxLintCycles int, stream bool, providerName string) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -229,6 +237,23 @@ func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCy
 		fmt.Println("\nInterrupted, cleaning up...")
 		cancel()
 	}()
+
+	// Create the AI provider
+	var provider providers.Provider
+	var err error
+	switch providerName {
+	case "anthropic":
+		provider, err = anthropicprovider.New(anthropicprovider.Config{})
+	case "openai":
+		provider, err = openai.New(openai.Config{})
+	case "gemini":
+		provider, err = gemini.New(gemini.Config{})
+	default:
+		return fmt.Errorf("unsupported provider: %s", providerName)
+	}
+	if err != nil {
+		return fmt.Errorf("creating %s provider: %w", providerName, err)
+	}
 
 	// Get persona
 	persona, err := personas.Get(personaName)
@@ -244,7 +269,7 @@ func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCy
 	developer := orchestrator.NewAIDeveloper(persona, responder)
 
 	// Create stream handler if streaming enabled
-	var streamHandler agents.StreamHandler
+	var streamHandler providers.StreamHandler
 	if stream {
 		streamHandler = func(text string) {
 			fmt.Print(text)
@@ -253,6 +278,7 @@ func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCy
 
 	// Create runner agent
 	runner, err := agents.NewRunnerAgent(agents.RunnerConfig{
+		Provider:      provider,
 		WorkDir:       outputDir,
 		MaxLintCycles: maxLintCycles,
 		Session:       session,
@@ -264,7 +290,7 @@ func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCy
 		return fmt.Errorf("creating runner: %w", err)
 	}
 
-	fmt.Printf("Running test with persona '%s' and scenario '%s'\n", personaName, scenario)
+	fmt.Printf("Running test with provider '%s', persona '%s', and scenario '%s'\n", providerName, personaName, scenario)
 	fmt.Printf("Prompt: %s\n\n", prompt)
 
 	// Run the agent
@@ -285,6 +311,7 @@ func runTestAnthropic(prompt, outputDir, personaName, scenario string, maxLintCy
 
 	// Print summary
 	fmt.Println("\n--- Test Summary ---")
+	fmt.Printf("Provider: %s\n", providerName)
 	fmt.Printf("Persona: %s\n", personaName)
 	fmt.Printf("Scenario: %s\n", scenario)
 	fmt.Printf("Generated files: %d\n", len(runner.GetGeneratedFiles()))
