@@ -8,7 +8,7 @@ require (
 	github.com/google/generative-ai-go v0.20.1
 	github.com/lex00/cfn-lint-go v1.0.0
 	github.com/lex00/cloudformation-schema-go v1.0.0
-	github.com/lex00/wetwire-core-go v1.11.0
+	github.com/lex00/wetwire-core-go v1.12.0
 	github.com/openai/openai-go v1.12.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
