@@ -187,7 +187,7 @@ var MySecurityGroup = ec2.SecurityGroup{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW007", issues[0].RuleID)
+		assert.Equal(t, "WAW007", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "SecurityGroupIngress")
 	}
 }
@@ -242,7 +242,7 @@ var MySecurityGroup = ec2.SecurityGroup{
 	// Should detect 2 inline struct literals
 	assert.Len(t, issues, 2)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW008", issues[0].RuleID)
+		assert.Equal(t, "WAW008", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "SecurityGroupIngress")
 	}
 }

@@ -256,9 +256,9 @@ func runWatchLint(packages []string) bool {
 			if issue.File != "" {
 				fmt.Printf("%s:%d:%d: %s: %s [%s]\n",
 					issue.File, issue.Line, issue.Column,
-					issue.Severity, issue.Message, issue.RuleID)
+					issue.Severity, issue.Message, issue.Rule)
 			} else {
-				fmt.Printf("%s: %s [%s]\n", issue.Severity, issue.Message, issue.RuleID)
+				fmt.Printf("%s: %s [%s]\n", issue.Severity, issue.Message, issue.Rule)
 			}
 		}
 	}

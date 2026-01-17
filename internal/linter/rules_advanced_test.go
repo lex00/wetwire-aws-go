@@ -77,10 +77,10 @@ var MyBucket = s3.Bucket{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW011", issues[0].RuleID)
+		assert.Equal(t, "WAW011", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "Invalid StorageClass")
 		assert.Contains(t, issues[0].Message, "INVALID_CLASS")
-		assert.Equal(t, "error", issues[0].Severity)
+		assert.Equal(t, SeverityError, issues[0].Severity)
 	}
 }
 
@@ -192,7 +192,7 @@ var MyFunction = lambda_.Function{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW012", issues[0].RuleID)
+		assert.Equal(t, "WAW012", issues[0].Rule)
 	}
 }
 
@@ -278,7 +278,7 @@ var MyBucket = s3.Bucket{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW014", issues[0].RuleID)
+		assert.Equal(t, "WAW014", issues[0].Rule)
 	}
 }
 

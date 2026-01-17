@@ -31,18 +31,8 @@ import (
 	"strings"
 )
 
-// Issue represents a detected lint issue with fix information.
-type Issue struct {
-	RuleID     string // The rule identifier (e.g., "WAW001")
-	Message    string // Human-readable description of the issue
-	Suggestion string // The suggested replacement code
-	File       string // File path where the issue was found
-	Line       int    // Line number (1-indexed)
-	Column     int    // Column number (0-indexed)
-	Severity   string // "error" or "warning"
-}
-
 // Rule is the interface for lint rules.
+// Note: Issue type is imported from corelint via type alias in linter.go.
 type Rule interface {
 	ID() string
 	Description() string
@@ -100,13 +90,13 @@ func (r HardcodedPseudoParameter) Check(file *ast.File, fset *token.FileSet) []I
 		if constant, found := pseudoParams[value]; found {
 			pos := fset.Position(lit.Pos())
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    "Use " + constant + " instead of \"" + value + "\"",
 				Suggestion: constant,
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "warning",
+				Severity:   SeverityWarning,
 			})
 		}
 
@@ -179,13 +169,13 @@ func (r MapShouldBeIntrinsic) Check(file *ast.File, fset *token.FileSet) []Issue
 		if typeName, found := intrinsicKeys[keyValue]; found {
 			pos := fset.Position(comp.Pos())
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    "Use intrinsics." + typeName + "{...} instead of map[string]any{\"" + keyValue + "\": ...}",
 				Suggestion: typeName + "{...}",
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "warning",
+				Severity:   SeverityWarning,
 			})
 		}
 
@@ -264,13 +254,13 @@ func (r DuplicateResource) Check(file *ast.File, fset *token.FileSet) []Issue {
 			// Report all locations after the first
 			for _, loc := range locations[1:] {
 				issues = append(issues, Issue{
-					RuleID:     r.ID(),
+					Rule:     r.ID(),
 					Message:    "Duplicate resource variable '" + name + "' (first defined at line " + string(rune(locations[0].Line+'0')) + ")",
 					Suggestion: "// DUPLICATE: var " + name,
 					File:       loc.Filename,
 					Line:       loc.Line,
 					Column:     loc.Column,
-					Severity:   "error",
+					Severity:   SeverityError,
 				})
 			}
 		}
@@ -383,13 +373,13 @@ func (r FileTooLarge) Check(file *ast.File, fset *token.FileSet) []Issue {
 		pos := fset.Position(file.Pos())
 		message := "File has " + itoa(count) + " resources (max " + itoa(maxResources) + "). Consider splitting by category: storage.go, compute.go, network.go, security.go"
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    message,
 			Suggestion: "// Split " + itoa(count) + " resources into multiple files",
 			File:       pos.Filename,
 			Line:       1,
 			Column:     0,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 	}
 
@@ -479,13 +469,13 @@ func (r InlinePropertyType) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 		pos := fset.Position(kv.Pos())
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    "Use a struct type for " + keyIdent.Name + " instead of inline map[string]any",
 			Suggestion: "// Define a named type for " + keyIdent.Name,
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 
 		return true
@@ -534,13 +524,13 @@ func (r HardcodedPolicyVersion) Check(file *ast.File, fset *token.FileSet) []Iss
 		if policyVersionPattern.MatchString(value) {
 			pos := fset.Position(lit.Pos())
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    "Consider using a constant for policy version \"" + value + "\"",
 				Suggestion: "PolicyVersion",
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "info",
+				Severity:   SeverityInfo,
 			})
 		}
 
@@ -628,13 +618,13 @@ func (r InlineMapInSlice) Check(file *ast.File, fset *token.FileSet) []Issue {
 		if hasInlineMaps {
 			pos := fset.Position(kv.Pos())
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    keyIdent.Name + " uses inline map[string]any. " + suggestion,
 				Suggestion: "// Refactor to use typed structs",
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "warning",
+				Severity:   SeverityWarning,
 			})
 		}
 
@@ -713,13 +703,13 @@ func (r InlineStructLiteral) Check(file *ast.File, fset *token.FileSet) []Issue 
 			if innerComp, ok := elt.(*ast.CompositeLit); ok {
 				pos := fset.Position(innerComp.Pos())
 				issues = append(issues, Issue{
-					RuleID:     r.ID(),
+					Rule:     r.ID(),
 					Message:    fmt.Sprintf("Use a named var declaration for %s item instead of inline struct literal", fieldName),
 					Suggestion: "Extract to: var MyItem = Type{...} and reference by name",
 					File:       pos.Filename,
 					Line:       pos.Line,
 					Column:     pos.Column,
-					Severity:   "warning",
+					Severity:   SeverityWarning,
 				})
 			}
 		}
@@ -813,13 +803,13 @@ func findUnflattenedMaps(expr ast.Expr, path string, fset *token.FileSet, ruleID
 	if isMapStringAny(comp.Type) {
 		pos := fset.Position(comp.Pos())
 		issues = append(issues, Issue{
-			RuleID:     ruleID,
+			Rule:     ruleID,
 			Message:    fmt.Sprintf("%s: use typed struct instead of map[string]any", path),
 			Suggestion: fmt.Sprintf("// Use the appropriate property type struct for %s", path),
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 
 		// Recursively check map values
@@ -959,13 +949,13 @@ func findInlineTypedStructs(expr ast.Expr, fset *token.FileSet, ruleID string, d
 		if isPropertyType && depth > 0 {
 			pos := fset.Position(e.Pos())
 			issues = append(issues, Issue{
-				RuleID:     ruleID,
+				Rule:     ruleID,
 				Message:    fmt.Sprintf("Flatten inline %s to a named var declaration", typeName),
 				Suggestion: fmt.Sprintf("var My%s = ...", typeName),
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "warning",
+				Severity:   SeverityWarning,
 			})
 		}
 

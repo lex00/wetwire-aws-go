@@ -105,13 +105,13 @@ func (r InvalidEnumValue) Check(file *ast.File, fset *token.FileSet) []Issue {
 			}
 
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    fmt.Sprintf("Invalid %s value: %q", fieldIdent.Name, value),
 				Suggestion: suggestion,
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "error",
+				Severity:   SeverityError,
 			})
 		}
 
@@ -373,13 +373,13 @@ func (r PreferEnumConstant) Check(file *ast.File, fset *token.FileSet) []Issue {
 				if constName, ok := enumValues[value]; ok {
 					pos := fset.Position(lit.Pos())
 					issues = append(issues, Issue{
-						RuleID:     r.ID(),
+						Rule:     r.ID(),
 						Message:    fmt.Sprintf("Use enums.%s instead of %q", constName, value),
 						Suggestion: "enums." + constName,
 						File:       pos.Filename,
 						Line:       pos.Line,
 						Column:     pos.Column,
-						Severity:   "warning",
+						Severity:   SeverityWarning,
 					})
 				}
 			}
@@ -484,13 +484,13 @@ func (r UndefinedReference) checkWithDefined(file *ast.File, fset *token.FileSet
 		if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 			pos := fset.Position(ident.Pos())
 			issues = append(issues, Issue{
-				RuleID:     r.ID(),
+				Rule:     r.ID(),
 				Message:    fmt.Sprintf("Potentially undefined reference: %s (check if resource/parameter is defined)", name),
 				Suggestion: "// Ensure " + name + " is defined or imported",
 				File:       pos.Filename,
 				Line:       pos.Line,
 				Column:     pos.Column,
-				Severity:   "warning",
+				Severity:   SeverityWarning,
 			})
 		}
 
@@ -572,13 +572,13 @@ func (r UnusedIntrinsicsImport) Check(file *ast.File, fset *token.FileSet) []Iss
 	if !intrinsicsUsed {
 		pos := fset.Position(intrinsicsImport.Pos())
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    "Intrinsics package imported but no intrinsic types used",
 			Suggestion: "// Remove unused import or use intrinsic types",
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "error",
+			Severity:   SeverityError,
 		})
 	}
 
@@ -637,13 +637,13 @@ func (r AvoidExplicitRef) Check(file *ast.File, fset *token.FileSet) []Issue {
 		}
 
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    msg,
 			Suggestion: suggestion,
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 
 		return true
@@ -704,13 +704,13 @@ func (r AvoidExplicitGetAtt) Check(file *ast.File, fset *token.FileSet) []Issue 
 		}
 
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    msg,
 			Suggestion: suggestion,
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 
 		return true
@@ -785,13 +785,13 @@ func (r AvoidPointerAssignment) Check(file *ast.File, fset *token.FileSet) []Iss
 
 				pos := fset.Position(unary.Pos())
 				issues = append(issues, Issue{
-					RuleID:     r.ID(),
+					Rule:     r.ID(),
 					Message:    fmt.Sprintf("Avoid pointer assignment for %s - use value type instead of &%s{}", varName, typeName),
 					Suggestion: fmt.Sprintf("var %s = %s{...} (remove &)", varName, typeName),
 					File:       pos.Filename,
 					Line:       pos.Line,
 					Column:     pos.Column,
-					Severity:   "error",
+					Severity:   SeverityError,
 				})
 			}
 		}
@@ -852,13 +852,13 @@ func (r PreferJsonType) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 		pos := fset.Position(comp.Pos())
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    "Use Json{} instead of map[string]any{} for cleaner syntax",
 			Suggestion: "Json{...}",
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "warning",
+			Severity:   SeverityWarning,
 		})
 
 		return true
@@ -982,13 +982,13 @@ func (r SecretPattern) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 				pos := fset.Position(lit.Pos())
 				issues = append(issues, Issue{
-					RuleID:     r.ID(),
+					Rule:     r.ID(),
 					Message:    fmt.Sprintf("Potential %s detected - avoid hardcoding secrets", sp.name),
 					Suggestion: "Use AWS Secrets Manager, Parameter Store, or environment variables",
 					File:       pos.Filename,
 					Line:       pos.Line,
 					Column:     pos.Column,
-					Severity:   "error",
+					Severity:   SeverityError,
 				})
 				return true // Only report first match per string
 			}
@@ -1037,13 +1037,13 @@ func (r SecretPattern) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 		pos := fset.Position(lit.Pos())
 		issues = append(issues, Issue{
-			RuleID:     r.ID(),
+			Rule:     r.ID(),
 			Message:    fmt.Sprintf("Hardcoded value in sensitive field '%s' - avoid storing secrets in code", keyName),
 			Suggestion: "Use AWS Secrets Manager, Parameter Store, or environment variables",
 			File:       pos.Filename,
 			Line:       pos.Line,
 			Column:     pos.Column,
-			Severity:   "error",
+			Severity:   SeverityError,
 		})
 
 		return true

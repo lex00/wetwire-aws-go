@@ -29,7 +29,7 @@ func TestLintFile_WithIssues(t *testing.T) {
 	// Should detect hardcoded pseudo-parameter
 	foundPseudoParam := false
 	for _, issue := range result.Issues {
-		if issue.RuleID == "WAW001" {
+		if issue.Rule == "WAW001" {
 			foundPseudoParam = true
 			break
 		}
