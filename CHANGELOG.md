@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- MCP: Migrated to `domain.BuildMCPServer()` for auto-generated MCP server (#194)
+  - Reduced `cmd/wetwire-aws/mcp.go` from 641 lines to 60 lines (~90% reduction)
+  - Removed all manual tool registration and handler functions
+  - Now uses `domain.BuildMCPServer()` from wetwire-core-go v1.13.0
+  - MCP tools automatically generated from Domain interface implementation
+  - All 7 tools (init, build, lint, validate, import, list, graph) work seamlessly
+- Deps: Updated wetwire-core-go to v1.13.0 for BuildMCPServer support (#194)
 - MCP: Refactored MCP server to use domain interface for automatic tool generation (#185)
   - Replaced ~750 lines of manual MCP handlers with domain-based approach
   - MCP tools now automatically generated from `domain.Domain` interface
