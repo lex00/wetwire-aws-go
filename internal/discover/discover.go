@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	wetwire "github.com/lex00/wetwire-aws-go"
+	coreast "github.com/lex00/wetwire-core-go/ast"
 )
 
 // knownResourcePackages maps package names to CloudFormation service prefixes.
@@ -465,7 +466,7 @@ func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *
 			}
 
 			// Get the type
-			typeName, pkgName := extractTypeName(compLit.Type)
+			typeName, pkgName := coreast.ExtractTypeName(compLit.Type)
 			if typeName == "" {
 				continue
 			}
@@ -563,22 +564,6 @@ func isIntrinsicPackage(pkgName string, imports map[string]string) bool {
 		return strings.HasSuffix(path, "/intrinsics")
 	}
 	return false
-}
-
-// extractTypeName extracts the type name and package from a type expression.
-// For s3.Bucket, returns ("Bucket", "s3").
-func extractTypeName(expr ast.Expr) (typeName, pkgName string) {
-	switch t := expr.(type) {
-	case *ast.SelectorExpr:
-		// pkg.Type
-		if ident, ok := t.X.(*ast.Ident); ok {
-			return t.Sel.Name, ident.Name
-		}
-	case *ast.Ident:
-		// Just Type (unqualified)
-		return t.Name, ""
-	}
-	return "", ""
 }
 
 // extractDependencies finds references to other resources in composite literal fields.
@@ -752,12 +737,13 @@ func (r *Result) resolveAttrRefsRecursive(varName, pathPrefix string, visited ma
 
 // isCommonIdent returns true for identifiers that are likely not resource names.
 func isCommonIdent(name string) bool {
-	common := map[string]bool{
-		// Go built-ins
-		"true": true, "false": true, "nil": true,
-		"string": true, "int": true, "bool": true, "float64": true,
-		"any": true, "error": true,
+	// Check Go built-ins using core AST package
+	if coreast.IsBuiltinIdent(name) {
+		return true
+	}
 
+	// AWS-specific intrinsic function types and pseudo-parameters
+	awsIntrinsics := map[string]bool{
 		// Intrinsic function types (from intrinsics package)
 		"Ref": true, "Sub": true, "Join": true, "GetAtt": true,
 		"Select": true, "Split": true, "If": true, "Equals": true,
@@ -772,5 +758,5 @@ func isCommonIdent(name string) bool {
 		"AWS_REGION": true, "AWS_STACK_ID": true,
 		"AWS_STACK_NAME": true, "AWS_URL_SUFFIX": true,
 	}
-	return common[name]
+	return awsIntrinsics[name]
 }
