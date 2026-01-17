@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/lex00/wetwire-aws-go/internal/discover"
-	"github.com/lex00/wetwire-aws-go/internal/linter"
+	"github.com/lex00/wetwire-aws-go/internal/lint"
 	"github.com/lex00/wetwire-aws-go/internal/runner"
 	"github.com/lex00/wetwire-aws-go/internal/template"
 )
@@ -245,7 +245,7 @@ func runWatchLint(packages []string) bool {
 	// Run lint rules
 	hasIssues := false
 	for _, pkg := range packages {
-		lintResult, err := linter.LintPackage(pkg, linter.Options{})
+		lintResult, err := lint.LintPackage(pkg, lint.Options{})
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: failed to lint %s: %v\n", pkg, err)
 			continue

@@ -7,7 +7,7 @@ import (
 
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 	"github.com/lex00/wetwire-aws-go/internal/importer"
-	"github.com/lex00/wetwire-aws-go/internal/linter"
+	"github.com/lex00/wetwire-aws-go/internal/lint"
 	"github.com/lex00/wetwire-aws-go/internal/runner"
 	"github.com/lex00/wetwire-aws-go/internal/schema"
 	"github.com/lex00/wetwire-aws-go/internal/template"
@@ -163,7 +163,7 @@ func (b *awsBuilder) Build(ctx *Context, path string, opts BuildOpts) (*Result, 
 type awsLinter struct{}
 
 func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, error) {
-	result, err := linter.LintPackage(path, linter.Options{})
+	result, err := lint.LintPackage(path, lint.Options{})
 	if err != nil {
 		return nil, fmt.Errorf("linting failed: %w", err)
 	}

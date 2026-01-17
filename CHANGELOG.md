@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Linter: Renamed `internal/linter` to `internal/lint` for consistency (#208)
+  - Package name changed from `linter` to `lint`
+  - Updated all imports and documentation references
 - Discover: Migrated to use `wetwire-core-go/ast` package for shared AST utilities (#207)
   - Uses `coreast.ExtractTypeName` instead of local implementation
   - Uses `coreast.IsBuiltinIdent` for Go builtin checks

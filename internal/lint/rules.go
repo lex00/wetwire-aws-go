@@ -1,4 +1,4 @@
-// Package linter provides lint rules for wetwire-aws Go code.
+// Package lint provides lint rules for wetwire-aws Go code.
 //
 // This package analyzes Go source files to detect patterns that can be improved.
 // Each rule provides clear messages and suggestions.
@@ -21,7 +21,7 @@
 //	WAW016: Avoid explicit GetAtt{} - use resource.Attr field access
 //	WAW017: Avoid pointer assignments (&Type{}) - use value types
 //	WAW018: Use Json{} instead of map[string]any{} for cleaner syntax
-package linter
+package lint
 
 import (
 	"fmt"

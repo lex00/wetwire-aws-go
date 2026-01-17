@@ -392,9 +392,9 @@ type Rule struct {
 ### Running the Linter
 
 ```go
-import "github.com/lex00/wetwire-aws-go/internal/linter"
+import "github.com/lex00/wetwire-aws-go/internal/lint"
 
-issues, err := linter.Lint(packages, linter.Options{
+issues, err := lint.Lint(packages, lint.Options{
     Fix: false,
 })
 
@@ -424,8 +424,8 @@ The fix function receives the original source and returns modified source.
 | `internal/discover/discover.go` | AST-based resource discovery |
 | `internal/template/template.go` | Template builder with topo sort |
 | `internal/runner/runner.go` | Value extraction via compilation |
-| `internal/linter/rules.go` | Lint rules WAW001-WAW010 |
-| `internal/linter/rules_extra.go` | Lint rules WAW011-WAW018 |
+| `internal/lint/rules.go` | Lint rules WAW001-WAW010 |
+| `internal/lint/rules_extra.go` | Lint rules WAW011-WAW018 |
 | `internal/importer/parser.go` | CloudFormation YAML/JSON parser |
 | `internal/importer/codegen.go` | Go code generator |
 | `intrinsics/intrinsics.go` | Intrinsic function types |
