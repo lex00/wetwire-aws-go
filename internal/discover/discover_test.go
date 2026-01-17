@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	wetwire "github.com/lex00/wetwire-aws-go"
+	coreast "github.com/lex00/wetwire-core-go/ast"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -176,8 +177,8 @@ func TestExtractTypeName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// This would need proper AST parsing to test properly
-			// For now, just verify the function exists
-			_ = extractTypeName
+			// For now, just verify the function exists in core AST package
+			_ = coreast.ExtractTypeName
 		})
 	}
 }
@@ -568,7 +569,7 @@ var MyBucket = s3.Bucket{
 }
 
 func TestExtractTypeName_DefaultCase(t *testing.T) {
-	// Test extractTypeName returns empty strings for unsupported expression types
+	// Test coreast.ExtractTypeName returns empty strings for unsupported expression types
 	// (The function handles *ast.SelectorExpr and *ast.Ident, anything else returns "","")
 
 	// Create a mock expression that is neither SelectorExpr nor Ident
@@ -592,7 +593,7 @@ var x = 42
 	})
 
 	require.NotNil(t, foundExpr)
-	typeName, pkgName := extractTypeName(foundExpr)
+	typeName, pkgName := coreast.ExtractTypeName(foundExpr)
 	assert.Equal(t, "", typeName)
 	assert.Equal(t, "", pkgName)
 }
