@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Linter: Migrated to use `wetwire-core-go/lint` package for shared lint types (#206)
+  - Uses type aliases for `Issue` and `Severity` from core lint package
+  - Maintains backward compatibility with existing code
+  - Reduces duplication across domain repos
+- Deps: Updated wetwire-core-go to v1.16.0 for lint package (#206)
 - MCP: Migrated to `domain.BuildMCPServer()` for auto-generated MCP server (#194)
   - Reduced `cmd/wetwire-aws/mcp.go` from 641 lines to 60 lines (~90% reduction)
   - Removed all manual tool registration and handler functions

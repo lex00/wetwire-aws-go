@@ -32,9 +32,9 @@ var MyFunction = lambda_.Function{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW019", issues[0].RuleID)
+		assert.Equal(t, "WAW019", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "AWS access key")
-		assert.Equal(t, "error", issues[0].Severity)
+		assert.Equal(t, SeverityError, issues[0].Severity)
 	}
 }
 

@@ -27,7 +27,7 @@ var BucketRef = Ref{"MyBucket"}
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW015", issues[0].RuleID)
+		assert.Equal(t, "WAW015", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "Ref{}")
 	}
 }
@@ -66,7 +66,7 @@ var RoleArn = GetAtt{"MyRole", "Arn"}
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW016", issues[0].RuleID)
+		assert.Equal(t, "WAW016", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "GetAtt{}")
 	}
 }
@@ -116,10 +116,10 @@ var MyEncryption = &s3.Bucket_BucketEncryption{
 	// Should detect 2 pointer assignments
 	assert.Len(t, issues, 2)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW017", issues[0].RuleID)
+		assert.Equal(t, "WAW017", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "MyConfig")
 		assert.Contains(t, issues[0].Message, "Bucket_VersioningConfiguration")
-		assert.Equal(t, "error", issues[0].Severity)
+		assert.Equal(t, SeverityError, issues[0].Severity)
 	}
 	if len(issues) > 1 {
 		assert.Contains(t, issues[1].Message, "MyEncryption")
@@ -173,7 +173,7 @@ var MyFunction = lambda_.Function{
 
 	assert.Len(t, issues, 1)
 	if len(issues) > 0 {
-		assert.Equal(t, "WAW018", issues[0].RuleID)
+		assert.Equal(t, "WAW018", issues[0].Rule)
 		assert.Contains(t, issues[0].Message, "Json{}")
 	}
 }

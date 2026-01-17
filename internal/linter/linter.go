@@ -8,6 +8,23 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	corelint "github.com/lex00/wetwire-core-go/lint"
+)
+
+// Type aliases for backward compatibility with core lint package.
+type (
+	// Issue is an alias for corelint.Issue.
+	Issue = corelint.Issue
+	// Severity is an alias for corelint.Severity.
+	Severity = corelint.Severity
+)
+
+// Severity constants for backward compatibility.
+const (
+	SeverityError   = corelint.SeverityError
+	SeverityWarning = corelint.SeverityWarning
+	SeverityInfo    = corelint.SeverityInfo
 )
 
 // Result contains the outcome of linting.

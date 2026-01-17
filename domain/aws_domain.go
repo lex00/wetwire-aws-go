@@ -176,9 +176,9 @@ func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, err
 				Path:     issue.File,
 				Line:     issue.Line,
 				Column:   issue.Column,
-				Severity: issue.Severity,
+				Severity: issue.Severity.String(),
 				Message:  issue.Message,
-				Code:     issue.RuleID,
+				Code:     issue.Rule,
 			})
 		}
 		return NewErrorResultMultiple("lint issues found", errs), nil
