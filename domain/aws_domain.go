@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"context"
 	"fmt"
 	"os"
 
@@ -12,7 +11,7 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/schema"
 	"github.com/lex00/wetwire-aws-go/internal/template"
 	"github.com/lex00/wetwire-aws-go/version"
-	"github.com/lex00/wetwire-core-go/cmd"
+	coredomain "github.com/lex00/wetwire-core-go/domain"
 )
 
 // AwsDomain implements the Domain interface for AWS CloudFormation.
@@ -20,10 +19,10 @@ type AwsDomain struct{}
 
 // Compile-time check that AwsDomain implements Domain and all optional interfaces
 var (
-	_ Domain            = (*AwsDomain)(nil)
-	_ OptionalImporter  = (*AwsDomain)(nil)
-	_ OptionalLister    = (*AwsDomain)(nil)
-	_ OptionalGrapher   = (*AwsDomain)(nil)
+	_ coredomain.Domain         = (*AwsDomain)(nil)
+	_ coredomain.ImporterDomain = (*AwsDomain)(nil)
+	_ coredomain.ListerDomain   = (*AwsDomain)(nil)
+	_ coredomain.GrapherDomain  = (*AwsDomain)(nil)
 )
 
 // Name returns "aws"
@@ -37,44 +36,44 @@ func (d *AwsDomain) Version() string {
 }
 
 // Builder returns the AWS CloudFormation builder implementation
-func (d *AwsDomain) Builder() cmd.Builder {
+func (d *AwsDomain) Builder() coredomain.Builder {
 	return &awsBuilder{}
 }
 
 // Linter returns the AWS linter implementation
-func (d *AwsDomain) Linter() cmd.Linter {
+func (d *AwsDomain) Linter() coredomain.Linter {
 	return &awsLinter{}
 }
 
 // Initializer returns the AWS project initializer implementation
-func (d *AwsDomain) Initializer() cmd.Initializer {
+func (d *AwsDomain) Initializer() coredomain.Initializer {
 	return &awsInitializer{}
 }
 
 // Validator returns the AWS validator implementation
-func (d *AwsDomain) Validator() cmd.Validator {
+func (d *AwsDomain) Validator() coredomain.Validator {
 	return &awsValidator{}
 }
 
 // Importer returns the AWS CloudFormation importer implementation
-func (d *AwsDomain) Importer() Importer {
+func (d *AwsDomain) Importer() coredomain.Importer {
 	return &awsImporter{}
 }
 
 // Lister returns the AWS resource lister implementation
-func (d *AwsDomain) Lister() Lister {
+func (d *AwsDomain) Lister() coredomain.Lister {
 	return &awsLister{}
 }
 
 // Grapher returns the AWS dependency grapher implementation
-func (d *AwsDomain) Grapher() Grapher {
+func (d *AwsDomain) Grapher() coredomain.Grapher {
 	return &awsGrapher{}
 }
 
-// awsBuilder implements cmd.Builder for AWS
+// awsBuilder implements domain.Builder for AWS
 type awsBuilder struct{}
 
-func (b *awsBuilder) Build(ctx context.Context, path string, opts cmd.BuildOptions) error {
+func (b *awsBuilder) Build(ctx *Context, path string, opts BuildOpts) (*Result, error) {
 	packages := []string{path}
 
 	// Discover resources
@@ -82,15 +81,18 @@ func (b *awsBuilder) Build(ctx context.Context, path string, opts cmd.BuildOptio
 		Packages: packages,
 	})
 	if err != nil {
-		return fmt.Errorf("discovery failed: %w", err)
+		return nil, fmt.Errorf("discovery failed: %w", err)
 	}
 
 	// Check for discovery errors
 	if len(result.Errors) > 0 {
+		errs := make([]Error, 0, len(result.Errors))
 		for _, e := range result.Errors {
-			fmt.Fprintln(os.Stderr, e.Error())
+			errs = append(errs, Error{
+				Message: e.Error(),
+			})
 		}
-		return fmt.Errorf("build failed: discovery errors")
+		return NewErrorResultMultiple("discovery errors", errs), nil
 	}
 
 	// Build template
@@ -122,7 +124,7 @@ func (b *awsBuilder) Build(ctx context.Context, path string, opts cmd.BuildOptio
 		result.Conditions,
 	)
 	if err != nil {
-		return fmt.Errorf("extracting values: %w", err)
+		return nil, fmt.Errorf("extracting values: %w", err)
 	}
 
 	// Set all extracted values
@@ -144,89 +146,60 @@ func (b *awsBuilder) Build(ctx context.Context, path string, opts cmd.BuildOptio
 
 	tmpl, err := builder.Build()
 	if err != nil {
-		return fmt.Errorf("building template: %w", err)
+		return nil, fmt.Errorf("building template: %w", err)
 	}
 
-	// Output template
-	var data []byte
-	if opts.Output == "" || opts.Output == "-" {
-		data, err = template.ToJSON(tmpl)
-		if err != nil {
-			return fmt.Errorf("serializing template: %w", err)
-		}
-		fmt.Println(string(data))
-	} else {
-		// Determine format from file extension
-		format := "json"
-		if len(opts.Output) > 5 && opts.Output[len(opts.Output)-5:] == ".yaml" {
-			format = "yaml"
-		} else if len(opts.Output) > 4 && opts.Output[len(opts.Output)-4:] == ".yml" {
-			format = "yaml"
-		}
-
-		if format == "yaml" {
-			data, err = template.ToYAML(tmpl)
-		} else {
-			data, err = template.ToJSON(tmpl)
-		}
-		if err != nil {
-			return fmt.Errorf("serializing template: %w", err)
-		}
-
-		if err := os.WriteFile(opts.Output, data, 0644); err != nil {
-			return fmt.Errorf("writing output file: %w", err)
-		}
+	// Serialize template to JSON for the result
+	data, err := template.ToJSON(tmpl)
+	if err != nil {
+		return nil, fmt.Errorf("serializing template: %w", err)
 	}
 
-	return nil
+	// Return the JSON as the result data
+	return NewResultWithData("Build completed", string(data)), nil
 }
 
-// awsLinter implements cmd.Linter for AWS
+// awsLinter implements domain.Linter for AWS
 type awsLinter struct{}
 
-func (l *awsLinter) Lint(ctx context.Context, path string, opts cmd.LintOptions) ([]cmd.Issue, error) {
+func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, error) {
 	result, err := linter.LintPackage(path, linter.Options{})
 	if err != nil {
 		return nil, fmt.Errorf("linting failed: %w", err)
 	}
 
-	// Convert linter issues to cmd.Issue format
-	issues := make([]cmd.Issue, 0, len(result.Issues))
-	for _, issue := range result.Issues {
-		issues = append(issues, cmd.Issue{
-			File:     issue.File,
-			Line:     issue.Line,
-			Column:   issue.Column,
-			Severity: issue.Severity,
-			Message:  issue.Message,
-			Rule:     issue.RuleID,
-		})
-	}
-
-	// Output issues to stderr
-	if !opts.Verbose && len(issues) > 0 {
-		for _, issue := range issues {
-			fmt.Fprintf(os.Stderr, "%s:%d:%d: %s (%s)\n",
-				issue.File, issue.Line, issue.Column, issue.Message, issue.Rule)
+	// Convert linter issues to domain.Error format
+	if len(result.Issues) > 0 {
+		errs := make([]Error, 0, len(result.Issues))
+		for _, issue := range result.Issues {
+			errs = append(errs, Error{
+				Path:     issue.File,
+				Line:     issue.Line,
+				Column:   issue.Column,
+				Severity: issue.Severity,
+				Message:  issue.Message,
+				Code:     issue.RuleID,
+			})
 		}
+		return NewErrorResultMultiple("lint issues found", errs), nil
 	}
 
-	return issues, nil
+	return NewResult("No lint issues found"), nil
 }
 
-// awsInitializer implements cmd.Initializer for AWS
+// awsInitializer implements domain.Initializer for AWS
 type awsInitializer struct{}
 
-func (i *awsInitializer) Init(ctx context.Context, name string, opts cmd.InitOptions) error {
+func (i *awsInitializer) Init(ctx *Context, path string, opts InitOpts) (*Result, error) {
 	// Use the existing init logic from init.go
 	// For now, this is a placeholder that would need the actual implementation
-	return fmt.Errorf("init not yet implemented via domain interface")
+	return nil, fmt.Errorf("init not yet implemented via domain interface")
 }
 
-// awsValidator implements cmd.Validator for AWS
+// awsValidator implements domain.Validator for AWS
 type awsValidator struct{}
 
-func (v *awsValidator) Validate(ctx context.Context, path string, opts cmd.ValidateOptions) ([]cmd.ValidationError, error) {
+func (v *awsValidator) Validate(ctx *Context, path string, opts ValidateOpts) (*Result, error) {
 	packages := []string{path}
 
 	// First build the template
@@ -292,42 +265,44 @@ func (v *awsValidator) Validate(ctx context.Context, path string, opts cmd.Valid
 	}
 
 	// Validate the template
-	validationResult, err := schema.ValidateTemplate(tmpl, schema.Options{
-		Strict: opts.Strict,
-	})
+	validationResult, err := schema.ValidateTemplate(tmpl, schema.Options{})
 	if err != nil {
 		return nil, fmt.Errorf("validation failed: %w", err)
 	}
 
-	// Convert validation errors to cmd.ValidationError format
-	errors := make([]cmd.ValidationError, 0, len(validationResult.Errors))
-	for _, verr := range validationResult.Errors {
-		errors = append(errors, cmd.ValidationError{
-			Path:    fmt.Sprintf("%s.%s", verr.Resource, verr.Property),
-			Message: verr.Message,
-			Code:    verr.Resource,
-		})
+	// Convert validation errors to domain.Error format
+	if len(validationResult.Errors) > 0 {
+		errs := make([]Error, 0, len(validationResult.Errors))
+		for _, verr := range validationResult.Errors {
+			errs = append(errs, Error{
+				Path:    fmt.Sprintf("%s.%s", verr.Resource, verr.Property),
+				Message: verr.Message,
+				Code:    verr.Resource,
+			})
+		}
+		return NewErrorResultMultiple("validation errors", errs), nil
 	}
 
-	return errors, nil
+	return NewResult("Validation passed"), nil
 }
 
-// awsImporter implements Importer for AWS
+// awsImporter implements domain.Importer for AWS
 type awsImporter struct{}
 
-func (i *awsImporter) Import(inputPath, outputPath string) error {
+func (i *awsImporter) Import(ctx *Context, source string, opts ImportOpts) (*Result, error) {
+	outputPath := opts.Target
 	if outputPath == "" {
 		outputPath = "imported.go"
 	}
 
 	// Parse the CloudFormation template
-	irTemplate, err := importer.ParseTemplate(inputPath)
+	irTemplate, err := importer.ParseTemplate(source)
 	if err != nil {
-		return fmt.Errorf("parsing template: %w", err)
+		return nil, fmt.Errorf("parsing template: %w", err)
 	}
 
 	// Generate Go code
-	packageName := importer.DerivePackageName(inputPath)
+	packageName := importer.DerivePackageName(source)
 	files := importer.GenerateCode(irTemplate, packageName)
 
 	// Write the main file
@@ -340,69 +315,65 @@ func (i *awsImporter) Import(inputPath, outputPath string) error {
 	}
 
 	if mainContent == "" {
-		return fmt.Errorf("no main content generated")
+		return nil, fmt.Errorf("no main content generated")
 	}
 
 	if err := os.WriteFile(outputPath, []byte(mainContent), 0644); err != nil {
-		return fmt.Errorf("writing output: %w", err)
+		return nil, fmt.Errorf("writing output: %w", err)
 	}
 
-	fmt.Printf("Imported template to %s\n", outputPath)
-	return nil
+	return NewResult(fmt.Sprintf("Imported template to %s", outputPath)), nil
 }
 
-// awsLister implements Lister for AWS
+// awsLister implements domain.Lister for AWS
 type awsLister struct{}
 
-func (l *awsLister) List(packages []string, format string) error {
+func (l *awsLister) List(ctx *Context, path string, opts ListOpts) (*Result, error) {
 	result, err := discover.Discover(discover.Options{
-		Packages: packages,
+		Packages: []string{path},
 	})
 	if err != nil {
-		return fmt.Errorf("discovery failed: %w", err)
+		return nil, fmt.Errorf("discovery failed: %w", err)
 	}
 
-	switch format {
-	case "text":
-		fmt.Printf("Discovered %d resources:\n", len(result.Resources))
-		for name, res := range result.Resources {
-			fmt.Printf("  - %s (%s)\n", name, res.Type)
-		}
-	case "json", "yaml":
-		// TODO: Implement JSON/YAML output
-		return fmt.Errorf("format %s not yet implemented", format)
-	default:
-		return fmt.Errorf("unknown format: %s", format)
+	// Build a list of resources
+	resources := make([]map[string]string, 0, len(result.Resources))
+	for name, res := range result.Resources {
+		resources = append(resources, map[string]string{
+			"name": name,
+			"type": res.Type,
+		})
 	}
 
-	return nil
+	return NewResultWithData(fmt.Sprintf("Discovered %d resources", len(result.Resources)), resources), nil
 }
 
-// awsGrapher implements Grapher for AWS
+// awsGrapher implements domain.Grapher for AWS
 type awsGrapher struct{}
 
-func (g *awsGrapher) Graph(packages []string, format string) error {
+func (g *awsGrapher) Graph(ctx *Context, path string, opts GraphOpts) (*Result, error) {
 	result, err := discover.Discover(discover.Options{
-		Packages: packages,
+		Packages: []string{path},
 	})
 	if err != nil {
-		return fmt.Errorf("discovery failed: %w", err)
+		return nil, fmt.Errorf("discovery failed: %w", err)
 	}
 
-	switch format {
-	case "dot":
-		// Generate DOT format graph
-		fmt.Println("digraph G {")
+	// Generate DOT format graph as string
+	var graph string
+	switch opts.Format {
+	case "dot", "":
+		graph = "digraph G {\n"
 		for name := range result.Resources {
-			fmt.Printf("  %s;\n", name)
+			graph += fmt.Sprintf("  %s;\n", name)
 		}
 		// TODO: Add edges based on dependencies
-		fmt.Println("}")
+		graph += "}"
 	case "mermaid":
-		return fmt.Errorf("mermaid format not yet implemented")
+		return nil, fmt.Errorf("mermaid format not yet implemented")
 	default:
-		return fmt.Errorf("unknown format: %s", format)
+		return nil, fmt.Errorf("unknown format: %s", opts.Format)
 	}
 
-	return nil
+	return NewResultWithData("Graph generated", graph), nil
 }

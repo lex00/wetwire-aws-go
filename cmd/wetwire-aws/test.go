@@ -284,7 +284,7 @@ func runTestWithProvider(prompt, outputDir, personaName, scenario string, maxLin
 		Session:       session,
 		Developer:     developer,
 		StreamHandler: streamHandler,
-		Domain:        agents.DefaultAWSDomain(),
+		Domain:        DefaultAWSDomain(),
 	})
 	if err != nil {
 		return fmt.Errorf("creating runner: %w", err)

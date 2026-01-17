@@ -125,7 +125,8 @@ func runRoundTrip(t *testing.T, templatePath, cliPath string) {
 	}
 
 	// Step 7: Run wetwire-aws build to generate CloudFormation template
-	buildCmd := exec.Command(cliPath, "build", projectDir)
+	// Use --format=raw to get raw CloudFormation JSON output
+	buildCmd := exec.Command(cliPath, "build", projectDir, "--format", "raw")
 	buildOutput, err := buildCmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("wetwire-aws build failed: %v\n%s", err, buildOutput)

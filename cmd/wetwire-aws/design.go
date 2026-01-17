@@ -173,7 +173,7 @@ func runDesignWithProvider(prompt, outputDir string, maxLintCycles int, stream b
 		Session:       session,
 		Developer:     developer,
 		StreamHandler: streamHandler,
-		Domain:        agents.DefaultAWSDomain(),
+		Domain:        DefaultAWSDomain(),
 	})
 	if err != nil {
 		return fmt.Errorf("creating runner: %w", err)
