@@ -50,7 +50,7 @@ chore: Update dependencies
 
 ## Adding a New Lint Rule
 
-1. Add rule to `internal/linter/rules.go` or `rules_extra.go`
+1. Add rule to `internal/lint/rules.go` or `rules_extra.go`
 2. Implement the check in `checkFile()` or appropriate function
 3. Add test case in `rules_test.go`
 4. Update docs/FAQ.md with the new rule

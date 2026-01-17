@@ -652,7 +652,7 @@ Currently, individual rules cannot be disabled. To skip linting, simply don't ru
 
 To add new lint rules:
 
-1. Add the rule struct in `internal/linter/rules.go` or `rules_extra.go`
+1. Add the rule struct in `internal/lint/rules.go` or `rules_extra.go`
 2. Implement the `Rule` interface: `ID()`, `Description()`, `Check()`
 3. Add to `AllRules()` function
 4. Add tests in `rules_test.go`

@@ -1,5 +1,5 @@
-// Package linter provides lint rules for wetwire-aws Go code.
-package linter
+// Package lint provides lint rules for wetwire-aws Go code.
+package lint
 
 import (
 	"go/ast"
