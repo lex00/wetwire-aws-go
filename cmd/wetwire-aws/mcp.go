@@ -25,13 +25,12 @@ import (
 	"os"
 	"path/filepath"
 
-	coremcp "github.com/lex00/wetwire-core-go/mcp"
-	"github.com/spf13/cobra"
-
 	"github.com/lex00/wetwire-aws-go/domain"
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 	"github.com/lex00/wetwire-aws-go/version"
-	awsdomain "github.com/lex00/wetwire-core-go/cmd"
+	coredomain "github.com/lex00/wetwire-core-go/domain"
+	coremcp "github.com/lex00/wetwire-core-go/mcp"
+	"github.com/spf13/cobra"
 )
 
 func newMCPCmd() *cobra.Command {
@@ -286,9 +285,7 @@ Thumbs.db
 func makeDomainBuildHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 	return func(ctx context.Context, args map[string]any) (string, error) {
 		pkg, _ := args["package"].(string)
-		output, _ := args["output"].(string)
 		format, _ := args["format"].(string)
-		dryRun, _ := args["dry_run"].(bool)
 
 		result := MCPBuildResult{}
 
@@ -297,48 +294,34 @@ func makeDomainBuildHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 		}
 
 		if format == "" {
-			format = "yaml"
-		}
-		if format != "json" && format != "yaml" {
-			result.Errors = append(result.Errors, fmt.Sprintf("invalid format: %s (use json or yaml)", format))
-			return toJSON(result)
+			format = "json"
 		}
 
 		// Use the domain's Builder implementation
 		builder := d.Builder()
-		opts := awsdomain.BuildOptions{
-			Output: output,
-		}
-
-		// Create a temporary file if dry run or no output specified
-		needsTempFile := dryRun || output == ""
-		if needsTempFile {
-			tmpFile, err := os.CreateTemp("", "wetwire-aws-*."+format)
-			if err != nil {
-				result.Errors = append(result.Errors, fmt.Sprintf("creating temp file: %v", err))
-				return toJSON(result)
-			}
-			defer os.Remove(tmpFile.Name())
-			tmpFile.Close()
-			opts.Output = tmpFile.Name()
+		domainCtx := coredomain.NewContext(ctx, pkg)
+		opts := coredomain.BuildOpts{
+			Format: format,
 		}
 
 		// Build the template
-		if err := builder.Build(ctx, pkg, opts); err != nil {
+		buildResult, err := builder.Build(domainCtx, pkg, opts)
+		if err != nil {
 			result.Errors = append(result.Errors, err.Error())
 			return toJSON(result)
 		}
 
-		// If dry run or no output, read the temp file
-		if needsTempFile {
-			data, err := os.ReadFile(opts.Output)
-			if err != nil {
-				result.Errors = append(result.Errors, fmt.Sprintf("reading output: %v", err))
-				return toJSON(result)
+		// Check if build was successful
+		if !buildResult.Success {
+			for _, e := range buildResult.Errors {
+				result.Errors = append(result.Errors, e.Message)
 			}
-			result.Template = string(data)
-		} else {
-			result.Template = fmt.Sprintf("Written to %s", output)
+			return toJSON(result)
+		}
+
+		// Get the template from the result data
+		if template, ok := buildResult.Data.(string); ok {
+			result.Template = template
 		}
 
 		// Get resource list
@@ -369,7 +352,8 @@ func makeDomainLintHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 
 		// Use the domain's Linter implementation
 		linter := d.Linter()
-		issues, err := linter.Lint(ctx, pkg, awsdomain.LintOptions{})
+		domainCtx := coredomain.NewContext(ctx, pkg)
+		lintResult, err := linter.Lint(domainCtx, pkg, coredomain.LintOpts{})
 		if err != nil {
 			result.Issues = append(result.Issues, MCPLintIssue{
 				Severity: "error",
@@ -379,19 +363,19 @@ func makeDomainLintHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 			return toJSON(result)
 		}
 
-		// Convert issues to MCP format
-		for _, issue := range issues {
+		// Convert errors to MCP format
+		for _, issue := range lintResult.Errors {
 			result.Issues = append(result.Issues, MCPLintIssue{
 				Severity: issue.Severity,
 				Message:  issue.Message,
-				RuleID:   issue.Rule,
-				File:     issue.File,
+				RuleID:   issue.Code,
+				File:     issue.Path,
 				Line:     issue.Line,
 				Column:   issue.Column,
 			})
 		}
 
-		result.Success = len(result.Issues) == 0
+		result.Success = lintResult.Success
 		return toJSON(result)
 	}
 }
@@ -416,17 +400,18 @@ func makeDomainValidateHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 
 		// Use the domain's Validator implementation
 		validator := d.Validator()
-		errors, err := validator.Validate(ctx, path, awsdomain.ValidateOptions{})
+		domainCtx := coredomain.NewContext(ctx, path)
+		validateResult, err := validator.Validate(domainCtx, path, coredomain.ValidateOpts{})
 		if err != nil {
 			result.Error = fmt.Sprintf("validation failed: %v", err)
 			return toJSON(result)
 		}
 
-		result.Success = len(errors) == 0
-		if len(errors) > 0 {
-			result.Error = fmt.Sprintf("found %d validation errors", len(errors))
+		result.Success = validateResult.Success
+		if !validateResult.Success {
+			result.Error = fmt.Sprintf("found %d validation errors", len(validateResult.Errors))
 		} else {
-			result.Message = "Template is valid"
+			result.Message = validateResult.Message
 		}
 
 		return toJSON(result)
@@ -435,7 +420,7 @@ func makeDomainValidateHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 
 // makeDomainImportHandler creates an MCP handler from the domain's Importer
 func makeDomainImportHandler(d *domain.AwsDomain) coremcp.ToolHandler {
-	return func(_ context.Context, args map[string]any) (string, error) {
+	return func(ctx context.Context, args map[string]any) (string, error) {
 		files, _ := args["files"].([]any)
 		output, _ := args["output"].(string)
 
@@ -462,8 +447,16 @@ func makeDomainImportHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 			// Generate output file name
 			outFile := filepath.Join(output, filepath.Base(filePath)+".go")
 
-			if err := importer.Import(filePath, outFile); err != nil {
+			domainCtx := coredomain.NewContext(ctx, output)
+			importResult, err := importer.Import(domainCtx, filePath, coredomain.ImportOpts{
+				Target: outFile,
+			})
+			if err != nil {
 				result.Error = fmt.Sprintf("importing %s: %v", filePath, err)
+				return toJSON(result)
+			}
+			if !importResult.Success {
+				result.Error = fmt.Sprintf("importing %s: %s", filePath, importResult.Message)
 				return toJSON(result)
 			}
 			result.Files = append(result.Files, outFile)
@@ -476,7 +469,7 @@ func makeDomainImportHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 
 // makeDomainListHandler creates an MCP handler from the domain's Lister
 func makeDomainListHandler(d *domain.AwsDomain) coremcp.ToolHandler {
-	return func(_ context.Context, args map[string]any) (string, error) {
+	return func(ctx context.Context, args map[string]any) (string, error) {
 		pkg, _ := args["package"].(string)
 
 		result := MCPListResult{}
@@ -485,21 +478,40 @@ func makeDomainListHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 			pkg = "./..."
 		}
 
-		// Discover resources directly (since Lister doesn't return data)
-		discoverResult, err := discover.Discover(discover.Options{
-			Packages: []string{pkg},
-		})
+		// Use the domain's Lister implementation
+		lister := d.Lister()
+		domainCtx := coredomain.NewContext(ctx, pkg)
+		listResult, err := lister.List(domainCtx, pkg, coredomain.ListOpts{})
 		if err != nil {
-			result.Error = fmt.Sprintf("discovery failed: %v", err)
+			result.Error = fmt.Sprintf("list failed: %v", err)
 			return toJSON(result)
 		}
 
-		for name, info := range discoverResult.Resources {
-			result.Resources = append(result.Resources, MCPResourceInfo{
-				Name: name,
-				Type: info.Type,
-				File: info.File,
+		// Extract resources from result data
+		if resources, ok := listResult.Data.([]map[string]string); ok {
+			for _, res := range resources {
+				result.Resources = append(result.Resources, MCPResourceInfo{
+					Name: res["name"],
+					Type: res["type"],
+				})
+			}
+		} else {
+			// Fallback to discover for detailed info
+			discoverResult, err := discover.Discover(discover.Options{
+				Packages: []string{pkg},
 			})
+			if err != nil {
+				result.Error = fmt.Sprintf("discovery failed: %v", err)
+				return toJSON(result)
+			}
+
+			for name, info := range discoverResult.Resources {
+				result.Resources = append(result.Resources, MCPResourceInfo{
+					Name: name,
+					Type: info.Type,
+					File: info.File,
+				})
+			}
 		}
 
 		result.Success = true
@@ -509,7 +521,7 @@ func makeDomainListHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 
 // makeDomainGraphHandler creates an MCP handler from the domain's Grapher
 func makeDomainGraphHandler(d *domain.AwsDomain) coremcp.ToolHandler {
-	return func(_ context.Context, args map[string]any) (string, error) {
+	return func(ctx context.Context, args map[string]any) (string, error) {
 		pkg, _ := args["package"].(string)
 		format, _ := args["format"].(string)
 
@@ -520,12 +532,31 @@ func makeDomainGraphHandler(d *domain.AwsDomain) coremcp.ToolHandler {
 		}
 
 		if format == "" {
-			format = "mermaid"
+			format = "dot"
 		}
 
-		// TODO: Implement graph generation from domain's Grapher
-		result.Success = false
-		result.Error = "graph generation not yet fully implemented"
+		// Use the domain's Grapher implementation
+		grapher := d.Grapher()
+		domainCtx := coredomain.NewContext(ctx, pkg)
+		graphResult, err := grapher.Graph(domainCtx, pkg, coredomain.GraphOpts{
+			Format: format,
+		})
+		if err != nil {
+			result.Error = fmt.Sprintf("graph failed: %v", err)
+			return toJSON(result)
+		}
+
+		if !graphResult.Success {
+			result.Error = graphResult.Message
+			return toJSON(result)
+		}
+
+		// Get the graph from the result data
+		if graph, ok := graphResult.Data.(string); ok {
+			result.Graph = graph
+		}
+
+		result.Success = true
 		return toJSON(result)
 	}
 }
@@ -550,8 +581,8 @@ type MCPBuildResult struct {
 
 // MCPLintResult is the result of the wetwire_lint tool.
 type MCPLintResult struct {
-	Success bool            `json:"success"`
-	Issues  []MCPLintIssue  `json:"issues,omitempty"`
+	Success bool           `json:"success"`
+	Issues  []MCPLintIssue `json:"issues,omitempty"`
 }
 
 // MCPLintIssue represents a single lint issue.

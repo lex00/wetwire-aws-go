@@ -2,98 +2,90 @@
 package domain
 
 import (
-	"github.com/lex00/wetwire-core-go/cmd"
+	"github.com/lex00/wetwire-core-go/domain"
 	"github.com/spf13/cobra"
 )
 
-// Domain represents a wetwire domain (e.g., "aws", "honeycomb") that provides
-// infrastructure-as-code capabilities. Domains implement this interface to
-// enable automatic CLI command generation.
-type Domain interface {
-	// Name returns the domain name (e.g., "aws", "honeycomb")
-	Name() string
+// Re-export core domain types for convenience
+type (
+	// Domain is the core interface for wetwire domains.
+	Domain = domain.Domain
 
-	// Version returns the current version of the domain
-	Version() string
+	// ImporterDomain is an optional interface for domains that support importing.
+	ImporterDomain = domain.ImporterDomain
 
-	// Builder returns the implementation for building infrastructure
-	Builder() cmd.Builder
+	// ListerDomain is an optional interface for domains that support listing.
+	ListerDomain = domain.ListerDomain
 
-	// Linter returns the implementation for linting source files
-	Linter() cmd.Linter
+	// GrapherDomain is an optional interface for domains that support graphing.
+	GrapherDomain = domain.GrapherDomain
 
-	// Initializer returns the implementation for creating new projects
-	Initializer() cmd.Initializer
+	// Builder builds domain resources from source code.
+	Builder = domain.Builder
 
-	// Validator returns the implementation for validating infrastructure
-	Validator() cmd.Validator
-}
+	// Linter validates domain resources according to domain-specific rules.
+	Linter = domain.Linter
 
-// OptionalImporter provides import functionality (e.g., YAML/JSON to Go)
-type OptionalImporter interface {
-	Importer() Importer
-}
+	// Initializer creates new domain projects with example code.
+	Initializer = domain.Initializer
 
-// OptionalLister provides resource listing functionality
-type OptionalLister interface {
-	Lister() Lister
-}
+	// Validator validates that generated output conforms to domain specifications.
+	Validator = domain.Validator
 
-// OptionalGrapher provides dependency graph generation
-type OptionalGrapher interface {
-	Grapher() Grapher
-}
+	// Importer imports external resources or configurations into the domain.
+	Importer = domain.Importer
 
-// Importer converts external formats to domain source code
-type Importer interface {
-	Import(inputPath, outputPath string) error
-}
+	// Lister discovers and lists domain resources.
+	Lister = domain.Lister
 
-// Lister lists discovered resources in packages
-type Lister interface {
-	List(packages []string, format string) error
-}
+	// Grapher visualizes relationships between domain resources.
+	Grapher = domain.Grapher
 
-// Grapher generates dependency graphs
-type Grapher interface {
-	Graph(packages []string, format string) error
-}
+	// Context wraps context.Context with additional domain operation context.
+	Context = domain.Context
+
+	// Result represents the outcome of a domain operation.
+	Result = domain.Result
+
+	// Error represents a structured error with location and context information.
+	Error = domain.Error
+
+	// BuildOpts contains options for the Build operation.
+	BuildOpts = domain.BuildOpts
+
+	// LintOpts contains options for the Lint operation.
+	LintOpts = domain.LintOpts
+
+	// InitOpts contains options for the Init operation.
+	InitOpts = domain.InitOpts
+
+	// ValidateOpts contains options for the Validate operation.
+	ValidateOpts = domain.ValidateOpts
+
+	// ImportOpts contains options for the Import operation.
+	ImportOpts = domain.ImportOpts
+
+	// ListOpts contains options for the List operation.
+	ListOpts = domain.ListOpts
+
+	// GraphOpts contains options for the Graph operation.
+	GraphOpts = domain.GraphOpts
+)
+
+// Re-export constructors
+var (
+	NewResult              = domain.NewResult
+	NewResultWithData      = domain.NewResultWithData
+	NewErrorResult         = domain.NewErrorResult
+	NewErrorResultMultiple = domain.NewErrorResultMultiple
+	NewContext             = domain.NewContext
+	NewContextWithVerbose  = domain.NewContextWithVerbose
+)
 
 // CreateRootCommand creates a root command with all standard domain commands.
 // This allows callers to add additional domain-specific commands before executing.
 func CreateRootCommand(d Domain) *cobra.Command {
-	description := "Infrastructure as Code for " + d.Name()
-	root := cmd.NewRootCommand("wetwire-"+d.Name(), description)
-
-	// Add version command
-	root.AddCommand(&cobra.Command{
-		Use:   "version",
-		Short: "Show version information",
-		Run: func(cmd *cobra.Command, args []string) {
-			println("wetwire-" + d.Name() + " " + d.Version())
-		},
-	})
-
-	// Add core commands
-	root.AddCommand(cmd.NewBuildCommand(d.Builder()))
-	root.AddCommand(cmd.NewLintCommand(d.Linter()))
-	root.AddCommand(cmd.NewInitCommand(d.Initializer()))
-	root.AddCommand(cmd.NewValidateCommand(d.Validator()))
-
-	// Add optional commands if implemented
-	if importer, ok := d.(OptionalImporter); ok {
-		root.AddCommand(newImportCommand(importer.Importer()))
-	}
-
-	if lister, ok := d.(OptionalLister); ok {
-		root.AddCommand(newListCommand(lister.Lister()))
-	}
-
-	if grapher, ok := d.(OptionalGrapher); ok {
-		root.AddCommand(newGraphCommand(grapher.Grapher()))
-	}
-
-	return root
+	return domain.Run(d)
 }
 
 // Run creates and executes a CLI for the given domain.
@@ -101,55 +93,4 @@ func CreateRootCommand(d Domain) *cobra.Command {
 func Run(d Domain) error {
 	root := CreateRootCommand(d)
 	return root.Execute()
-}
-
-func newImportCommand(importer Importer) *cobra.Command {
-	var outputPath string
-
-	cmd := &cobra.Command{
-		Use:   "import [input]",
-		Short: "Import external format to domain source code",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return importer.Import(args[0], outputPath)
-		},
-	}
-
-	cmd.Flags().StringVarP(&outputPath, "output", "o", "", "Output file path")
-
-	return cmd
-}
-
-func newListCommand(lister Lister) *cobra.Command {
-	var format string
-
-	cmd := &cobra.Command{
-		Use:   "list [packages...]",
-		Short: "List discovered resources",
-		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return lister.List(args, format)
-		},
-	}
-
-	cmd.Flags().StringVarP(&format, "format", "f", "text", "Output format: text, json, yaml")
-
-	return cmd
-}
-
-func newGraphCommand(grapher Grapher) *cobra.Command {
-	var format string
-
-	cmd := &cobra.Command{
-		Use:   "graph [packages...]",
-		Short: "Generate dependency graph",
-		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return grapher.Graph(args, format)
-		},
-	}
-
-	cmd.Flags().StringVarP(&format, "format", "f", "dot", "Output format: dot, mermaid")
-
-	return cmd
 }

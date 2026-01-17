@@ -88,7 +88,8 @@ func TestExamplesBuild(t *testing.T) {
 			}
 
 			// Step 2: Run wetwire-aws build to generate CF output
-			buildCmd := exec.Command(cliPath, "build", examplePath)
+			// Use --format=raw to get raw CloudFormation JSON (not wrapped in Result)
+			buildCmd := exec.Command(cliPath, "build", examplePath, "--format", "raw")
 			buildOutput, err := buildCmd.CombinedOutput()
 			if err != nil {
 				t.Fatalf("wetwire-aws build failed for %s: %v\n%s", example, err, string(buildOutput))
