@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 	"github.com/lex00/wetwire-aws-go/internal/importer"
@@ -190,9 +191,157 @@ func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, err
 type awsInitializer struct{}
 
 func (i *awsInitializer) Init(ctx *Context, path string, opts InitOpts) (*Result, error) {
-	// Use the existing init logic from init.go
-	// For now, this is a placeholder that would need the actual implementation
-	return nil, fmt.Errorf("init not yet implemented via domain interface")
+	// Use opts.Path if provided, otherwise fall back to path argument
+	targetPath := opts.Path
+	if targetPath == "" || targetPath == "." {
+		targetPath = path
+	}
+
+	// Handle scenario initialization
+	if opts.Scenario {
+		return i.initScenario(ctx, targetPath, opts)
+	}
+
+	// Basic project initialization
+	return i.initProject(ctx, targetPath, opts)
+}
+
+// initScenario creates a full scenario structure with prompts and expected outputs
+func (i *awsInitializer) initScenario(ctx *Context, path string, opts InitOpts) (*Result, error) {
+	name := opts.Name
+	if name == "" {
+		name = filepath.Base(path)
+	}
+
+	description := opts.Description
+	if description == "" {
+		description = "AWS CloudFormation scenario"
+	}
+
+	// Use core's scenario scaffolding
+	scenario := coredomain.ScaffoldScenario(name, description, "aws")
+	created, err := coredomain.WriteScenario(path, scenario)
+	if err != nil {
+		return nil, fmt.Errorf("write scenario: %w", err)
+	}
+
+	// Create AWS-specific expected directories
+	expectedDirs := []string{
+		filepath.Join(path, "expected", "resources"),
+		filepath.Join(path, "expected", "parameters"),
+		filepath.Join(path, "expected", "outputs"),
+	}
+	for _, dir := range expectedDirs {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return nil, fmt.Errorf("create directory %s: %w", dir, err)
+		}
+	}
+
+	// Create example CloudFormation code in expected/resources/
+	exampleResource := `package resources
+
+import (
+	"github.com/lex00/wetwire-aws-go/ec2"
+	"github.com/lex00/wetwire-aws-go/iam"
+)
+
+// WebServerRole is the IAM role for the web server instance
+var WebServerRole = iam.Role{
+	AssumeRolePolicyDocument: map[string]interface{}{
+		"Version": "2012-10-17",
+		"Statement": []map[string]interface{}{
+			{
+				"Effect": "Allow",
+				"Principal": map[string]interface{}{
+					"Service": "ec2.amazonaws.com",
+				},
+				"Action": "sts:AssumeRole",
+			},
+		},
+	},
+	ManagedPolicyArns: []string{
+		"arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+	},
+}
+
+// WebServerInstance is an EC2 instance for the web server
+var WebServerInstance = ec2.Instance{
+	InstanceType: "t3.micro",
+	ImageId:      "ami-0c55b159cbfafe1f0", // Amazon Linux 2
+	IamInstanceProfile: WebServerRole,
+	Tags: []map[string]interface{}{
+		{
+			"Key":   "Name",
+			"Value": "WebServer",
+		},
+	},
+}
+`
+	resourcePath := filepath.Join(path, "expected", "resources", "resources.go")
+	if err := os.WriteFile(resourcePath, []byte(exampleResource), 0644); err != nil {
+		return nil, fmt.Errorf("write example resource: %w", err)
+	}
+	created = append(created, "expected/resources/resources.go")
+
+	return NewResultWithData(
+		fmt.Sprintf("Created scenario %s with %d files", name, len(created)),
+		created,
+	), nil
+}
+
+// initProject creates a basic project with example resources
+func (i *awsInitializer) initProject(ctx *Context, path string, opts InitOpts) (*Result, error) {
+	// Create directory
+	if err := os.MkdirAll(path, 0755); err != nil {
+		return nil, fmt.Errorf("create directory: %w", err)
+	}
+
+	// Create go.mod
+	name := opts.Name
+	if name == "" {
+		name = filepath.Base(path)
+	}
+	goMod := fmt.Sprintf(`module %s
+
+go 1.23
+
+require github.com/lex00/wetwire-aws-go v0.0.0
+`, name)
+	goModPath := filepath.Join(path, "go.mod")
+	if err := os.WriteFile(goModPath, []byte(goMod), 0644); err != nil {
+		return nil, fmt.Errorf("write go.mod: %w", err)
+	}
+
+	// Create example resource file
+	exampleContent := `package main
+
+import (
+	"github.com/lex00/wetwire-aws-go/s3"
+)
+
+// MyBucket is an S3 bucket for storing application data
+var MyBucket = s3.Bucket{
+	BucketName: "my-app-bucket", // TODO: Change to unique name
+	VersioningConfiguration: &s3.VersioningConfiguration{
+		Status: "Enabled",
+	},
+	PublicAccessBlockConfiguration: &s3.PublicAccessBlockConfiguration{
+		BlockPublicAcls:       true,
+		BlockPublicPolicy:     true,
+		IgnorePublicAcls:      true,
+		RestrictPublicBuckets: true,
+	},
+}
+`
+	examplePath := filepath.Join(path, "main.go")
+	if err := os.WriteFile(examplePath, []byte(exampleContent), 0644); err != nil {
+		return nil, fmt.Errorf("write example: %w", err)
+	}
+
+	return NewResultWithData(
+		fmt.Sprintf("Created %s with example resources", path),
+		[]string{"go.mod", "main.go"},
+	), nil
 }
 
 // awsValidator implements domain.Validator for AWS
