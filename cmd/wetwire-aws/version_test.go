@@ -4,27 +4,27 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lex00/wetwire-aws-go/version"
+	"github.com/lex00/wetwire-aws-go/domain"
 )
 
 func TestGetVersion(t *testing.T) {
-	v := version.Version()
+	v := domain.Version
 
 	// Version should not be empty
 	if v == "" {
-		t.Error("Version() returned empty string")
+		t.Error("Version is empty")
 	}
 
-	// When running tests (not via go install), version should be "dev"
-	// or a valid semver when installed via go install @version
+	// When running tests, version should be "dev"
+	// or a valid semver when built with ldflags
 	if v != "dev" && !strings.HasPrefix(v, "v") {
-		t.Errorf("Version() = %q, want 'dev' or 'vX.Y.Z'", v)
+		t.Errorf("Version = %q, want 'dev' or 'vX.Y.Z'", v)
 	}
 }
 
 func TestGetVersionNotEmpty(t *testing.T) {
-	// Ensure the version function always returns something useful
-	v := version.Version()
+	// Ensure the version is always set to something useful
+	v := domain.Version
 	if len(v) == 0 {
 		t.Error("version should not be empty")
 	}

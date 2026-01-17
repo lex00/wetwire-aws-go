@@ -6,6 +6,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version is set via ldflags at build time.
+var Version = "dev"
+
 // Re-export core domain types for convenience
 type (
 	// Domain is the core interface for wetwire domains.

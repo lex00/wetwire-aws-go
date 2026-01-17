@@ -10,7 +10,6 @@ import (
 	"github.com/lex00/wetwire-aws-go/internal/runner"
 	"github.com/lex00/wetwire-aws-go/internal/schema"
 	"github.com/lex00/wetwire-aws-go/internal/template"
-	"github.com/lex00/wetwire-aws-go/version"
 	coredomain "github.com/lex00/wetwire-core-go/domain"
 )
 
@@ -32,7 +31,7 @@ func (d *AwsDomain) Name() string {
 
 // Version returns the current version
 func (d *AwsDomain) Version() string {
-	return version.Version()
+	return Version
 }
 
 // Builder returns the AWS CloudFormation builder implementation
