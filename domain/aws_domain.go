@@ -508,6 +508,14 @@ func (l *awsLister) List(ctx *Context, path string, opts ListOpts) (*Result, err
 		return nil, fmt.Errorf("discovery failed: %w", err)
 	}
 
+	// Return domain error if no resources found
+	if len(result.Resources) == 0 {
+		return NewErrorResult("no resources found", Error{
+			Path:    path,
+			Message: "no AWS resources found in package",
+		}), nil
+	}
+
 	// Build a list of resources
 	resources := make([]map[string]string, 0, len(result.Resources))
 	for name, res := range result.Resources {
