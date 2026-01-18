@@ -39,8 +39,13 @@ type Result struct {
 type Options struct {
 	// Rules to enable. If empty, all rules are enabled.
 	EnabledRules []string
+	// DisabledRules specifies rules to disable by ID (e.g., "WAW001", "WAW002").
+	// Takes precedence over EnabledRules.
+	DisabledRules []string
 	// MaxResources for the FileTooLarge rule.
 	MaxResources int
+	// Fix automatically fixes fixable issues (reserved for future use).
+	Fix bool
 }
 
 // LintFile lints a single Go file.
@@ -203,22 +208,39 @@ func getRules(opts Options) []Rule {
 		}
 	}
 
+	// Build disabled rules set (takes precedence)
+	disabled := make(map[string]bool)
+	for _, id := range opts.DisabledRules {
+		disabled[id] = true
+	}
+
 	// Filter by enabled rules if specified
-	if len(opts.EnabledRules) == 0 {
-		return all
-	}
-
-	enabled := make(map[string]bool)
-	for _, id := range opts.EnabledRules {
-		enabled[id] = true
-	}
-
-	var filtered []Rule
-	for _, r := range all {
-		if enabled[r.ID()] {
-			filtered = append(filtered, r)
+	if len(opts.EnabledRules) > 0 {
+		enabled := make(map[string]bool)
+		for _, id := range opts.EnabledRules {
+			enabled[id] = true
 		}
+
+		var filtered []Rule
+		for _, r := range all {
+			// Include if enabled and not disabled
+			if enabled[r.ID()] && !disabled[r.ID()] {
+				filtered = append(filtered, r)
+			}
+		}
+		return filtered
 	}
 
-	return filtered
+	// If no enabled rules specified, use all rules except disabled ones
+	if len(opts.DisabledRules) > 0 {
+		var filtered []Rule
+		for _, r := range all {
+			if !disabled[r.ID()] {
+				filtered = append(filtered, r)
+			}
+		}
+		return filtered
+	}
+
+	return all
 }
