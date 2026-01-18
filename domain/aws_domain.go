@@ -155,6 +155,19 @@ func (b *awsBuilder) Build(ctx *Context, path string, opts BuildOpts) (*Result, 
 		return nil, fmt.Errorf("serializing template: %w", err)
 	}
 
+	// If DryRun is enabled, return the template without writing
+	if opts.DryRun {
+		return NewResultWithData("Build completed (dry run - no files written)", string(data)), nil
+	}
+
+	// If Output path is specified, write the template to file
+	if opts.Output != "" {
+		if err := os.WriteFile(opts.Output, data, 0644); err != nil {
+			return nil, fmt.Errorf("writing template to %s: %w", opts.Output, err)
+		}
+		return NewResultWithData(fmt.Sprintf("Build completed, template written to %s", opts.Output), string(data)), nil
+	}
+
 	// Return the JSON as the result data
 	return NewResultWithData("Build completed", string(data)), nil
 }
@@ -163,7 +176,13 @@ func (b *awsBuilder) Build(ctx *Context, path string, opts BuildOpts) (*Result, 
 type awsLinter struct{}
 
 func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, error) {
-	result, err := lint.LintPackage(path, lint.Options{})
+	// Build lint options from LintOpts
+	lintOpts := lint.Options{
+		DisabledRules: opts.Disable,
+		Fix:           opts.Fix,
+	}
+
+	result, err := lint.LintPackage(path, lintOpts)
 	if err != nil {
 		return nil, fmt.Errorf("linting failed: %w", err)
 	}
@@ -180,6 +199,11 @@ func (l *awsLinter) Lint(ctx *Context, path string, opts LintOpts) (*Result, err
 				Message:  issue.Message,
 				Code:     issue.Rule,
 			})
+		}
+
+		// If Fix mode is enabled, add a note about auto-fixing
+		if opts.Fix {
+			return NewErrorResultMultiple("lint issues found (auto-fix not yet implemented for these issues)", errs), nil
 		}
 		return NewErrorResultMultiple("lint issues found", errs), nil
 	}
