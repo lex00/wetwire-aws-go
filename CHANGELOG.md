@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Test: Split `internal/lint/rules_test.go` (1,265 lines) into 5 focused files (#205)
+  - `rules_core_test.go` (323 lines) - WAW001-WAW008 core rules tests
+  - `rules_advanced_test.go` (399 lines) - WAW009-WAW014 advanced rules tests
+  - `rules_references_test.go` (205 lines) - WAW015-WAW018 reference/type rules tests
+  - `rules_secrets_test.go` (249 lines) - WAW019 secret detection + helper tests
+  - `rules_lint_test.go` (133 lines) - LintFile, LintPackage integration tests
+  - All tests pass, no file exceeds 600 lines
 - Linter: Renamed `internal/linter` to `internal/lint` for consistency (#208)
   - Package name changed from `linter` to `lint`
   - Updated all imports and documentation references
