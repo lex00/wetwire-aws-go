@@ -46,6 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Examples: Lambda API scenario for testing CloudFormation generation (#218)
+  - Added `examples/lambda_api_scenario/` with scenario.yaml, system_prompt.md
+  - Three persona-based prompts (beginner, intermediate, expert)
+  - Expected outputs: compute.go (Lambda), api.go (API Gateway), security.go (IAM role)
+  - Validation requires minimum 3 AWS resources
 - CI: Codecov integration for coverage reporting (#163)
   - Test step now generates coverage profile with `go test -coverprofile=coverage.out -covermode=atomic`
   - Coverage uploaded to Codecov after tests

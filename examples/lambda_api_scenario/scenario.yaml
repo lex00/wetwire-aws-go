@@ -1,0 +1,22 @@
+name: lambda_api_scenario
+description: Generate AWS resources for a Lambda-backed REST API
+
+model: sonnet
+timeout: 120s
+
+prompts:
+  default: prompts/intermediate.md
+  variants:
+    beginner: prompts/beginner.md
+    intermediate: prompts/intermediate.md
+    expert: prompts/expert.md
+
+domains:
+  - name: aws
+    outputs:
+      - "expected/**/*.go"
+
+validation:
+  aws:
+    resources:
+      min: 3
