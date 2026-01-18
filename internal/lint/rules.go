@@ -31,13 +31,8 @@ import (
 	"strings"
 )
 
-// Rule is the interface for lint rules.
-// Note: Issue type is imported from corelint via type alias in linter.go.
-type Rule interface {
-	ID() string
-	Description() string
-	Check(file *ast.File, fset *token.FileSet) []Issue
-}
+// Note: Rule interface is imported from corelint via type alias in linter.go.
+// Issue and Severity types are also imported from corelint.
 
 // PackageContext holds information about all files in a package.
 // This is used by package-aware rules that need cross-file visibility.

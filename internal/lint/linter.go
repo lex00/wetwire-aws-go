@@ -18,6 +18,8 @@ type (
 	Issue = corelint.Issue
 	// Severity is an alias for corelint.Severity.
 	Severity = corelint.Severity
+	// Rule is an alias for corelint.Rule.
+	Rule = corelint.Rule
 )
 
 // Severity constants for backward compatibility.
