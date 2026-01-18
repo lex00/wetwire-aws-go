@@ -421,19 +421,7 @@ func discoverDir(dir string, result *Result, opts Options) error {
 
 func discoverFile(fset *token.FileSet, filename string, file *ast.File, result *Result, opts Options) {
 	// Build import map: alias -> package path
-	imports := make(map[string]string)
-	for _, imp := range file.Imports {
-		path := strings.Trim(imp.Path.Value, `"`)
-		var name string
-		if imp.Name != nil {
-			name = imp.Name.Name
-		} else {
-			// Use last component of path
-			parts := strings.Split(path, "/")
-			name = parts[len(parts)-1]
-		}
-		imports[name] = path
-	}
+	imports := coreast.ExtractImports(file)
 
 	// Find package-level var declarations
 	for _, decl := range file.Decls {
