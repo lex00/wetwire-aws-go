@@ -8,9 +8,7 @@ This FAQ covers questions specific to the Go implementation of wetwire for AWS C
 
 ### How do I install wetwire-aws-go?
 
-```bash
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
-```
+See [README.md](../README.md#installation) for installation instructions.
 
 ### How do I create a new project?
 

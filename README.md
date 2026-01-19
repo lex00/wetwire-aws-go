@@ -82,11 +82,18 @@ Requires `ANTHROPIC_API_KEY`. See [CLI Reference](docs/CLI.md#design) for detail
 
 ## Documentation
 
-- [Quick Start](docs/QUICK_START.md) - Full tutorial
+**Getting Started:**
+- [Quick Start](docs/QUICK_START.md) - 5-minute tutorial
+- [FAQ](docs/FAQ.md) - Common questions
+
+**Reference:**
 - [CLI Reference](docs/CLI.md) - All commands
 - [SAM Guide](docs/SAM.md) - Serverless resources
-- [FAQ](docs/FAQ.md) - Common questions
-- [Adoption Guide](docs/ADOPTION.md) - Migration and onboarding
+- [Lint Rules](docs/LINT_RULES.md) - WAW rule reference
+
+**Advanced:**
+- [Internals](docs/INTERNALS.md) - Architecture and extension points
+- [Adoption Guide](docs/ADOPTION.md) - Team migration strategies
 - [Examples](docs/EXAMPLES.md) - Imported template catalog
 
 ## Development

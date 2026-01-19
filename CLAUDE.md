@@ -110,16 +110,9 @@ Beyond the domain interface, wetwire-aws adds AWS-specific commands:
 - **watch**: Auto-rebuild on file changes
 - **mcp**: MCP server for Claude Code integration
 
-## Lint Rules (WAW001-WAW018)
+## Lint Rules
 
-Key rules enforcing declarative patterns:
-
-- **WAW001**: Use pseudo-parameter constants (`AWS_REGION` not `"AWS::Region"`)
-- **WAW002**: Use intrinsic types (`Ref{}` not `map[string]any`)
-- **WAW005**: Extract inline property types to separate vars
-- **WAW015-16**: Avoid explicit `Ref{}` and `GetAtt{}` — use direct references
-- **WAW017**: Avoid pointer assignments
-- **WAW018**: Use `Json{}` type instead of `map[string]any{}`
+Uses the `WAW` prefix (Wetwire AWS). See [LINT_RULES.md](docs/LINT_RULES.md) for the complete rule reference (WAW001-WAW019).
 
 ## Key Principles
 

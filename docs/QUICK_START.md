@@ -4,15 +4,7 @@ Get started with `wetwire-aws` in 5 minutes.
 
 ## Installation
 
-```bash
-go install github.com/lex00/wetwire-aws-go/cmd/wetwire-aws@latest
-```
-
-Or add to your project:
-
-```bash
-go get github.com/lex00/wetwire-aws-go
-```
+See [README.md](../README.md#installation) for installation instructions.
 
 ## Quick Test (No Setup Required)
 
