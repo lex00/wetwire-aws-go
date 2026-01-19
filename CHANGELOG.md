@@ -56,6 +56,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Coverage uploaded to Codecov after tests
   - Added codecov badge to README.md
 
+
+## [1.18.0] - 2026-01-19
+
+### Changed
+
+- **Claude CLI as default provider for design command**
+  - No API key required - uses existing Claude authentication
+  - Falls back to Anthropic API if Claude CLI not installed
+  - Updated wetwire-core-go to v1.17.1
+
 ## [1.11.0] - 2026-01-10
 
 ### Added
