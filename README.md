@@ -71,14 +71,14 @@ All 9 SAM resource types supported: `Function`, `Api`, `HttpApi`, `SimpleTable`,
 Create infrastructure interactively with AI:
 
 ```bash
-# Interactive design session
+# No API key required - uses Claude CLI
 wetwire-aws design "Create an encrypted S3 bucket"
 
 # Automated testing with personas
 wetwire-aws test --persona beginner "Create a Lambda function"
 ```
 
-Requires `ANTHROPIC_API_KEY`. See [CLI Reference](docs/CLI.md#design) for details.
+Uses [Claude CLI](https://claude.ai/download) by default (no API key required). Falls back to Anthropic API if Claude CLI is not installed. See [CLI Reference](docs/CLI.md#design) for details.
 
 ## Documentation
 

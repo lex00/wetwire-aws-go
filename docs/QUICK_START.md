@@ -292,6 +292,17 @@ See the full [SAM Guide](SAM.md) for all 9 SAM resource types.
 
 ---
 
+## AI-Assisted Design
+
+Let AI help create your AWS infrastructure:
+
+```bash
+# No API key required - uses Claude CLI
+wetwire-aws design "Create an S3 bucket with versioning and a Lambda function to process uploads"
+```
+
+The design command creates Go code following wetwire patterns, runs linting, and builds the final CloudFormation template.
+
 ## Next Steps
 
 - See the full [CLI Reference](CLI.md)
