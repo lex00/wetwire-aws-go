@@ -1,12 +1,9 @@
-Create Lambda API infrastructure. Required files:
+Create CloudFormation template for Lambda API:
 
-**expected/compute.go:**
-- Lambda function: Python 3.12, inline handler, 128MB/30s, reference IAM role
+- Lambda: Python 3.12, inline handler, 128MB/30s
+- API Gateway v2 HTTP API with Lambda integration
+- IAM role: lambda.amazonaws.com trust, AWSLambdaBasicExecutionRole
+- Lambda permission for API Gateway invocation
+- Outputs: API endpoint URL, function ARN
 
-**expected/api.go:**
-- ApiGatewayV2 HTTP API with Lambda target integration
-
-**expected/security.go:**
-- IAM role: lambda.amazonaws.com trust policy, AWSLambdaBasicExecutionRole managed policy
-
-Follow wetwire-aws-go patterns: direct references, dot-import intrinsics, Json type for policy docs.
+Single YAML file. No documentation.

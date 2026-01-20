@@ -1,4 +1,4 @@
-Create AWS resources for a Lambda-backed HTTP API:
+Create a CloudFormation template for a Lambda-backed HTTP API:
 
 **Lambda Function:**
 - Python 3.12 runtime
@@ -14,4 +14,4 @@ Create AWS resources for a Lambda-backed HTTP API:
 **IAM:**
 - Lambda execution role with basic CloudWatch logging permissions
 
-Generate the three resource files.
+Generate a single CloudFormation YAML template with all resources.

@@ -1,11 +1,15 @@
 name: lambda_api_scenario
-description: Generate AWS resources for a Lambda-backed REST API
+description: Generate AWS CloudFormation templates for a Lambda-backed REST API
 
 model: sonnet
 timeout: 120s
 
 prompts:
   default: prompts/intermediate.md
+  personas:
+    - beginner
+    - intermediate
+    - expert
   variants:
     beginner: prompts/beginner.md
     intermediate: prompts/intermediate.md
@@ -14,9 +18,12 @@ prompts:
 domains:
   - name: aws
     outputs:
-      - "expected/**/*.go"
+      - "*.yaml"
+      - "*.json"
 
 validation:
   aws:
+    stacks:
+      min: 1
     resources:
       min: 3

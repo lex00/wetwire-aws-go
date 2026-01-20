@@ -7,4 +7,4 @@ Can you help me set up:
 
 I want to be able to call the API and get a response from the Lambda function.
 
-Please create the CloudFormation resources I need.
+Please create a CloudFormation YAML template with all the resources I need.
