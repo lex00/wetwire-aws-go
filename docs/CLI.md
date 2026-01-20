@@ -384,8 +384,8 @@ Personas simulate different user skill levels and communication styles:
 | `beginner` | New to AWS, asks many clarifying questions |
 | `intermediate` | Familiar with AWS basics (default) |
 | `expert` | Deep AWS knowledge, asks advanced questions |
-| `terse` | Gives minimal responses |
-| `verbose` | Provides detailed context |
+
+Custom personas can be registered for domain-specific testing.
 
 ### Options
 
