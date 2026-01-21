@@ -8,10 +8,69 @@ import (
 	"reflect"
 	"sort"
 
-	"gopkg.in/yaml.v3"
-
 	wetwire "github.com/lex00/wetwire-aws-go"
+	coredomain "github.com/lex00/wetwire-core-go/domain"
+	"gopkg.in/yaml.v3"
 )
+
+// CFDiffer implements coredomain.Differ for CloudFormation templates.
+type CFDiffer struct{}
+
+// Compile-time check that CFDiffer implements Differ.
+var _ coredomain.Differ = (*CFDiffer)(nil)
+
+// New creates a new CloudFormation differ.
+func New() *CFDiffer {
+	return &CFDiffer{}
+}
+
+// Diff compares two CloudFormation templates and returns a domain DiffResult.
+func (d *CFDiffer) Diff(ctx *coredomain.Context, file1, file2 string, opts coredomain.DiffOpts) (*coredomain.DiffResult, error) {
+	result, err := CompareFiles(file1, file2, Options{
+		IgnoreOrder: opts.IgnoreOrder,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert to domain types
+	domainResult := &coredomain.DiffResult{
+		Summary: coredomain.DiffSummary{
+			Added:    result.Summary.Added,
+			Removed:  result.Summary.Removed,
+			Modified: result.Summary.Modified,
+			Total:    result.Summary.Total,
+		},
+	}
+
+	// Convert entries
+	for _, e := range result.Diff.Added {
+		domainResult.Entries = append(domainResult.Entries, coredomain.DiffEntry{
+			Resource: e.Resource,
+			Type:     e.Type,
+			Action:   "added",
+			Changes:  e.Changes,
+		})
+	}
+	for _, e := range result.Diff.Removed {
+		domainResult.Entries = append(domainResult.Entries, coredomain.DiffEntry{
+			Resource: e.Resource,
+			Type:     e.Type,
+			Action:   "removed",
+			Changes:  e.Changes,
+		})
+	}
+	for _, e := range result.Diff.Modified {
+		domainResult.Entries = append(domainResult.Entries, coredomain.DiffEntry{
+			Resource: e.Resource,
+			Type:     e.Type,
+			Action:   "modified",
+			Changes:  e.Changes,
+		})
+	}
+
+	return domainResult, nil
+}
 
 // Options configures the differ.
 type Options struct {

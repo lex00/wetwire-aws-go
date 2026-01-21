@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/lex00/wetwire-aws-go/internal/differ"
 	"github.com/lex00/wetwire-aws-go/internal/discover"
 	"github.com/lex00/wetwire-aws-go/internal/importer"
 	"github.com/lex00/wetwire-aws-go/internal/lint"
@@ -23,6 +24,7 @@ var (
 	_ coredomain.ImporterDomain = (*AwsDomain)(nil)
 	_ coredomain.ListerDomain   = (*AwsDomain)(nil)
 	_ coredomain.GrapherDomain  = (*AwsDomain)(nil)
+	_ coredomain.DifferDomain   = (*AwsDomain)(nil)
 )
 
 // Name returns "aws"
@@ -68,6 +70,11 @@ func (d *AwsDomain) Lister() coredomain.Lister {
 // Grapher returns the AWS dependency grapher implementation
 func (d *AwsDomain) Grapher() coredomain.Grapher {
 	return &awsGrapher{}
+}
+
+// Differ returns the AWS CloudFormation differ implementation
+func (d *AwsDomain) Differ() coredomain.Differ {
+	return differ.New()
 }
 
 // awsBuilder implements domain.Builder for AWS
