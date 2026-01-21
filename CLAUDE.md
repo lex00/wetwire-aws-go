@@ -131,6 +131,28 @@ Uses the `WAW` prefix (Wetwire AWS). See [LINT_RULES.md](docs/LINT_RULES.md) for
 wetwire-aws build ./infra > template.json
 ```
 
+## Diff
+
+Compare CloudFormation templates semantically:
+
+```bash
+# Compare two templates
+wetwire-aws diff template1.json template2.json
+
+# JSON output for CI/CD
+wetwire-aws diff template1.json template2.json -f json
+
+# Ignore array ordering differences
+wetwire-aws diff template1.json template2.json --ignore-order
+```
+
+The diff command performs semantic comparison by resource name, detecting:
+- Added resources
+- Removed resources
+- Modified resources (with property-level change details)
+
+Exit code is 1 if differences are found, enabling CI pipeline validation.
+
 ## K8s-Native Deployments (ACK)
 
 The `resources/k8s/` directory contains AWS Controllers for Kubernetes (ACK) types for deploying AWS resources via `kubectl apply`. This provides a Kubernetes-native alternative to CloudFormation.
