@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 60%
+        threshold: 5%
+    patch:
+      default:
+        target: 60%
+
+ignore:
+  - "resources/**/*"
+  - "vendor/**/*"
+  - "**/*_test.go"
+  - "**/testdata/**/*"
