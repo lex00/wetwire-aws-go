@@ -67,7 +67,11 @@ wetwire-aws-go/
 │   ├── s3/           # S3 resources (Bucket, AccessPoint, etc.)
 │   ├── lambda/       # Lambda resources (Function, etc.)
 │   ├── iam/          # IAM resources (Role, Policy, etc.)
-│   └── serverless/   # SAM resources (Function, Api, etc.)
+│   ├── serverless/   # SAM resources (Function, Api, etc.)
+│   └── k8s/          # K8s CRD types (via ACK) for kubectl deployments
+│       ├── ec2/      # VPC, Subnet, SecurityGroup CRDs
+│       ├── eks/      # Cluster, NodeGroup, Addon CRDs
+│       └── iam/      # Role, Policy CRDs
 ├── intrinsics/       # Ref, GetAtt, Sub, Join, etc.
 ├── domain/           # Domain interface implementation
 │   ├── domain.go     # Domain interface and CreateRootCommand
@@ -126,6 +130,43 @@ Uses the `WAW` prefix (Wetwire AWS). See [LINT_RULES.md](docs/LINT_RULES.md) for
 ```bash
 wetwire-aws build ./infra > template.json
 ```
+
+## K8s-Native Deployments (ACK)
+
+The `resources/k8s/` directory contains AWS Controllers for Kubernetes (ACK) types for deploying AWS resources via `kubectl apply`. This provides a Kubernetes-native alternative to CloudFormation.
+
+### Using ACK Types
+
+```go
+import (
+    eksv1 "github.com/lex00/wetwire-aws-go/resources/k8s/eks/v1alpha1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+var Cluster = eksv1.Cluster{
+    TypeMeta: metav1.TypeMeta{
+        APIVersion: "eks.services.k8s.aws/v1alpha1",
+        Kind:       "Cluster",
+    },
+    ObjectMeta: metav1.ObjectMeta{
+        Name:      "my-cluster",
+        Namespace: "ack-system",
+    },
+    Spec: eksv1.ClusterSpec{
+        Name:    "my-cluster",
+        Version: "1.28",
+    },
+}
+```
+
+### When to Use ACK vs CloudFormation
+
+| Approach | Use When |
+|----------|----------|
+| **CloudFormation** (`resources/eks/`) | Traditional IaC, AWS-native tooling, existing CF pipelines |
+| **ACK** (`resources/k8s/eks/`) | GitOps workflows, Kubernetes-centric teams, unified K8s API |
+
+See `examples/eks-golden/` for CloudFormation approach and `examples/eks-k8s/` for ACK approach.
 
 ## Project Structure
 
