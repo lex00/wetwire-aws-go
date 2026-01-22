@@ -42,3 +42,7 @@ Thumbs.db
 # Generated CloudFormation templates
 *.cfn.json
 *.cfn.yaml
+
+# SVG recordings (allow mascot)
+*.svg
+!docs/wetwire.svg
