@@ -3,9 +3,6 @@
   <img src="docs/wetwire-light.svg" width="100" height="67" align="right">
 </picture>
 
-  <img src="docs/wetwire-light.svg" width="100" height="67">
-</picture>
-
 
 # wetwire-aws (Go)
 
