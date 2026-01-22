@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 67 45" width="67" height="45">
+  <style>
+    text {
+      font-family: 'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace;
+      font-size: 7px;
+      fill: #1f2328;
+    }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e6edf3; }
+    }
+  </style>
+  <text x="4" y="9">&#160;&#160;╭↯↯↯↯╮</text>
+  <text x="4" y="18">&#160;┌┴────┴┐</text>
+  <text x="4" y="27">&#160;│︵&#160;&#160;︵&#160;│</text>
+  <text x="4" y="36">&#160;│◎&#160;⬭&#160;◎&#160;│</text>
+  <text x="4" y="45">&#160;└──────┘</text>
+</svg>
