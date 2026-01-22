@@ -1,4 +1,7 @@
-# Lint Rules
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
+  <img src="./wetwire-light.svg" width="100" height="67">
+</picture>
 
 wetwire-aws-go includes 19 lint rules to enforce best practices and idiomatic patterns for declarative CloudFormation infrastructure-as-code.
 

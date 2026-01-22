@@ -26,8 +26,8 @@ type Builder struct {
 	outputs     map[string]wetwire.DiscoveredOutput
 	mappings    map[string]wetwire.DiscoveredMapping
 	conditions  map[string]wetwire.DiscoveredCondition
-	values      map[string]any                // Actual struct values for serialization
-	varAttrRefs map[string]VarAttrRefInfo     // For recursive AttrRef resolution
+	values      map[string]any            // Actual struct values for serialization
+	varAttrRefs map[string]VarAttrRefInfo // For recursive AttrRef resolution
 }
 
 // NewBuilder creates a template builder from discovered resources.
@@ -335,7 +335,7 @@ func (b *Builder) transformRefs(name string, props map[string]any, res wetwire.D
 // The slice index corresponds to the position in the intrinsic's array value.
 var intrinsicFieldNames = map[string][]string{
 	"Fn::Join":        {"Delimiter", "Values"},
-	"Fn::Sub":         {"String"},            // SubWithMap has {"String", "Variables"}
+	"Fn::Sub":         {"String"}, // SubWithMap has {"String", "Variables"}
 	"Fn::Select":      {"Index", "List"},
 	"Fn::If":          {"Condition", "TrueValue", "FalseValue"},
 	"Fn::GetAZs":      {"Region"},

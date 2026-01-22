@@ -1,4 +1,7 @@
-# Adoption Guide
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
+  <img src="./wetwire-light.svg" width="100" height="67">
+</picture>
 
 Practical guidance for teams adopting wetwire-aws alongside existing infrastructure.
 

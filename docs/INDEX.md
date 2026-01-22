@@ -1,4 +1,7 @@
-# Documentation Index
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
+  <img src="./wetwire-light.svg" width="100" height="67">
+</picture>
 
 Navigate the wetwire-aws-go documentation by your goal.
 

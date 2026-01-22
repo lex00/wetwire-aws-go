@@ -83,7 +83,7 @@ func (r HardcodedPseudoParameter) Check(file *ast.File, fset *token.FileSet) []I
 		if constant, found := pseudoParams[value]; found {
 			pos := fset.Position(lit.Pos())
 			issues = append(issues, Issue{
-				Rule:     r.ID(),
+				Rule:       r.ID(),
 				Message:    "Use " + constant + " instead of \"" + value + "\"",
 				Suggestion: constant,
 				File:       pos.Filename,
@@ -162,7 +162,7 @@ func (r MapShouldBeIntrinsic) Check(file *ast.File, fset *token.FileSet) []Issue
 		if typeName, found := intrinsicKeys[keyValue]; found {
 			pos := fset.Position(comp.Pos())
 			issues = append(issues, Issue{
-				Rule:     r.ID(),
+				Rule:       r.ID(),
 				Message:    "Use intrinsics." + typeName + "{...} instead of map[string]any{\"" + keyValue + "\": ...}",
 				Suggestion: typeName + "{...}",
 				File:       pos.Filename,
@@ -247,7 +247,7 @@ func (r DuplicateResource) Check(file *ast.File, fset *token.FileSet) []Issue {
 			// Report all locations after the first
 			for _, loc := range locations[1:] {
 				issues = append(issues, Issue{
-					Rule:     r.ID(),
+					Rule:       r.ID(),
 					Message:    "Duplicate resource variable '" + name + "' (first defined at line " + string(rune(locations[0].Line+'0')) + ")",
 					Suggestion: "// DUPLICATE: var " + name,
 					File:       loc.Filename,
@@ -366,7 +366,7 @@ func (r FileTooLarge) Check(file *ast.File, fset *token.FileSet) []Issue {
 		pos := fset.Position(file.Pos())
 		message := "File has " + itoa(count) + " resources (max " + itoa(maxResources) + "). Consider splitting by category: storage.go, compute.go, network.go, security.go"
 		issues = append(issues, Issue{
-			Rule:     r.ID(),
+			Rule:       r.ID(),
 			Message:    message,
 			Suggestion: "// Split " + itoa(count) + " resources into multiple files",
 			File:       pos.Filename,
@@ -462,7 +462,7 @@ func (r InlinePropertyType) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 		pos := fset.Position(kv.Pos())
 		issues = append(issues, Issue{
-			Rule:     r.ID(),
+			Rule:       r.ID(),
 			Message:    "Use a struct type for " + keyIdent.Name + " instead of inline map[string]any",
 			Suggestion: "// Define a named type for " + keyIdent.Name,
 			File:       pos.Filename,
@@ -476,4 +476,3 @@ func (r InlinePropertyType) Check(file *ast.File, fset *token.FileSet) []Issue {
 
 	return issues
 }
-

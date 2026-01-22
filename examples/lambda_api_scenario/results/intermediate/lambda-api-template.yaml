@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Lambda-backed HTTP API with API Gateway integration
+
+Resources:
+  # IAM Role for Lambda execution
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-api-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  # Lambda Function
+  ApiProcessorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: api-processor
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      MemorySize: 128
+      Timeout: 30
+      Code:
+        ZipFile: |
+          import json
+
+          def handler(event, context):
+              """
+              Simple Lambda handler that returns a JSON response.
+              Handles HTTP requests from API Gateway.
+              """
+              # Extract request details
+              http_method = event.get('requestContext', {}).get('http', {}).get('method', 'UNKNOWN')
+              path = event.get('rawPath', '/')
+
+              # Build response
+              response_body = {
+                  "message": "Hello from Lambda!",
+                  "method": http_method,
+                  "path": path,
+                  "timestamp": context.request_id
+              }
+
+              return {
+                  "statusCode": 200,
+                  "headers": {
+                      "Content-Type": "application/json"
+                  },
+                  "body": json.dumps(response_body)
+              }
+
+  # HTTP API (API Gateway v2)
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: lambda-http-api
+      Description: HTTP API with direct Lambda integration
+      ProtocolType: HTTP
+      Target: !GetAtt ApiProcessorFunction.Arn
+
+  # Lambda Permission for API Gateway
+  ApiGatewayInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApiProcessorFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*
+
+Outputs:
+  ApiEndpoint:
+    Description: HTTP API endpoint URL
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+    Export:
+      Name: !Sub ${AWS::StackName}-ApiEndpoint
+
+  FunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt ApiProcessorFunction.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-FunctionArn
+
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref ApiProcessorFunction
+
+  ExecutionRoleArn:
+    Description: Lambda execution role ARN
+    Value: !GetAtt LambdaExecutionRole.Arn

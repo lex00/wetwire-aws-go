@@ -151,7 +151,6 @@ func valueToBlockStyleProperty(ctx *codegenContext, value any, propName string, 
 	return fmt.Sprintf("%#v", value)
 }
 
-
 // valueToGoForBlock converts values for block generation, creating nested blocks as needed.
 // Returns either a literal value or a reference to another block variable.
 func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVarName string) string {
@@ -320,7 +319,6 @@ func valueToGoForBlock(ctx *codegenContext, value any, propName string, parentVa
 
 	return fmt.Sprintf("%#v", value)
 }
-
 
 // valueToGo converts an IR value to Go source code.
 func valueToGo(ctx *codegenContext, value any, indent int) string {

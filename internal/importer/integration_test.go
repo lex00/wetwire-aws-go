@@ -126,7 +126,6 @@ func TestExamplesBuild(t *testing.T) {
 	}
 }
 
-
 // findEmptyRefs recursively searches for empty ref patterns in the JSON structure.
 // Returns two lists: empty GetAtts and empty Refs.
 func findEmptyRefs(v any, path string) (emptyGetAtts, emptyRefs []string) {

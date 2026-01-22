@@ -136,15 +136,15 @@ func TestIsHighEntropy(t *testing.T) {
 		expected bool
 	}{
 		// High entropy: needs >= 3 char types AND length >= 32
-		{"4 char types", "AbCdEfGh123456789!@#$%^&*()AbCdEf", true},  // 34 chars, 4 types (upper, lower, digit, special)
+		{"4 char types", "AbCdEfGh123456789!@#$%^&*()AbCdEf", true},   // 34 chars, 4 types (upper, lower, digit, special)
 		{"3 char types", "test_key_1234567890abcdefghijklmnop", true}, // 38 chars, 3 types (lower, digit, special)
 
 		// Low entropy: fails one or both criteria
-		{"short string", "abc123", false},                // Too short (6 chars)
+		{"short string", "abc123", false},                                             // Too short (6 chars)
 		{"only 2 types uppercase+digit", "AKIAIOSFODNN7EXAMPLE12345678901234", false}, // 34 chars but only 2 types
-		{"only 2 types lower+digit", "abcdefghijklmnopqrstuvwxyz1234567890", false}, // 36 chars, only 2 types
-		{"too short 8 chars", "password", false},         // Too short
-		{"21 chars 2 types", "my-simple-bucket-name", false}, // 21 chars, only 2 types
+		{"only 2 types lower+digit", "abcdefghijklmnopqrstuvwxyz1234567890", false},   // 36 chars, only 2 types
+		{"too short 8 chars", "password", false},                                      // Too short
+		{"21 chars 2 types", "my-simple-bucket-name", false},                          // 21 chars, only 2 types
 	}
 
 	for _, tt := range tests {

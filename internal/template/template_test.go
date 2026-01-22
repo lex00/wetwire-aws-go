@@ -196,11 +196,11 @@ func TestBuilder_Build_SAMFunction(t *testing.T) {
 
 	builder := NewBuilder(resources)
 	builder.SetValue("HelloWorldFunction", map[string]any{
-		"Handler":     "bootstrap",
-		"Runtime":     "provided.al2",
-		"CodeUri":     "./hello-world/",
-		"MemorySize":  128,
-		"Timeout":     5,
+		"Handler":    "bootstrap",
+		"Runtime":    "provided.al2",
+		"CodeUri":    "./hello-world/",
+		"MemorySize": 128,
+		"Timeout":    5,
 	})
 
 	template, err := builder.Build()
@@ -305,8 +305,8 @@ func TestBuilder_Build_NoSAM_NoTransform(t *testing.T) {
 
 func TestCfResourceType_SAM(t *testing.T) {
 	tests := []struct {
-		goType   string
-		cfnType  string
+		goType  string
+		cfnType string
 	}{
 		{"serverless.Function", "AWS::Serverless::Function"},
 		{"serverless.Api", "AWS::Serverless::Api"},

@@ -98,14 +98,14 @@ func TestSanitizeGoName(t *testing.T) {
 		expected string
 	}{
 		{"ValidName", "ValidName"},
-		{"123Invalid", "N123Invalid"},                         // Digits preserved with N prefix (exported)
-		{"2RouteTableCondition", "N2RouteTableCondition"},     // Issue #76: digit prefix preserved (N for exported)
-		{"with-dash", "Withdash"},                             // Capitalized for export
-		{"with.dot", "Withdot"},                               // Capitalized for export
-		{"type", "Type"},                                      // Capitalized, no longer a keyword
-		{"package", "Package"},                                // Capitalized, no longer a keyword
+		{"123Invalid", "N123Invalid"},                     // Digits preserved with N prefix (exported)
+		{"2RouteTableCondition", "N2RouteTableCondition"}, // Issue #76: digit prefix preserved (N for exported)
+		{"with-dash", "Withdash"},                         // Capitalized for export
+		{"with.dot", "Withdot"},                           // Capitalized for export
+		{"type", "Type"},                                  // Capitalized, no longer a keyword
+		{"package", "Package"},                            // Capitalized, no longer a keyword
 		{"", "_"},
-		{"myBucket", "MyBucket"},                              // Lowercase capitalized
+		{"myBucket", "MyBucket"}, // Lowercase capitalized
 	}
 
 	for _, tt := range tests {
@@ -183,15 +183,15 @@ func TestCapitalizeService(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"ec2", "Ec2"},      // Switch case: ec2 -> Ec2
-		{"s3", "S3"},        // Switch case: s3 -> S3
-		{"rds", "Rds"},      // Switch case: rds -> Rds
-		{"ecs", "Ecs"},      // Switch case: ecs -> Ecs
-		{"acm", "Acm"},      // Switch case: acm -> Acm
-		{"elbv2", "Elbv2"},  // Switch case: elbv2 -> Elbv2
-		{"lambda", "Lambda"}, // Default: capitalize first letter
+		{"ec2", "Ec2"},         // Switch case: ec2 -> Ec2
+		{"s3", "S3"},           // Switch case: s3 -> S3
+		{"rds", "Rds"},         // Switch case: rds -> Rds
+		{"ecs", "Ecs"},         // Switch case: ecs -> Ecs
+		{"acm", "Acm"},         // Switch case: acm -> Acm
+		{"elbv2", "Elbv2"},     // Switch case: elbv2 -> Elbv2
+		{"lambda", "Lambda"},   // Default: capitalize first letter
 		{"unknown", "Unknown"}, // Default: capitalize first letter
-		{"", ""},            // Empty string
+		{"", ""},               // Empty string
 	}
 
 	for _, tt := range tests {

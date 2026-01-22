@@ -222,10 +222,10 @@ type ListResource struct {
 
 // OptimizeResult is the JSON output from `wetwire-aws optimize`.
 type OptimizeResult struct {
-	Success       bool                   `json:"success"`
-	Suggestions   []OptimizeSuggestion   `json:"suggestions,omitempty"`
-	ResourceCount int                    `json:"resource_count"`
-	Summary       OptimizeSummary        `json:"summary"`
+	Success       bool                 `json:"success"`
+	Suggestions   []OptimizeSuggestion `json:"suggestions,omitempty"`
+	ResourceCount int                  `json:"resource_count"`
+	Summary       OptimizeSummary      `json:"summary"`
 }
 
 // OptimizeSuggestion is a single optimization suggestion.
@@ -251,9 +251,9 @@ type OptimizeSummary struct {
 
 // DiffResult is the JSON output from `wetwire-aws diff`.
 type DiffResult struct {
-	Success  bool           `json:"success"`
-	Diff     TemplateDiff   `json:"diff"`
-	Summary  DiffSummary    `json:"summary"`
+	Success bool         `json:"success"`
+	Diff    TemplateDiff `json:"diff"`
+	Summary DiffSummary  `json:"summary"`
 }
 
 // TemplateDiff represents the differences between two templates.
@@ -280,11 +280,11 @@ type DiffSummary struct {
 
 // SchemaResult is the JSON output from `wetwire-aws schema`.
 type SchemaResult struct {
-	Success    bool          `json:"success"`
-	Valid      bool          `json:"valid"`
-	Errors     []SchemaError `json:"errors,omitempty"`
-	Warnings   []SchemaError `json:"warnings,omitempty"`
-	Resources  int           `json:"resources"`
+	Success   bool          `json:"success"`
+	Valid     bool          `json:"valid"`
+	Errors    []SchemaError `json:"errors,omitempty"`
+	Warnings  []SchemaError `json:"warnings,omitempty"`
+	Resources int           `json:"resources"`
 }
 
 // SchemaError represents a schema validation error.
@@ -317,23 +317,23 @@ type TestScore struct {
 
 // TestResult is the JSON output from `wetwire-aws test`.
 type TestResult struct {
-	Success      bool                   `json:"success"`
-	Persona      string                 `json:"persona"`
-	Score        TestScore              `json:"score"`
-	Duration     string                 `json:"duration"`
-	LintCycles   int                    `json:"lint_cycles"`
-	BuildPassed  bool                   `json:"build_passed"`
-	ValidatePassed bool                 `json:"validate_passed"`
-	FilesCreated []string               `json:"files_created,omitempty"`
-	Errors       []string               `json:"errors,omitempty"`
-	Details      map[string]any         `json:"details,omitempty"`
+	Success        bool           `json:"success"`
+	Persona        string         `json:"persona"`
+	Score          TestScore      `json:"score"`
+	Duration       string         `json:"duration"`
+	LintCycles     int            `json:"lint_cycles"`
+	BuildPassed    bool           `json:"build_passed"`
+	ValidatePassed bool           `json:"validate_passed"`
+	FilesCreated   []string       `json:"files_created,omitempty"`
+	Errors         []string       `json:"errors,omitempty"`
+	Details        map[string]any `json:"details,omitempty"`
 }
 
 // TestSummary aggregates results from multiple test runs.
 type TestSummary struct {
-	TotalRuns   int          `json:"total_runs"`
-	PassedRuns  int          `json:"passed_runs"`
-	FailedRuns  int          `json:"failed_runs"`
-	AverageScore float64     `json:"average_score"`
-	Results     []TestResult `json:"results"`
+	TotalRuns    int          `json:"total_runs"`
+	PassedRuns   int          `json:"passed_runs"`
+	FailedRuns   int          `json:"failed_runs"`
+	AverageScore float64      `json:"average_score"`
+	Results      []TestResult `json:"results"`
 }

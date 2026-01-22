@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	corekiro "github.com/lex00/wetwire-core-go/kiro"
 	"github.com/lex00/wetwire-core-go/agent/personas"
+	corekiro "github.com/lex00/wetwire-core-go/kiro"
 )
 
 // TestResult contains the results of a Kiro test run.

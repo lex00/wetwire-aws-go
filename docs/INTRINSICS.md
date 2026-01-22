@@ -1,4 +1,7 @@
-# Intrinsics Guide
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
+  <img src="./wetwire-light.svg" width="100" height="67">
+</picture>
 
 wetwire-aws-go provides type-safe CloudFormation intrinsic functions through the `intrinsics` package. This guide covers all supported intrinsic types and their usage patterns.
 

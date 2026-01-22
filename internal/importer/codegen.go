@@ -419,7 +419,6 @@ func buildFile(packageName, description string, imports map[string]bool, code st
 	return strings.Join(sections, "\n\n") + "\n"
 }
 
-
 // codegenContext holds state during code generation.
 type codegenContext struct {
 	template         *IRTemplate

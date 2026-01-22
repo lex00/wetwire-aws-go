@@ -104,7 +104,7 @@ func (r InvalidEnumValue) Check(file *ast.File, fset *token.FileSet) []Issue {
 			}
 
 			issues = append(issues, Issue{
-				Rule:     r.ID(),
+				Rule:       r.ID(),
 				Message:    fmt.Sprintf("Invalid %s value: %q", fieldIdent.Name, value),
 				Suggestion: suggestion,
 				File:       pos.Filename,
@@ -372,7 +372,7 @@ func (r PreferEnumConstant) Check(file *ast.File, fset *token.FileSet) []Issue {
 				if constName, ok := enumValues[value]; ok {
 					pos := fset.Position(lit.Pos())
 					issues = append(issues, Issue{
-						Rule:     r.ID(),
+						Rule:       r.ID(),
 						Message:    fmt.Sprintf("Use enums.%s instead of %q", constName, value),
 						Suggestion: "enums." + constName,
 						File:       pos.Filename,
@@ -483,7 +483,7 @@ func (r UndefinedReference) checkWithDefined(file *ast.File, fset *token.FileSet
 		if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 			pos := fset.Position(ident.Pos())
 			issues = append(issues, Issue{
-				Rule:     r.ID(),
+				Rule:       r.ID(),
 				Message:    fmt.Sprintf("Potentially undefined reference: %s (check if resource/parameter is defined)", name),
 				Suggestion: "// Ensure " + name + " is defined or imported",
 				File:       pos.Filename,
@@ -571,7 +571,7 @@ func (r UnusedIntrinsicsImport) Check(file *ast.File, fset *token.FileSet) []Iss
 	if !intrinsicsUsed {
 		pos := fset.Position(intrinsicsImport.Pos())
 		issues = append(issues, Issue{
-			Rule:     r.ID(),
+			Rule:       r.ID(),
 			Message:    "Intrinsics package imported but no intrinsic types used",
 			Suggestion: "// Remove unused import or use intrinsic types",
 			File:       pos.Filename,
@@ -583,4 +583,3 @@ func (r UnusedIntrinsicsImport) Check(file *ast.File, fset *token.FileSet) []Iss
 
 	return issues
 }
-
