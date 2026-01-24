@@ -1,0 +1,9 @@
+name = "Wetwire"
+license = "MIT"
+licenselink = "https://github.com/lex00/wetwire/blob/main/LICENSE"
+description = "Minimal theme for wetwire documentation"
+homepage = "https://github.com/lex00/wetwire"
+
+[author]
+  name = "wetwire"
+  homepage = "https://github.com/lex00"

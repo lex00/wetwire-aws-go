@@ -46,3 +46,4 @@ Thumbs.db
 # SVG recordings (allow mascot)
 *.svg
 !docs/wetwire*.svg
+!themes/wetwire/static/wetwire.svg

@@ -1,0 +1,46 @@
+baseURL = "https://lex00.github.io/wetwire-aws-go/"
+languageCode = "en-us"
+title = "Wetwire AWS"
+
+# Theme is added as git submodule in themes/wetwire
+theme = "wetwire"
+
+# Clean URLs
+[permalinks]
+  [permalinks.page]
+    '/' = '/:slug/'
+  [permalinks.section]
+    '/' = '/:slug/'
+
+# Syntax highlighting
+[markup]
+  [markup.highlight]
+    style = "dracula"
+    lineNos = false
+    tabWidth = 4
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Main menu
+[menus]
+  [[menus.main]]
+    name = "CLI"
+    pageRef = "/cli"
+    weight = 10
+  [[menus.main]]
+    name = "Quick Start"
+    pageRef = "/quick-start"
+    weight = 20
+  [[menus.main]]
+    name = "Examples"
+    pageRef = "/examples"
+    weight = 30
+  [[menus.main]]
+    name = "SAM"
+    pageRef = "/sam"
+    weight = 40
+  [[menus.main]]
+    name = "FAQ"
+    pageRef = "/faq"
+    weight = 50

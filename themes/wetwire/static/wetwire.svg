@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 67 45" width="67" height="45">
+  <style>
+    text {
+      font-family: 'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace;
+      font-size: 7px;
+      fill: #ea39b8;
+      stroke: #170229;
+      stroke-width: 2;
+      paint-order: stroke;
+    }
+  </style>
+  <text x="4" y="9">&#160;&#160;&#x256D;&#x21AF;&#x21AF;&#x21AF;&#x21AF;&#x256E;</text>
+  <text x="4" y="18">&#160;&#x250C;&#x2534;&#x2500;&#x2500;&#x2500;&#x2500;&#x2534;&#x2510;</text>
+  <text x="4" y="27">&#160;&#x2502;&#xFE35;&#160;&#160;&#xFE35;&#160;&#x2502;</text>
+  <text x="4" y="36">&#160;&#x2502;&#x25CE;&#160;&#x2B2D;&#160;&#x25CE;&#160;&#x2502;</text>
+  <text x="4" y="45">&#160;&#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;</text>
+</svg>
