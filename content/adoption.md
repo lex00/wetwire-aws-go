@@ -21,8 +21,6 @@ You don't need to migrate everything at once. wetwire-aws generates standard Clo
 | Existing Tool | Integration Approach |
 |---------------|---------------------|
 | Raw CloudFormation | Keep existing templates as-is and gradually add new stacks in Go |
-| CDK | Both generate CloudFormation. Deploy CDK stacks and wetwire stacks independently |
-| Terraform | Separate state domains. Terraform manages its resources; CloudFormation manages yours |
 
 ### Incremental Migration Path
 
@@ -46,7 +44,6 @@ You don't need to migrate everything at once. wetwire-aws generates standard Clo
 Some stacks are better left alone:
 - **Stable production stacks** that never change
 - **Stacks managed by other teams** (coordinate first)
-- **CDK stacks with heavy L2/L3 usage** (the abstractions don't translate)
 
 Migration should reduce maintenance burden, not create it.
 

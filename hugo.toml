@@ -37,10 +37,6 @@ theme = "wetwire"
     pageRef = "/examples"
     weight = 30
   [[menus.main]]
-    name = "SAM"
-    pageRef = "/sam"
-    weight = 40
-  [[menus.main]]
     name = "FAQ"
     pageRef = "/faq"
-    weight = 50
+    weight = 40

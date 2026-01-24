@@ -1,65 +1,42 @@
 ---
 title: "Wetwire AWS"
 ---
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
-  <img src="./wetwire-light.svg" width="100" height="67">
-</picture>
 
-Navigate the wetwire-aws-go documentation by your goal.
+[![Go Reference](https://pkg.go.dev/badge/github.com/lex00/wetwire-aws-go.svg)](https://pkg.go.dev/github.com/lex00/wetwire-aws-go)
+[![CI](https://github.com/lex00/wetwire-aws-go/actions/workflows/ci.yml/badge.svg)](https://github.com/lex00/wetwire-aws-go/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Quick Links
+Generate AWS CloudFormation templates from Go structs with AI-assisted design.
 
-| Goal | Document |
-|------|----------|
-| Get started in 5 minutes | [QUICK_START.md](QUICK_START.md) |
-| Find a CLI command | [CLI.md](CLI.md) |
-| Understand a lint rule | [LINT_RULES.md](LINT_RULES.md) |
-| Migrate existing templates | [IMPORT_WORKFLOW.md](IMPORT_WORKFLOW.md) |
-| Build serverless apps | [SAM.md](SAM.md) |
+## Philosophy
 
-## By Audience
+Wetwire uses typed constraints to reduce the model capability required for accurate code generation.
 
-### New Users
-1. [QUICK_START.md](QUICK_START.md) - Build your first CloudFormation template
-2. [FAQ.md](FAQ.md) - Common questions and troubleshooting
-3. [EXAMPLES.md](EXAMPLES.md) - Real-world template patterns
+**Core hypothesis:** Typed input + smaller model ≈ Semantic input + larger model
 
-### Regular Users
-- [CLI.md](CLI.md) - Complete command reference
-- [LINT_RULES.md](LINT_RULES.md) - All WAW rules with examples
-- [SAM.md](SAM.md) - Serverless Application Model guide
-- [INTRINSICS.md](INTRINSICS.md) - Ref, GetAtt, Sub, Join functions
+The type system and lint rules act as a force multiplier — cheaper models produce quality output when guided by schema-generated types and iterative lint feedback.
 
-### Team Adoption
-- [ADOPTION.md](ADOPTION.md) - Migration strategies and team onboarding
-- [IMPORT_WORKFLOW.md](IMPORT_WORKFLOW.md) - Convert existing YAML/JSON templates
+## Documentation
 
-### Contributors
-- [DEVELOPERS.md](DEVELOPERS.md) - Development setup and guidelines
-- [CONTRIBUTING.md](../CONTRIBUTING.md) - Pull request process
-- [INTERNALS.md](INTERNALS.md) - Architecture deep-dive
-- [CODEGEN.md](CODEGEN.md) - Resource type generation
+| Document | Description |
+|----------|-------------|
+| [CLI Reference]({{< relref "/cli" >}}) | Command-line interface |
+| [Quick Start]({{< relref "/quick-start" >}}) | Get started in 5 minutes |
+| [Examples]({{< relref "/examples" >}}) | Sample CloudFormation projects |
+| [FAQ]({{< relref "/faq" >}}) | Frequently asked questions |
 
-### AI Integration
-- [AWS-KIRO-CLI.md](AWS-KIRO-CLI.md) - Kiro CLI setup (canonical reference)
-- [../CLAUDE.md](../CLAUDE.md) - AI assistant context
+## Installation
 
-## All Documents
+```bash
+go install github.com/lex00/wetwire-aws-go@latest
+```
 
-| Document | Description | Audience |
-|----------|-------------|----------|
-| [QUICK_START.md](QUICK_START.md) | 5-minute getting started guide | New users |
-| [CLI.md](CLI.md) | Command reference (build, lint, import, etc.) | All users |
-| [LINT_RULES.md](LINT_RULES.md) | WAW001-WAW019 rule reference | All users |
-| [FAQ.md](FAQ.md) | Common questions and troubleshooting | All users |
-| [SAM.md](SAM.md) | Serverless Application Model guide | Users building Lambda |
-| [INTRINSICS.md](INTRINSICS.md) | CloudFormation intrinsic functions | Users needing Ref/GetAtt |
-| [EXAMPLES.md](EXAMPLES.md) | Template patterns and examples | Learning users |
-| [ADOPTION.md](ADOPTION.md) | Team migration and onboarding | Team leads |
-| [IMPORT_WORKFLOW.md](IMPORT_WORKFLOW.md) | Convert existing templates | Migrating users |
-| [DEVELOPERS.md](DEVELOPERS.md) | Development setup | Contributors |
-| [INTERNALS.md](INTERNALS.md) | Architecture documentation | Contributors |
-| [CODEGEN.md](CODEGEN.md) | Resource type generation | Contributors |
-| [VERSIONING.md](VERSIONING.md) | Version policy and compatibility | Maintainers |
-| [AWS-KIRO-CLI.md](AWS-KIRO-CLI.md) | Kiro CLI integration | AI users |
+## Quick Example
+
+```go
+// Keep this minimal - just show the pattern
+var MyBucket = s3.Bucket{
+    BucketName: "my-data-bucket",
+    Versioning: s3.VersioningEnabled,
+}
+```

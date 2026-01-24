@@ -91,14 +91,14 @@ Solutions/CodeBuildAndCodePipeline/codebuild-app-*.yml
 
 **Rationale**: These are CodeBuild buildspec files, not CloudFormation templates.
 
-#### CDK configuration files
+#### Non-CloudFormation configuration files
 
 ```
 CloudFormation/StackSets-CDK/cdk.json
 CloudFormation/StackSets-CDK/config.json
 ```
 
-**Rationale**: These are AWS CDK configuration files, not CloudFormation templates.
+**Rationale**: These are configuration files, not CloudFormation templates.
 
 #### Macro test events
 
