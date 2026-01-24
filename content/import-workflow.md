@@ -1,10 +1,6 @@
 ---
 title: "Import Workflow"
 ---
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
-  <img src="./wetwire-light.svg" width="100" height="67">
-</picture>
 
 This document explains the CloudFormation template import workflow used by wetwire-aws (Go) to test and validate the implementation against real-world AWS templates.
 

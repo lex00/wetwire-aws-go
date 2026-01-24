@@ -1,10 +1,6 @@
 ---
 title: "SAM"
 ---
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
-  <img src="./wetwire-light.svg" width="100" height="67">
-</picture>
 
 wetwire-aws fully supports AWS SAM (Serverless Application Model) resources, allowing you to define serverless applications using the same declarative Go syntax as CloudFormation resources.
 

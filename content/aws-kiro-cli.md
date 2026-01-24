@@ -1,10 +1,6 @@
 ---
 title: "AWS Kiro CLI"
 ---
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
-  <img src="./wetwire-light.svg" width="100" height="67">
-</picture>
 
 Use Kiro CLI with wetwire-aws for AI-assisted infrastructure design in corporate AWS environments.
 

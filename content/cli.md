@@ -1,10 +1,6 @@
 ---
 title: "CLI"
 ---
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./wetwire-dark.svg">
-  <img src="./wetwire-light.svg" width="100" height="67">
-</picture>
 
 The `wetwire-aws` command provides tools for generating and validating CloudFormation templates from Go code.
 
