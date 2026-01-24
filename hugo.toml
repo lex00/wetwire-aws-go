@@ -40,3 +40,7 @@ theme = "wetwire"
     name = "FAQ"
     pageRef = "/faq"
     weight = 40
+  [[menus.main]]
+    name = "Source"
+    url = "https://github.com/lex00/wetwire-aws-go"
+    weight = 50
