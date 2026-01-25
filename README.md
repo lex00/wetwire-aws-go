@@ -7,10 +7,6 @@
 [![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?logo=go)](https://golang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Wetwire uses typed constraints to reduce the model capability required for accurate code generation.
-
-**Core hypothesis:** Typed input + smaller model ≈ Semantic input + larger model
-
-Generate AWS CloudFormation templates from Go structs with AI-assisted design.
+Semantic linting for CloudFormation.
 
 ## [Read the Documentation →](https://lex00.github.io/wetwire-aws-go/)

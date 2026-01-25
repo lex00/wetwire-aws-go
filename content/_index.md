@@ -9,15 +9,7 @@ title: "Wetwire AWS"
 [![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?logo=go)](https://golang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Generate AWS CloudFormation templates from Go structs with AI-assisted design.
-
-## Philosophy
-
-Wetwire uses typed constraints to reduce the model capability required for accurate code generation.
-
-**Core hypothesis:** Typed input + smaller model ≈ Semantic input + larger model
-
-The type system and lint rules act as a force multiplier — cheaper models produce quality output when guided by schema-generated types and iterative lint feedback.
+Semantic linting for CloudFormation.
 
 ## Documentation
 
